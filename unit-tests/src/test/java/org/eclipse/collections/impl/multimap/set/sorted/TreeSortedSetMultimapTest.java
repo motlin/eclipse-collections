@@ -31,6 +31,7 @@ import org.junit.Test;
  */
 public class TreeSortedSetMultimapTest extends AbstractMutableSortedSetMultimapTestCase
 {
+    @Override
     public <K, V> MutableSortedSetMultimap<K, V> newMultimap(Comparator<? super V> comparator)
     {
         return TreeSortedSetMultimap.newMultimap(comparator);

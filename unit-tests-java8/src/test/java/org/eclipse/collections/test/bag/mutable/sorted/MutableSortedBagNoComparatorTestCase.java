@@ -12,10 +12,17 @@ package org.eclipse.collections.test.bag.mutable.sorted;
 
 import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
 import org.eclipse.collections.api.bag.sorted.SortedBag;
+import org.eclipse.collections.api.block.predicate.Predicate;
+import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
+import org.eclipse.collections.impl.block.factory.Predicates;
+import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.factory.Lists;
+import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.MutableSortedNaturalOrderTestCase;
+import org.eclipse.collections.test.collection.mutable.MutableCollectionTestCase;
 import org.junit.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.addAllTo;
@@ -23,7 +30,7 @@ import static org.eclipse.collections.test.IterableTestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public interface MutableSortedBagNoComparatorTestCase extends SortedBagTestCase, MutableBagIterableTestCase, MutableSortedNaturalOrderTestCase
+public interface MutableSortedBagNoComparatorTestCase extends SortedBagTestCase, MutableBagIterableTestCase, MutableSortedNaturalOrderTestCase, MutableCollectionTestCase
 {
     @Override
     <T> MutableSortedBag<T> newWith(T... elements);
@@ -40,6 +47,41 @@ public interface MutableSortedBagNoComparatorTestCase extends SortedBagTestCase,
         TreeBag<T> result = new TreeBag<>();
         addAllTo(elements, result);
         return result;
+    }
+    @Override
+    @Test
+    default void MutableCollection_removeIf()
+    {
+        MutableCollection<Integer> collection1 = this.newWith(1, 1, 2, 2, 3, 3, 4, 4, 5, 5);
+        assertTrue(collection1.removeIf(Predicates.cast(each -> each % 2 == 0)));
+        IterableTestCase.assertEquals(this.getExpectedFiltered(1, 1, 3, 3, 5, 5), collection1);
+
+        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3, 4);
+        assertFalse(collection2.removeIf(Predicates.equal(5)));
+        assertTrue(collection2.removeIf(Predicates.greaterThan(0)));
+        assertEquals(this.newWith(), collection2);
+        assertFalse(collection2.removeIf(Predicates.greaterThan(2)));
+
+        Predicate<Object> predicate = null;
+        Verify.assertThrows(NullPointerException.class, () -> this.newWith(1, 4, 5, 7).removeIf(predicate));
+    }
+
+    @Override
+    @Test
+    default void MutableCollection_removeIfWith()
+    {
+        MutableCollection<Integer> collection = this.newWith(1, 1, 2, 2, 3, 3, 4, 4, 5, 5);
+        assertTrue(collection.removeIfWith(Predicates2.<Integer>in(), Lists.immutable.with(5, 3, 1)));
+        IterableTestCase.assertEquals(this.getExpectedFiltered(2, 2, 4, 4), collection);
+        Verify.assertThrows(NullPointerException.class, () -> this.newWith(7, 4, 5, 1).removeIfWith(null, this));
+
+        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3, 4);
+        assertFalse(collection2.removeIfWith(Predicates2.equal(), 5));
+        assertTrue(collection2.removeIfWith(Predicates2.greaterThan(), 0));
+        assertEquals(this.newWith(), collection2);
+        assertFalse(collection2.removeIfWith(Predicates2.greaterThan(), 2));
+
+        Verify.assertThrows(NullPointerException.class, () -> this.newWith(1, 4, 5, 7).removeIfWith(null, null));
     }
 
     @Override

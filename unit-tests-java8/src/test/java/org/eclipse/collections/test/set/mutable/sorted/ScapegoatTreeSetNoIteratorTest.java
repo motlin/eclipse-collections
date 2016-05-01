@@ -10,27 +10,24 @@
 
 package org.eclipse.collections.test.set.mutable.sorted;
 
-import java.util.Comparator;
 import java.util.Iterator;
 
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
-import org.eclipse.collections.impl.block.factory.Comparators;
-import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
+import org.eclipse.collections.impl.set.sorted.mutable.ScapegoatTreeSet;
 import org.eclipse.collections.impl.test.junit.Java8Runner;
 import org.eclipse.collections.test.IterableTestCase;
-import org.eclipse.collections.test.NoIteratorTestCase;
-import org.junit.Ignore;
+import org.eclipse.collections.test.bag.mutable.sorted.OrderedIterableNoIteratorTest;
 import org.junit.runner.RunWith;
 
-@Ignore("Requires scapegoat tree implementation")
 @RunWith(Java8Runner.class)
-public class TreeSortedSetNoIteratorTest implements MutableSortedSetTestCase, NoIteratorTestCase
+public class ScapegoatTreeSetNoIteratorTest implements MutableSortedSetTestCase, MutableSortedSetNoComparatorTestCase, OrderedIterableNoIteratorTest
 {
     @SafeVarargs
     @Override
     public final <T> MutableSortedSet<T> newWith(T... elements)
     {
-        MutableSortedSet<T> result = new TreeSortedSetNoIterator<>(Comparators.reverseNaturalOrder());
+        // Cast assumes T extends Comparable<? super T>
+        MutableSortedSet<T> result = (MutableSortedSet<T>) new ScapegoatTreeSetNoIterator<>();
         IterableTestCase.addAllTo(elements, result);
         return result;
     }
@@ -38,37 +35,38 @@ public class TreeSortedSetNoIteratorTest implements MutableSortedSetTestCase, No
     @Override
     public void Iterable_next()
     {
-        NoIteratorTestCase.super.Iterable_next();
+        OrderedIterableNoIteratorTest.super.Iterable_next();
     }
 
     @Override
     public void Iterable_remove()
     {
-        NoIteratorTestCase.super.Iterable_remove();
+        OrderedIterableNoIteratorTest.super.Iterable_remove();
     }
 
     @Override
     public void RichIterable_getFirst()
     {
-        NoIteratorTestCase.super.RichIterable_getFirst();
+        OrderedIterableNoIteratorTest.super.RichIterable_getFirst();
     }
 
     @Override
     public void RichIterable_getLast()
     {
-        NoIteratorTestCase.super.RichIterable_getLast();
+        OrderedIterableNoIteratorTest.super.RichIterable_getLast();
     }
 
-    public static class TreeSortedSetNoIterator<T> extends TreeSortedSet<T>
+    @Override
+    public void OrderedIterable_next()
     {
-        public TreeSortedSetNoIterator()
+        OrderedIterableNoIteratorTest.super.OrderedIterable_next();
+    }
+
+    public static class ScapegoatTreeSetNoIterator<T extends Comparable<? super T>> extends ScapegoatTreeSet<T>
+    {
+        public ScapegoatTreeSetNoIterator()
         {
             // For serialization
-        }
-
-        public TreeSortedSetNoIterator(Comparator<? super T> comparator)
-        {
-            super(comparator);
         }
 
         @Override

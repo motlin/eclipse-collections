@@ -72,6 +72,7 @@ import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.factory.Procedures;
 import org.eclipse.collections.impl.block.factory.Procedures2;
+import org.eclipse.collections.impl.block.procedure.AdaptObjectIntProcedureToProcedure;
 import org.eclipse.collections.impl.block.procedure.AppendStringProcedure;
 import org.eclipse.collections.impl.block.procedure.BiMapCollectProcedure;
 import org.eclipse.collections.impl.block.procedure.CollectIfProcedure;
@@ -572,7 +573,7 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     @Override
     public void forEachWithIndex(ObjectIntProcedure<? super T> objectIntProcedure)
     {
-        IterableIterate.forEachWithIndex(this, objectIntProcedure);
+        this.each(new AdaptObjectIntProcedureToProcedure<>(objectIntProcedure));
     }
 
     @Override

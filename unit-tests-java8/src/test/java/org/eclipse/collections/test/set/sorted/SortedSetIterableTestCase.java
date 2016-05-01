@@ -19,6 +19,7 @@ import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.ordered.SortedIterable;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
+import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.SortedSets;
@@ -34,6 +35,7 @@ import org.junit.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertThrows;
 import static org.eclipse.collections.test.IterableTestCase.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public interface SortedSetIterableTestCase extends SetIterableTestCase, SortedIterableTestCase, TransformsToListTrait
 {
@@ -61,7 +63,7 @@ public interface SortedSetIterableTestCase extends SetIterableTestCase, SortedIt
     @Test
     default void SortedSetIterable_union()
     {
-        SortedSetIterable<Integer> union = this.newWith(1, 2, 3).union(this.newWith(3, 4, 5));
+        SortedSetIterable<Integer> union = this.newWith(3, 2, 1).union(this.newWith(5, 4, 3));
         assertEquals(SortedSets.immutable.with(Comparators.reverseNaturalOrder(), 5, 4, 3, 2, 1), union);
     }
 
@@ -171,13 +173,16 @@ public interface SortedSetIterableTestCase extends SetIterableTestCase, SortedIt
     default void OrderedIterable_zipWithIndex_target()
     {
         RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
+        MutableList<Pair<Integer, Integer>> target = Lists.mutable.empty();
+        MutableList<Pair<Integer, Integer>> result = iterable.zipWithIndex(target);
         Assert.assertEquals(
                 Lists.immutable.with(
                         Tuples.pair(4, 0),
                         Tuples.pair(3, 1),
                         Tuples.pair(2, 2),
                         Tuples.pair(1, 3)),
-                iterable.zipWithIndex(Lists.mutable.empty()));
+                result);
+        assertSame(target, result);
     }
 
     @Test

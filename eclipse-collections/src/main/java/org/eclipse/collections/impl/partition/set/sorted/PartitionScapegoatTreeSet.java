@@ -12,28 +12,35 @@ package org.eclipse.collections.impl.partition.set.sorted;
 
 import org.eclipse.collections.api.partition.set.sorted.PartitionImmutableSortedSet;
 import org.eclipse.collections.api.partition.set.sorted.PartitionMutableSortedSet;
-import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
+import org.eclipse.collections.api.set.sorted.MutableSortedSet;
+import org.eclipse.collections.impl.set.sorted.mutable.ScapegoatTreeSet;
 
-public class PartitionImmutableSortedSetImpl<T> implements PartitionImmutableSortedSet<T>
+public class PartitionScapegoatTreeSet<T extends Comparable<? super T>> implements PartitionMutableSortedSet<T>
 {
-    private final ImmutableSortedSet<T> selected;
-    private final ImmutableSortedSet<T> rejected;
+    private final MutableSortedSet<T> selected;
+    private final MutableSortedSet<T> rejected;
 
-    public PartitionImmutableSortedSetImpl(PartitionMutableSortedSet<T> partitionTreeSortedSet)
+    public PartitionScapegoatTreeSet()
     {
-        this.selected = partitionTreeSortedSet.getSelected().toImmutable();
-        this.rejected = partitionTreeSortedSet.getRejected().toImmutable();
+        this.selected = new ScapegoatTreeSet<T>();
+        this.rejected = new ScapegoatTreeSet<T>();
     }
 
     @Override
-    public ImmutableSortedSet<T> getSelected()
+    public MutableSortedSet<T> getSelected()
     {
         return this.selected;
     }
 
     @Override
-    public ImmutableSortedSet<T> getRejected()
+    public MutableSortedSet<T> getRejected()
     {
         return this.rejected;
+    }
+
+    @Override
+    public PartitionImmutableSortedSet<T> toImmutable()
+    {
+        return new PartitionImmutableSortedSetImpl<T>(this);
     }
 }

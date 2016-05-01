@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -39,5 +39,12 @@ public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetec
     default void RichIterable_minOptional_maxOptional_non_comparable()
     {
         assertThrows(ClassCastException.class, () -> this.newWith(new Object()));
+	}
+
+    @Test
+    default void SortedIterable_with_null()
+    {
+        assertThrows(NullPointerException.class, () -> this.newWith(null, null));
+        assertThrows(NullPointerException.class, () -> this.newWith((Object) null));
     }
 }

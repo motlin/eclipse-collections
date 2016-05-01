@@ -21,7 +21,7 @@ import org.eclipse.collections.test.collection.mutable.MutableCollectionTestCase
 import org.junit.Assert;
 import org.junit.Test;
 
-public interface MutableSortedNaturalOrderTestCase extends SortedNaturalOrderTestCase, MutableOrderedIterableTestCase, MutableCollectionTestCase
+public interface MutableSortedNaturalOrderTestCase extends SortedNaturalOrderTestCase, MutableOrderedIterableTestCase  //, MutableCollectionTestCase
 {
     @Test
     @Override
@@ -32,41 +32,5 @@ public interface MutableSortedNaturalOrderTestCase extends SortedNaturalOrderTes
         iterator.next();
         iterator.remove();
         IterableTestCase.assertEquals(this.newWith(1, 1, 2, 2, 3), iterable);
-    }
-
-    @Override
-    @Test
-    default void MutableCollection_removeIf()
-    {
-        MutableCollection<Integer> collection1 = this.newWith(1, 1, 2, 2, 3, 3, 4, 4, 5, 5);
-        Assert.assertTrue(collection1.removeIf(Predicates.cast(each -> each % 2 == 0)));
-        IterableTestCase.assertEquals(this.getExpectedFiltered(1, 1, 3, 3, 5, 5), collection1);
-
-        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3, 4);
-        Assert.assertFalse(collection2.removeIf(Predicates.equal(5)));
-        Assert.assertTrue(collection2.removeIf(Predicates.greaterThan(0)));
-        Assert.assertEquals(this.newWith(), collection2);
-        Assert.assertFalse(collection2.removeIf(Predicates.greaterThan(2)));
-
-        Predicate<Object> predicate = null;
-        Assert.assertThrows(NullPointerException.class, () -> this.newWith(1, 4, 5, 7).removeIf(predicate));
-    }
-
-    @Override
-    @Test
-    default void MutableCollection_removeIfWith()
-    {
-        MutableCollection<Integer> collection = this.newWith(1, 1, 2, 2, 3, 3, 4, 4, 5, 5);
-        Assert.assertTrue(collection.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1)));
-        IterableTestCase.assertEquals(this.getExpectedFiltered(2, 2, 4, 4), collection);
-        Assert.assertThrows(NullPointerException.class, () -> this.newWith(7, 4, 5, 1).removeIfWith(null, this));
-
-        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3, 4);
-        Assert.assertFalse(collection2.removeIfWith(Predicates2.equal(), 5));
-        Assert.assertTrue(collection2.removeIfWith(Predicates2.greaterThan(), 0));
-        Assert.assertEquals(this.newWith(), collection2);
-        Assert.assertFalse(collection2.removeIfWith(Predicates2.greaterThan(), 2));
-
-        Assert.assertThrows(NullPointerException.class, () -> this.newWith(1, 4, 5, 7).removeIfWith(null, null));
     }
 }

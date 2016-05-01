@@ -20,88 +20,43 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.concurrent.ExecutorService;
 
 import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.annotation.Beta;
 import org.eclipse.collections.api.block.function.Function;
-import org.eclipse.collections.api.block.function.Function2;
-import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
-import org.eclipse.collections.api.block.function.primitive.ByteFunction;
-import org.eclipse.collections.api.block.function.primitive.CharFunction;
-import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
-import org.eclipse.collections.api.block.function.primitive.FloatFunction;
-import org.eclipse.collections.api.block.function.primitive.IntFunction;
-import org.eclipse.collections.api.block.function.primitive.LongFunction;
-import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.MutableBooleanList;
-import org.eclipse.collections.api.list.primitive.MutableByteList;
-import org.eclipse.collections.api.list.primitive.MutableCharList;
-import org.eclipse.collections.api.list.primitive.MutableDoubleList;
-import org.eclipse.collections.api.list.primitive.MutableFloatList;
-import org.eclipse.collections.api.list.primitive.MutableIntList;
-import org.eclipse.collections.api.list.primitive.MutableLongList;
-import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.set.sorted.PartitionMutableSortedSet;
 import org.eclipse.collections.api.set.SetIterable;
-import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
-import org.eclipse.collections.api.set.sorted.ParallelSortedSetIterable;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates2;
-import org.eclipse.collections.impl.block.procedure.CollectIfProcedure;
-import org.eclipse.collections.impl.block.procedure.CollectProcedure;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
-import org.eclipse.collections.impl.block.procedure.FlatCollectProcedure;
 import org.eclipse.collections.impl.block.procedure.PartitionPredicate2Procedure;
 import org.eclipse.collections.impl.block.procedure.PartitionProcedure;
 import org.eclipse.collections.impl.block.procedure.RejectProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectInstancesOfProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectProcedure;
 import org.eclipse.collections.impl.block.procedure.checked.CheckedProcedure;
-import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
-import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
-import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
-import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
-import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
-import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
-import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
-import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
-import org.eclipse.collections.impl.collection.mutable.AbstractMutableCollection;
-import org.eclipse.collections.impl.lazy.parallel.set.sorted.NonParallelSortedSetIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
-import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
-import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
-import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
-import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
-import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
-import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
-import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
-import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap;
 import org.eclipse.collections.impl.partition.set.sorted.PartitionTreeSortedSet;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.eclipse.collections.impl.utility.ListIterate;
 import org.eclipse.collections.impl.utility.OrderedIterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 import org.eclipse.collections.impl.utility.internal.SetIterables;
-import org.eclipse.collections.impl.utility.internal.SetIterate;
 import org.eclipse.collections.impl.utility.internal.SortedSetIterables;
 
-public class TreeSortedSet<T> extends AbstractMutableCollection<T>
-        implements Externalizable, MutableSortedSet<T>
+public class TreeSortedSet<T> extends AbstractMutableSortedSet<T> implements Externalizable
 {
     private static final long serialVersionUID = 1L;
     private TreeSet<T> treeSet;
@@ -170,39 +125,6 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     }
 
     @Override
-    public MutableSortedSet<T> asUnmodifiable()
-    {
-        return UnmodifiableSortedSet.of(this);
-    }
-
-    @Override
-    public MutableSortedSet<T> asSynchronized()
-    {
-        return SynchronizedSortedSet.of(this);
-    }
-
-    @Override
-    @Beta
-    public ParallelSortedSetIterable<T> asParallel(ExecutorService executorService, int batchSize)
-    {
-        if (executorService == null)
-        {
-            throw new NullPointerException();
-        }
-        if (batchSize < 1)
-        {
-            throw new IllegalArgumentException();
-        }
-        return new NonParallelSortedSetIterable<>(this);
-    }
-
-    @Override
-    public ImmutableSortedSet<T> toImmutable()
-    {
-        return SortedSets.immutable.withSortedSet(this);
-    }
-
-    @Override
     public boolean add(T element)
     {
         return this.treeSet.add(element);
@@ -241,16 +163,9 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public TreeSortedSet<T> clone()
     {
-        try
-        {
-            TreeSortedSet<T> clone = (TreeSortedSet<T>) super.clone();
-            clone.treeSet = (TreeSet<T>) this.treeSet.clone();
-            return clone;
-        }
-        catch (CloneNotSupportedException e)
-        {
-            throw new AssertionError(e);
-        }
+        TreeSortedSet<T> clone = (TreeSortedSet<T>) super.clone();
+        clone.treeSet = (TreeSet<T>) this.treeSet.clone();
+        return clone;
     }
 
     @Override
@@ -392,102 +307,6 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     }
 
     @Override
-    public <V> MutableList<V> collect(Function<? super T, ? extends V> function)
-    {
-        MutableList<V> result = FastList.newList();
-        this.forEach(new CollectProcedure<>(function, result));
-        return result;
-    }
-
-    @Override
-    public MutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction)
-    {
-        BooleanArrayList result = new BooleanArrayList(this.size());
-        this.forEach(new CollectBooleanProcedure<>(booleanFunction, result));
-        return result;
-    }
-
-    @Override
-    public MutableByteList collectByte(ByteFunction<? super T> byteFunction)
-    {
-        ByteArrayList result = new ByteArrayList(this.size());
-        this.forEach(new CollectByteProcedure<>(byteFunction, result));
-        return result;
-    }
-
-    @Override
-    public MutableCharList collectChar(CharFunction<? super T> charFunction)
-    {
-        CharArrayList result = new CharArrayList(this.size());
-        this.forEach(new CollectCharProcedure<>(charFunction, result));
-        return result;
-    }
-
-    @Override
-    public MutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction)
-    {
-        DoubleArrayList result = new DoubleArrayList(this.size());
-        this.forEach(new CollectDoubleProcedure<>(doubleFunction, result));
-        return result;
-    }
-
-    @Override
-    public MutableFloatList collectFloat(FloatFunction<? super T> floatFunction)
-    {
-        FloatArrayList result = new FloatArrayList(this.size());
-        this.forEach(new CollectFloatProcedure<>(floatFunction, result));
-        return result;
-    }
-
-    @Override
-    public MutableIntList collectInt(IntFunction<? super T> intFunction)
-    {
-        IntArrayList result = new IntArrayList(this.size());
-        this.forEach(new CollectIntProcedure<>(intFunction, result));
-        return result;
-    }
-
-    @Override
-    public MutableLongList collectLong(LongFunction<? super T> longFunction)
-    {
-        LongArrayList result = new LongArrayList(this.size());
-        this.forEach(new CollectLongProcedure<>(longFunction, result));
-        return result;
-    }
-
-    @Override
-    public MutableShortList collectShort(ShortFunction<? super T> shortFunction)
-    {
-        ShortArrayList result = new ShortArrayList(this.size());
-        this.forEach(new CollectShortProcedure<>(shortFunction, result));
-        return result;
-    }
-
-    @Override
-    public <V> MutableList<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
-    {
-        MutableList<V> result = FastList.newList();
-        this.forEach(new FlatCollectProcedure<>(function, result));
-        return result;
-    }
-
-    @Override
-    public <V> MutableList<V> collectIf(
-            Predicate<? super T> predicate,
-            Function<? super T, ? extends V> function)
-    {
-        MutableList<V> result = FastList.newList();
-        this.forEach(new CollectIfProcedure<>(result, function, predicate));
-        return result;
-    }
-
-    @Override
-    public int detectIndex(Predicate<? super T> predicate)
-    {
-        return Iterate.detectIndex(this, predicate);
-    }
-
-    @Override
     public <V> TreeSortedSetMultimap<V, T> groupBy(Function<? super T, ? extends V> function)
     {
         return Iterate.groupBy(this.treeSet, function, TreeSortedSetMultimap.newMultimap(this.comparator()));
@@ -542,20 +361,6 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     }
 
     @Override
-    public MutableSortedSet<T> takeWhile(Predicate<? super T> predicate)
-    {
-        MutableSortedSet<T> result = TreeSortedSet.newSet(this.comparator());
-        return IterableIterate.takeWhile(this, predicate, result);
-    }
-
-    @Override
-    public MutableSortedSet<T> dropWhile(Predicate<? super T> predicate)
-    {
-        MutableSortedSet<T> result = TreeSortedSet.newSet(this.comparator());
-        return IterableIterate.dropWhile(this, predicate, result);
-    }
-
-    @Override
     public MutableSortedSet<T> distinct()
     {
         return this.clone();
@@ -565,58 +370,6 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     public <S> boolean corresponds(OrderedIterable<S> other, Predicate2<? super T, ? super S> predicate)
     {
         return OrderedIterate.corresponds(this, other, predicate);
-    }
-
-    @Override
-    public void forEach(int fromIndex, int toIndex, Procedure<? super T> procedure)
-    {
-        ListIterate.rangeCheck(fromIndex, toIndex, this.size());
-
-        if (fromIndex > toIndex)
-        {
-            throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
-        }
-
-        Iterator<T> iterator = this.iterator();
-        int i = 0;
-        while (iterator.hasNext() && i <= toIndex)
-        {
-            T each = iterator.next();
-            if (i >= fromIndex)
-            {
-                procedure.value(each);
-            }
-            i++;
-        }
-    }
-
-    @Override
-    public void forEachWithIndex(int fromIndex, int toIndex, ObjectIntProcedure<? super T> objectIntProcedure)
-    {
-        ListIterate.rangeCheck(fromIndex, toIndex, this.size());
-
-        if (fromIndex > toIndex)
-        {
-            throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
-        }
-
-        Iterator<T> iterator = this.iterator();
-        int i = 0;
-        while (iterator.hasNext() && i <= toIndex)
-        {
-            T each = iterator.next();
-            if (i >= fromIndex)
-            {
-                objectIntProcedure.value(each, i);
-            }
-            i++;
-        }
-    }
-
-    @Override
-    public boolean removeAllIterable(Iterable<?> iterable)
-    {
-        return SetIterate.removeAllIterable(this.treeSet, iterable);
     }
 
     @Override
@@ -708,48 +461,6 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     }
 
     @Override
-    public MutableSortedSet<T> symmetricDifference(SetIterable<? extends T> setB)
-    {
-        return SetIterables.symmetricDifferenceInto(this, setB, this.newEmpty());
-    }
-
-    @Override
-    public <R extends Set<T>> R unionInto(SetIterable<? extends T> set, R targetSet)
-    {
-        return SetIterables.unionInto(this, set, targetSet);
-    }
-
-    @Override
-    public <R extends Set<T>> R intersectInto(SetIterable<? extends T> set, R targetSet)
-    {
-        return SetIterables.intersectInto(this, set, targetSet);
-    }
-
-    @Override
-    public <R extends Set<T>> R differenceInto(SetIterable<? extends T> subtrahendSet, R targetSet)
-    {
-        return SetIterables.differenceInto(this, subtrahendSet, targetSet);
-    }
-
-    @Override
-    public <R extends Set<T>> R symmetricDifferenceInto(SetIterable<? extends T> set, R targetSet)
-    {
-        return SetIterables.symmetricDifferenceInto(this, set, targetSet);
-    }
-
-    @Override
-    public boolean isSubsetOf(SetIterable<? extends T> candidateSuperset)
-    {
-        return SetIterables.isSubsetOf(this, candidateSuperset);
-    }
-
-    @Override
-    public boolean isProperSubsetOf(SetIterable<? extends T> candidateSuperset)
-    {
-        return SetIterables.isProperSubsetOf(this, candidateSuperset);
-    }
-
-    @Override
     public Iterator<T> iterator()
     {
         return this.treeSet.iterator();
@@ -765,18 +476,6 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     public MutableSortedSet<T> toReversed()
     {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toReversed() not implemented yet");
-    }
-
-    @Override
-    public MutableSortedSet<T> take(int count)
-    {
-        return IterableIterate.take(this, Math.min(this.size(), count), this.newEmpty());
-    }
-
-    @Override
-    public MutableSortedSet<T> drop(int count)
-    {
-        return IterableIterate.drop(this, count, this.newEmpty());
     }
 
     @Override
@@ -826,11 +525,5 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
         {
             this.add((T) in.readObject());
         }
-    }
-
-    @Override
-    public int compareTo(SortedSetIterable<T> otherSet)
-    {
-        return SortedSetIterables.compare(this, otherSet);
     }
 }
