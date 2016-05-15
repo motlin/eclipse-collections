@@ -16,10 +16,10 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.collections.api.RichIterable;
+import net.jcip.annotations.Immutable;
+import org.eclipse.collections.api.ImmutableIterable;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.block.function.Function;
-import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
@@ -32,7 +32,6 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
-import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.collection.primitive.ImmutableBooleanCollection;
 import org.eclipse.collections.api.collection.primitive.ImmutableByteCollection;
 import org.eclipse.collections.api.collection.primitive.ImmutableCharCollection;
@@ -43,12 +42,7 @@ import org.eclipse.collections.api.collection.primitive.ImmutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.ImmutableShortCollection;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.ImmutableMap;
-import org.eclipse.collections.api.map.ImmutableMapIterable;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.map.MutableMapIterable;
-import org.eclipse.collections.api.map.primitive.ImmutableObjectDoubleMap;
-import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
-import org.eclipse.collections.api.multimap.ImmutableMultimap;
 import org.eclipse.collections.api.partition.PartitionImmutableCollection;
 import org.eclipse.collections.api.tuple.Pair;
 
@@ -58,7 +52,7 @@ import org.eclipse.collections.api.tuple.Pair;
  * methods available on the public interface.
  */
 public interface ImmutableCollection<T>
-        extends RichIterable<T>
+        extends ImmutableIterable<T>
 {
     /**
      * This method is similar to the {@code with} method in {@code MutableCollection}
@@ -153,18 +147,6 @@ public interface ImmutableCollection<T>
         return this.flatCollect(each -> function.apply(each, parameter));
     }
 
-    @Override
-    <V> ImmutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function);
-
-    @Override
-    <V> ImmutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function);
-
-    @Override
-    <V> ImmutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function);
-
-    @Override
-    <V> ImmutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function);
-
     /**
      * @since 9.0
      */
@@ -193,12 +175,6 @@ public interface ImmutableCollection<T>
     }
 
     @Override
-    <V> ImmutableMultimap<V, T> groupBy(Function<? super T, ? extends V> function);
-
-    @Override
-    <V> ImmutableMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function);
-
-    @Override
     default <V> ImmutableMap<V, T> groupByUniqueKey(Function<? super T, ? extends V> function)
     {
         MutableMap<V, T> target = Maps.mutable.withInitialCapacity(this.size());
@@ -210,45 +186,6 @@ public interface ImmutableCollection<T>
 
     @Override
     ImmutableCollection<Pair<T, Integer>> zipWithIndex();
-
-    @Override
-    default <K, V> ImmutableMap<K, V> aggregateInPlaceBy(
-            Function<? super T, ? extends K> groupBy,
-            Function0<? extends V> zeroValueFactory,
-            Procedure2<? super V, ? super T> mutatingAggregator)
-    {
-        MutableMap<K, V> map = Maps.mutable.empty();
-        this.forEach(each ->
-        {
-            K key = groupBy.valueOf(each);
-            V value = map.getIfAbsentPut(key, zeroValueFactory);
-            mutatingAggregator.value(value, each);
-        });
-        return map.toImmutable();
-    }
-
-    @Override
-    default <K, V> ImmutableMap<K, V> aggregateBy(
-            Function<? super T, ? extends K> groupBy,
-            Function0<? extends V> zeroValueFactory,
-            Function2<? super V, ? super T, ? extends V> nonMutatingAggregator)
-    {
-        MutableMap<K, V> map = this.aggregateBy(
-                groupBy,
-                zeroValueFactory,
-                nonMutatingAggregator,
-                Maps.mutable.empty());
-        return map.toImmutable();
-    }
-
-    @Override
-    default <K> ImmutableMapIterable<K, T> reduceBy(
-            Function<? super T, ? extends K> groupBy,
-            Function2<? super T, ? super T, ? extends T> reduceFunction)
-    {
-        MutableMapIterable<K, T> map = this.reduceBy(groupBy, reduceFunction, Maps.mutable.empty());
-        return map.toImmutable();
-    }
 
     /**
      * @since 9.0

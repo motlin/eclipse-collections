@@ -12,7 +12,7 @@ package org.eclipse.collections.api.collection;
 
 import java.util.Collection;
 
-import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.MutableIterable;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -49,7 +49,6 @@ import org.eclipse.collections.api.factory.primitive.LongLists;
 import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
@@ -68,7 +67,7 @@ import org.eclipse.collections.api.tuple.Twin;
  * There are several extensions to MutableCollection, including MutableList, MutableSet, and MutableBag.
  */
 public interface MutableCollection<T>
-        extends Collection<T>, RichIterable<T>
+        extends Collection<T>, MutableIterable<T>
 {
     @Override
     default Object[] toArray()
@@ -482,6 +481,7 @@ public interface MutableCollection<T>
      * @see java.util.Collections#unmodifiableCollection(Collection)
      * @since 1.0
      */
+    @Override
     MutableCollection<T> asUnmodifiable();
 
     /**
@@ -508,6 +508,7 @@ public interface MutableCollection<T>
      * @see java.util.Collections#synchronizedCollection(Collection)
      * @since 1.0
      */
+    @Override
     MutableCollection<T> asSynchronized();
 
     /**
@@ -515,19 +516,8 @@ public interface MutableCollection<T>
      *
      * @since 1.0
      */
+    @Override
     ImmutableCollection<T> toImmutable();
-
-    @Override
-    <V> MutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function);
-
-    @Override
-    <V> MutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function);
-
-    @Override
-    <V> MutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function);
-
-    @Override
-    <V> MutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function);
 
     /**
      * @since 9.0
@@ -555,20 +545,6 @@ public interface MutableCollection<T>
     {
         return this.asLazy().flatCollect(function).toBag();
     }
-
-    /**
-     * {@inheritDoc}
-     * Co-variant example for MutableCollection:
-     * <pre>
-     * MutableMultimap&lt;String, Person&gt; peopleByLastName =
-     *     people.groupBy(Person::getLastName);
-     * </pre>
-     */
-    @Override
-    <V> MutableMultimap<V, T> groupBy(Function<? super T, ? extends V> function);
-
-    @Override
-    <V> MutableMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function);
 
     @Override
     default <V> MutableMap<V, T> groupByUniqueKey(Function<? super T, ? extends V> function)
@@ -608,40 +584,4 @@ public interface MutableCollection<T>
      */
     boolean retainAllIterable(Iterable<?> iterable);
 
-    @Override
-    default <K, V> MutableMap<K, V> aggregateInPlaceBy(
-            Function<? super T, ? extends K> groupBy,
-            Function0<? extends V> zeroValueFactory,
-            Procedure2<? super V, ? super T> mutatingAggregator)
-    {
-        MutableMap<K, V> map = Maps.mutable.empty();
-        this.forEach(each ->
-        {
-            K key = groupBy.valueOf(each);
-            V value = map.getIfAbsentPut(key, zeroValueFactory);
-            mutatingAggregator.value(value, each);
-        });
-        return map;
-    }
-
-    @Override
-    default <K, V> MutableMap<K, V> aggregateBy(
-            Function<? super T, ? extends K> groupBy,
-            Function0<? extends V> zeroValueFactory,
-            Function2<? super V, ? super T, ? extends V> nonMutatingAggregator)
-    {
-        return this.aggregateBy(
-                groupBy,
-                zeroValueFactory,
-                nonMutatingAggregator,
-                Maps.mutable.empty());
-    }
-
-    @Override
-    default <K> MutableMapIterable<K, T> reduceBy(
-            Function<? super T, ? extends K> groupBy,
-            Function2<? super T, ? super T, ? extends T> reduceFunction)
-    {
-        return this.reduceBy(groupBy, reduceFunction, Maps.mutable.empty());
-    }
 }

@@ -22,7 +22,6 @@ import org.eclipse.collections.api.bag.primitive.ImmutableIntBag;
 import org.eclipse.collections.api.bag.primitive.ImmutableLongBag;
 import org.eclipse.collections.api.bag.primitive.ImmutableShortBag;
 import org.eclipse.collections.api.block.function.Function;
-import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
@@ -189,36 +188,6 @@ public interface ImmutableMap<K, V>
     }
 
     @Override
-    default <KK, VV> ImmutableMap<KK, VV> aggregateInPlaceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function0<? extends VV> zeroValueFactory,
-            Procedure2<? super VV, ? super V> mutatingAggregator)
-    {
-        MutableMap<KK, VV> map = Maps.mutable.empty();
-        this.forEach(each ->
-        {
-            KK key = groupBy.valueOf(each);
-            VV value = map.getIfAbsentPut(key, zeroValueFactory);
-            mutatingAggregator.value(value, each);
-        });
-        return map.toImmutable();
-    }
-
-    @Override
-    default <KK, VV> ImmutableMap<KK, VV> aggregateBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function0<? extends VV> zeroValueFactory,
-            Function2<? super VV, ? super V, ? extends VV> nonMutatingAggregator)
-    {
-        MutableMap<KK, VV> map = this.aggregateBy(
-                groupBy,
-                zeroValueFactory,
-                nonMutatingAggregator,
-                Maps.mutable.empty());
-        return map.toImmutable();
-    }
-
-    @Override
     default <K1, V1, V2> ImmutableMap<K1, V2> aggregateBy(
             Function<? super K, ? extends K1> keyFunction,
             Function<? super V, ? extends V1> valueFunction,
@@ -232,15 +201,6 @@ public interface ImmutableMap<K, V>
                 nonMutatingAggregator,
                 valueFunction.valueOf(value)));
         return map.toImmutable();
-    }
-
-    @Override
-    default <KK> ImmutableMap<KK, V> reduceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function2<? super V, ? super V, ? extends V> reduceFunction)
-    {
-        MutableMap<KK, V> map = Maps.mutable.empty();
-        return this.reduceBy(groupBy, reduceFunction, map).toImmutable();
     }
 
     @Override

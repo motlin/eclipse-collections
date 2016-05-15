@@ -83,7 +83,6 @@ import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.Twin;
-import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
@@ -1045,29 +1044,57 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
     @Override
     public <V> MutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByIntFunction(groupBy, function));
+        this.acquireReadLock();
+        try
+        {
+            return this.getDelegate().sumByInt(groupBy, function);
+        }
+        finally
+        {
+            this.unlockReadLock();
+        }
     }
 
     @Override
     public <V> MutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByFloatFunction(groupBy, function));
+        this.acquireReadLock();
+        try
+        {
+            return this.getDelegate().sumByFloat(groupBy, function);
+        }
+        finally
+        {
+            this.unlockReadLock();
+        }
     }
 
     @Override
     public <V> MutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByLongFunction(groupBy, function));
+        this.acquireReadLock();
+        try
+        {
+            return this.getDelegate().sumByLong(groupBy, function);
+        }
+        finally
+        {
+            this.unlockReadLock();
+        }
     }
 
     @Override
     public <V> MutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByDoubleFunction(groupBy, function));
+        this.acquireReadLock();
+        try
+        {
+            return this.getDelegate().sumByDouble(groupBy, function);
+        }
+        finally
+        {
+            this.unlockReadLock();
+        }
     }
 
     @Override

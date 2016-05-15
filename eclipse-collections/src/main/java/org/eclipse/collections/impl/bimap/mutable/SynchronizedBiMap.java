@@ -15,6 +15,16 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.api.BooleanIterable;
+import org.eclipse.collections.api.ByteIterable;
+import org.eclipse.collections.api.CharIterable;
+import org.eclipse.collections.api.DoubleIterable;
+import org.eclipse.collections.api.FloatIterable;
+import org.eclipse.collections.api.IntIterable;
+import org.eclipse.collections.api.LongIterable;
+import org.eclipse.collections.api.MutableIterable;
+import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.ShortIterable;
 import org.eclipse.collections.api.bimap.ImmutableBiMap;
 import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.api.block.function.Function;
@@ -188,7 +198,118 @@ public class SynchronizedBiMap<K, V> extends AbstractSynchronizedMapIterable<K, 
     @Override
     public <P> PartitionMutableSet<V> partitionWith(Predicate2<? super V, ? super P> predicate, P parameter)
     {
-        return (PartitionMutableSet<V>) super.partitionWith(predicate, parameter);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().partitionWith(predicate, parameter);
+        }
+    }
+
+    @Override
+    public <V1> MutableIterable<V1> collect(Function<? super V, ? extends V1> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collect(function);
+        }
+    }
+
+    @Override
+    public BooleanIterable collectBoolean(BooleanFunction<? super V> booleanFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectBoolean(booleanFunction);
+        }
+    }
+
+    @Override
+    public ByteIterable collectByte(ByteFunction<? super V> byteFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectByte(byteFunction);
+        }
+    }
+
+    @Override
+    public CharIterable collectChar(CharFunction<? super V> charFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectChar(charFunction);
+        }
+    }
+
+    @Override
+    public DoubleIterable collectDouble(DoubleFunction<? super V> doubleFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectDouble(doubleFunction);
+        }
+    }
+
+    @Override
+    public FloatIterable collectFloat(FloatFunction<? super V> floatFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectFloat(floatFunction);
+        }
+    }
+
+    @Override
+    public IntIterable collectInt(IntFunction<? super V> intFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectInt(intFunction);
+        }
+    }
+
+    @Override
+    public LongIterable collectLong(LongFunction<? super V> longFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectLong(longFunction);
+        }
+    }
+
+    @Override
+    public ShortIterable collectShort(ShortFunction<? super V> shortFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectShort(shortFunction);
+        }
+    }
+
+    @Override
+    public <P, V1> MutableIterable<V1> collectWith(Function2<? super V, ? super P, ? extends V1> function, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectWith(function, parameter);
+        }
+    }
+
+    @Override
+    public <V1> MutableIterable<V1> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends V1> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectIf(predicate, function);
+        }
+    }
+
+    @Override
+    public <V1> MutableIterable<V1> flatCollect(Function<? super V, ? extends Iterable<V1>> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().flatCollect(function);
+        }
     }
 
     @Override

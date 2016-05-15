@@ -91,7 +91,6 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
-import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.collection.mutable.UnmodifiableMutableCollection;
 import org.eclipse.collections.impl.set.mutable.UnmodifiableMutableSet;
 import org.eclipse.collections.impl.tuple.AbstractImmutableEntry;
@@ -896,34 +895,6 @@ public class UnmodifiableTreeMap<K, V>
     }
 
     @Override
-    public <V1> MutableObjectLongMap<V1> sumByInt(Function<? super V, ? extends V1> groupBy, IntFunction<? super V> function)
-    {
-        MutableObjectLongMap<V1> result = ObjectLongMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByIntFunction(groupBy, function));
-    }
-
-    @Override
-    public <V1> MutableObjectDoubleMap<V1> sumByFloat(Function<? super V, ? extends V1> groupBy, FloatFunction<? super V> function)
-    {
-        MutableObjectDoubleMap<V1> result = ObjectDoubleMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByFloatFunction(groupBy, function));
-    }
-
-    @Override
-    public <V1> MutableObjectLongMap<V1> sumByLong(Function<? super V, ? extends V1> groupBy, LongFunction<? super V> function)
-    {
-        MutableObjectLongMap<V1> result = ObjectLongMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByLongFunction(groupBy, function));
-    }
-
-    @Override
-    public <V1> MutableObjectDoubleMap<V1> sumByDouble(Function<? super V, ? extends V1> groupBy, DoubleFunction<? super V> function)
-    {
-        MutableObjectDoubleMap<V1> result = ObjectDoubleMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByDoubleFunction(groupBy, function));
-    }
-
-    @Override
     public String makeString()
     {
         return this.getMutableSortedMap().makeString();
@@ -1283,6 +1254,18 @@ public class UnmodifiableTreeMap<K, V>
     public MutableSet<Entry<K, V>> entrySet()
     {
         return UnmodifiableMutableSet.of(super.entrySet());
+    }
+
+    @Override
+    public <KK, VV> MutableMap<KK, VV> aggregateBy(Function<? super V, ? extends KK> groupBy, Function0<? extends VV> zeroValueFactory, Function2<? super VV, ? super V, ? extends VV> nonMutatingAggregator)
+    {
+        return this.getMutableSortedMap().aggregateBy(groupBy, zeroValueFactory, nonMutatingAggregator);
+    }
+
+    @Override
+    public <KK, VV> MutableMap<KK, VV> aggregateInPlaceBy(Function<? super V, ? extends KK> groupBy, Function0<? extends VV> zeroValueFactory, Procedure2<? super VV, ? super V> mutatingAggregator)
+    {
+        return this.getMutableSortedMap().aggregateInPlaceBy(groupBy, zeroValueFactory, mutatingAggregator);
     }
 
     @Override

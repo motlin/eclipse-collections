@@ -192,12 +192,6 @@ public interface ImmutableOrderedMap<K, V> extends OrderedMap<K, V>, ImmutableMa
     <V1> ImmutableOrderedMap<V1, V> groupByUniqueKey(Function<? super V, ? extends V1> function);
 
     @Override
-    <KK, VV> ImmutableOrderedMap<KK, VV> aggregateInPlaceBy(Function<? super V, ? extends KK> groupBy, Function0<? extends VV> zeroValueFactory, Procedure2<? super VV, ? super V> mutatingAggregator);
-
-    @Override
-    <KK, VV> ImmutableOrderedMap<KK, VV> aggregateBy(Function<? super V, ? extends KK> groupBy, Function0<? extends VV> zeroValueFactory, Function2<? super VV, ? super V, ? extends VV> nonMutatingAggregator);
-
-    @Override
     default <K1, V1, V2> ImmutableOrderedMap<K1, V2> aggregateBy(
             Function<? super K, ? extends K1> keyFunction,
             Function<? super V, ? extends V1> valueFunction,
@@ -206,23 +200,4 @@ public interface ImmutableOrderedMap<K, V> extends OrderedMap<K, V>, ImmutableMa
     {
         throw new UnsupportedOperationException("Not implemented");
     }
-
-    @Override
-    <KK> ImmutableOrderedMap<KK, V> reduceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function2<? super V, ? super V, ? extends V> reduceFunction);
-
-    @Override
-    <VV> ImmutableObjectLongMap<VV> sumByInt(
-            Function<? super V, ? extends VV> groupBy,
-            IntFunction<? super V> function);
-
-    @Override
-    <VV> ImmutableObjectDoubleMap<VV> sumByFloat(Function<? super V, ? extends VV> groupBy, FloatFunction<? super V> function);
-
-    @Override
-    <VV> ImmutableObjectLongMap<VV> sumByLong(Function<? super V, ? extends VV> groupBy, LongFunction<? super V> function);
-
-    @Override
-    <VV> ImmutableObjectDoubleMap<VV> sumByDouble(Function<? super V, ? extends VV> groupBy, DoubleFunction<? super V> function);
 }

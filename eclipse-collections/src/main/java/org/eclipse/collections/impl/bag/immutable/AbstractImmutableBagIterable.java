@@ -22,61 +22,17 @@ import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.bag.ImmutableBagIterable;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
-import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
-import org.eclipse.collections.api.block.function.primitive.FloatFunction;
-import org.eclipse.collections.api.block.function.primitive.IntFunction;
-import org.eclipse.collections.api.block.function.primitive.LongFunction;
 import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
-import org.eclipse.collections.api.map.primitive.ImmutableObjectDoubleMap;
-import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
-import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
-import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.impl.bag.AbstractBag;
-import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
+import org.eclipse.collections.impl.collection.immutable.AbstractImmutableIterable;
 
 public abstract class AbstractImmutableBagIterable<T>
         extends AbstractBag<T>
         implements ImmutableBagIterable<T>
 {
-    @Override
-    public <V> ImmutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
-    {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        this.forEachWithOccurrences((each, occurrences) -> result.addToValue(
-                groupBy.valueOf(each),
-                function.intValueOf(each) * (long) occurrences));
-        return result.toImmutable();
-    }
-
-    @Override
-    public <V> ImmutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function)
-    {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByFloatFunction(groupBy, function)).toImmutable();
-    }
-
-    @Override
-    public <V> ImmutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
-    {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        this.forEachWithOccurrences((each, occurrences) -> result.addToValue(
-                groupBy.valueOf(each),
-                function.longValueOf(each) * (long) occurrences));
-        return result.toImmutable();
-    }
-
-    @Override
-    public <V> ImmutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function)
-    {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByDoubleFunction(groupBy, function)).toImmutable();
-    }
-
     protected void removeAllFrom(Iterable<? extends T> elements, MutableCollection<T> result)
     {
         if (elements instanceof Set)

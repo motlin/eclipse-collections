@@ -86,7 +86,6 @@ import org.eclipse.collections.api.stack.primitive.MutableLongStack;
 import org.eclipse.collections.api.stack.primitive.MutableShortStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
-import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 
 public final class UnmodifiableStack<T> implements MutableStack<T>, Serializable
 {
@@ -780,34 +779,6 @@ public final class UnmodifiableStack<T> implements MutableStack<T>, Serializable
     public double sumOfDouble(DoubleFunction<? super T> doubleFunction)
     {
         return this.mutableStack.sumOfDouble(doubleFunction);
-    }
-
-    @Override
-    public <V> MutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
-    {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByIntFunction(groupBy, function));
-    }
-
-    @Override
-    public <V> MutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function)
-    {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByFloatFunction(groupBy, function));
-    }
-
-    @Override
-    public <V> MutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
-    {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByLongFunction(groupBy, function));
-    }
-
-    @Override
-    public <V> MutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function)
-    {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
-        return this.injectInto(result, PrimitiveFunctions.sumByDoubleFunction(groupBy, function));
     }
 
     @Override

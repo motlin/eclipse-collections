@@ -77,10 +77,6 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
-import org.eclipse.collections.api.map.primitive.ImmutableObjectDoubleMap;
-import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
-import org.eclipse.collections.api.map.primitive.ObjectDoubleMap;
-import org.eclipse.collections.api.map.primitive.ObjectLongMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.multimap.list.ImmutableListMultimap;
@@ -101,6 +97,7 @@ import org.eclipse.collections.api.stack.primitive.ImmutableShortStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.procedure.checked.CheckedProcedure;
+import org.eclipse.collections.impl.collection.immutable.AbstractImmutableIterable;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
@@ -117,7 +114,9 @@ import org.eclipse.collections.impl.utility.LazyIterate;
  * Use {@link org.eclipse.collections.api.factory.Stacks#immutable}.{@link ImmutableStackFactoryImpl#with(Object[]) with()}
  */
 @Deprecated
-final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
+final class ImmutableArrayStack<T>
+        extends AbstractImmutableIterable<T>
+        implements ImmutableStack<T>, Serializable
 {
     private static final long serialVersionUID = 1L;
     private final MutableList<T> delegate;
@@ -870,34 +869,6 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     public double sumOfDouble(DoubleFunction<? super T> doubleFunction)
     {
         return this.delegate.asReversed().sumOfDouble(doubleFunction);
-    }
-
-    @Override
-    public <V> ImmutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
-    {
-        ObjectLongMap<V> map = this.delegate.asReversed().sumByInt(groupBy, function);
-        return map.toImmutable();
-    }
-
-    @Override
-    public <V> ImmutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function)
-    {
-        ObjectDoubleMap<V> map = this.delegate.asReversed().sumByFloat(groupBy, function);
-        return map.toImmutable();
-    }
-
-    @Override
-    public <V> ImmutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
-    {
-        ObjectLongMap<V> map = this.delegate.asReversed().sumByLong(groupBy, function);
-        return map.toImmutable();
-    }
-
-    @Override
-    public <V> ImmutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function)
-    {
-        ObjectDoubleMap<V> map = this.delegate.asReversed().sumByDouble(groupBy, function);
-        return map.toImmutable();
     }
 
     @Override

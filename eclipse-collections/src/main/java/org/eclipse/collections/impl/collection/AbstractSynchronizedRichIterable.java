@@ -24,6 +24,7 @@ import org.eclipse.collections.api.FloatIterable;
 import org.eclipse.collections.api.IntIterable;
 import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.LongIterable;
+import org.eclipse.collections.api.MutableIterable;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.ShortIterable;
 import org.eclipse.collections.api.bag.Bag;
@@ -63,9 +64,10 @@ import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
+import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
+import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.map.primitive.ObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.ObjectLongMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
@@ -80,7 +82,7 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
-public abstract class AbstractSynchronizedRichIterable<T> implements RichIterable<T>
+public abstract class AbstractSynchronizedRichIterable<T> implements MutableIterable<T>
 {
     protected final Object lock;
     protected final RichIterable<T> delegate;
@@ -1217,6 +1219,7 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
         }
     }
 
+
     @Override
     public String makeString()
     {
@@ -1375,7 +1378,7 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
     }
 
     @Override
-    public <V> MapIterable<V, T> groupByUniqueKey(Function<? super T, ? extends V> function)
+    public <V> MutableMapIterable<V, T> groupByUniqueKey(Function<? super T, ? extends V> function)
     {
         synchronized (this.lock)
         {
@@ -1520,41 +1523,6 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
         }
     }
 
-    @Override
-    public <V> ObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.sumByInt(groupBy, function);
-        }
-    }
-
-    @Override
-    public <V> ObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function)
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.sumByFloat(groupBy, function);
-        }
-    }
-
-    @Override
-    public <V> ObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.sumByLong(groupBy, function);
-        }
-    }
-
-    @Override
-    public <V> ObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function)
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.sumByDouble(groupBy, function);
-        }
-    }
 
     @Override
     public <V> Multimap<V, T> groupBy(Function<? super T, ? extends V> function)

@@ -12,9 +12,8 @@ package org.eclipse.collections.api.stack;
 
 import java.util.Collection;
 
-import org.eclipse.collections.api.bag.MutableBag;
+import org.eclipse.collections.api.MutableIterable;
 import org.eclipse.collections.api.block.function.Function;
-import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
@@ -28,12 +27,8 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
-import org.eclipse.collections.api.block.procedure.Procedure2;
-import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
-import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.list.MutableListMultimap;
 import org.eclipse.collections.api.partition.stack.PartitionMutableStack;
 import org.eclipse.collections.api.stack.primitive.MutableBooleanStack;
@@ -46,7 +41,7 @@ import org.eclipse.collections.api.stack.primitive.MutableLongStack;
 import org.eclipse.collections.api.stack.primitive.MutableShortStack;
 import org.eclipse.collections.api.tuple.Pair;
 
-public interface MutableStack<T> extends StackIterable<T>
+public interface MutableStack<T> extends StackIterable<T>, MutableIterable<T>
 {
     /**
      * Adds an item to the top of the stack.
@@ -89,8 +84,10 @@ public interface MutableStack<T> extends StackIterable<T>
     @Override
     MutableStack<T> distinct();
 
+    @Override
     MutableStack<T> asUnmodifiable();
 
+    @Override
     MutableStack<T> asSynchronized();
 
     @Override
@@ -172,99 +169,10 @@ public interface MutableStack<T> extends StackIterable<T>
         return this.flatCollect(each -> function.apply(each, parameter));
     }
 
-    @Override
-    <V> MutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function);
-
-    @Override
-    <V> MutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function);
-
-    @Override
-    <V> MutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function);
-
-    @Override
-    <V> MutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function);
-
-    @Override
-    <V> MutableListMultimap<V, T> groupBy(Function<? super T, ? extends V> function);
-
-    /**
-     * @since 9.0
-     */
-    @Override
-    default <V> MutableBag<V> countBy(Function<? super T, ? extends V> function)
-    {
-        return this.asLazy().<V>collect(function).toBag();
-    }
-
-    /**
-     * @since 9.0
-     */
-    @Override
-    default <V, P> MutableBag<V> countByWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
-    {
-        return this.asLazy().<P, V>collectWith(function, parameter).toBag();
-    }
-
-    /**
-     * @since 10.0.0
-     */
-    @Override
-    default <V> MutableBag<V> countByEach(Function<? super T, ? extends Iterable<V>> function)
-    {
-        return this.asLazy().flatCollect(function).toBag();
-    }
-
-    @Override
-    <V> MutableListMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function);
-
-    @Override
-    default <V> MutableMap<V, T> groupByUniqueKey(Function<? super T, ? extends V> function)
-    {
-        return this.groupByUniqueKey(function, Maps.mutable.withInitialCapacity(this.size()));
-    }
 
     @Override
     <S> MutableStack<Pair<T, S>> zip(Iterable<S> that);
 
     @Override
     MutableStack<Pair<T, Integer>> zipWithIndex();
-
-    @Override
-    default <K, V> MutableMap<K, V> aggregateInPlaceBy(
-            Function<? super T, ? extends K> groupBy,
-            Function0<? extends V> zeroValueFactory,
-            Procedure2<? super V, ? super T> mutatingAggregator)
-    {
-        MutableMap<K, V> map = Maps.mutable.empty();
-        this.forEach(each ->
-        {
-            K key = groupBy.valueOf(each);
-            V value = map.getIfAbsentPut(key, zeroValueFactory);
-            mutatingAggregator.value(value, each);
-        });
-        return map;
-    }
-
-    @Override
-    default <K, V> MutableMap<K, V> aggregateBy(
-            Function<? super T, ? extends K> groupBy,
-            Function0<? extends V> zeroValueFactory,
-            Function2<? super V, ? super T, ? extends V> nonMutatingAggregator)
-    {
-        MutableMap<K, V> map = Maps.mutable.empty();
-        this.forEach(each ->
-        {
-            K key = groupBy.valueOf(each);
-            map.updateValueWith(key, zeroValueFactory, nonMutatingAggregator, each);
-        });
-        return map;
-    }
-
-    @Override
-    default <K> MutableMap<K, T> reduceBy(
-            Function<? super T, ? extends K> groupBy,
-            Function2<? super T, ? super T, ? extends T> reduceFunction)
-    {
-        return this.reduceBy(groupBy, reduceFunction, Maps.mutable.empty());
-    }
 }

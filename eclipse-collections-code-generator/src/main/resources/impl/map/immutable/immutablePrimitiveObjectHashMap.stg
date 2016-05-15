@@ -815,16 +815,9 @@ final class Immutable<name>ObjectHashMap\<V> extends AbstractImmutable<name>Obje
         return map.toImmutable();
     }
 
-    @Override
-    public void forEach(Procedure\<? super V> procedure)
-    {
-        this.each(procedure);
-    }
-
-    @Override
     public void each(Procedure\<? super V> procedure)
     {
-        this.delegate.forEach(procedure);
+        this.delegate.each(procedure);
     }
 
     @Override

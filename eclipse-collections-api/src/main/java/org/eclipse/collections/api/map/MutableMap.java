@@ -187,35 +187,6 @@ public interface MutableMap<K, V>
     }
 
     @Override
-    default <KK, VV> MutableMap<KK, VV> aggregateInPlaceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function0<? extends VV> zeroValueFactory,
-            Procedure2<? super VV, ? super V> mutatingAggregator)
-    {
-        MutableMap<KK, VV> map = Maps.mutable.empty();
-        this.forEach(each ->
-        {
-            KK key = groupBy.valueOf(each);
-            VV value = map.getIfAbsentPut(key, zeroValueFactory);
-            mutatingAggregator.value(value, each);
-        });
-        return map;
-    }
-
-    @Override
-    default <KK, VV> MutableMap<KK, VV> aggregateBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function0<? extends VV> zeroValueFactory,
-            Function2<? super VV, ? super V, ? extends VV> nonMutatingAggregator)
-    {
-        return this.aggregateBy(
-                groupBy,
-                zeroValueFactory,
-                nonMutatingAggregator,
-                Maps.mutable.empty());
-    }
-
-    @Override
     default <K1, V1, V2> MutableMap<K1, V2> aggregateBy(
             Function<? super K, ? extends K1> keyFunction,
             Function<? super V, ? extends V1> valueFunction,
@@ -229,17 +200,6 @@ public interface MutableMap<K, V>
                 nonMutatingAggregator,
                 valueFunction.valueOf(value)));
         return map;
-    }
-
-    @Override
-    default <KK> MutableMap<KK, V> reduceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function2<? super V, ? super V, ? extends V> reduceFunction)
-    {
-        return this.reduceBy(
-                groupBy,
-                reduceFunction,
-                Maps.mutable.empty());
     }
 
     @Override
