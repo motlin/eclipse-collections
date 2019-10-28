@@ -84,12 +84,12 @@ final class ImmutableArrayList<T>
     }
 
     @Override
-    public ImmutableList<T> newWith(T newItem)
+    public ImmutableList<T> newWith(T element)
     {
         int oldSize = this.size();
         T[] array = (T[]) new Object[oldSize + 1];
         this.toArray(array);
-        array[oldSize] = newItem;
+        array[oldSize] = element;
         return new ImmutableArrayList<>(array);
     }
 
@@ -159,12 +159,6 @@ final class ImmutableArrayList<T>
     public void batchForEach(Procedure<? super T> procedure, int sectionIndex, int sectionCount)
     {
         InternalArrayIterate.batchForEach(procedure, this.items, this.items.length, sectionIndex, sectionCount);
-    }
-
-    @Override
-    public int getBatchCount(int batchSize)
-    {
-        return Math.max(1, this.size() / batchSize);
     }
 
     @Override

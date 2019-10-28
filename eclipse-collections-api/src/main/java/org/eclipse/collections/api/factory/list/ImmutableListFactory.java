@@ -144,4 +144,6 @@ public interface ImmutableListFactory
         MutableList<T> list = (MutableList<T>) items.toSortedList(comparator);
         return list.toImmutable();
     }
+
+    <T> ImmutableList<T> withNValues(int size, T value);
 }
