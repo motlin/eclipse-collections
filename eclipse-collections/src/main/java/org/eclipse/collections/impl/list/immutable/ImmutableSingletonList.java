@@ -11,11 +11,11 @@
 package org.eclipse.collections.impl.list.immutable;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.RandomAccess;
 
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.impl.block.factory.Comparators;
 
 /**
  * This is a single element immutable List which is created by calling
@@ -43,7 +43,7 @@ final class ImmutableSingletonList<T>
     @Override
     public boolean contains(Object obj)
     {
-        return Comparators.nullSafeEquals(obj, this.element1);
+        return Objects.equals(obj, this.element1);
     }
 
     @Override
