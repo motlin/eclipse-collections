@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -30,8 +30,6 @@ import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanIntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.BooleanBags;
-import org.eclipse.collections.api.factory.primitive.BooleanSets;
 import org.eclipse.collections.api.iterator.BooleanIterator;
 import org.eclipse.collections.api.iterator.MutableBooleanIterator;
 import org.eclipse.collections.api.list.MutableList;
@@ -40,6 +38,8 @@ import org.eclipse.collections.api.set.primitive.BooleanSet;
 import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
 import org.eclipse.collections.api.tuple.primitive.BooleanIntPair;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
+import org.eclipse.collections.impl.factory.primitive.BooleanBags;
+import org.eclipse.collections.impl.factory.primitive.BooleanSets;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.BooleanHashSet;
@@ -463,6 +463,12 @@ public final class BooleanHashBag implements MutableBooleanBag, Externalizable
         return true;
     }
 
+    @Override
+    public void forEach(BooleanProcedure procedure)
+    {
+        this.each(procedure);
+    }
+
     /**
      * @since 7.0.
      */
@@ -803,7 +809,7 @@ public final class BooleanHashBag implements MutableBooleanBag, Externalizable
     @Override
     public <V> MutableBag<V> collect(BooleanToObjectFunction<? extends V> function)
     {
-        MutableBag<V> result = HashBag.newBag();
+        HashBag<V> result = HashBag.newBag();
         if (this.containsFalse())
         {
             result.addOccurrences(function.valueOf(false), this.falseCount);
@@ -826,28 +832,6 @@ public final class BooleanHashBag implements MutableBooleanBag, Externalizable
             for (int i = 0; i < occurrences; i++)
             {
                 array[index[0]] = each;
-                index[0]++;
-            }
-        });
-        return array;
-    }
-
-    @Override
-    public boolean[] toArray(boolean[] array)
-    {
-        if (array.length < this.size())
-        {
-            array = new boolean[this.size()];
-        }
-        int[] index = {0};
-
-        boolean[] finalBypass = array;
-
-        this.forEachWithOccurrences((each, occurrences) ->
-        {
-            for (int i = 0; i < occurrences; i++)
-            {
-                finalBypass[index[0]] = each;
                 index[0]++;
             }
         });

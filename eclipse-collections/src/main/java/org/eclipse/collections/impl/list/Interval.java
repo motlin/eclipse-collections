@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2019 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,8 +10,6 @@
 
 package org.eclipse.collections.impl.list;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -37,11 +35,10 @@ import org.eclipse.collections.api.block.procedure.primitive.IntIntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.IntObjectProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.IntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.block.procedure.CollectProcedure;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.block.procedure.RejectProcedure;
@@ -49,6 +46,7 @@ import org.eclipse.collections.impl.block.procedure.SelectProcedure;
 import org.eclipse.collections.impl.lazy.AbstractLazyIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.MutableListIterator;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 /**
  * An Interval is a range of integers that may be iterated over using a step value. Interval
@@ -63,14 +61,12 @@ public final class Interval
     private final int from;
     private final int to;
     private final int step;
-    private transient int size;
 
     private Interval(int from, int to, int step)
     {
         this.from = from;
         this.to = to;
         this.step = step;
-        this.size = IntervalUtils.intSize(this.from, this.to, this.step);
     }
 
     /**
@@ -100,8 +96,7 @@ public final class Interval
      */
     public Interval to(int newTo)
     {
-        int adjustedStep = IntervalUtils.calculateAdjustedStep(this.from, newTo, this.step);
-        return Interval.fromToBy(this.from, newTo, adjustedStep);
+        return Interval.fromToBy(this.from, newTo, this.step);
     }
 
     /**
@@ -138,8 +133,7 @@ public final class Interval
      */
     public static Interval oneTo(int count)
     {
-        int adjustedStep = IntervalUtils.calculateAdjustedStep(1, count, 1);
-        return Interval.oneToBy(count, adjustedStep);
+        return Interval.oneToBy(count, 1);
     }
 
     /**
@@ -147,6 +141,10 @@ public final class Interval
      */
     public static Interval oneToBy(int count, int step)
     {
+        if (count < 1)
+        {
+            throw new IllegalArgumentException("Only positive ranges allowed using oneToBy");
+        }
         return Interval.fromToBy(1, count, step);
     }
 
@@ -155,8 +153,7 @@ public final class Interval
      */
     public static Interval zeroTo(int count)
     {
-        int adjustedStep = IntervalUtils.calculateAdjustedStep(0, count, 1);
-        return Interval.zeroToBy(count, adjustedStep);
+        return Interval.zeroToBy(count, 1);
     }
 
     /**
@@ -177,29 +174,6 @@ public final class Interval
             return Interval.fromToBy(from, to, 1);
         }
         return Interval.fromToBy(from, to, -1);
-    }
-
-    /**
-     * Returns an Interval starting from the value from until the specified value to (exclusive) with a step value of 1.
-     */
-    public static Interval fromToExclusive(int from, int to)
-    {
-        if (from == to)
-        {
-            if (to == Integer.MIN_VALUE)
-            {
-                throw new IllegalArgumentException("to cannot be the Integer minimum value " + Integer.MIN_VALUE);
-            }
-
-            return Interval.fromToBy(from, to - 1, -1);
-        }
-
-        if (from < to)
-        {
-            return Interval.fromToBy(from, to - 1, 1);
-        }
-
-        return Interval.fromToBy(from, to + 1, -1);
     }
 
     /**
@@ -263,11 +237,11 @@ public final class Interval
     }
 
     /**
-     * Returns a Set representing the Integer values from the value from to the value to.
+     * Returns an Set representing the Integer values from the value from to the value to.
      */
     public static MutableSet<Integer> toSet(int from, int to)
     {
-        MutableSet<Integer> targetCollection = Sets.mutable.empty();
+        MutableSet<Integer> targetCollection = UnifiedSet.newSet();
         Interval.fromTo(from, to).forEach(CollectionAddProcedure.on(targetCollection));
         return targetCollection;
     }
@@ -304,7 +278,7 @@ public final class Interval
     }
 
     /**
-     * Returns true if the Interval contains all the specified int values.
+     * Returns true if the Interval contains all of the specified int values.
      */
     public boolean containsAll(int... values)
     {
@@ -423,7 +397,7 @@ public final class Interval
         }
     }
 
-    private boolean goForward()
+    public boolean goForward()
     {
         return this.from <= this.to && this.step > 0;
     }
@@ -532,7 +506,7 @@ public final class Interval
 
     /**
      * This method runs a runnable a specified number of times against an executor. The method is effectively
-     * asynchronous because it does not wait for all the runnables to finish.
+     * asynchronous because it does not wait for all of the runnables to finish.
      */
     public void run(Runnable runnable, Executor executor)
     {
@@ -657,7 +631,7 @@ public final class Interval
             Function<? super Integer, ? extends T> function,
             R target)
     {
-        Procedure<Integer> procedure = new CollectProcedure<>(function, target);
+        CollectProcedure<Integer, T> procedure = new CollectProcedure<>(function, target);
         this.forEach(procedure);
         return target;
     }
@@ -665,7 +639,7 @@ public final class Interval
     @Override
     public <R extends Collection<Integer>> R select(Predicate<? super Integer> predicate, R target)
     {
-        Procedure<Integer> procedure = new SelectProcedure<>(predicate, target);
+        SelectProcedure<Integer> procedure = new SelectProcedure<>(predicate, target);
         this.forEach(procedure);
         return target;
     }
@@ -673,7 +647,7 @@ public final class Interval
     @Override
     public <R extends Collection<Integer>> R reject(Predicate<? super Integer> predicate, R target)
     {
-        Procedure<Integer> procedure = new RejectProcedure<>(predicate, target);
+        RejectProcedure<Integer> procedure = new RejectProcedure<>(predicate, target);
         this.forEach(procedure);
         return target;
     }
@@ -760,12 +734,12 @@ public final class Interval
     }
 
     /**
-     * Returns the size of the interval.
+     * Calculates and returns the size of the interval.
      */
     @Override
     public int size()
     {
-        return this.size;
+        return IntervalUtils.intSize(this.from, this.to, this.step);
     }
 
     @Override
@@ -776,14 +750,8 @@ public final class Interval
         return result;
     }
 
-    @Override
-    public <E> E[] toArray(E[] array)
-    {
-        return super.toArray(array);
-    }
-
     /**
-     * Converts the interval to an Integer array.
+     * Converts the interval to an Integer array
      */
     public int[] toIntArray()
     {
@@ -931,7 +899,7 @@ public final class Interval
     @Override
     public MutableList<Integer> toList()
     {
-        MutableList<Integer> list = FastList.newList(this.size());
+        FastList<Integer> list = FastList.newList(this.size());
         this.forEach(CollectionAddProcedure.on(list));
         return list;
     }
@@ -939,7 +907,7 @@ public final class Interval
     @Override
     public MutableSet<Integer> toSet()
     {
-        MutableSet<Integer> set = Sets.mutable.withInitialCapacity(this.size());
+        MutableSet<Integer> set = UnifiedSet.newSet(this.size());
         this.forEach(CollectionAddProcedure.on(set));
         return set;
     }
@@ -947,7 +915,7 @@ public final class Interval
     @Override
     public MutableBag<Integer> toBag()
     {
-        MutableBag<Integer> bag = Bags.mutable.withInitialCapacity(this.size());
+        MutableBag<Integer> bag = HashBag.newBag(this.size());
         this.forEach(CollectionAddProcedure.on(bag));
         return bag;
     }
@@ -1067,12 +1035,5 @@ public final class Interval
     public LazyIterable<Integer> distinct()
     {
         return this;
-    }
-
-    private void readObject(ObjectInputStream ois)
-            throws IOException, ClassNotFoundException
-    {
-        ois.defaultReadObject();
-        this.size = IntervalUtils.intSize(this.from, this.to, this.step);
     }
 }

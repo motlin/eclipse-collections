@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,6 +13,7 @@ package org.eclipse.collections.impl.multimap.bag.sorted.immutable;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Maps;
+import org.eclipse.collections.api.factory.SortedBags;
 import org.eclipse.collections.api.multimap.ImmutableMultimap;
 import org.eclipse.collections.api.multimap.bag.ImmutableBagMultimap;
 import org.eclipse.collections.api.multimap.list.ImmutableListMultimap;
@@ -20,7 +21,6 @@ import org.eclipse.collections.api.multimap.list.MutableListMultimap;
 import org.eclipse.collections.api.multimap.sortedbag.ImmutableSortedBagMultimap;
 import org.eclipse.collections.api.multimap.sortedbag.MutableSortedBagMultimap;
 import org.eclipse.collections.impl.block.factory.Comparators;
-import org.eclipse.collections.impl.factory.SortedBags;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.AbstractImmutableMultimapTestCase;
@@ -28,9 +28,8 @@ import org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableSortedBagMultimapImplTest extends AbstractImmutableMultimapTestCase
 {
@@ -57,8 +56,8 @@ public class ImmutableSortedBagMultimapImplTest extends AbstractImmutableMultima
         mutableMap.put("Less than 3", 2);
         ImmutableSortedBagMultimap<String, Integer> multimap = mutableMap.toImmutable();
         ImmutableBagMultimap<Integer, String> flipped = multimap.flip();
-        assertEquals(Bags.immutable.with("Less than 3", "Less than 3"), flipped.get(2));
-        assertEquals(Bags.immutable.with("Less than 2", "Less than 3"), flipped.get(1));
+        Assert.assertEquals(Bags.immutable.with("Less than 3", "Less than 3"), flipped.get(2));
+        Assert.assertEquals(Bags.immutable.with("Less than 2", "Less than 3"), flipped.get(1));
     }
 
     @Override
@@ -98,7 +97,7 @@ public class ImmutableSortedBagMultimapImplTest extends AbstractImmutableMultima
         MutableSortedBagMultimap<Integer, Integer> expectedMultimap = TreeBagMultimap.newMultimap(Comparators.reverseNaturalOrder());
         expectedMultimap.putAll(3, FastList.newListWith(4, 3, 1, 1));
         Verify.assertSortedBagMultimapsEqual(expectedMultimap, selectedMultimap);
-        assertEquals(expectedMultimap.toImmutable().comparator(), selectedMultimap.comparator());
+        Assert.assertEquals(expectedMultimap.toImmutable().comparator(), selectedMultimap.comparator());
     }
 
     @Test
@@ -106,8 +105,8 @@ public class ImmutableSortedBagMultimapImplTest extends AbstractImmutableMultima
     {
         ImmutableSortedBagMultimap<Integer, Integer> map = new ImmutableSortedBagMultimapImpl<>(Maps.immutable.empty());
         ImmutableSortedBagMultimap<Integer, Integer> map2 = new ImmutableSortedBagMultimapImpl<>(Maps.immutable.empty(), Comparators.reverseNaturalOrder());
-        assertEquals(this.classUnderTest(), map);
-        assertEquals(TreeBagMultimap.newMultimap(Comparators.reverseNaturalOrder()), map2);
+        Assert.assertEquals(this.classUnderTest(), map);
+        Assert.assertEquals(TreeBagMultimap.newMultimap(Comparators.reverseNaturalOrder()), map2);
     }
 
     @Test

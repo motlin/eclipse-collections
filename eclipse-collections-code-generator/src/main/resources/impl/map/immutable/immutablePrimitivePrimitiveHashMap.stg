@@ -46,7 +46,7 @@ import org.eclipse.collections.api.collection.primitive.Mutable<name2>Collection
 import org.eclipse.collections.api.iterator.<name1>Iterator;
 <if(!sameTwoPrimitives)>import org.eclipse.collections.api.iterator.<name2>Iterator;<endif>
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.impl.factory.Lists;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.primitive.Mutable<name2>List;
 import org.eclipse.collections.api.map.primitive.<name1><name2>Map;
 <if(!primitive2.booleanPrimitive)>import org.eclipse.collections.impl.factory.primitive.<name2><name1>Maps;<endif>

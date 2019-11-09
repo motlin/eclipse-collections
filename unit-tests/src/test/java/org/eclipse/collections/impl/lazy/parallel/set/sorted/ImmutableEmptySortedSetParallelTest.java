@@ -13,13 +13,13 @@ package org.eclipse.collections.impl.lazy.parallel.set.sorted;
 import java.util.NoSuchElementException;
 
 import org.eclipse.collections.api.block.function.Function0;
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.set.sorted.ParallelSortedSetIterable;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.function.PassThruFunction0;
-import org.eclipse.collections.impl.factory.SortedSets;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 import org.junit.jupiter.api.Test;
 

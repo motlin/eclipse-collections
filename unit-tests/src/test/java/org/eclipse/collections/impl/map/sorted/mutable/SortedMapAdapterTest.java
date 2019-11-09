@@ -14,8 +14,8 @@ import java.util.Comparator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.eclipse.collections.api.factory.SortedMaps;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
-import org.eclipse.collections.impl.factory.SortedMaps;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.junit.jupiter.api.Test;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -28,9 +28,6 @@ import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.IntIntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.IntProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.IntBags;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.IntSets;
 import org.eclipse.collections.api.iterator.IntIterator;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
@@ -38,13 +35,15 @@ import org.eclipse.collections.api.list.primitive.ImmutableIntList;
 import org.eclipse.collections.api.list.primitive.IntList;
 import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.set.primitive.MutableIntSet;
-import org.eclipse.collections.api.stack.primitive.MutableIntStack;
 import org.eclipse.collections.api.tuple.primitive.IntIntPair;
 import org.eclipse.collections.api.tuple.primitive.IntObjectPair;
-import org.eclipse.collections.impl.factory.primitive.IntStacks;
+import org.eclipse.collections.impl.bag.mutable.primitive.IntHashBag;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
 import org.eclipse.collections.impl.lazy.primitive.ReverseIntIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
 import org.eclipse.collections.impl.primitive.AbstractIntIterable;
+import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
 
@@ -75,8 +74,9 @@ public class CodePointAdapter
     public static CodePointAdapter from(int... codePoints)
     {
         StringBuilder builder = new StringBuilder();
-        for (int codePoint : codePoints)
+        for (int i = 0; i < codePoints.length; i++)
         {
+            int codePoint = codePoints[i];
             builder.appendCodePoint(codePoint);
         }
         return new CodePointAdapter(builder.toString());
@@ -102,12 +102,6 @@ public class CodePointAdapter
     public int length()
     {
         return this.adapted.length();
-    }
-
-    @Override
-    public boolean isEmpty()
-    {
-        return this.length() == 0;
     }
 
     @Override
@@ -140,12 +134,6 @@ public class CodePointAdapter
     }
 
     @Override
-    public int[] toArray(int[] target)
-    {
-        return this.toList().toArray(target);
-    }
-
-    @Override
     public boolean contains(int expected)
     {
         int length = this.adapted.length();
@@ -159,6 +147,12 @@ public class CodePointAdapter
             i += Character.charCount(codePoint);
         }
         return false;
+    }
+
+    @Override
+    public void forEach(IntProcedure procedure)
+    {
+        this.each(procedure);
     }
 
     @Override
@@ -176,8 +170,20 @@ public class CodePointAdapter
     @Override
     public CodePointAdapter distinct()
     {
-        MutableIntSet seenSoFar = IntSets.mutable.empty();
-        return this.select(seenSoFar::add);
+        StringBuilder builder = new StringBuilder();
+        IntHashSet seenSoFar = new IntHashSet();
+
+        int length = this.adapted.length();
+        for (int i = 0; i < length; )
+        {
+            int codePoint = this.adapted.codePointAt(i);
+            if (seenSoFar.add(codePoint))
+            {
+                builder.appendCodePoint(codePoint);
+            }
+            i += Character.charCount(codePoint);
+        }
+        return new CodePointAdapter(builder.toString());
     }
 
     @Override
@@ -387,7 +393,7 @@ public class CodePointAdapter
     @Override
     public <V> ImmutableList<V> collect(IntToObjectFunction<? extends V> function)
     {
-        MutableList<V> list = FastList.newList(this.adapted.length());
+        FastList<V> list = FastList.newList(this.adapted.length());
         for (int i = 0; i < this.adapted.length(); )
         {
             int codePoint = this.adapted.codePointAt(i);
@@ -488,7 +494,7 @@ public class CodePointAdapter
     @Override
     public MutableIntList toList()
     {
-        MutableIntList list = IntLists.mutable.withInitialCapacity(this.adapted.length());
+        IntArrayList list = new IntArrayList(this.adapted.length());
         for (int i = 0; i < this.adapted.length(); )
         {
             int codePoint = this.adapted.codePointAt(i);
@@ -501,7 +507,7 @@ public class CodePointAdapter
     @Override
     public MutableIntSet toSet()
     {
-        MutableIntSet set = IntSets.mutable.empty();
+        IntHashSet set = new IntHashSet(this.adapted.length());
         for (int i = 0; i < this.adapted.length(); )
         {
             int codePoint = this.adapted.codePointAt(i);
@@ -514,7 +520,7 @@ public class CodePointAdapter
     @Override
     public MutableIntBag toBag()
     {
-        MutableIntBag bag = IntBags.mutable.empty();
+        IntHashBag bag = new IntHashBag(this.adapted.length());
         for (int i = 0; i < this.adapted.length(); )
         {
             int codePoint = this.adapted.codePointAt(i);
@@ -658,9 +664,9 @@ public class CodePointAdapter
                 else
                 {
                     char[] chars = Character.toChars(codePoint);
-                    for (char aChar : chars)
+                    for (int j = 0; j < chars.length; j++)
                     {
-                        appendable.append(aChar);
+                        appendable.append(chars[j]);
                     }
                 }
                 i += Character.charCount(codePoint);
@@ -704,7 +710,11 @@ public class CodePointAdapter
             }
             i += Character.charCount(codePoint);
         }
-        return size >= list.size();
+        if (size < list.size())
+        {
+            return false;
+        }
+        return true;
     }
 
     private boolean equalsCodePointAdapter(CodePointAdapter adapter)
@@ -776,12 +786,6 @@ public class CodePointAdapter
     public Spliterator.OfInt spliterator()
     {
         return this.adapted.codePoints().spliterator();
-    }
-
-    @Override
-    public MutableIntStack toStack()
-    {
-        return IntStacks.mutable.withAll(this);
     }
 
     private class InternalIntIterator implements IntIterator

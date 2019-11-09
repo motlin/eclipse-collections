@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs and others.
+ * Copyright (c) 2017 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -12,12 +12,11 @@ package org.eclipse.collections.impl.map.mutable;
 
 import java.util.HashMap;
 
+import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.impl.factory.Maps;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.eclipse.collections.impl.test.Verify;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link MapAdapter}.
@@ -65,14 +64,14 @@ public class MapAdapterTest extends MutableMapTestCase
     public void adapt()
     {
         MutableMap<Integer, Integer> map = Maps.mutable.with(1, 1, 2, 2, 3, 3);
-        assertEquals(MapAdapter.adapt(new HashMap<>(map)), Maps.adapt(new HashMap<>(map)));
+        Assert.assertEquals(MapAdapter.adapt(new HashMap<>(map)), Maps.adapt(new HashMap<>(map)));
     }
 
     @Test
     public void adaptNull()
     {
-        assertThrows(NullPointerException.class, () -> new MapAdapter<>(null));
+        Verify.assertThrows(NullPointerException.class, () -> new MapAdapter<>(null));
 
-        assertThrows(NullPointerException.class, () -> MapAdapter.adapt(null));
+        Verify.assertThrows(NullPointerException.class, () -> MapAdapter.adapt(null));
     }
 }

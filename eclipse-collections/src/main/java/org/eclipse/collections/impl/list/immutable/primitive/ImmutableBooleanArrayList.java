@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -29,7 +29,6 @@ import org.eclipse.collections.api.block.predicate.primitive.BooleanPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanIntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
 import org.eclipse.collections.api.iterator.BooleanIterator;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
@@ -37,9 +36,8 @@ import org.eclipse.collections.api.list.primitive.BooleanList;
 import org.eclipse.collections.api.list.primitive.ImmutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
-import org.eclipse.collections.api.stack.primitive.MutableBooleanStack;
 import org.eclipse.collections.impl.bag.mutable.primitive.BooleanHashBag;
-import org.eclipse.collections.impl.factory.primitive.BooleanStacks;
+import org.eclipse.collections.impl.factory.primitive.BooleanLists;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
 import org.eclipse.collections.impl.lazy.primitive.ReverseBooleanIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
@@ -278,7 +276,7 @@ final class ImmutableBooleanArrayList
     @Override
     public <V> ImmutableList<V> collect(BooleanToObjectFunction<? extends V> function)
     {
-        MutableList<V> target = FastList.newList(this.size);
+        FastList<V> target = FastList.newList(this.size);
         for (int i = 0; i < this.size; i++)
         {
             target.add(function.valueOf(this.items.get(i)));
@@ -295,20 +293,6 @@ final class ImmutableBooleanArrayList
             newItems[i] = this.items.get(i);
         }
         return newItems;
-    }
-
-    @Override
-    public boolean[] toArray(boolean[] target)
-    {
-        if (target.length < this.size)
-        {
-            target = new boolean[this.size];
-        }
-        for (int i = 0; i < this.size; i++)
-        {
-            target[i] = this.items.get(i);
-        }
-        return target;
     }
 
     @Override
@@ -398,7 +382,7 @@ final class ImmutableBooleanArrayList
     @Override
     public ImmutableBooleanList distinct()
     {
-        MutableBooleanList target = new BooleanArrayList();
+        BooleanArrayList target = new BooleanArrayList();
         MutableBooleanSet seenSoFar = new BooleanHashSet();
         for (int i = 0; i < this.size; i++)
         {
@@ -648,12 +632,6 @@ final class ImmutableBooleanArrayList
     private Object writeReplace()
     {
         return new ImmutableBooleanListSerializationProxy(this);
-    }
-
-    @Override
-    public MutableBooleanStack toStack()
-    {
-        return BooleanStacks.mutable.withAll(this);
     }
 
     private static class ImmutableBooleanListSerializationProxy implements Externalizable

@@ -18,9 +18,9 @@ body(type, name, wrapperName, charPrimitive) ::= <<
 
 package org.eclipse.collections.impl.map.primitive;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.map.primitive.ImmutableObject<name>Map;
 import org.eclipse.collections.api.map.primitive.MutableObject<name>Map;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.Object<name>Maps;
 import org.eclipse.collections.impl.map.mutable.primitive.Object<name>HashMap;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,12 +11,11 @@
 package org.eclipse.collections.impl.list.immutable;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.RandomAccess;
 
 import org.eclipse.collections.api.block.procedure.Procedure;
-import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
+import org.eclipse.collections.impl.block.factory.Comparators;
 
 /**
  * This is a two element immutable List which is created by calling
@@ -85,7 +84,7 @@ final class ImmutableDoubletonList<T>
     @Override
     public boolean contains(Object obj)
     {
-        return Objects.equals(obj, this.element1) || Objects.equals(obj, this.element2);
+        return Comparators.nullSafeEquals(obj, this.element1) || Comparators.nullSafeEquals(obj, this.element2);
     }
 
     @Override

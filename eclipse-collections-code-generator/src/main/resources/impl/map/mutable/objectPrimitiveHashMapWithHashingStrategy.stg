@@ -51,12 +51,6 @@ import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.collection.primitive.Immutable<name>Collection;
 import org.eclipse.collections.api.collection.primitive.Mutable<name>Collection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.<name>Bags;
-import org.eclipse.collections.api.factory.primitive.<name>Lists;
-import org.eclipse.collections.api.factory.primitive.<name>Sets;
-import org.eclipse.collections.api.factory.primitive.Object<name>Maps;
-<if(!primitive.booleanPrimitive)>import org.eclipse.collections.api.factory.primitive.<name>ObjectMaps;<endif>
-import org.eclipse.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
 import org.eclipse.collections.api.iterator.<name>Iterator;
 import org.eclipse.collections.api.iterator.Mutable<name>Iterator;
 import org.eclipse.collections.api.list.MutableList;
@@ -68,9 +62,18 @@ import org.eclipse.collections.api.map.primitive.Object<name>Map;
 import org.eclipse.collections.api.set.primitive.<name>Set;
 import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
 import org.eclipse.collections.api.tuple.primitive.Object<name>Pair;
+import org.eclipse.collections.impl.bag.mutable.primitive.<name>HashBag;
 import org.eclipse.collections.impl.collection.mutable.primitive.Synchronized<name>Collection;
 import org.eclipse.collections.impl.collection.mutable.primitive.Unmodifiable<name>Collection;
 import org.eclipse.collections.impl.lazy.AbstractLazyIterable;
+import org.eclipse.collections.impl.factory.primitive.<name>Bags;
+import org.eclipse.collections.impl.factory.primitive.<name>Lists;
+import org.eclipse.collections.impl.factory.primitive.Object<name>Maps;
+<if(!primitive.booleanPrimitive)>import org.eclipse.collections.impl.factory.primitive.<name>ObjectMaps;<endif>
+import org.eclipse.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
+import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.<name>ArrayList;
+import org.eclipse.collections.impl.set.mutable.primitive.<name>HashSet;
 <(procedureImport.(type))()>
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 
@@ -180,11 +183,6 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     public static \<K> Object<name>HashMapWithHashingStrategy\<K> newMap(Object<name>HashMapWithHashingStrategy\<K> map)
     {
         return new Object<name>HashMapWithHashingStrategy\<>(map.hashingStrategy, map);
-    }
-
-    public static \<K> Object<name>HashMapWithHashingStrategy\<K> newMapWithInitialCapacity(HashingStrategy\<? super K> hashingStrategy, int initialCapacity)
-    {
-        return new Object<name>HashMapWithHashingStrategy\<>(hashingStrategy, initialCapacity);
     }
 
     public static \<K> Object<name>HashMapWithHashingStrategy\<K> newWithKeysValues(HashingStrategy\<? super K> hashingStrategy, K key1, <type> value1)
@@ -398,26 +396,6 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     }
 
     @Override
-    public <type>[] toArray(<type>[] target)
-    {
-        if (target.length \< this.size())
-        {
-            target = new <type>[this.size()];
-        }
-        int index = 0;
-
-        for (int i = 0; i \< this.keys.length; i++)
-        {
-            if (isNonSentinel(this.keys[i]))
-            {
-                target[index] = this.values[i];
-                index++;
-            }
-        }
-        return target;
-    }
-
-    @Override
     public boolean contains(<type> value)
     {
         return this.containsValue(value);
@@ -535,20 +513,6 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
         }
         this.addKeyValueAtIndex(key, value, index);
         return value;
-    }
-
-    @Override
-    public <type> getAndPut(K key, <type> putValue, <type> defaultValue)
-    {
-        int index = this.probe(key);
-        if (isNonSentinel(this.keys[index]) && nullSafeEquals(this.toNonSentinel(this.keys[index]), key))
-        {
-            <type> existingValue = this.values[index];
-            this.values[index] = putValue;
-            return existingValue;
-        }
-        this.addKeyValueAtIndex(key, putValue, index);
-        return defaultValue;
     }
 
     @Override
@@ -747,6 +711,12 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     }
 
     @Override
+    public void forEach(<name>Procedure procedure)
+    {
+        this.each(procedure);
+    }
+
+    @Override
     public void each(<name>Procedure procedure)
     {
         this.forEachValue(procedure);
@@ -788,26 +758,6 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
         }
     }
 
-    /**
-     * @since 12.0
-     */
-    @Override
-    public boolean allSatisfyKeyValue(Object<name>Predicate\<K> predicate)
-    {
-        for (int i = 0; i \< this.keys.length; i++)
-        {
-            Object key = this.keys[i];
-            if (isNonSentinel(key))
-            {
-                if (!predicate.accept(this.toNonSentinel(key), this.values[i]))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     @Override
     public Object<name>HashMapWithHashingStrategy\<K> select(Object<name>Predicate\<? super K> predicate)
     {
@@ -841,7 +791,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     @Override
     public Mutable<name>Collection select(<name>Predicate predicate)
     {
-        Mutable<name>List result = <name>Lists.mutable.empty();
+        <name>ArrayList result = new <name>ArrayList();
 
         for (int i = 0; i \< this.keys.length; i++)
         {
@@ -856,7 +806,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     @Override
     public Mutable<name>Collection reject(<name>Predicate predicate)
     {
-        Mutable<name>List result = <name>Lists.mutable.empty();
+        <name>ArrayList result = new <name>ArrayList();
 
         for (int i = 0; i \< this.keys.length; i++)
         {
@@ -884,7 +834,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     @Override
     public \<V> MutableCollection\<V> collect(<name>ToObjectFunction\<? extends V> function)
     {
-        MutableList\<V> result = Lists.mutable.withInitialCapacity(this.size());
+        MutableList\<V> result = FastList.newList(this.size());
         for (int i = 0; i \< this.keys.length; i++)
         {
             if (isNonSentinel(this.keys[i]))
@@ -1138,7 +1088,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     @Override
     public Mutable<name>List toList()
     {
-        Mutable<name>List result = <name>Lists.mutable.withInitialCapacity(this.size());
+        Mutable<name>List result = new <name>ArrayList(this.size());
 
         for (int i = 0; i \< this.keys.length; i++)
         {
@@ -1153,7 +1103,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     @Override
     public Mutable<name>Set toSet()
     {
-        Mutable<name>Set result = <name>Sets.mutable.empty();
+        Mutable<name>Set result = new <name>HashSet(this.size());
 
         for (int i = 0; i \< this.keys.length; i++)
         {
@@ -1168,7 +1118,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     @Override
     public Mutable<name>Bag toBag()
     {
-        Mutable<name>Bag result = <name>Bags.mutable.empty();
+        Mutable<name>Bag result = new <name>HashBag(this.size());
 
         for (int i = 0; i \< this.keys.length; i++)
         {
@@ -1259,25 +1209,8 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
     <endif>
 
     /**
-    * @since 12.0
-    */
-    public boolean trimToSize()
-    {
-        int newCapacity = this.smallestPowerOfTwoGreaterThan(this.size());
-        if (this.keys.length > newCapacity)
-        {
-            this.rehash(newCapacity);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Rehashes every element in the set into a new backing table of the smallest possible size and eliminating removed sentinels.
-     *
-     * @deprecated since 12.0 - Use {@link #trimToSize()} instead
      */
-    @Deprecated
     public void compact()
     {
         this.rehash(this.smallestPowerOfTwoGreaterThan(this.size()));
@@ -1389,7 +1322,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
         return false;
     }
 
-    protected void allocateTable(int sizeToAllocate)
+    private void allocateTable(int sizeToAllocate)
     {
         this.keys = new Object[sizeToAllocate];
         this.values = new <type>[sizeToAllocate];
@@ -1853,7 +1786,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
         @Override
         public boolean retainAll(<type>... source)
         {
-            return this.retainAll(<name>Sets.mutable.with(source));
+            return this.retainAll(<name>HashSet.newSetWith(source));
         }
 
         @Override
@@ -1914,12 +1847,6 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
         public <type>[] toArray()
         {
             return Object<name>HashMapWithHashingStrategy.this.toArray();
-        }
-
-        @Override
-        public <type>[] toArray(<type>[] target)
-        {
-            return Object<name>HashMapWithHashingStrategy.this.toArray(target);
         }
 
         @Override
@@ -2096,7 +2023,7 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
         @Override
         public Mutable<name>Collection newEmpty()
         {
-            return <name>Bags.mutable.empty();
+            return new <name>HashBag();
         }
     }
 

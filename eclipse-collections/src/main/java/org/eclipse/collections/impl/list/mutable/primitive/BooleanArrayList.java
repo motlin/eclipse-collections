@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -28,7 +28,6 @@ import org.eclipse.collections.api.block.predicate.primitive.BooleanPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanIntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
 import org.eclipse.collections.api.iterator.BooleanIterator;
 import org.eclipse.collections.api.iterator.MutableBooleanIterator;
 import org.eclipse.collections.api.list.MutableList;
@@ -37,9 +36,8 @@ import org.eclipse.collections.api.list.primitive.ImmutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.set.primitive.BooleanSet;
 import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
-import org.eclipse.collections.api.stack.primitive.MutableBooleanStack;
 import org.eclipse.collections.impl.bag.mutable.primitive.BooleanHashBag;
-import org.eclipse.collections.impl.factory.primitive.BooleanStacks;
+import org.eclipse.collections.impl.factory.primitive.BooleanLists;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
 import org.eclipse.collections.impl.lazy.primitive.ReverseBooleanIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
@@ -318,7 +316,7 @@ public final class BooleanArrayList
         int sourceSize = source.length;
         int newSize = this.size + sourceSize;
 
-        for (int i = newSize - 1; i >= index + sourceSize; i--)
+        for (int i = newSize; i > index; i--)
         {
             this.items.set(i, this.items.get(i - sourceSize));
         }
@@ -353,29 +351,18 @@ public final class BooleanArrayList
     @Override
     public boolean removeIf(BooleanPredicate predicate)
     {
-        int currentFilledIndex = 0;
+        boolean changed = false;
         for (int i = 0; i < this.size; i++)
         {
             boolean item = this.items.get(i);
-            if (!predicate.accept(item))
+            if (predicate.accept(item))
             {
-                // keep it
-                if (currentFilledIndex != i)
-                {
-                    this.items.set(currentFilledIndex, item);
-                }
-                currentFilledIndex++;
+                this.removeAtIndex(i);
+                i--;
+                changed = true;
             }
         }
-        boolean changed = currentFilledIndex < this.size;
-        this.wipeAndResetTheEnd(currentFilledIndex);
         return changed;
-    }
-
-    private void wipeAndResetTheEnd(int newCurrentFilledIndex)
-    {
-        this.items.clear(newCurrentFilledIndex, this.size);
-        this.size = newCurrentFilledIndex;
     }
 
     @Override
@@ -534,6 +521,12 @@ public final class BooleanArrayList
     public MutableBooleanIterator booleanIterator()
     {
         return new InternalBooleanIterator();
+    }
+
+    @Override
+    public void forEach(BooleanProcedure procedure)
+    {
+        this.each(procedure);
     }
 
     /**
@@ -756,7 +749,7 @@ public final class BooleanArrayList
     @Override
     public MutableBooleanList distinct()
     {
-        MutableBooleanList target = new BooleanArrayList();
+        BooleanArrayList target = new BooleanArrayList();
         MutableBooleanSet seenSoFar = new BooleanHashSet();
         for (int i = 0; i < this.size; i++)
         {
@@ -786,7 +779,7 @@ public final class BooleanArrayList
     @Override
     public <V> MutableList<V> collect(BooleanToObjectFunction<? extends V> function)
     {
-        MutableList<V> target = FastList.newList(this.size);
+        FastList<V> target = FastList.newList(this.size);
         for (int i = 0; i < this.size; i++)
         {
             target.add(function.valueOf(this.items.get(i)));
@@ -803,17 +796,6 @@ public final class BooleanArrayList
             newItems[i] = this.items.get(i);
         }
         return newItems;
-    }
-
-    @Override
-    public boolean[] toArray(boolean[] target)
-    {
-        if (target.length < this.size)
-        {
-            target = new boolean[this.size];
-        }
-        System.arraycopy(this.items, 0, target, 0, this.size);
-        return target;
     }
 
     @Override
@@ -967,12 +949,6 @@ public final class BooleanArrayList
         }
     }
 
-    @Override
-    public MutableBooleanStack toStack()
-    {
-        return BooleanStacks.mutable.withAll(this);
-    }
-
     private class InternalBooleanIterator implements MutableBooleanIterator
     {
         /**
@@ -1010,11 +986,5 @@ public final class BooleanArrayList
             this.currentIndex--;
             this.lastIndex = -1;
         }
-    }
-
-    @Override
-    public MutableList<Boolean> boxed()
-    {
-        return new BoxedMutableBooleanList(this);
     }
 }

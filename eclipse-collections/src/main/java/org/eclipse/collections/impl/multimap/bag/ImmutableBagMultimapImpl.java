@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2019 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -16,13 +16,11 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
 
-import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.predicate.Predicate2;
-import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.ImmutableMap;
@@ -64,12 +62,6 @@ public final class ImmutableBagMultimapImpl<K, V>
     }
 
     @Override
-    public void forEachKeyImmutableBag(Procedure2<? super K, ? super ImmutableBag<V>> procedure)
-    {
-        this.getMap().forEachKeyValue(procedure);
-    }
-
-    @Override
     public ImmutableBagMultimap<K, V> newEmpty()
     {
         return new ImmutableBagMultimapImpl<>(Maps.immutable.of());
@@ -100,6 +92,7 @@ public final class ImmutableBagMultimapImpl<K, V>
         private ImmutableMap<K, ImmutableBag<V>> map;
         private MutableMultimap<K, V> multimap;
 
+        @SuppressWarnings("UnusedDeclaration")
         public ImmutableBagMultimapSerializationProxy()
         {
             // For Externalizable use only
@@ -203,13 +196,13 @@ public final class ImmutableBagMultimapImpl<K, V>
     }
 
     @Override
-    public ImmutableBagMultimap<K, V> selectKeysMultiValues(Predicate2<? super K, ? super RichIterable<V>> predicate)
+    public ImmutableBagMultimap<K, V> selectKeysMultiValues(Predicate2<? super K, ? super Iterable<V>> predicate)
     {
         return this.selectKeysMultiValues(predicate, HashBagMultimap.newMultimap()).toImmutable();
     }
 
     @Override
-    public ImmutableBagMultimap<K, V> rejectKeysMultiValues(Predicate2<? super K, ? super RichIterable<V>> predicate)
+    public ImmutableBagMultimap<K, V> rejectKeysMultiValues(Predicate2<? super K, ? super Iterable<V>> predicate)
     {
         return this.rejectKeysMultiValues(predicate, HashBagMultimap.newMultimap()).toImmutable();
     }

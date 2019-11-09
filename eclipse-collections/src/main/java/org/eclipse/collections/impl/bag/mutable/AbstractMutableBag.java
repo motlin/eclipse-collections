@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -18,20 +18,44 @@ import org.eclipse.collections.api.annotation.Beta;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.ParallelUnsortedBag;
+import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
+import org.eclipse.collections.api.bag.primitive.MutableByteBag;
+import org.eclipse.collections.api.bag.primitive.MutableCharBag;
+import org.eclipse.collections.api.bag.primitive.MutableDoubleBag;
+import org.eclipse.collections.api.bag.primitive.MutableFloatBag;
+import org.eclipse.collections.api.bag.primitive.MutableIntBag;
+import org.eclipse.collections.api.bag.primitive.MutableLongBag;
+import org.eclipse.collections.api.bag.primitive.MutableShortBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
+import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
+import org.eclipse.collections.api.block.function.primitive.ByteFunction;
+import org.eclipse.collections.api.block.function.primitive.CharFunction;
+import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
+import org.eclipse.collections.api.block.function.primitive.FloatFunction;
+import org.eclipse.collections.api.block.function.primitive.IntFunction;
+import org.eclipse.collections.api.block.function.primitive.LongFunction;
 import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
+import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.factory.Bags;
-import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.bag.PartitionMutableBag;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.bag.mutable.primitive.BooleanHashBag;
+import org.eclipse.collections.impl.bag.mutable.primitive.ByteHashBag;
+import org.eclipse.collections.impl.bag.mutable.primitive.CharHashBag;
+import org.eclipse.collections.impl.bag.mutable.primitive.DoubleHashBag;
+import org.eclipse.collections.impl.bag.mutable.primitive.FloatHashBag;
+import org.eclipse.collections.impl.bag.mutable.primitive.IntHashBag;
+import org.eclipse.collections.impl.bag.mutable.primitive.LongHashBag;
+import org.eclipse.collections.impl.bag.mutable.primitive.ShortHashBag;
 import org.eclipse.collections.impl.lazy.parallel.bag.NonParallelUnsortedBag;
 import org.eclipse.collections.impl.partition.bag.PartitionHashBag;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.utility.Iterate;
 
 public abstract class AbstractMutableBag<T>
@@ -179,6 +203,54 @@ public abstract class AbstractMutableBag<T>
         return this.flatCollect(function, HashBag.newBag());
     }
 
+    @Override
+    public MutableBooleanBag collectBoolean(BooleanFunction<? super T> booleanFunction)
+    {
+        return this.collectBoolean(booleanFunction, new BooleanHashBag());
+    }
+
+    @Override
+    public MutableByteBag collectByte(ByteFunction<? super T> byteFunction)
+    {
+        return this.collectByte(byteFunction, new ByteHashBag());
+    }
+
+    @Override
+    public MutableCharBag collectChar(CharFunction<? super T> charFunction)
+    {
+        return this.collectChar(charFunction, new CharHashBag());
+    }
+
+    @Override
+    public MutableDoubleBag collectDouble(DoubleFunction<? super T> doubleFunction)
+    {
+        return this.collectDouble(doubleFunction, new DoubleHashBag());
+    }
+
+    @Override
+    public MutableFloatBag collectFloat(FloatFunction<? super T> floatFunction)
+    {
+        return this.collectFloat(floatFunction, new FloatHashBag());
+    }
+
+    @Override
+    public MutableIntBag collectInt(IntFunction<? super T> intFunction)
+    {
+        return this.collectInt(intFunction, new IntHashBag());
+    }
+
+    @Override
+    public MutableLongBag collectLong(LongFunction<? super T> longFunction)
+    {
+        return this.collectLong(longFunction, new LongHashBag());
+    }
+
+    @Override
+    public MutableShortBag collectShort(ShortFunction<? super T> shortFunction)
+    {
+        return this.collectShort(shortFunction, new ShortHashBag());
+    }
+
     /**
      * @deprecated in 6.0. Use {@link OrderedIterable#zip(Iterable)} instead.
      */
@@ -189,7 +261,7 @@ public abstract class AbstractMutableBag<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            MutableBag<Pair<T, S>> target = HashBag.newBag(Math.min(this.size(), thatSize));
+            HashBag<Pair<T, S>> target = HashBag.newBag(Math.min(this.size(), thatSize));
             return this.zip(that, target);
         }
         return this.zip(that, HashBag.newBag());
@@ -202,7 +274,7 @@ public abstract class AbstractMutableBag<T>
     @Deprecated
     public MutableSet<Pair<T, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(Sets.mutable.empty());
+        return this.zipWithIndex(UnifiedSet.newSet());
     }
 
     @Beta

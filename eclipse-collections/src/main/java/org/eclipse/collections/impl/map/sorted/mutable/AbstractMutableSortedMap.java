@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,8 +10,7 @@
 
 package org.eclipse.collections.impl.map.sorted.mutable;
 
-import java.util.LinkedHashMap;
-
+import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
@@ -26,16 +25,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.SortedMaps;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
@@ -46,7 +36,6 @@ import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.list.primitive.MutableLongList;
 import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.multimap.list.MutableListMultimap;
@@ -61,11 +50,26 @@ import org.eclipse.collections.impl.block.procedure.MapCollectProcedure;
 import org.eclipse.collections.impl.block.procedure.PartitionPredicate2Procedure;
 import org.eclipse.collections.impl.block.procedure.PartitionProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectInstancesOfProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.map.mutable.AbstractMutableMapIterable;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
-import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -145,49 +149,65 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     @Override
     public MutableBooleanList collectBoolean(BooleanFunction<? super V> booleanFunction)
     {
-        return this.collectBoolean(booleanFunction, BooleanLists.mutable.withInitialCapacity(this.size()));
+        BooleanArrayList result = new BooleanArrayList(this.size());
+        this.forEach(new CollectBooleanProcedure<>(booleanFunction, result));
+        return result;
     }
 
     @Override
     public MutableByteList collectByte(ByteFunction<? super V> byteFunction)
     {
-        return this.collectByte(byteFunction, ByteLists.mutable.withInitialCapacity(this.size()));
+        ByteArrayList result = new ByteArrayList(this.size());
+        this.forEach(new CollectByteProcedure<>(byteFunction, result));
+        return result;
     }
 
     @Override
     public MutableCharList collectChar(CharFunction<? super V> charFunction)
     {
-        return this.collectChar(charFunction, CharLists.mutable.withInitialCapacity(this.size()));
+        CharArrayList result = new CharArrayList(this.size());
+        this.forEach(new CollectCharProcedure<>(charFunction, result));
+        return result;
     }
 
     @Override
     public MutableDoubleList collectDouble(DoubleFunction<? super V> doubleFunction)
     {
-        return this.collectDouble(doubleFunction, DoubleLists.mutable.withInitialCapacity(this.size()));
+        DoubleArrayList result = new DoubleArrayList(this.size());
+        this.forEach(new CollectDoubleProcedure<>(doubleFunction, result));
+        return result;
     }
 
     @Override
     public MutableFloatList collectFloat(FloatFunction<? super V> floatFunction)
     {
-        return this.collectFloat(floatFunction, FloatLists.mutable.withInitialCapacity(this.size()));
+        FloatArrayList result = new FloatArrayList(this.size());
+        this.forEach(new CollectFloatProcedure<>(floatFunction, result));
+        return result;
     }
 
     @Override
     public MutableIntList collectInt(IntFunction<? super V> intFunction)
     {
-        return this.collectInt(intFunction, IntLists.mutable.withInitialCapacity(this.size()));
+        IntArrayList result = new IntArrayList(this.size());
+        this.forEach(new CollectIntProcedure<>(intFunction, result));
+        return result;
     }
 
     @Override
     public MutableLongList collectLong(LongFunction<? super V> longFunction)
     {
-        return this.collectLong(longFunction, LongLists.mutable.withInitialCapacity(this.size()));
+        LongArrayList result = new LongArrayList(this.size());
+        this.forEach(new CollectLongProcedure<>(longFunction, result));
+        return result;
     }
 
     @Override
     public MutableShortList collectShort(ShortFunction<? super V> shortFunction)
     {
-        return this.collectShort(shortFunction, ShortLists.mutable.withInitialCapacity(this.size()));
+        ShortArrayList result = new ShortArrayList(this.size());
+        this.forEach(new CollectShortProcedure<>(shortFunction, result));
+        return result;
     }
 
     @Override
@@ -204,15 +224,6 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     public <R> MutableSortedMap<K, R> collectValues(Function2<? super K, ? super V, ? extends R> function)
     {
         return MapIterate.collectValues(this, function, TreeSortedMap.newMap(this.comparator()));
-    }
-
-    @Override
-    public <R> MutableOrderedMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function)
-    {
-        return MapIterate.collectKeysUnique(
-                this,
-                function,
-                OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size())));
     }
 
     @Override
@@ -237,7 +248,7 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     @Override
     public <R> MutableList<R> collect(Function<? super V, ? extends R> function)
     {
-        return this.collect(function, Lists.mutable.withInitialCapacity(this.size()));
+        return this.collect(function, FastList.newList(this.size()));
     }
 
     @Override
@@ -249,19 +260,19 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     @Override
     public <R> MutableList<R> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends R> function)
     {
-        return this.collectIf(predicate, function, Lists.mutable.withInitialCapacity(this.size()));
+        return this.collectIf(predicate, function, FastList.newList(this.size()));
     }
 
     @Override
     public <R> MutableList<R> flatCollect(Function<? super V, ? extends Iterable<R>> function)
     {
-        return this.flatCollect(function, Lists.mutable.withInitialCapacity(this.size()));
+        return this.flatCollect(function, FastList.newList(this.size()));
     }
 
     @Override
     public MutableList<V> reject(Predicate<? super V> predicate)
     {
-        return this.reject(predicate, Lists.mutable.withInitialCapacity(this.size()));
+        return this.reject(predicate, FastList.newList(this.size()));
     }
 
     @Override
@@ -279,7 +290,7 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     @Override
     public MutableList<V> select(Predicate<? super V> predicate)
     {
-        return this.select(predicate, Lists.mutable.withInitialCapacity(this.size()));
+        return this.select(predicate, FastList.newList(this.size()));
     }
 
     @Override
@@ -310,13 +321,13 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     @Override
     public <S> MutableList<Pair<V, S>> zip(Iterable<S> that)
     {
-        return this.zip(that, Lists.mutable.withInitialCapacity(this.size()));
+        return this.zip(that, FastList.newList(this.size()));
     }
 
     @Override
     public MutableList<Pair<V, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(Lists.mutable.withInitialCapacity(this.size()));
+        return this.zipWithIndex(FastList.newList(this.size()));
     }
 
     @Override
@@ -338,9 +349,21 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     }
 
     @Override
+    public LazyIterable<V> asReversed()
+    {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".asReversed() not implemented yet");
+    }
+
+    @Override
     public int detectLastIndex(Predicate<? super V> predicate)
     {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectLastIndex() not implemented yet");
+    }
+
+    @Override
+    public int indexOf(Object object)
+    {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".indexOf() not implemented yet");
     }
 
     @Override

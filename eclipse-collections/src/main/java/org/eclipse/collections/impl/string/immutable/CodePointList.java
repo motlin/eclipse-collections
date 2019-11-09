@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -27,7 +27,6 @@ import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.IntIntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.IntProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
 import org.eclipse.collections.api.iterator.IntIterator;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
@@ -35,10 +34,10 @@ import org.eclipse.collections.api.list.primitive.ImmutableIntList;
 import org.eclipse.collections.api.list.primitive.IntList;
 import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.set.primitive.MutableIntSet;
-import org.eclipse.collections.api.stack.primitive.MutableIntStack;
 import org.eclipse.collections.api.tuple.primitive.IntIntPair;
 import org.eclipse.collections.api.tuple.primitive.IntObjectPair;
-import org.eclipse.collections.impl.factory.primitive.IntStacks;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
 import org.eclipse.collections.impl.primitive.AbstractIntIterable;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -58,7 +57,7 @@ public class CodePointList extends AbstractIntIterable implements CharSequence, 
     public CodePointList(String value)
     {
         int stringSize = value.length();
-        MutableIntList list = IntLists.mutable.withInitialCapacity(stringSize);
+        IntArrayList list = new IntArrayList(stringSize);
         for (int i = 0; i < stringSize; )
         {
             int codePoint = value.codePointAt(i);
@@ -144,12 +143,6 @@ public class CodePointList extends AbstractIntIterable implements CharSequence, 
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        return this.length() == 0;
-    }
-
-    @Override
     public String subSequence(int start, int end)
     {
         StringBuilder builder = this.toStringBuilder();
@@ -178,15 +171,15 @@ public class CodePointList extends AbstractIntIterable implements CharSequence, 
     }
 
     @Override
-    public int[] toArray(int[] target)
-    {
-        return this.codePoints.toArray(target);
-    }
-
-    @Override
     public boolean contains(int expected)
     {
         return this.codePoints.contains(expected);
+    }
+
+    @Override
+    public void forEach(IntProcedure procedure)
+    {
+        this.each(procedure);
     }
 
     @Override
@@ -323,7 +316,7 @@ public class CodePointList extends AbstractIntIterable implements CharSequence, 
 
     public CodePointList collectInt(IntToIntFunction function)
     {
-        MutableIntList collected = IntLists.mutable.withInitialCapacity(this.size());
+        IntArrayList collected = new IntArrayList(this.size());
         for (int i = 0; i < this.size(); i++)
         {
             int codePoint = this.get(i);
@@ -441,9 +434,9 @@ public class CodePointList extends AbstractIntIterable implements CharSequence, 
                 else
                 {
                     char[] chars = Character.toChars(codePoint);
-                    for (char aChar : chars)
+                    for (int j = 0; j < chars.length; j++)
                     {
-                        appendable.append(aChar);
+                        appendable.append(chars[j]);
                     }
                 }
             }
@@ -505,11 +498,5 @@ public class CodePointList extends AbstractIntIterable implements CharSequence, 
     public Spliterator.OfInt spliterator()
     {
         return this.codePoints.spliterator();
-    }
-
-    @Override
-    public MutableIntStack toStack()
-    {
-        return IntStacks.mutable.withAll(this);
     }
 }

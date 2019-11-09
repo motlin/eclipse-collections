@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,13 +11,11 @@
 package org.eclipse.collections.impl.bag.mutable;
 
 import org.eclipse.collections.api.bag.MutableBag;
-import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.collection.mutable.AbstractCollectionTestCase;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.eclipse.collections.impl.test.Verify;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class MultiReaderHashBagAsWriteUntouchableTest extends AbstractCollectionTestCase
 {
@@ -30,23 +28,23 @@ public class MultiReaderHashBagAsWriteUntouchableTest extends AbstractCollection
     @Override
     public void asSynchronized()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith().asSynchronized());
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newWith().asSynchronized());
     }
 
     @Override
     public void asUnmodifiable()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith().asUnmodifiable());
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newWith().asUnmodifiable());
     }
 
     @Test
     public void addOccurrences()
     {
         MutableBag<Integer> bag = this.newWith(1, 1);
-        assertEquals(4, bag.addOccurrences(1, 2));
+        Assert.assertEquals(4, bag.addOccurrences(1, 2));
         MutableBagTestCase.assertBagsEqual(HashBag.newBagWith(1, 1, 1, 1), bag);
-        assertEquals(0, bag.addOccurrences(2, 0));
-        assertEquals(2, bag.addOccurrences(2, 2));
+        Assert.assertEquals(0, bag.addOccurrences(2, 0));
+        Assert.assertEquals(2, bag.addOccurrences(2, 2));
         MutableBagTestCase.assertBagsEqual(HashBag.newBagWith(1, 1, 1, 1, 2, 2), bag);
     }
 
@@ -54,7 +52,7 @@ public class MultiReaderHashBagAsWriteUntouchableTest extends AbstractCollection
     @Test
     public void makeString()
     {
-        assertEquals("[1, 1, 2, 3]", MultiReaderHashBag.newBagWith(1, 1, 2, 3).toString());
+        Assert.assertEquals("[1, 1, 2, 3]", MultiReaderHashBag.newBagWith(1, 1, 2, 3).toString());
     }
 
     @Override
@@ -63,14 +61,14 @@ public class MultiReaderHashBagAsWriteUntouchableTest extends AbstractCollection
     {
         Appendable builder = new StringBuilder();
         MultiReaderHashBag.newBagWith(1, 1, 2, 3).appendString(builder);
-        assertEquals("1, 1, 2, 3", builder.toString());
+        Assert.assertEquals("1, 1, 2, 3", builder.toString());
     }
 
     @Override
     @Test
     public void testToString()
     {
-        assertEquals("[1, 1, 2, 3]", MultiReaderHashBag.newBagWith(1, 1, 2, 3).toString());
+        Assert.assertEquals("[1, 1, 2, 3]", MultiReaderHashBag.newBagWith(1, 1, 2, 3).toString());
     }
 
     @Test
@@ -79,12 +77,6 @@ public class MultiReaderHashBagAsWriteUntouchableTest extends AbstractCollection
         MutableBag<String> bag = this.newWith("0", "1", "1", "1", "1", "2", "2", "2", "3", "3", "4", "5");
         MutableSet<String> expected = Sets.mutable.with("0", "4", "5");
         MutableSet<String> actual = bag.selectUnique();
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void distinctView()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith().distinctView());
+        Assert.assertEquals(expected, actual);
     }
 }

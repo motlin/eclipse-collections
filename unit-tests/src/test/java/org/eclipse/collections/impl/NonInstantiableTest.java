@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl;
 
+import org.eclipse.collections.api.factory.SortedMaps;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.block.factory.primitive.CharToCharFunctions;
 import org.eclipse.collections.impl.block.factory.primitive.IntToIntFunctions;
@@ -18,7 +19,6 @@ import org.eclipse.collections.impl.block.function.MaxSizeFunction;
 import org.eclipse.collections.impl.block.function.MinFunction;
 import org.eclipse.collections.impl.block.function.MinSizeFunction;
 import org.eclipse.collections.impl.block.function.SubtractFunction;
-import org.eclipse.collections.impl.factory.SortedMaps;
 import org.eclipse.collections.impl.factory.primitive.BooleanSets;
 import org.eclipse.collections.impl.factory.primitive.BooleanStacks;
 import org.eclipse.collections.impl.factory.primitive.ByteBooleanMaps;

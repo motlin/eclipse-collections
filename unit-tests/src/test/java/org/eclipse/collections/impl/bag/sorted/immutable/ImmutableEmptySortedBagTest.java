@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -20,6 +20,10 @@ import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
+import org.eclipse.collections.api.factory.SortedBags;
+import org.eclipse.collections.api.factory.SortedMaps;
+import org.eclipse.collections.api.factory.SortedSets;
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
@@ -45,10 +49,6 @@ import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.factory.Iterables;
-import org.eclipse.collections.impl.factory.SortedBags;
-import org.eclipse.collections.impl.factory.SortedMaps;
-import org.eclipse.collections.impl.factory.SortedSets;
-import org.eclipse.collections.impl.factory.Stacks;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
@@ -63,16 +63,8 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestCase
 {
@@ -112,89 +104,90 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     {
         //Evaluates true for all empty lists and false for all non-empty lists
 
-        assertTrue(this.classUnderTest().corresponds(Lists.mutable.of(), Predicates2.alwaysFalse()));
+        Assert.assertTrue(this.classUnderTest().corresponds(Lists.mutable.of(), Predicates2.alwaysFalse()));
 
         ImmutableSortedBag<Integer> integers = this.classUnderTest().newWith(Integer.valueOf(1));
-        assertFalse(this.classUnderTest().corresponds(integers, Predicates2.alwaysTrue()));
+        Assert.assertFalse(this.classUnderTest().corresponds(integers, Predicates2.alwaysTrue()));
     }
 
     @Override
     @Test
     public void compareTo()
     {
-        assertEquals(0, this.classUnderTest().compareTo(this.classUnderTest()));
-        assertEquals(0, this.classUnderTest(Comparator.reverseOrder()).compareTo(this.classUnderTest(Comparator.reverseOrder())));
-        assertEquals(0, this.classUnderTest(Comparator.naturalOrder()).compareTo(this.classUnderTest(Comparator.reverseOrder())));
-        assertEquals(-1, this.classUnderTest().compareTo(TreeBag.newBagWith(1)));
-        assertEquals(-1, this.classUnderTest(Comparator.reverseOrder()).compareTo(TreeBag.newBagWith(Comparator.reverseOrder(), 1)));
-        assertEquals(-5, this.classUnderTest().compareTo(TreeBag.newBagWith(1, 2, 2, 3, 4)));
-        assertEquals(0, this.classUnderTest().compareTo(TreeBag.newBag()));
-        assertEquals(0, this.classUnderTest().compareTo(TreeBag.newBag(Comparator.reverseOrder())));
+        Assert.assertEquals(0, this.classUnderTest().compareTo(this.classUnderTest()));
+        Assert.assertEquals(0, this.classUnderTest(Comparator.reverseOrder()).compareTo(this.classUnderTest(Comparator.reverseOrder())));
+        Assert.assertEquals(0, this.classUnderTest(Comparator.naturalOrder()).compareTo(this.classUnderTest(Comparator.reverseOrder())));
+        Assert.assertEquals(-1, this.classUnderTest().compareTo(TreeBag.newBagWith(1)));
+        Assert.assertEquals(-1, this.classUnderTest(Comparator.reverseOrder()).compareTo(TreeBag.newBagWith(Comparator.reverseOrder(), 1)));
+        Assert.assertEquals(-5, this.classUnderTest().compareTo(TreeBag.newBagWith(1, 2, 2, 3, 4)));
+        Assert.assertEquals(0, this.classUnderTest().compareTo(TreeBag.newBag()));
+        Assert.assertEquals(0, this.classUnderTest().compareTo(TreeBag.newBag(Comparator.reverseOrder())));
     }
 
     @Override
     @Test
     public void selectDuplicates()
     {
-        assertEquals(Bags.immutable.empty(), this.classUnderTest().selectDuplicates());
+        Assert.assertEquals(Bags.immutable.empty(), this.classUnderTest().selectDuplicates());
     }
 
     @Override
     @Test
     public void contains()
     {
-        assertFalse(this.classUnderTest().contains(1));
-        assertFalse(this.classUnderTest(Comparator.reverseOrder()).contains(1));
+        Assert.assertFalse(this.classUnderTest().contains(1));
+        Assert.assertFalse(this.classUnderTest(Comparator.reverseOrder()).contains(1));
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void contains_null()
     {
-        assertThrows(NullPointerException.class, () -> this.classUnderTest(Comparator.naturalOrder()).contains(null));
+        this.classUnderTest().contains(null);
+        this.classUnderTest(Comparator.naturalOrder()).contains(null);
     }
 
     @Override
     public void allSatisfyWith()
     {
-        assertTrue(this.classUnderTest().allSatisfyWith(Predicates2.alwaysFalse(), "false"));
-        assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).allSatisfyWith(Predicates2.alwaysFalse(), false));
+        Assert.assertTrue(this.classUnderTest().allSatisfyWith(Predicates2.alwaysFalse(), "false"));
+        Assert.assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).allSatisfyWith(Predicates2.alwaysFalse(), false));
     }
 
     @Override
     public void anySatisfyWith()
     {
-        assertFalse(this.classUnderTest().anySatisfyWith(Predicates2.alwaysFalse(), "false"));
-        assertFalse(this.classUnderTest(Comparators.reverseNaturalOrder()).anySatisfyWith(Predicates2.alwaysFalse(), false));
+        Assert.assertFalse(this.classUnderTest().anySatisfyWith(Predicates2.alwaysFalse(), "false"));
+        Assert.assertFalse(this.classUnderTest(Comparators.reverseNaturalOrder()).anySatisfyWith(Predicates2.alwaysFalse(), false));
     }
 
     @Override
     public void noneSatisfyWith()
     {
-        assertTrue(this.classUnderTest().noneSatisfyWith(Predicates2.alwaysFalse(), "false"));
-        assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).noneSatisfyWith(Predicates2.alwaysFalse(), false));
+        Assert.assertTrue(this.classUnderTest().noneSatisfyWith(Predicates2.alwaysFalse(), "false"));
+        Assert.assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).noneSatisfyWith(Predicates2.alwaysFalse(), false));
     }
 
     @Override
     public void noneSatisfy()
     {
-        assertTrue(this.classUnderTest().noneSatisfy(Predicates.alwaysFalse()));
-        assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).noneSatisfy(Predicates.alwaysFalse()));
+        Assert.assertTrue(this.classUnderTest().noneSatisfy(Predicates.alwaysFalse()));
+        Assert.assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).noneSatisfy(Predicates.alwaysFalse()));
     }
 
     @Override
     @Test
     public void containsAllIterable()
     {
-        assertFalse(this.classUnderTest().containsAllIterable(FastList.newListWith(1, 2, 3)));
-        assertFalse(this.classUnderTest(Comparator.reverseOrder()).containsAllIterable(FastList.newListWith(1, 2, 3)));
+        Assert.assertFalse(this.classUnderTest().containsAllIterable(FastList.newListWith(1, 2, 3)));
+        Assert.assertFalse(this.classUnderTest(Comparator.reverseOrder()).containsAllIterable(FastList.newListWith(1, 2, 3)));
     }
 
     @Override
     @Test
     public void containsAll()
     {
-        assertFalse(this.classUnderTest().containsAll(FastList.newListWith(1, 2, 3)));
-        assertFalse(this.classUnderTest(Comparator.reverseOrder()).containsAll(FastList.newListWith(1, 2, 3)));
+        Assert.assertFalse(this.classUnderTest().containsAll(FastList.newListWith(1, 2, 3)));
+        Assert.assertFalse(this.classUnderTest(Comparator.reverseOrder()).containsAll(FastList.newListWith(1, 2, 3)));
     }
 
     @Override
@@ -208,111 +201,77 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
 
     @Override
     @Test
-    public void anySatisfyWithOccurrences()
-    {
-        ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertFalse(bag.anySatisfyWithOccurrences((object, value) -> true));
-        assertFalse(bag.anySatisfyWithOccurrences((object, value) -> false));
-    }
-
-    @Override
-    @Test
-    public void allSatisfyWithOccurrences()
-    {
-        ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertTrue(bag.allSatisfyWithOccurrences((object, value) -> true));
-        assertTrue(bag.allSatisfyWithOccurrences((object, value) -> false));
-    }
-
-    @Override
-    @Test
-    public void noneSatisfyWithOccurrences()
-    {
-        ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertTrue(bag.noneSatisfyWithOccurrences((object, value) -> true));
-        assertTrue(bag.noneSatisfyWithOccurrences((object, value) -> false));
-    }
-
-    @Override
-    @Test
-    public void detectWithOccurrences()
-    {
-        ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertNull(bag.detectWithOccurrences((object, value) -> true));
-        assertNull(bag.detectWithOccurrences((object, value) -> false));
-    }
-
-    @Override
-    @Test
     public void chunk_large_size()
     {
-        assertEquals(Lists.immutable.empty(), this.classUnderTest().chunk(10));
+        Assert.assertEquals(Lists.immutable.empty(), this.classUnderTest().chunk(10));
     }
 
     @Override
     @Test
     public void detect()
     {
-        assertNull(this.classUnderTest().detect(each -> each % 2 == 0));
-        assertNull(this.classUnderTest(Comparator.naturalOrder()).detect(each -> each % 2 == 0));
+        Assert.assertNull(this.classUnderTest().detect(each -> each % 2 == 0));
+        Assert.assertNull(this.classUnderTest(Comparator.naturalOrder()).detect(each -> each % 2 == 0));
     }
 
     @Override
     @Test
     public void allSatisfy()
     {
-        assertTrue(this.classUnderTest().allSatisfy(each -> each % 2 == 0));
-        assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).allSatisfy(each -> each % 2 == 0));
+        Assert.assertTrue(this.classUnderTest().allSatisfy(each -> each % 2 == 0));
+        Assert.assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).allSatisfy(each -> each % 2 == 0));
     }
 
     @Override
     @Test
     public void detectWith()
     {
-        assertNull(this.classUnderTest().detectWith(Predicates2.greaterThan(), 3));
-        assertNull(this.classUnderTest(Comparators.reverseNaturalOrder()).detectWith(Predicates2.greaterThan(), 3));
+        Assert.assertNull(this.classUnderTest().detectWith(Predicates2.greaterThan(), 3));
+        Assert.assertNull(this.classUnderTest(Comparators.reverseNaturalOrder()).detectWith(Predicates2.greaterThan(), 3));
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void max()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest(Comparators.reverseNaturalOrder()).max());
+        this.classUnderTest(Comparators.reverseNaturalOrder()).max();
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void max_without_comparator()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().max(Comparator.naturalOrder()));
+        this.classUnderTest().max();
+        this.classUnderTest().max(Comparator.naturalOrder());
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void max_with_comparator()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().max(Comparator.naturalOrder()));
+        this.classUnderTest().max(Comparator.naturalOrder());
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void maxBy()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest(Comparators.reverseNaturalOrder()).maxBy(Functions.getToString()));
+        this.classUnderTest().maxBy(Functions.getToString());
+        this.classUnderTest(Comparators.reverseNaturalOrder()).maxBy(Functions.getToString());
     }
 
     @Override
     @Test
     public void toSortedBag()
     {
-        assertEquals(TreeBag.newBag(), this.classUnderTest().toSortedBag());
-        assertEquals(TreeBag.newBag(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).toSortedBag());
+        Assert.assertEquals(TreeBag.newBag(), this.classUnderTest().toSortedBag());
+        Assert.assertEquals(TreeBag.newBag(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).toSortedBag());
     }
 
     @Override
     @Test
     public void toSortedMap()
     {
-        assertEquals(SortedMaps.mutable.empty(), this.classUnderTest().toSortedMap(Functions.getIntegerPassThru(), Functions.getIntegerPassThru()));
+        Assert.assertEquals(SortedMaps.mutable.empty(), this.classUnderTest().toSortedMap(Functions.getIntegerPassThru(), Functions.getIntegerPassThru()));
     }
 
     @Override
@@ -323,7 +282,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
                 Functions.getIntegerPassThru(), Functions.getIntegerPassThru());
         Verify.assertEmpty(map);
         Verify.assertInstanceOf(TreeSortedMap.class, map);
-        assertEquals(Comparators.<String>reverseNaturalOrder(), map.comparator());
+        Assert.assertEquals(Comparators.<String>reverseNaturalOrder(), map.comparator());
     }
 
     @Override
@@ -340,16 +299,16 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     @Test
     public void toStack()
     {
-        assertEquals(Stacks.immutable.empty(), this.classUnderTest().toStack());
-        assertEquals(Stacks.immutable.empty(), this.classUnderTest(Comparators.reverseNaturalOrder()).toStack());
+        Assert.assertEquals(Stacks.immutable.empty(), this.classUnderTest().toStack());
+        Assert.assertEquals(Stacks.immutable.empty(), this.classUnderTest(Comparators.reverseNaturalOrder()).toStack());
     }
 
     @Override
     @Test
     public void toStringOfItemToCount()
     {
-        assertEquals("{}", this.classUnderTest().toStringOfItemToCount());
-        assertEquals("{}", this.classUnderTest(Comparator.reverseOrder()).toStringOfItemToCount());
+        Assert.assertEquals("{}", this.classUnderTest().toStringOfItemToCount());
+        Assert.assertEquals("{}", this.classUnderTest(Comparator.reverseOrder()).toStringOfItemToCount());
     }
 
     @Override
@@ -357,7 +316,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void groupByUniqueKey()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(Maps.mutable.empty(), bag.groupByUniqueKey(integer -> integer));
+        Assert.assertEquals(Maps.mutable.empty(), bag.groupByUniqueKey(integer -> integer));
     }
 
     @Override
@@ -365,32 +324,31 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void groupByUniqueKey_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 UnifiedMap.newWithKeysValues(0, 0),
                 bag.groupByUniqueKey(id -> id, UnifiedMap.newWithKeysValues(0, 0)));
     }
 
-    @Override
     @Test
     public void countByEach()
     {
-        assertEquals(Bags.immutable.empty(), this.classUnderTest().countByEach(each -> IntInterval.oneTo(5).collect(i -> each + i)));
+        Assert.assertEquals(Bags.immutable.empty(), this.classUnderTest().countByEach(each -> IntInterval.oneTo(5).collect(i -> each + i)));
     }
 
     @Test
     public void countByEach_target()
     {
         MutableBag<Integer> target = Bags.mutable.empty();
-        assertEquals(target, this.classUnderTest().countByEach(each -> IntInterval.oneTo(5).collect(i -> each + i), target));
+        Assert.assertEquals(target, this.classUnderTest().countByEach(each -> IntInterval.oneTo(5).collect(i -> each + i), target));
     }
 
     @Override
     @Test
     public void zip()
     {
-        assertEquals(Lists.immutable.empty(), this.classUnderTest().zip(Iterables.iBag()));
-        assertEquals(Lists.immutable.empty(), this.classUnderTest().zip(Iterables.iBag(), FastList.newList()));
-        assertEquals(Lists.immutable.empty(), this.classUnderTest(Comparators.reverseNaturalOrder()).zip(Iterables.iBag()));
+        Assert.assertEquals(Lists.immutable.empty(), this.classUnderTest().zip(Iterables.iBag()));
+        Assert.assertEquals(Lists.immutable.empty(), this.classUnderTest().zip(Iterables.iBag(), FastList.newList()));
+        Assert.assertEquals(Lists.immutable.empty(), this.classUnderTest(Comparators.reverseNaturalOrder()).zip(Iterables.iBag()));
     }
 
     @Override
@@ -398,59 +356,60 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest(Comparator.reverseOrder());
         ImmutableSortedSet<Pair<Integer, Integer>> actual = bag.zipWithIndex();
-        assertEquals(SortedSets.immutable.empty(), actual);
-        assertSame(SortedSets.immutable.empty(Comparator.<Integer>reverseOrder()).comparator(), actual.comparator());
+        Assert.assertEquals(SortedSets.immutable.empty(), actual);
+        Assert.assertSame(SortedSets.immutable.empty(Comparator.<Integer>reverseOrder()).comparator(), actual.comparator());
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void min()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest(Comparator.reverseOrder()).min(Comparator.naturalOrder()));
+        this.classUnderTest(Comparator.reverseOrder()).min();
+        this.classUnderTest(Comparator.reverseOrder()).min(Comparator.naturalOrder());
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void min_without_comparator()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().min());
+        this.classUnderTest().min();
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void min_with_comparator()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().min(Comparator.naturalOrder()));
+        this.classUnderTest().min(Comparator.naturalOrder());
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void minBy()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().minBy(Functions.getToString()));
+        this.classUnderTest().minBy(Functions.getToString());
     }
 
     @Override
     @Test
     public void newWithTest()
     {
-        assertEquals(SortedBags.immutable.of(1), this.classUnderTest().newWith(1));
-        assertEquals(SortedBags.immutable.of(Comparators.reverseNaturalOrder(), 1), this.classUnderTest(Comparators.reverseNaturalOrder()).newWith(1));
+        Assert.assertEquals(SortedBags.immutable.of(1), this.classUnderTest().newWith(1));
+        Assert.assertEquals(SortedBags.immutable.of(Comparators.reverseNaturalOrder(), 1), this.classUnderTest(Comparators.reverseNaturalOrder()).newWith(1));
     }
 
     @Override
     @Test
     public void newWithAll()
     {
-        assertEquals(SortedBags.immutable.ofAll(FastList.newListWith(1, 2, 3, 3)), this.classUnderTest().newWithAll(FastList.newListWith(1, 2, 3, 3)));
-        assertEquals(SortedBags.immutable.ofAll(Comparators.reverseNaturalOrder(), FastList.newListWith(1, 2, 3, 3)), this.classUnderTest(Comparators.reverseNaturalOrder()).newWithAll(FastList.newListWith(1, 2, 3, 3)));
+        Assert.assertEquals(SortedBags.immutable.ofAll(FastList.newListWith(1, 2, 3, 3)), this.classUnderTest().newWithAll(FastList.newListWith(1, 2, 3, 3)));
+        Assert.assertEquals(SortedBags.immutable.ofAll(Comparators.reverseNaturalOrder(), FastList.newListWith(1, 2, 3, 3)), this.classUnderTest(Comparators.reverseNaturalOrder()).newWithAll(FastList.newListWith(1, 2, 3, 3)));
     }
 
     @Override
     @Test
     public void newWithout()
     {
-        assertEquals(this.classUnderTest(), this.classUnderTest().newWithout(1));
-        assertEquals(this.classUnderTest(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).newWithout(1));
+        Assert.assertEquals(this.classUnderTest(), this.classUnderTest().newWithout(1));
+        Assert.assertEquals(this.classUnderTest(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).newWithout(1));
     }
 
     @Override
@@ -461,8 +420,8 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         PartitionImmutableSortedBag<Integer> partition = bag.partition(Predicates.lessThan(4));
         Verify.assertIterableEmpty(partition.getSelected());
         Verify.assertIterableEmpty(partition.getRejected());
-        assertSame(Collections.<Integer>reverseOrder(), partition.getSelected().comparator());
-        assertSame(Collections.<Integer>reverseOrder(), partition.getRejected().comparator());
+        Assert.assertSame(Collections.<Integer>reverseOrder(), partition.getSelected().comparator());
+        Assert.assertSame(Collections.<Integer>reverseOrder(), partition.getRejected().comparator());
     }
 
     @Override
@@ -473,8 +432,8 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         PartitionSortedBag<Integer> partition = bag.partitionWhile(Predicates.lessThan(4));
         Verify.assertIterableEmpty(partition.getSelected());
         Verify.assertIterableEmpty(partition.getRejected());
-        assertSame(Collections.<Integer>reverseOrder(), partition.getSelected().comparator());
-        assertSame(Collections.<Integer>reverseOrder(), partition.getRejected().comparator());
+        Assert.assertSame(Collections.<Integer>reverseOrder(), partition.getSelected().comparator());
+        Assert.assertSame(Collections.<Integer>reverseOrder(), partition.getRejected().comparator());
     }
 
     @Override
@@ -485,7 +444,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         TreeSortedMap<Object, Object> expectedMap = TreeSortedMap.newMap(Comparators.reverseNaturalOrder());
         MutableSortedMap<Integer, Integer> actualMap = bag.toMapOfItemToCount();
         Verify.assertSortedMapsEqual(expectedMap, actualMap);
-        assertSame(expectedMap.comparator(), actualMap.comparator());
+        Assert.assertSame(expectedMap.comparator(), actualMap.comparator());
     }
 
     @Override
@@ -496,24 +455,24 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         PartitionImmutableSortedBag<Integer> partition = bag.partitionWith(Predicates2.lessThan(), 4);
         Verify.assertIterableEmpty(partition.getSelected());
         Verify.assertIterableEmpty(partition.getRejected());
-        assertEquals(Collections.<Integer>reverseOrder(), partition.getSelected().comparator());
-        assertEquals(Collections.<Integer>reverseOrder(), partition.getRejected().comparator());
+        Assert.assertEquals(Collections.<Integer>reverseOrder(), partition.getSelected().comparator());
+        Assert.assertEquals(Collections.<Integer>reverseOrder(), partition.getRejected().comparator());
     }
 
     @Override
     @Test
     public void reject()
     {
-        assertEquals(this.classUnderTest(), this.classUnderTest().reject(each -> each % 2 == 0));
-        assertEquals(this.classUnderTest(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).reject(each -> each % 2 == 0));
+        Assert.assertEquals(this.classUnderTest(), this.classUnderTest().reject(each -> each % 2 == 0));
+        Assert.assertEquals(this.classUnderTest(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).reject(each -> each % 2 == 0));
     }
 
     @Override
     @Test
     public void rejectWith()
     {
-        assertEquals(this.classUnderTest(), this.classUnderTest().rejectWith(Predicates2.alwaysFalse(), 2));
-        assertEquals(this.classUnderTest(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).rejectWith(Predicates2.alwaysFalse(), 2));
+        Assert.assertEquals(this.classUnderTest(), this.classUnderTest().rejectWith(Predicates2.alwaysFalse(), 2));
+        Assert.assertEquals(this.classUnderTest(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).rejectWith(Predicates2.alwaysFalse(), 2));
     }
 
     @Override
@@ -533,36 +492,34 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     }
 
     @Override
-    @Test
     public void toSortedSet()
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest();
         MutableSortedSet<Integer> set = integers.toSortedSet();
-        assertEquals(SortedSets.immutable.empty(), set);
+        Assert.assertEquals(SortedSets.immutable.empty(), set);
     }
 
     @Override
-    @Test
     public void toSortedSetWithComparator()
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest(Comparators.reverseNaturalOrder());
         MutableSortedSet<Integer> set = integers.toSortedSet();
-        assertEquals(SortedSets.immutable.of(Comparator.<Integer>reverseOrder()), set);
+        Assert.assertEquals(SortedSets.immutable.of(Comparator.<Integer>reverseOrder()), set);
     }
 
     @Override
     @Test
     public void select()
     {
-        assertEquals(this.classUnderTest(), this.classUnderTest().select(each -> each % 2 == 0));
-        assertEquals(this.classUnderTest(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).select(each -> each % 2 == 0));
+        Assert.assertEquals(this.classUnderTest(), this.classUnderTest().select(each -> each % 2 == 0));
+        Assert.assertEquals(this.classUnderTest(Comparators.reverseNaturalOrder()), this.classUnderTest(Comparators.reverseNaturalOrder()).select(each -> each % 2 == 0));
     }
 
     @Override
     @Test
     public void selectWith()
     {
-        assertEquals(this.classUnderTest(), this.classUnderTest().selectWith(Predicates2.alwaysFalse(), "false"));
+        Assert.assertEquals(this.classUnderTest(), this.classUnderTest().selectWith(Predicates2.alwaysFalse(), "false"));
     }
 
     @Override
@@ -572,18 +529,18 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         ImmutableSortedBag<Integer> set = this.classUnderTest(Collections.reverseOrder());
         ImmutableSortedBag<Integer> take = set.takeWhile(Predicates.lessThan(4));
         Verify.assertIterableEmpty(take);
-        assertEquals(Collections.<Integer>reverseOrder(), take.comparator());
+        Assert.assertEquals(Collections.<Integer>reverseOrder(), take.comparator());
     }
 
     @Override
     @Test
     public void distinct()
     {
-        assertEquals(SortedSets.immutable.empty(), this.classUnderTest().distinct());
+        Assert.assertEquals(SortedSets.immutable.empty(), this.classUnderTest().distinct());
         ImmutableSortedSet<Object> expected = SortedSets.immutable.with(Comparators.reverseNaturalOrder());
         ImmutableSortedSet<Integer> actual = this.classUnderTest(Comparators.reverseNaturalOrder()).distinct();
-        assertEquals(expected, actual);
-        assertSame(expected.comparator(), actual.comparator());
+        Assert.assertEquals(expected, actual);
+        Assert.assertSame(expected.comparator(), actual.comparator());
     }
 
     @Override
@@ -593,7 +550,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         ImmutableSortedBag<Integer> set = this.classUnderTest(Collections.reverseOrder());
         ImmutableSortedBag<Integer> drop = set.dropWhile(Predicates.lessThan(4));
         Verify.assertIterableEmpty(drop);
-        assertEquals(Collections.<Integer>reverseOrder(), drop.comparator());
+        Assert.assertEquals(Collections.<Integer>reverseOrder(), drop.comparator());
     }
 
     @Override
@@ -603,7 +560,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         ImmutableSortedBag<Integer> immutable = this.classUnderTest();
         Verify.assertEqualsAndHashCode(HashBag.newBag(), immutable);
         Verify.assertPostSerializedIdentity(immutable);
-        assertNotEquals(Lists.mutable.empty(), immutable);
+        Assert.assertNotEquals(Lists.mutable.empty(), immutable);
 
         ImmutableSortedBag<Integer> bagWithComparator = this.classUnderTest(Comparators.reverseNaturalOrder());
         Verify.assertEqualsAndHashCode(HashBag.newBag(), bagWithComparator);
@@ -614,57 +571,57 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     @Test
     public void getLast()
     {
-        assertNull(this.classUnderTest().getLast());
-        assertNull(this.classUnderTest(Comparators.reverseNaturalOrder()).getLast());
+        Assert.assertNull(this.classUnderTest().getLast());
+        Assert.assertNull(this.classUnderTest(Comparators.reverseNaturalOrder()).getLast());
     }
 
     @Override
     @Test
     public void getFirst()
     {
-        assertNull(this.classUnderTest().getFirst());
-        assertNull(this.classUnderTest(Comparators.reverseNaturalOrder()).getFirst());
+        Assert.assertNull(this.classUnderTest().getFirst());
+        Assert.assertNull(this.classUnderTest(Comparators.reverseNaturalOrder()).getFirst());
     }
 
     @Test
     public void getOnly()
     {
-        assertThrows(IllegalStateException.class, () -> this.classUnderTest().getOnly());
+        Verify.assertThrows(IllegalStateException.class, () -> this.classUnderTest().getOnly());
     }
 
     @Override
     public void detectIndex()
     {
-        assertEquals(-1, this.classUnderTest().detectIndex(each -> each > 1));
+        Assert.assertEquals(-1, this.classUnderTest().detectIndex(each -> each > 1));
     }
 
     @Override
     public void indexOf()
     {
-        assertEquals(-1, this.classUnderTest().indexOf(1));
+        Assert.assertEquals(-1, this.classUnderTest().indexOf(1));
     }
 
     @Override
     @Test
     public void occurrencesOf()
     {
-        assertEquals(0, this.classUnderTest().occurrencesOf(1));
+        Assert.assertEquals(0, this.classUnderTest().occurrencesOf(1));
     }
 
     @Override
     @Test
     public void isEmpty()
     {
-        assertTrue(this.classUnderTest().isEmpty());
-        assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).isEmpty());
+        Assert.assertTrue(this.classUnderTest().isEmpty());
+        Assert.assertTrue(this.classUnderTest(Comparators.reverseNaturalOrder()).isEmpty());
     }
 
     @Override
     @Test
     public void anySatisfy()
     {
-        assertFalse(this.classUnderTest().anySatisfy(each -> each * 2 == 4));
-        assertFalse(this.classUnderTest(Comparators.reverseNaturalOrder()).anySatisfy(each -> each * 2 == 4));
+        Assert.assertFalse(this.classUnderTest().anySatisfy(each -> each * 2 == 4));
+        Assert.assertFalse(this.classUnderTest(Comparators.reverseNaturalOrder()).anySatisfy(each -> each * 2 == 4));
     }
 
     @Override
@@ -672,21 +629,21 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectIfToTarget()
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest();
-        assertEquals(integers.toBag(), integers.collectIf(Integer.class::isInstance, Functions.getIntegerPassThru(), HashBag.newBag()));
+        Assert.assertEquals(integers.toBag(), integers.collectIf(Integer.class::isInstance, Functions.getIntegerPassThru(), HashBag.newBag()));
     }
 
     @Override
     @Test
     public void topOccurrences()
     {
-        assertEquals(0, this.classUnderTest().topOccurrences(5).size());
+        Assert.assertEquals(0, this.classUnderTest().topOccurrences(5).size());
     }
 
     @Override
     @Test
     public void bottomOccurrences()
     {
-        assertEquals(0, this.newWith().bottomOccurrences(5).size());
+        Assert.assertEquals(0, this.newWith().bottomOccurrences(5).size());
     }
 
     /**
@@ -698,7 +655,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest(Collections.reverseOrder());
         ImmutableList<ObjectIntPair<Integer>> actual = integers.collectWithIndex(PrimitiveTuples::pair);
-        assertEquals(Lists.mutable.empty(), actual);
+        Assert.assertEquals(Lists.mutable.empty(), actual);
     }
 
     /**
@@ -710,7 +667,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         ImmutableSortedBag<Integer> integers = this.classUnderTest(Collections.reverseOrder());
         MutableList<ObjectIntPair<Integer>> actual =
                 integers.collectWithIndex(PrimitiveTuples::pair, Lists.mutable.empty());
-        assertEquals(Lists.mutable.empty(), actual);
+        Assert.assertEquals(Lists.mutable.empty(), actual);
     }
 
     @Override
@@ -718,7 +675,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectBoolean()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new BooleanArrayList(),
                 bag.collectBoolean(each -> false));
     }
@@ -728,7 +685,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectByte()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new ByteArrayList(),
                 bag.collectByte(PrimitiveFunctions.unboxIntegerToByte()));
     }
@@ -738,7 +695,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectChar()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new CharArrayList(),
                 bag.collectChar(PrimitiveFunctions.unboxIntegerToChar()));
     }
@@ -748,7 +705,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectDouble()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new DoubleArrayList(),
                 bag.collectDouble(PrimitiveFunctions.unboxIntegerToDouble()));
     }
@@ -758,7 +715,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectFloat()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new FloatArrayList(),
                 bag.collectFloat(PrimitiveFunctions.unboxIntegerToFloat()));
     }
@@ -768,7 +725,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectInt()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new IntArrayList(),
                 bag.collectInt(PrimitiveFunctions.unboxIntegerToInt()));
     }
@@ -778,7 +735,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectLong()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new LongArrayList(),
                 bag.collectLong(PrimitiveFunctions.unboxIntegerToLong()));
     }
@@ -788,7 +745,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectShort()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new ShortArrayList(),
                 bag.collectShort(PrimitiveFunctions.unboxIntegerToShort()));
     }
@@ -798,12 +755,12 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectBoolean_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new BooleanArrayList(),
                 bag.collectBoolean(each -> false, new BooleanArrayList()));
 
         ImmutableSortedBag<Integer> bag2 = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new BooleanHashBag(),
                 bag2.collectBoolean(each -> false, new BooleanHashBag()));
     }
@@ -813,12 +770,12 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectByte_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new ByteArrayList(),
                 bag.collectByte(PrimitiveFunctions.unboxIntegerToByte(), new ByteArrayList()));
 
         ImmutableSortedBag<Integer> bag2 = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new ByteHashBag(),
                 bag2.collectByte(PrimitiveFunctions.unboxIntegerToByte(), new ByteHashBag()));
     }
@@ -828,12 +785,12 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectChar_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new CharArrayList(),
                 bag.collectChar(PrimitiveFunctions.unboxIntegerToChar(), new CharArrayList()));
 
         ImmutableSortedBag<Integer> bag2 = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new CharHashBag(),
                 bag2.collectChar(PrimitiveFunctions.unboxIntegerToChar(), new CharHashBag()));
     }
@@ -843,12 +800,12 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectDouble_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new DoubleArrayList(),
                 bag.collectDouble(PrimitiveFunctions.unboxIntegerToDouble(), new DoubleArrayList()));
 
         ImmutableSortedBag<Integer> bag2 = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new DoubleHashBag(),
                 bag2.collectDouble(PrimitiveFunctions.unboxIntegerToDouble(), new DoubleHashBag()));
     }
@@ -858,12 +815,12 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectFloat_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new FloatArrayList(),
                 bag.collectFloat(PrimitiveFunctions.unboxIntegerToFloat(), new FloatArrayList()));
 
         ImmutableSortedBag<Integer> bag2 = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new FloatHashBag(),
                 bag2.collectFloat(PrimitiveFunctions.unboxIntegerToFloat(), new FloatHashBag()));
     }
@@ -873,12 +830,12 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectInt_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new IntArrayList(),
                 bag.collectInt(PrimitiveFunctions.unboxIntegerToInt(), new IntArrayList()));
 
         ImmutableSortedBag<Integer> bag2 = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new IntHashBag(),
                 bag2.collectInt(PrimitiveFunctions.unboxIntegerToInt(), new IntHashBag()));
     }
@@ -888,12 +845,12 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectLong_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new LongArrayList(),
                 bag.collectLong(PrimitiveFunctions.unboxIntegerToLong(), new LongArrayList()));
 
         ImmutableSortedBag<Integer> bag2 = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new LongHashBag(),
                 bag2.collectLong(PrimitiveFunctions.unboxIntegerToLong(), new LongHashBag()));
     }
@@ -903,12 +860,12 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void collectShort_target()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new ShortArrayList(),
                 bag.collectShort(PrimitiveFunctions.unboxIntegerToShort(), new ShortArrayList()));
 
         ImmutableSortedBag<Integer> bag2 = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 new ShortHashBag(),
                 bag2.collectShort(PrimitiveFunctions.unboxIntegerToShort(), new ShortHashBag()));
     }
@@ -919,22 +876,22 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest(Collections.reverseOrder());
         MutableList<Integer> copy = FastList.newList(integers);
-        assertArrayEquals(integers.toArray(), copy.toArray());
-        assertArrayEquals(integers.toArray(new Integer[integers.size()]), copy.toArray(new Integer[integers.size()]));
+        Assert.assertArrayEquals(integers.toArray(), copy.toArray());
+        Assert.assertArrayEquals(integers.toArray(new Integer[integers.size()]), copy.toArray(new Integer[integers.size()]));
     }
 
     @Override
     @Test
     public void take()
     {
-        assertEquals(this.classUnderTest(), this.classUnderTest().take(2));
+        Assert.assertEquals(this.classUnderTest(), this.classUnderTest().take(2));
     }
 
     @Override
     @Test
     public void drop()
     {
-        assertEquals(this.classUnderTest(), this.classUnderTest().drop(2));
+        Assert.assertEquals(this.classUnderTest(), this.classUnderTest().drop(2));
     }
 
     @Override
@@ -947,7 +904,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
         ImmutableSortedBag<Integer> bag = this.classUnderTest(comparator);
         ImmutableSortedSet<Integer> expected = SortedSets.immutable.empty(comparator);
         ImmutableSortedSet<Integer> actual = bag.selectUnique();
-        assertEquals(expected, actual);
-        assertEquals(expected.comparator(), actual.comparator());
+        Assert.assertEquals(expected, actual);
+        Assert.assertEquals(expected.comparator(), actual.comparator());
     }
 }

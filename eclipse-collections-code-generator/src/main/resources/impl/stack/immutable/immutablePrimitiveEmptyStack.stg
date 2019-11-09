@@ -29,6 +29,8 @@ import org.eclipse.collections.api.block.function.primitive.Object<name>ToObject
 import org.eclipse.collections.api.block.predicate.primitive.<name>Predicate;
 import org.eclipse.collections.api.block.procedure.primitive.<name>IntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.<name>Procedure;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.iterator.<name>Iterator;
 import org.eclipse.collections.api.list.primitive.<name>List;
 import org.eclipse.collections.api.list.primitive.Mutable<name>List;
@@ -38,13 +40,11 @@ import org.eclipse.collections.api.stack.primitive.Immutable<name>Stack;
 import org.eclipse.collections.api.stack.primitive.Mutable<name>Stack;
 import org.eclipse.collections.api.stack.primitive.<name>Stack;
 import org.eclipse.collections.impl.bag.mutable.primitive.<name>HashBag;
-import org.eclipse.collections.impl.factory.Stacks;
 import org.eclipse.collections.impl.factory.primitive.<name>Stacks;
 import org.eclipse.collections.impl.iterator.ImmutableEmpty<name>Iterator;
 import org.eclipse.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
 import org.eclipse.collections.impl.list.mutable.primitive.<name>ArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.<name>HashSet;
-import org.eclipse.collections.impl.factory.Lists;
 
 /**
  * Immutable<name>EmptyStack is an optimization for {@link Immutable<name>Stack} of size 0.

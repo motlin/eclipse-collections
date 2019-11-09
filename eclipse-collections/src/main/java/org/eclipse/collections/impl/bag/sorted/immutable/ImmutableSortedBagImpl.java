@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2017 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.RandomAccess;
 
-import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.Bag;
 import org.eclipse.collections.api.bag.sorted.ImmutableSortedBag;
 import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
@@ -30,11 +29,8 @@ import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
-import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.factory.SortedBags;
-import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
@@ -43,8 +39,8 @@ import org.eclipse.collections.api.partition.bag.sorted.PartitionImmutableSorted
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.impl.Counter;
+import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
-import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.partition.bag.sorted.PartitionImmutableSortedBagImpl;
@@ -168,7 +164,7 @@ class ImmutableSortedBagImpl<T>
     @Override
     public ImmutableSortedBag<T> newWithAll(Iterable<? extends T> elements)
     {
-        MutableSortedBag<T> result = SortedBags.mutable.withAll(this);
+        MutableSortedBag<T> result = TreeBag.newBag(this);
         result.addAllIterable(elements);
         return result.toImmutable();
     }
@@ -218,7 +214,7 @@ class ImmutableSortedBagImpl<T>
     @Override
     public ImmutableSortedBag<T> takeWhile(Predicate<? super T> predicate)
     {
-        MutableSortedBag<T> bag = SortedBags.mutable.empty(this.comparator);
+        MutableSortedBag<T> bag = TreeBag.newBag(this.comparator);
         for (int i = 0; i < this.elements.length; i++)
         {
             if (predicate.accept(this.elements[i]))
@@ -236,7 +232,7 @@ class ImmutableSortedBagImpl<T>
     @Override
     public ImmutableSortedBag<T> dropWhile(Predicate<? super T> predicate)
     {
-        MutableSortedBag<T> bag = SortedBags.mutable.empty(this.comparator);
+        MutableSortedBag<T> bag = TreeBag.newBag(this.comparator);
         int startIndex = this.detectNotIndex(predicate);
         for (int i = startIndex; i < this.elements.length; i++)
         {
@@ -298,38 +294,6 @@ class ImmutableSortedBagImpl<T>
         {
             procedure.value(this.elements[i], this.occurrences[i]);
         }
-    }
-
-    @Override
-    public boolean anySatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.shortCircuit(this.elements, this.occurrences, predicate, true, true, false);
-    }
-
-    @Override
-    public boolean allSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.shortCircuit(this.elements, this.occurrences, predicate, false, false, true);
-    }
-
-    @Override
-    public boolean noneSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.shortCircuit(this.elements, this.occurrences, predicate, true, false, true);
-    }
-
-    @Override
-    public T detectWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        for (int i = 0; i < this.elements.length; i++)
-        {
-            T key = this.elements[i];
-            if (predicate.accept(key, this.occurrences[i]))
-            {
-                return key;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -707,7 +671,7 @@ class ImmutableSortedBagImpl<T>
             return this;
         }
 
-        MutableSortedBag<T> output = SortedBags.mutable.empty(this.comparator());
+        MutableSortedBag<T> output = TreeBag.newBag(this.comparator());
         int index = 0;
         for (int i = 0; i < this.elements.length; i++)
         {
@@ -741,7 +705,7 @@ class ImmutableSortedBagImpl<T>
             return SortedBags.immutable.empty(this.comparator());
         }
 
-        MutableSortedBag<T> output = SortedBags.mutable.empty(this.comparator());
+        MutableSortedBag<T> output = TreeBag.newBag(this.comparator());
         int index = 0;
         for (int i = 0; i < this.elements.length; i++)
         {
@@ -791,13 +755,6 @@ class ImmutableSortedBagImpl<T>
         Counter counter = new Counter();
         this.forEachWithOccurrences((each, count) -> counter.add((each == null ? 0 : each.hashCode()) ^ count));
         return counter.getCount();
-    }
-
-    @Override
-    public RichIterable<T> distinctView()
-    {
-        // TODO use an implementation taking advantage of the sorting of the array
-        return ArrayAdapter.adapt(this.elements).asUnmodifiable();
     }
 
     private class InternalIterator implements Iterator<T>

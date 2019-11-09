@@ -12,10 +12,10 @@ package org.eclipse.collections.impl.stack.mutable;
 
 import java.util.EmptyStackException;
 
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.stack.MutableStack;
-import org.eclipse.collections.impl.factory.Stacks;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.stack.StackIterableTestCase;
 import org.eclipse.collections.impl.test.Verify;

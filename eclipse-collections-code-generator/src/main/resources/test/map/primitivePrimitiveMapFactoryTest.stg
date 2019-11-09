@@ -30,9 +30,9 @@ body(type1, type2, name1, name2, wrapperName1, wrapperName2, charPrimitive1, cha
 
 package org.eclipse.collections.impl.map.primitive;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.map.primitive.Immutable<name1><name2>Map;
 import org.eclipse.collections.api.map.primitive.Mutable<name1><name2>Map;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.<name1><name2>Maps;
 import org.eclipse.collections.impl.map.mutable.primitive.<name1><name2>HashMap;
 import org.eclipse.collections.impl.test.Verify;

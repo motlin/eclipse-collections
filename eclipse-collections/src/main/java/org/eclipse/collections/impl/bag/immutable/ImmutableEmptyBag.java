@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -49,7 +49,6 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
-import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
@@ -57,16 +56,6 @@ import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.SortedBags;
-import org.eclipse.collections.api.factory.SortedMaps;
-import org.eclipse.collections.api.factory.primitive.BooleanBags;
-import org.eclipse.collections.api.factory.primitive.ByteBags;
-import org.eclipse.collections.api.factory.primitive.CharBags;
-import org.eclipse.collections.api.factory.primitive.DoubleBags;
-import org.eclipse.collections.api.factory.primitive.FloatBags;
-import org.eclipse.collections.api.factory.primitive.IntBags;
-import org.eclipse.collections.api.factory.primitive.LongBags;
-import org.eclipse.collections.api.factory.primitive.ShortBags;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MutableMap;
@@ -78,6 +67,18 @@ import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.EmptyIterator;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
+import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
+import org.eclipse.collections.impl.block.factory.Comparators;
+import org.eclipse.collections.impl.factory.primitive.BooleanBags;
+import org.eclipse.collections.impl.factory.primitive.ByteBags;
+import org.eclipse.collections.impl.factory.primitive.CharBags;
+import org.eclipse.collections.impl.factory.primitive.DoubleBags;
+import org.eclipse.collections.impl.factory.primitive.FloatBags;
+import org.eclipse.collections.impl.factory.primitive.IntBags;
+import org.eclipse.collections.impl.factory.primitive.LongBags;
+import org.eclipse.collections.impl.factory.primitive.ShortBags;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.eclipse.collections.impl.partition.bag.PartitionHashBag;
@@ -127,30 +128,6 @@ final class ImmutableEmptyBag<T>
     @Override
     public void forEachWithOccurrences(ObjectIntProcedure<? super T> objectIntProcedure)
     {
-    }
-
-    @Override
-    public boolean anySatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean allSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return true;
-    }
-
-    @Override
-    public boolean noneSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return true;
-    }
-
-    @Override
-    public T detectWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return null;
     }
 
     @Override
@@ -276,7 +253,7 @@ final class ImmutableEmptyBag<T>
     @Override
     public ImmutableBag<T> newWithAll(Iterable<? extends T> elements)
     {
-        MutableBag<T> bag = Bags.mutable.withAll(elements);
+        MutableBag<T> bag = HashBag.newBag(elements);
         return bag.toImmutable();
     }
 
@@ -585,6 +562,12 @@ final class ImmutableEmptyBag<T>
     }
 
     @Override
+    public <V extends Comparable<? super V>> MutableList<T> toSortedListBy(Function<? super T, ? extends V> function)
+    {
+        return Lists.mutable.empty();
+    }
+
+    @Override
     public MutableSet<T> toSet()
     {
         return Sets.mutable.empty();
@@ -599,13 +582,19 @@ final class ImmutableEmptyBag<T>
     @Override
     public MutableSortedBag<T> toSortedBag()
     {
-        return SortedBags.mutable.empty();
+        return TreeBag.newBag();
     }
 
     @Override
     public MutableSortedBag<T> toSortedBag(Comparator<? super T> comparator)
     {
-        return SortedBags.mutable.empty(comparator);
+        return TreeBag.newBag(comparator);
+    }
+
+    @Override
+    public <V extends Comparable<? super V>> MutableSortedBag<T> toSortedBagBy(Function<? super T, ? extends V> function)
+    {
+        return TreeBag.newBag(Comparators.byFunction(function));
     }
 
     @Override
@@ -613,7 +602,7 @@ final class ImmutableEmptyBag<T>
             Function<? super T, ? extends NK> keyFunction,
             Function<? super T, ? extends NV> valueFunction)
     {
-        return Maps.mutable.empty();
+        return UnifiedMap.newMap();
     }
 
     @Override
@@ -630,7 +619,7 @@ final class ImmutableEmptyBag<T>
             Function<? super T, ? extends NK> keyFunction,
             Function<? super T, ? extends NV> valueFunction)
     {
-        return SortedMaps.mutable.empty();
+        return TreeSortedMap.newMap();
     }
 
     @Override
@@ -640,6 +629,12 @@ final class ImmutableEmptyBag<T>
             Function<? super T, ? extends NV> valueFunction)
     {
         return TreeSortedMap.newMap(comparator);
+    }
+
+    @Override
+    public <KK extends Comparable<? super KK>, K, V> MutableSortedMap<K, V> toSortedMapBy(Function<? super K, KK> sortBy, Function<? super T, ? extends K> keyFunction, Function<? super T, ? extends V> valueFunction)
+    {
+        return TreeSortedMap.newMap(Comparators.byFunction(sortBy));
     }
 
     @Override
@@ -785,12 +780,6 @@ final class ImmutableEmptyBag<T>
 
     @Override
     public ImmutableSet<T> selectUnique()
-    {
-        return Sets.immutable.empty();
-    }
-
-    @Override
-    public RichIterable<T> distinctView()
     {
         return Sets.immutable.empty();
     }

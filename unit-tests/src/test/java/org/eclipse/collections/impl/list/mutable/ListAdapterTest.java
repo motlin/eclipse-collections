@@ -13,8 +13,8 @@ package org.eclipse.collections.impl.list.mutable;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 

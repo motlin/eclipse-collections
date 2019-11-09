@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.RandomAccess;
 import java.util.function.BiConsumer;
@@ -33,32 +32,16 @@ import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.HashingStrategy;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
-import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
-import org.eclipse.collections.api.block.function.primitive.ByteFunction;
-import org.eclipse.collections.api.block.function.primitive.CharFunction;
 import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
 import org.eclipse.collections.api.block.function.primitive.FloatFunction;
 import org.eclipse.collections.api.block.function.primitive.IntFunction;
 import org.eclipse.collections.api.block.function.primitive.LongFunction;
 import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
-import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
-import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.collection.primitive.MutableBooleanCollection;
-import org.eclipse.collections.api.collection.primitive.MutableByteCollection;
-import org.eclipse.collections.api.collection.primitive.MutableCharCollection;
-import org.eclipse.collections.api.collection.primitive.MutableDoubleCollection;
-import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
-import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
-import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
-import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMapIterable;
@@ -68,20 +51,24 @@ import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Twin;
+import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.procedure.CountProcedure;
 import org.eclipse.collections.impl.block.procedure.FastListCollectIfProcedure;
 import org.eclipse.collections.impl.block.procedure.FastListCollectProcedure;
 import org.eclipse.collections.impl.block.procedure.FastListRejectProcedure;
 import org.eclipse.collections.impl.block.procedure.FastListSelectProcedure;
 import org.eclipse.collections.impl.block.procedure.MultimapPutProcedure;
+import org.eclipse.collections.impl.factory.primitive.ObjectDoubleMaps;
+import org.eclipse.collections.impl.factory.primitive.ObjectLongMaps;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectDoubleHashMap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
 
-@SuppressWarnings("TypeMayBeWeakened")
 public final class InternalArrayIterate
 {
     private InternalArrayIterate()
@@ -106,7 +93,7 @@ public final class InternalArrayIterate
     {
         for (int i = 0; i < size; i++)
         {
-            if (!Objects.equals(array[i], list.get(i)))
+            if (!Comparators.nullSafeEquals(array[i], list.get(i)))
             {
                 return false;
             }
@@ -123,7 +110,7 @@ public final class InternalArrayIterate
             {
                 return false;
             }
-            if (!Objects.equals(array[i], iterator.next()))
+            if (!Comparators.nullSafeEquals(array[i], iterator.next()))
             {
                 return false;
             }
@@ -368,7 +355,7 @@ public final class InternalArrayIterate
     {
         for (int i = 0; i < size; i++)
         {
-            if (Objects.equals(array[i], object))
+            if (Comparators.nullSafeEquals(array[i], object))
             {
                 return i;
             }
@@ -380,7 +367,7 @@ public final class InternalArrayIterate
     {
         for (int i = size - 1; i >= 0; i--)
         {
-            if (Objects.equals(array[i], object))
+            if (Comparators.nullSafeEquals(array[i], object))
             {
                 return i;
             }
@@ -923,8 +910,17 @@ public final class InternalArrayIterate
     @Deprecated
     public static <T, R extends List<T>> R distinct(T[] objectArray, int size, R targetList)
     {
-        MutableSet<T> seenSoFar = Sets.mutable.empty();
-        return InternalArrayIterate.select(objectArray, size, seenSoFar::add, targetList);
+        MutableSet<T> seenSoFar = UnifiedSet.newSet();
+
+        for (int i = 0; i < size; i++)
+        {
+            T each = objectArray[i];
+            if (seenSoFar.add(each))
+            {
+                targetList.add(each);
+            }
+        }
+        return targetList;
     }
 
     /**
@@ -941,7 +937,17 @@ public final class InternalArrayIterate
     public static <T> FastList<T> distinct(T[] objectArray, int size, HashingStrategy<? super T> hashingStrategy)
     {
         MutableSet<T> seenSoFar = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
-        return InternalArrayIterate.select(objectArray, size, seenSoFar::add, FastList.newList());
+
+        FastList<T> result = FastList.newList();
+        for (int i = 0; i < size; i++)
+        {
+            T each = objectArray[i];
+            if (seenSoFar.add(each))
+            {
+                result.add(each);
+            }
+        }
+        return result;
     }
 
     public static <T> long sumOfInt(T[] array, int size, IntFunction<? super T> function)
@@ -1034,7 +1040,7 @@ public final class InternalArrayIterate
     public static <V, T> MutableObjectDoubleMap<V> sumByDouble(T[] array, int size, Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function)
     {
         MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
-        MutableObjectDoubleMap<V> groupKeyToCompensation = ObjectDoubleMaps.mutable.empty();
+        MutableObjectDoubleMap<V> groupKeyToCompensation = ObjectDoubleHashMap.newMap();
         for (int i = 0; i < size; i++)
         {
             T item = array[i];
@@ -1160,203 +1166,5 @@ public final class InternalArrayIterate
             T item = items[i];
             items[i] = operator.apply(item);
         }
-    }
-
-    /**
-     * Adds all array elements to the target Collection that return true when evaluating the specified predicate which is
-     * supplied each element and its relative index.
-     *
-     * @since 11.0
-     */
-    public static <R extends Collection<T>, T> R selectWithIndex(
-            T[] array,
-            int size,
-            ObjectIntPredicate<? super T> predicate,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            T item = array[i];
-            if (predicate.accept(item, i))
-            {
-                target.add(item);
-            }
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target Collection that return false when evaluating the specified predicate which is
-     * supplied each element and its relative index.
-     *
-     * @since 11.0
-     */
-    public static <R extends Collection<T>, T> R rejectWithIndex(
-            T[] array,
-            int size,
-            ObjectIntPredicate<? super T> predicate,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            T item = array[i];
-            if (!predicate.accept(item, i))
-            {
-                target.add(item);
-            }
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target MutableBooleanCollection after using the function supplied to convert
-     * each source element to the appropriate type
-     *
-     * @since 12.0
-     */
-    public static <R extends MutableBooleanCollection, T> R collectBoolean(
-            T[] items,
-            int size,
-            BooleanFunction<? super T> booleanFunction,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            target.add(booleanFunction.booleanValueOf(items[i]));
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target MutableByteCollection after using the function supplied to convert
-     * each source element to the appropriate type
-     *
-     * @since 12.0
-     */
-    public static <R extends MutableByteCollection, T> R collectByte(
-            T[] items,
-            int size,
-            ByteFunction<? super T> byteFunction,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            target.add(byteFunction.byteValueOf(items[i]));
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target MutableCharCollection after using the function supplied to convert
-     * each source element to the appropriate type
-     *
-     * @since 12.0
-     */
-    public static <R extends MutableCharCollection, T> R collectChar(
-            T[] items,
-            int size,
-            CharFunction<? super T> charFunction,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            target.add(charFunction.charValueOf(items[i]));
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target MutableDoubleCollection after using the function supplied to convert
-     * each source element to the appropriate type
-     *
-     * @since 12.0
-     */
-    public static <R extends MutableDoubleCollection, T> R collectDouble(
-            T[] items,
-            int size,
-            DoubleFunction<? super T> doubleFunction,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            target.add(doubleFunction.doubleValueOf(items[i]));
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target MutableFloatCollection after using the function supplied to convert
-     * each source element to the appropriate type
-     *
-     * @since 12.0
-     */
-    public static <R extends MutableFloatCollection, T> R collectFloat(
-            T[] items,
-            int size,
-            FloatFunction<? super T> floatFunction,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            target.add(floatFunction.floatValueOf(items[i]));
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target MutableIntCollection after using the function supplied to convert
-     * each source element to the appropriate type
-     *
-     * @since 12.0
-     */
-    public static <R extends MutableIntCollection, T> R collectInt(
-            T[] items,
-            int size,
-            IntFunction<? super T> intFunction,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            target.add(intFunction.intValueOf(items[i]));
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target MutableLongCollection after using the function supplied to convert
-     * each source element to the appropriate type
-     *
-     * @since 12.0
-     */
-    public static <R extends MutableLongCollection, T> R collectLong(
-            T[] items,
-            int size,
-            LongFunction<? super T> longFunction,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            target.add(longFunction.longValueOf(items[i]));
-        }
-        return target;
-    }
-
-    /**
-     * Adds all array elements to the target MutableShortCollection after using the function supplied to convert
-     * each source element to the appropriate type
-     *
-     * @since 12.0
-     */
-    public static <R extends MutableShortCollection, T> R collectShort(
-            T[] items,
-            int size,
-            ShortFunction<? super T> shortFunction,
-            R target)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            target.add(shortFunction.shortValueOf(items[i]));
-        }
-        return target;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -16,8 +16,8 @@ import java.util.Iterator;
 import org.eclipse.collections.api.bag.sorted.ImmutableSortedBag;
 import org.eclipse.collections.api.bag.sorted.SortedBag;
 import org.eclipse.collections.api.collection.MutableCollection;
-import org.eclipse.collections.impl.factory.SortedBags;
-import org.junit.jupiter.api.Test;
+import org.eclipse.collections.api.factory.SortedBags;
+import org.junit.Test;
 
 public class ImmutableSortedBagImplNoIteratorTest extends ImmutableSortedBagImplTest
 {

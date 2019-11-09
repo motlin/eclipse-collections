@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -16,7 +16,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.collections.api.block.function.Function2;
@@ -32,6 +31,7 @@ import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.tuple.Tuples;
 
@@ -71,7 +71,7 @@ final class SingletonMap<K, V>
     public MutableMap<K, V> withKeyValue(K addKey, V addValue)
     {
         // Map behavior specifies that if you put in a duplicate key, you replace the value
-        if (Objects.equals(this.key1, addKey))
+        if (Comparators.nullSafeEquals(this.key1, addKey))
         {
             this.value1 = addValue;
             return this;
@@ -82,7 +82,7 @@ final class SingletonMap<K, V>
     @Override
     public MutableMap<K, V> withoutKey(K key)
     {
-        if (Objects.equals(key, this.key1))
+        if (Comparators.nullSafeEquals(key, this.key1))
         {
             return new EmptyMap<>();
         }
@@ -105,19 +105,19 @@ final class SingletonMap<K, V>
     @Override
     public boolean containsKey(Object key)
     {
-        return Objects.equals(this.key1, key);
+        return Comparators.nullSafeEquals(this.key1, key);
     }
 
     @Override
     public boolean containsValue(Object value)
     {
-        return Objects.equals(this.value1, value);
+        return Comparators.nullSafeEquals(this.value1, value);
     }
 
     @Override
     public V get(Object key)
     {
-        if (Objects.equals(this.key1, key))
+        if (Comparators.nullSafeEquals(this.key1, key))
         {
             return this.value1;
         }
@@ -230,12 +230,6 @@ final class SingletonMap<K, V>
     public <R> FixedSizeMap<K, R> collectValues(Function2<? super K, ? super V, ? extends R> function)
     {
         return Maps.fixedSize.of(this.key1, function.value(this.key1, this.value1));
-    }
-
-    @Override
-    public <R> FixedSizeMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function)
-    {
-        return Maps.fixedSize.of(function.value(this.key1, this.value1), this.value1);
     }
 
     @Override

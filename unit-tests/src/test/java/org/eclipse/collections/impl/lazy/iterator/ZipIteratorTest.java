@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,19 +10,16 @@
 
 package org.eclipse.collections.impl.lazy.iterator;
 
-import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Test;
 
 public class ZipIteratorTest
 {
     private static final ImmutableList<Integer> EMPTY = Lists.immutable.of();
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testRemove()
     {
-        assertThrows(UnsupportedOperationException.class, () -> new ZipIterator<>(EMPTY, EMPTY).remove());
+        new ZipIterator<>(EMPTY, EMPTY).remove();
     }
 }

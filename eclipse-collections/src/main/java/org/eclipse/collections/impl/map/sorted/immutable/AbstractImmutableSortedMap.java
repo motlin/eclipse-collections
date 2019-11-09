@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2017 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,12 +11,11 @@
 package org.eclipse.collections.impl.map.sorted.immutable;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedMap;
-import java.util.function.BiConsumer;
 
+import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -32,23 +31,11 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.Bags;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.SortedMaps;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.ImmutableBooleanList;
 import org.eclipse.collections.api.list.primitive.ImmutableByteList;
 import org.eclipse.collections.api.list.primitive.ImmutableCharList;
@@ -57,19 +44,8 @@ import org.eclipse.collections.api.list.primitive.ImmutableFloatList;
 import org.eclipse.collections.api.list.primitive.ImmutableIntList;
 import org.eclipse.collections.api.list.primitive.ImmutableLongList;
 import org.eclipse.collections.api.list.primitive.ImmutableShortList;
-import org.eclipse.collections.api.list.primitive.MutableBooleanList;
-import org.eclipse.collections.api.list.primitive.MutableByteList;
-import org.eclipse.collections.api.list.primitive.MutableCharList;
-import org.eclipse.collections.api.list.primitive.MutableDoubleList;
-import org.eclipse.collections.api.list.primitive.MutableFloatList;
-import org.eclipse.collections.api.list.primitive.MutableIntList;
-import org.eclipse.collections.api.list.primitive.MutableLongList;
-import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.map.ImmutableMap;
-import org.eclipse.collections.api.map.ImmutableOrderedMap;
-import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.api.map.primitive.ImmutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
@@ -86,13 +62,32 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
+import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
+import org.eclipse.collections.impl.block.procedure.NonMutatingAggregationProcedure;
 import org.eclipse.collections.impl.block.procedure.PartitionPredicate2Procedure;
 import org.eclipse.collections.impl.block.procedure.PartitionProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectInstancesOfProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.map.AbstractMapIterable;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
-import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectDoubleHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectLongHashMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
@@ -164,22 +159,6 @@ public abstract class AbstractImmutableSortedMap<K, V>
     }
 
     @Override
-    public ImmutableSortedMap<K, V> newWithMap(Map<? extends K, ? extends V> map)
-    {
-        TreeSortedMap<K, V> sortedMap = TreeSortedMap.newMap(this);
-        sortedMap.putAll(map);
-        return sortedMap.toImmutable();
-    }
-
-    @Override
-    public ImmutableSortedMap<K, V> newWithMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
-    {
-        TreeSortedMap<K, V> sortedMap = TreeSortedMap.newMap(this);
-        mapIterable.forEachKeyValue(sortedMap::put);
-        return sortedMap.toImmutable();
-    }
-
-    @Override
     public ImmutableSortedMap<K, V> newWithAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
     {
         TreeSortedMap<K, V> sortedMap = TreeSortedMap.newMap(this);
@@ -237,7 +216,7 @@ public abstract class AbstractImmutableSortedMap<K, V>
     @Override
     public ImmutableList<V> select(Predicate<? super V> predicate)
     {
-        return this.select(predicate, Lists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.select(predicate, FastList.newList(this.size())).toImmutable();
     }
 
     @Override
@@ -263,7 +242,7 @@ public abstract class AbstractImmutableSortedMap<K, V>
     @Override
     public ImmutableList<V> reject(Predicate<? super V> predicate)
     {
-        return this.reject(predicate, Lists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.reject(predicate, FastList.newList(this.size())).toImmutable();
     }
 
     @Override
@@ -289,23 +268,23 @@ public abstract class AbstractImmutableSortedMap<K, V>
     @Override
     public PartitionImmutableList<V> partition(Predicate<? super V> predicate)
     {
-        PartitionMutableList<V> partitionMutableList = new PartitionFastList<>();
-        this.forEach(new PartitionProcedure<>(predicate, partitionMutableList));
-        return partitionMutableList.toImmutable();
+        PartitionMutableList<V> partitionFastList = new PartitionFastList<>();
+        this.forEach(new PartitionProcedure<>(predicate, partitionFastList));
+        return partitionFastList.toImmutable();
     }
 
     @Override
     public <P> PartitionImmutableList<V> partitionWith(Predicate2<? super V, ? super P> predicate, P parameter)
     {
-        PartitionMutableList<V> partitionMutableList = new PartitionFastList<>();
-        this.forEach(new PartitionPredicate2Procedure<>(predicate, parameter, partitionMutableList));
-        return partitionMutableList.toImmutable();
+        PartitionMutableList<V> partitionFastList = new PartitionFastList<>();
+        this.forEach(new PartitionPredicate2Procedure<>(predicate, parameter, partitionFastList));
+        return partitionFastList.toImmutable();
     }
 
     @Override
     public <S> ImmutableList<S> selectInstancesOf(Class<S> clazz)
     {
-        MutableList<S> result = FastList.newList(this.size());
+        FastList<S> result = FastList.newList(this.size());
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
         return result.toImmutable();
     }
@@ -319,57 +298,65 @@ public abstract class AbstractImmutableSortedMap<K, V>
     @Override
     public ImmutableBooleanList collectBoolean(BooleanFunction<? super V> booleanFunction)
     {
-        MutableBooleanList result = BooleanLists.mutable.withInitialCapacity(this.size());
-        return this.collectBoolean(booleanFunction, result).toImmutable();
+        BooleanArrayList result = new BooleanArrayList(this.size());
+        this.forEach(new CollectBooleanProcedure<>(booleanFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableByteList collectByte(ByteFunction<? super V> byteFunction)
     {
-        MutableByteList result = ByteLists.mutable.withInitialCapacity(this.size());
-        return this.collectByte(byteFunction, result).toImmutable();
+        ByteArrayList result = new ByteArrayList(this.size());
+        this.forEach(new CollectByteProcedure<>(byteFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableCharList collectChar(CharFunction<? super V> charFunction)
     {
-        MutableCharList result = CharLists.mutable.withInitialCapacity(this.size());
-        return this.collectChar(charFunction, result).toImmutable();
+        CharArrayList result = new CharArrayList(this.size());
+        this.forEach(new CollectCharProcedure<>(charFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableDoubleList collectDouble(DoubleFunction<? super V> doubleFunction)
     {
-        MutableDoubleList result = DoubleLists.mutable.withInitialCapacity(this.size());
-        return this.collectDouble(doubleFunction, result).toImmutable();
+        DoubleArrayList result = new DoubleArrayList(this.size());
+        this.forEach(new CollectDoubleProcedure<>(doubleFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableFloatList collectFloat(FloatFunction<? super V> floatFunction)
     {
-        MutableFloatList result = FloatLists.mutable.withInitialCapacity(this.size());
-        return this.collectFloat(floatFunction, result).toImmutable();
+        FloatArrayList result = new FloatArrayList(this.size());
+        this.forEach(new CollectFloatProcedure<>(floatFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableIntList collectInt(IntFunction<? super V> intFunction)
     {
-        MutableIntList result = IntLists.mutable.withInitialCapacity(this.size());
-        return this.collectInt(intFunction, result).toImmutable();
+        IntArrayList result = new IntArrayList(this.size());
+        this.forEach(new CollectIntProcedure<>(intFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableLongList collectLong(LongFunction<? super V> longFunction)
     {
-        MutableLongList result = LongLists.mutable.withInitialCapacity(this.size());
-        return this.collectLong(longFunction, result).toImmutable();
+        LongArrayList result = new LongArrayList(this.size());
+        this.forEach(new CollectLongProcedure<>(longFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableShortList collectShort(ShortFunction<? super V> shortFunction)
     {
-        MutableShortList result = ShortLists.mutable.withInitialCapacity(this.size());
-        return this.collectShort(shortFunction, result).toImmutable();
+        ShortArrayList result = new ShortArrayList(this.size());
+        this.forEach(new CollectShortProcedure<>(shortFunction, result));
+        return result.toImmutable();
     }
 
     @Override
@@ -401,15 +388,6 @@ public abstract class AbstractImmutableSortedMap<K, V>
     }
 
     @Override
-    public <R> ImmutableOrderedMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function)
-    {
-        MutableOrderedMap<R, V> result = OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size()));
-        return MapIterate
-                .collectKeysUnique(this, function, result)
-                .toImmutable();
-    }
-
-    @Override
     public Pair<K, V> detect(Predicate2<? super K, ? super V> predicate)
     {
         return this.keyValuesView().detect(each -> predicate.accept(each.getOne(), each.getTwo()));
@@ -424,19 +402,19 @@ public abstract class AbstractImmutableSortedMap<K, V>
     @Override
     public <R> ImmutableList<R> flatCollect(Function<? super V, ? extends Iterable<R>> function)
     {
-        return this.flatCollect(function, Lists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.flatCollect(function, FastList.newList(this.size())).toImmutable();
     }
 
     @Override
     public <S> ImmutableList<Pair<V, S>> zip(Iterable<S> that)
     {
-        return this.zip(that, Lists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.zip(that, FastList.newList(this.size())).toImmutable();
     }
 
     @Override
     public ImmutableList<Pair<V, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(Lists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.zipWithIndex(FastList.newList(this.size())).toImmutable();
     }
 
     @Override
@@ -476,47 +454,59 @@ public abstract class AbstractImmutableSortedMap<K, V>
     }
 
     @Override
-    public <K1, V1, V2> ImmutableMap<K1, V2> aggregateBy(
-            Function<? super K, ? extends K1> keyFunction,
-            Function<? super V, ? extends V1> valueFunction,
+    public <K2, V2> ImmutableMap<K2, V2> aggregateInPlaceBy(
+            Function<? super V, ? extends K2> groupBy,
             Function0<? extends V2> zeroValueFactory,
-            Function2<? super V2, ? super V1, ? extends V2> nonMutatingAggregator)
+            Procedure2<? super V2, ? super V> mutatingAggregator)
     {
-        MutableMap<K1, V2> map = Maps.mutable.empty();
-        this.forEachKeyValue((key, value) -> map.updateValueWith(
-                keyFunction.valueOf(key),
-                zeroValueFactory,
-                nonMutatingAggregator,
-                valueFunction.valueOf(value)));
+        MutableMap<K2, V2> map = UnifiedMap.newMap();
+        this.forEach(new MutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, mutatingAggregator));
+        return map.toImmutable();
+    }
+
+    @Override
+    public <K2, V2> ImmutableMap<K2, V2> aggregateBy(
+            Function<? super V, ? extends K2> groupBy,
+            Function0<? extends V2> zeroValueFactory,
+            Function2<? super V2, ? super V, ? extends V2> nonMutatingAggregator)
+    {
+        MutableMap<K2, V2> map = UnifiedMap.newMap();
+        this.forEach(new NonMutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, nonMutatingAggregator));
         return map.toImmutable();
     }
 
     @Override
     public <V1> ImmutableObjectLongMap<V1> sumByInt(Function<? super V, ? extends V1> groupBy, IntFunction<? super V> function)
     {
-        MutableObjectLongMap<V1> result = ObjectLongMaps.mutable.empty();
+        MutableObjectLongMap<V1> result = ObjectLongHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByIntFunction(groupBy, function)).toImmutable();
     }
 
     @Override
     public <V1> ImmutableObjectDoubleMap<V1> sumByFloat(Function<? super V, ? extends V1> groupBy, FloatFunction<? super V> function)
     {
-        MutableObjectDoubleMap<V1> result = ObjectDoubleMaps.mutable.empty();
+        MutableObjectDoubleMap<V1> result = ObjectDoubleHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByFloatFunction(groupBy, function)).toImmutable();
     }
 
     @Override
     public <V1> ImmutableObjectLongMap<V1> sumByLong(Function<? super V, ? extends V1> groupBy, LongFunction<? super V> function)
     {
-        MutableObjectLongMap<V1> result = ObjectLongMaps.mutable.empty();
+        MutableObjectLongMap<V1> result = ObjectLongHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByLongFunction(groupBy, function)).toImmutable();
     }
 
     @Override
     public <V1> ImmutableObjectDoubleMap<V1> sumByDouble(Function<? super V, ? extends V1> groupBy, DoubleFunction<? super V> function)
     {
-        MutableObjectDoubleMap<V1> result = ObjectDoubleMaps.mutable.empty();
+        MutableObjectDoubleMap<V1> result = ObjectDoubleHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByDoubleFunction(groupBy, function)).toImmutable();
+    }
+
+    @Override
+    public LazyIterable<V> asReversed()
+    {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".asReversed() not implemented yet");
     }
 
     @Override
@@ -553,6 +543,12 @@ public abstract class AbstractImmutableSortedMap<K, V>
     public ImmutableList<V> distinct()
     {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".distinct() not implemented yet");
+    }
+
+    @Override
+    public int indexOf(Object object)
+    {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".indexOf() not implemented yet");
     }
 
     @Override
@@ -610,11 +606,5 @@ public abstract class AbstractImmutableSortedMap<K, V>
     public <V1> ImmutableBag<V1> countByEach(Function<? super V, ? extends Iterable<V1>> function)
     {
         return this.countByEach(function, Bags.mutable.empty()).toImmutable();
-    }
-
-    @Override
-    public void forEach(BiConsumer<? super K, ? super V> action)
-    {
-        super.forEach(action);
     }
 }

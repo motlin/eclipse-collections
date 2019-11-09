@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,16 +11,15 @@
 package org.eclipse.collections.impl.lazy;
 
 import org.eclipse.collections.api.factory.Lists;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ZipIterableTest
 {
     private ZipIterable<Character, Integer> zipIterable;
 
-    @BeforeEach
+    @Before
     public void setUp()
     {
         this.zipIterable = new ZipIterable<>(
@@ -39,7 +38,7 @@ public class ZipIterableTest
             sb.append(index);
         });
 
-        assertEquals("|a00|b11|c22", sb.toString());
+        Assert.assertEquals("|a00|b11|c22", sb.toString());
     }
 
     @Test
@@ -52,6 +51,6 @@ public class ZipIterableTest
             sb.append(each.getTwo());
         }, "|");
 
-        assertEquals("|a0|b1|c2", sb.toString());
+        Assert.assertEquals("|a0|b1|c2", sb.toString());
     }
 }

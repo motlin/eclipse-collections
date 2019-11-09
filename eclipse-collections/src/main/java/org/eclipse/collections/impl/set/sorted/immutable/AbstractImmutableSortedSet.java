@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -12,7 +12,6 @@ package org.eclipse.collections.impl.set.sorted.immutable;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ExecutorService;
@@ -34,15 +33,6 @@ import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.SortedSets;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.ImmutableBooleanList;
@@ -53,14 +43,6 @@ import org.eclipse.collections.api.list.primitive.ImmutableFloatList;
 import org.eclipse.collections.api.list.primitive.ImmutableIntList;
 import org.eclipse.collections.api.list.primitive.ImmutableLongList;
 import org.eclipse.collections.api.list.primitive.ImmutableShortList;
-import org.eclipse.collections.api.list.primitive.MutableBooleanList;
-import org.eclipse.collections.api.list.primitive.MutableByteList;
-import org.eclipse.collections.api.list.primitive.MutableCharList;
-import org.eclipse.collections.api.list.primitive.MutableDoubleList;
-import org.eclipse.collections.api.list.primitive.MutableFloatList;
-import org.eclipse.collections.api.list.primitive.MutableIntList;
-import org.eclipse.collections.api.list.primitive.MutableLongList;
-import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.multimap.sortedset.ImmutableSortedSetMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.set.sorted.PartitionImmutableSortedSet;
@@ -83,9 +65,25 @@ import org.eclipse.collections.impl.block.procedure.PartitionProcedure;
 import org.eclipse.collections.impl.block.procedure.RejectProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectInstancesOfProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.collection.immutable.AbstractImmutableCollection;
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.NonParallelSortedSetIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap;
 import org.eclipse.collections.impl.partition.set.sorted.PartitionTreeSortedSet;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
@@ -114,7 +112,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     {
         if (!this.contains(element))
         {
-            return SortedSets.mutable.withAll(this).with(element).toImmutable();
+            return TreeSortedSet.newSet(this).with(element).toImmutable();
         }
         return this;
     }
@@ -124,7 +122,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     {
         if (this.contains(element))
         {
-            MutableSortedSet<T> result = TreeSortedSet.newSet(this);
+            TreeSortedSet<T> result = TreeSortedSet.newSet(this);
             result.remove(element);
             return result.toImmutable();
         }
@@ -134,7 +132,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     @Override
     public ImmutableSortedSet<T> newWithAll(Iterable<? extends T> elements)
     {
-        MutableSortedSet<T> result = TreeSortedSet.newSet(this);
+        TreeSortedSet<T> result = TreeSortedSet.newSet(this);
         result.addAllIterable(elements);
         return result.toImmutable();
     }
@@ -142,7 +140,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     @Override
     public ImmutableSortedSet<T> newWithoutAll(Iterable<? extends T> elements)
     {
-        MutableSortedSet<T> result = TreeSortedSet.newSet(this);
+        TreeSortedSet<T> result = TreeSortedSet.newSet(this);
         this.removeAllFrom(elements, result);
         return result.toImmutable();
     }
@@ -168,57 +166,65 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     @Override
     public ImmutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction)
     {
-        MutableBooleanList result = BooleanLists.mutable.withInitialCapacity(this.size());
-        return this.collectBoolean(booleanFunction, result).toImmutable();
+        BooleanArrayList result = new BooleanArrayList(this.size());
+        this.forEach(new CollectBooleanProcedure<>(booleanFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableByteList collectByte(ByteFunction<? super T> byteFunction)
     {
-        MutableByteList result = ByteLists.mutable.withInitialCapacity(this.size());
-        return this.collectByte(byteFunction, result).toImmutable();
+        ByteArrayList result = new ByteArrayList(this.size());
+        this.forEach(new CollectByteProcedure<>(byteFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableCharList collectChar(CharFunction<? super T> charFunction)
     {
-        MutableCharList result = CharLists.mutable.withInitialCapacity(this.size());
-        return this.collectChar(charFunction, result).toImmutable();
+        CharArrayList result = new CharArrayList(this.size());
+        this.forEach(new CollectCharProcedure<>(charFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction)
     {
-        MutableDoubleList result = DoubleLists.mutable.withInitialCapacity(this.size());
-        return this.collectDouble(doubleFunction, result).toImmutable();
+        DoubleArrayList result = new DoubleArrayList(this.size());
+        this.forEach(new CollectDoubleProcedure<>(doubleFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableFloatList collectFloat(FloatFunction<? super T> floatFunction)
     {
-        MutableFloatList result = FloatLists.mutable.withInitialCapacity(this.size());
-        return this.collectFloat(floatFunction, result).toImmutable();
+        FloatArrayList result = new FloatArrayList(this.size());
+        this.forEach(new CollectFloatProcedure<>(floatFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableIntList collectInt(IntFunction<? super T> intFunction)
     {
-        MutableIntList result = IntLists.mutable.withInitialCapacity(this.size());
-        return this.collectInt(intFunction, result).toImmutable();
+        IntArrayList result = new IntArrayList(this.size());
+        this.forEach(new CollectIntProcedure<>(intFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableLongList collectLong(LongFunction<? super T> longFunction)
     {
-        MutableLongList result = LongLists.mutable.withInitialCapacity(this.size());
-        return this.collectLong(longFunction, result).toImmutable();
+        LongArrayList result = new LongArrayList(this.size());
+        this.forEach(new CollectLongProcedure<>(longFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableShortList collectShort(ShortFunction<? super T> shortFunction)
     {
-        MutableShortList result = ShortLists.mutable.withInitialCapacity(this.size());
-        return this.collectShort(shortFunction, result).toImmutable();
+        ShortArrayList result = new ShortArrayList(this.size());
+        this.forEach(new CollectShortProcedure<>(shortFunction, result));
+        return result.toImmutable();
     }
 
     @Override
@@ -237,7 +243,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     @Override
     public ImmutableSortedSet<T> select(Predicate<? super T> predicate)
     {
-        MutableSortedSet<T> result = TreeSortedSet.newSet(this.comparator());
+        TreeSortedSet<T> result = TreeSortedSet.newSet(this.comparator());
         this.forEach(new SelectProcedure<>(predicate, result));
         return result.toImmutable();
     }
@@ -251,7 +257,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     @Override
     public ImmutableSortedSet<T> reject(Predicate<? super T> predicate)
     {
-        MutableSortedSet<T> result = TreeSortedSet.newSet(this.comparator());
+        TreeSortedSet<T> result = TreeSortedSet.newSet(this.comparator());
         this.forEach(new RejectProcedure<>(predicate, result));
         return result.toImmutable();
     }
@@ -288,7 +294,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     @Override
     public <S> ImmutableSortedSet<S> selectInstancesOf(Class<S> clazz)
     {
-        MutableSortedSet<S> result = TreeSortedSet.newSet((Comparator<? super S>) this.comparator());
+        TreeSortedSet<S> result = TreeSortedSet.newSet((Comparator<? super S>) this.comparator());
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
         return result.toImmutable();
     }
@@ -347,7 +353,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            MutableList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
+            FastList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
             return Iterate.zip(this, that, target).toImmutable();
         }
         return Iterate.zip(this, that, FastList.newList()).toImmutable();
@@ -359,7 +365,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
         Comparator<? super T> comparator = this.comparator();
         if (comparator == null)
         {
-            MutableSortedSet<Pair<T, Integer>> pairs = TreeSortedSet.newSet(Comparators.byFunction(Functions.firstOfPair(), Comparators.naturalOrder()));
+            TreeSortedSet<Pair<T, Integer>> pairs = TreeSortedSet.newSet(Comparators.byFunction(Functions.firstOfPair(), Comparators.naturalOrder()));
             return Iterate.zipWithIndex(this, pairs).toImmutable();
         }
         return Iterate.zipWithIndex(this, TreeSortedSet.newSet(Comparators.byFirstOfPair(comparator))).toImmutable();
@@ -490,12 +496,21 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     @Override
     public ParallelSortedSetIterable<T> asParallel(ExecutorService executorService, int batchSize)
     {
-        Objects.requireNonNull(executorService);
+        if (executorService == null)
+        {
+            throw new NullPointerException();
+        }
         if (batchSize < 1)
         {
-            throw new IllegalArgumentException("batchSize must be greater than zero, but was: " + batchSize);
+            throw new IllegalArgumentException();
         }
         return new NonParallelSortedSetIterable<>(this);
+    }
+
+    @Override
+    public LazyIterable<T> asReversed()
+    {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".asReversed() not implemented yet");
     }
 
     @Override

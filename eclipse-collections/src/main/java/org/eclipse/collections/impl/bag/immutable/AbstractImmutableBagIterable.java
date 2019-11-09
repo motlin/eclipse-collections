@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2017 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -21,59 +21,81 @@ import java.util.stream.StreamSupport;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.bag.ImmutableBagIterable;
 import org.eclipse.collections.api.block.function.Function;
+import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
 import org.eclipse.collections.api.block.function.primitive.FloatFunction;
 import org.eclipse.collections.api.block.function.primitive.IntFunction;
 import org.eclipse.collections.api.block.function.primitive.LongFunction;
-import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
+import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
+import org.eclipse.collections.api.map.ImmutableMap;
+import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.primitive.ImmutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.impl.bag.AbstractBag;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
+import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
+import org.eclipse.collections.impl.block.procedure.NonMutatingAggregationProcedure;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectDoubleHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectLongHashMap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 public abstract class AbstractImmutableBagIterable<T>
         extends AbstractBag<T>
         implements ImmutableBagIterable<T>
 {
     @Override
+    public <K, V> ImmutableMap<K, V> aggregateInPlaceBy(
+            Function<? super T, ? extends K> groupBy,
+            Function0<? extends V> zeroValueFactory,
+            Procedure2<? super V, ? super T> mutatingAggregator)
+    {
+        MutableMap<K, V> map = UnifiedMap.newMap();
+        this.forEach(new MutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, mutatingAggregator));
+        return map.toImmutable();
+    }
+
+    @Override
+    public <K, V> ImmutableMap<K, V> aggregateBy(
+            Function<? super T, ? extends K> groupBy,
+            Function0<? extends V> zeroValueFactory,
+            Function2<? super V, ? super T, ? extends V> nonMutatingAggregator)
+    {
+        MutableMap<K, V> map = UnifiedMap.newMap();
+        this.forEach(new NonMutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, nonMutatingAggregator));
+        return map.toImmutable();
+    }
+
+    @Override
     public <V> ImmutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        this.forEachWithOccurrences((each, occurrences) -> result.addToValue(
-                groupBy.valueOf(each),
-                function.intValueOf(each) * (long) occurrences));
-        return result.toImmutable();
+        MutableObjectLongMap<V> result = ObjectLongHashMap.newMap();
+        return this.injectInto(result, PrimitiveFunctions.sumByIntFunction(groupBy, function)).toImmutable();
     }
 
     @Override
     public <V> ImmutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
+        MutableObjectDoubleMap<V> result = ObjectDoubleHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByFloatFunction(groupBy, function)).toImmutable();
     }
 
     @Override
     public <V> ImmutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        this.forEachWithOccurrences((each, occurrences) -> result.addToValue(
-                groupBy.valueOf(each),
-                function.longValueOf(each) * (long) occurrences));
-        return result.toImmutable();
+        MutableObjectLongMap<V> result = ObjectLongHashMap.newMap();
+        return this.injectInto(result, PrimitiveFunctions.sumByLongFunction(groupBy, function)).toImmutable();
     }
 
     @Override
     public <V> ImmutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
+        MutableObjectDoubleMap<V> result = ObjectDoubleHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByDoubleFunction(groupBy, function)).toImmutable();
     }
 
@@ -88,7 +110,7 @@ public abstract class AbstractImmutableBagIterable<T>
             List<T> toBeRemoved = (List<T>) elements;
             if (this.size() * toBeRemoved.size() > 10000)
             {
-                result.removeAll(Sets.mutable.withAll(elements));
+                result.removeAll(UnifiedSet.newSet(elements));
             }
             else
             {
@@ -97,7 +119,7 @@ public abstract class AbstractImmutableBagIterable<T>
         }
         else
         {
-            result.removeAll(Sets.mutable.withAll(elements));
+            result.removeAll(UnifiedSet.newSet(elements));
         }
     }
 
@@ -198,24 +220,5 @@ public abstract class AbstractImmutableBagIterable<T>
     public Collection<T> castToCollection()
     {
         return this;
-    }
-
-    protected boolean shortCircuit(
-            T[] elements,
-            int[] occurrences,
-            ObjectIntPredicate<? super T> predicate,
-            boolean expected,
-            boolean onShortCircuit,
-            boolean atEnd)
-    {
-        for (int i = 0; i < elements.length; i++)
-        {
-            T each = elements[i];
-            if (predicate.accept(each, occurrences[i]) == expected)
-            {
-                return onShortCircuit;
-            }
-        }
-        return atEnd;
     }
 }

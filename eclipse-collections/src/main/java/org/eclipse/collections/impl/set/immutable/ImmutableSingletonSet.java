@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,14 +13,13 @@ package org.eclipse.collections.impl.set.immutable;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.ImmutableSet;
+import org.eclipse.collections.impl.block.factory.Comparators;
 
 final class ImmutableSingletonSet<T>
         extends AbstractImmutableSet<T>
@@ -85,7 +84,7 @@ final class ImmutableSingletonSet<T>
     @Override
     public boolean contains(Object obj)
     {
-        return Objects.equals(obj, this.element1);
+        return Comparators.nullSafeEquals(obj, this.element1);
     }
 
     @Override

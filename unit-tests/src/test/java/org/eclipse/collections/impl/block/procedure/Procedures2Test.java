@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -16,19 +16,13 @@ import java.util.IntSummaryStatistics;
 import java.util.LongSummaryStatistics;
 
 import org.eclipse.collections.api.block.procedure.Procedure2;
-import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.tuple.primitive.IntIntPair;
 import org.eclipse.collections.impl.block.factory.Procedures2;
-import org.eclipse.collections.impl.block.procedure.checked.ThrowingProcedure2;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class Procedures2Test
 {
@@ -38,21 +32,7 @@ public class Procedures2Test
         Verify.assertThrowsWithCause(
                 RuntimeException.class,
                 IOException.class,
-                () -> Procedures2.throwing((a, b) ->
-                {
-                    throw new IOException();
-                }).value(null, null));
-    }
-
-    @Test
-    public void throwingWithSuccessfulCompletion()
-    {
-        MutableList<IntIntPair> list = Lists.mutable.empty();
-        ThrowingProcedure2<Integer, Integer> throwingProcedure2 = (object, parameter) -> list.add(
-                PrimitiveTuples.pair(object.intValue(), parameter.intValue()));
-
-        Procedures2.throwing(throwingProcedure2).value(2, 3);
-        assertEquals(Lists.mutable.of(PrimitiveTuples.pair(2, 3)), list);
+                () -> Procedures2.throwing((a, b) -> { throw new IOException(); }).value(null, null));
     }
 
     @Test
@@ -62,33 +42,24 @@ public class Procedures2Test
                 RuntimeException.class,
                 IOException.class,
                 () -> Procedures2.throwing(
-                        (one, two) ->
-                        {
-                            throw new IOException();
-                        },
+                        (one, two) -> { throw new IOException(); },
                         (one, two, ce) -> new RuntimeException(ce)).value(null, null));
         Verify.assertThrowsWithCause(
                 MyRuntimeException.class,
                 IOException.class,
                 () -> Procedures2.throwing(
-                        (one, two) ->
-                        {
-                            throw new IOException();
-                        },
+                        (one, two) -> { throw new IOException(); },
                         this::throwMyException).value(null, null));
-        assertThrows(
+        Verify.assertThrows(
                 NullPointerException.class,
                 () -> Procedures2.throwing(
-                        (one, two) ->
-                        {
-                            throw new NullPointerException();
-                        },
+                        (one, two) -> { throw new NullPointerException(); },
                         this::throwMyException).value(null, null));
     }
 
     private MyRuntimeException throwMyException(Object one, Object two, Throwable exception)
     {
-        return new MyRuntimeException(String.valueOf(one) + two, exception);
+        return new MyRuntimeException(String.valueOf(one) + String.valueOf(two), exception);
     }
 
     @Test
@@ -97,7 +68,7 @@ public class Procedures2Test
         CollectionAddProcedure<Integer> procedure = CollectionAddProcedure.on(FastList.newList());
         Procedure2<Integer, Object> procedure2 = Procedures2.fromProcedure(procedure);
         procedure2.value(1, null);
-        assertEquals(FastList.newListWith(1), procedure.getResult());
+        Assert.assertEquals(FastList.newListWith(1), procedure.getResult());
     }
 
     @Test
@@ -126,8 +97,8 @@ public class Procedures2Test
                 DoubleSummaryStatistics::new,
                 Procedures2.summarizeDouble(Double::doubleValue));
         Verify.assertSize(2, map);
-        assertEquals(6.0, map.get("2.0").getSum(), 0.0);
-        assertEquals(9.0, map.get("3.0").getSum(), 0.0);
+        Assert.assertEquals(6.0, map.get("2.0").getSum(), 0.0);
+        Assert.assertEquals(9.0, map.get("3.0").getSum(), 0.0);
     }
 
     /**
@@ -142,8 +113,8 @@ public class Procedures2Test
                 DoubleSummaryStatistics::new,
                 Procedures2.summarizeFloat(Float::floatValue));
         Verify.assertSize(2, map);
-        assertEquals(6.0, map.get("2.0").getSum(), 0.0);
-        assertEquals(9.0, map.get("3.0").getSum(), 0.0);
+        Assert.assertEquals(6.0, map.get("2.0").getSum(), 0.0);
+        Assert.assertEquals(9.0, map.get("3.0").getSum(), 0.0);
     }
 
     /**
@@ -158,8 +129,8 @@ public class Procedures2Test
                 LongSummaryStatistics::new,
                 Procedures2.summarizeLong(Long::longValue));
         Verify.assertSize(2, map);
-        assertEquals(6, map.get("2").getSum());
-        assertEquals(9, map.get("3").getSum());
+        Assert.assertEquals(6, map.get("2").getSum());
+        Assert.assertEquals(9, map.get("3").getSum());
     }
 
     /**
@@ -174,7 +145,7 @@ public class Procedures2Test
                 IntSummaryStatistics::new,
                 Procedures2.summarizeInt(Integer::intValue));
         Verify.assertSize(2, map);
-        assertEquals(6, map.get("2").getSum());
-        assertEquals(9, map.get("3").getSum());
+        Assert.assertEquals(6, map.get("2").getSum());
+        Assert.assertEquals(9, map.get("3").getSum());
     }
 }

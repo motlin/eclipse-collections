@@ -28,6 +28,7 @@ import org.eclipse.collections.api.<name2>Iterable;
 import org.eclipse.collections.api.bag.Bag;
 import org.eclipse.collections.api.block.function.primitive.<name2>ToObjectFunction;
 import org.eclipse.collections.api.collection.primitive.Mutable<name2>Collection;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.iterator.<name2>Iterator;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.bag.mutable.HashBag;

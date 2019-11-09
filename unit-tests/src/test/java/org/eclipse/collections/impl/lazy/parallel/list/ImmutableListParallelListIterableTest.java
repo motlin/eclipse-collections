@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -12,9 +12,7 @@ package org.eclipse.collections.impl.lazy.parallel.list;
 
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ParallelListIterable;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Test;
 
 public class ImmutableListParallelListIterableTest extends ParallelListIterableTestCase
 {
@@ -30,15 +28,15 @@ public class ImmutableListParallelListIterableTest extends ParallelListIterableT
         return Lists.immutable.with(littleElements).asParallel(this.executorService, this.batchSize);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void asParallel_small_batch()
     {
-        assertThrows(IllegalArgumentException.class, () -> Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4).asParallel(this.executorService, 0));
+        Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4).asParallel(this.executorService, 0);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void asParallel_null_executorService()
     {
-        assertThrows(NullPointerException.class, () -> Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4).asParallel(null, 2));
+        Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4).asParallel(null, 2);
     }
 }

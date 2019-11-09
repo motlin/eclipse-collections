@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -25,11 +25,9 @@ import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
-import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.Bags;
-import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.multimap.bag.ImmutableBagMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
@@ -37,9 +35,9 @@ import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.block.factory.Predicates2;
-import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
 
@@ -102,38 +100,6 @@ public class ImmutableArrayBag<T>
     }
 
     @Override
-    public boolean anySatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.shortCircuit(this.keys, this.counts, predicate, true, true, false);
-    }
-
-    @Override
-    public boolean allSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.shortCircuit(this.keys, this.counts, predicate, false, false, true);
-    }
-
-    @Override
-    public boolean noneSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.shortCircuit(this.keys, this.counts, predicate, true, false, true);
-    }
-
-    @Override
-    public T detectWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        for (int i = 0; i < this.keys.length; i++)
-        {
-            T key = this.keys[i];
-            if (predicate.accept(key, this.counts[i]))
-            {
-                return key;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public int sizeDistinct()
     {
         return this.keys.length;
@@ -168,7 +134,7 @@ public class ImmutableArrayBag<T>
         int distinctItemCount = this.sizeDistinct() + (elementIndex == -1 ? 1 : 0);
         if (distinctItemCount > MAXIMUM_USEFUL_ARRAY_BAG_SIZE)
         {
-            return Bags.mutable.withAll(this).with(element).toImmutable();
+            return HashBag.newBag(this).with(element).toImmutable();
         }
         return this.newArrayBagWith(element, elementIndex, distinctItemCount);
     }
@@ -229,7 +195,7 @@ public class ImmutableArrayBag<T>
     @Override
     public ImmutableBag<T> newWithAll(Iterable<? extends T> elements)
     {
-        return Bags.immutable.withAll(Iterate.addAllTo(elements, Bags.mutable.withAll(this)));
+        return Bags.immutable.withAll(Iterate.addAllTo(elements, HashBag.newBag(this)));
     }
 
     @Override
@@ -495,7 +461,7 @@ public class ImmutableArrayBag<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            MutableBag<Pair<T, S>> target = HashBag.newBag(Math.min(this.size(), thatSize));
+            HashBag<Pair<T, S>> target = HashBag.newBag(Math.min(this.size(), thatSize));
             return this.zip(that, target).toImmutable();
         }
         return this.zip(that, HashBag.newBag()).toImmutable();
@@ -508,18 +474,12 @@ public class ImmutableArrayBag<T>
     @Deprecated
     public ImmutableSet<Pair<T, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(Sets.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.zipWithIndex(UnifiedSet.newSet(this.size())).toImmutable();
     }
 
     protected Object writeReplace()
     {
         return new ImmutableBagSerializationProxy<>(this);
-    }
-
-    @Override
-    public RichIterable<T> distinctView()
-    {
-        return ArrayAdapter.adapt(this.keys).asUnmodifiable();
     }
 
     private final class ArrayBagIterator

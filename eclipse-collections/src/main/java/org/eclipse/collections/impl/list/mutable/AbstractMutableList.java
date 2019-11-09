@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.RandomAccess;
 import java.util.concurrent.ExecutorService;
@@ -45,9 +44,17 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.ParallelListIterable;
+import org.eclipse.collections.api.list.primitive.MutableBooleanList;
+import org.eclipse.collections.api.list.primitive.MutableByteList;
+import org.eclipse.collections.api.list.primitive.MutableCharList;
+import org.eclipse.collections.api.list.primitive.MutableDoubleList;
+import org.eclipse.collections.api.list.primitive.MutableFloatList;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
+import org.eclipse.collections.api.list.primitive.MutableLongList;
+import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
@@ -63,6 +70,7 @@ import org.eclipse.collections.impl.collection.mutable.AbstractMutableCollection
 import org.eclipse.collections.impl.lazy.ReverseIterable;
 import org.eclipse.collections.impl.lazy.parallel.list.ListIterableParallelIterable;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.ListIterate;
@@ -202,6 +210,54 @@ public abstract class AbstractMutableList<T>
     public <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return ListIterate.removeIfWith(this, predicate, parameter);
+    }
+
+    @Override
+    public MutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction)
+    {
+        return ListIterate.collectBoolean(this, booleanFunction);
+    }
+
+    @Override
+    public MutableByteList collectByte(ByteFunction<? super T> byteFunction)
+    {
+        return ListIterate.collectByte(this, byteFunction);
+    }
+
+    @Override
+    public MutableCharList collectChar(CharFunction<? super T> charFunction)
+    {
+        return ListIterate.collectChar(this, charFunction);
+    }
+
+    @Override
+    public MutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction)
+    {
+        return ListIterate.collectDouble(this, doubleFunction);
+    }
+
+    @Override
+    public MutableFloatList collectFloat(FloatFunction<? super T> floatFunction)
+    {
+        return ListIterate.collectFloat(this, floatFunction);
+    }
+
+    @Override
+    public MutableIntList collectInt(IntFunction<? super T> intFunction)
+    {
+        return ListIterate.collectInt(this, intFunction);
+    }
+
+    @Override
+    public MutableLongList collectLong(LongFunction<? super T> longFunction)
+    {
+        return ListIterate.collectLong(this, longFunction);
+    }
+
+    @Override
+    public MutableShortList collectShort(ShortFunction<? super T> shortFunction)
+    {
+        return ListIterate.collectShort(this, shortFunction);
     }
 
     @Override
@@ -444,7 +500,13 @@ public abstract class AbstractMutableList<T>
     @Override
     public MutableSet<T> toSet()
     {
-        return Sets.mutable.withAll(this);
+        return UnifiedSet.newSet(this);
+    }
+
+    @Override
+    public MutableStack<T> toStack()
+    {
+        return Stacks.mutable.withAll(this);
     }
 
     @Override
@@ -457,6 +519,12 @@ public abstract class AbstractMutableList<T>
     public MutableList<T> asSynchronized()
     {
         return SynchronizedMutableList.of(this);
+    }
+
+    @Override
+    public <V extends Comparable<? super V>> MutableList<T> sortThisBy(Function<? super T, ? extends V> function)
+    {
+        return this.sortThis(Comparators.byFunction(function));
     }
 
     @Override
@@ -531,7 +599,7 @@ public abstract class AbstractMutableList<T>
     {
         for (int i = 0; i < this.size(); i++)
         {
-            if (Objects.equals(this.get(i), object))
+            if (Comparators.nullSafeEquals(this.get(i), object))
             {
                 return i;
             }
@@ -544,7 +612,7 @@ public abstract class AbstractMutableList<T>
     {
         for (int i = this.size() - 1; i >= 0; i--)
         {
-            if (Objects.equals(this.get(i), object))
+            if (Comparators.nullSafeEquals(this.get(i), object))
             {
                 return i;
             }
@@ -576,56 +644,9 @@ public abstract class AbstractMutableList<T>
     }
 
     @Override
-    public void clear()
-    {
-        this.removeRange(0, this.size());
-    }
-
-    @Override
     public MutableList<T> subList(int fromIndex, int toIndex)
     {
-        AbstractMutableList.subListRangeCheck(fromIndex, toIndex, this.size());
         return new SubList<>(this, fromIndex, toIndex);
-    }
-
-    /**
-     * Removes from this list all the elements whose index is between
-     * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive.
-     * Shifts any succeeding elements to the left (reduces their index).
-     * This call shortens the list by {@code (toIndex - fromIndex)} elements.
-     * (If {@code toIndex==fromIndex}, this operation has no effect.)
-     * @param fromIndex inclusive
-     * @param toIndex exclusive
-     */
-    protected void removeRange(int fromIndex, int toIndex)
-    {
-        if (fromIndex > toIndex)
-        {
-            throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ')');
-        }
-        ListIterator<T> it = this.listIterator(fromIndex);
-        int n = toIndex - fromIndex;
-        for (int i = 0; i < n; i++)
-        {
-            it.next();
-            it.remove();
-        }
-    }
-
-    static void subListRangeCheck(int fromIndex, int toIndex, int size)
-    {
-        if (fromIndex < 0)
-        {
-            throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
-        }
-        if (toIndex > size)
-        {
-            throw new IndexOutOfBoundsException("toIndex = " + toIndex);
-        }
-        if (fromIndex > toIndex)
-        {
-            throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ')');
-        }
     }
 
     protected static class SubList<T>
@@ -635,45 +656,38 @@ public abstract class AbstractMutableList<T>
         // Not important since it uses writeReplace()
         private static final long serialVersionUID = 1L;
 
-        // Always point to the first MutableList
-        private final AbstractMutableList<T> original;
-        private final SubList<T> parent;
+        private final MutableList<T> original;
         private final int offset;
         private int size;
 
         protected SubList(AbstractMutableList<T> list, int fromIndex, int toIndex)
         {
+            if (fromIndex < 0)
+            {
+                throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
+            }
+            if (toIndex > list.size())
+            {
+                throw new IndexOutOfBoundsException("toIndex = " + toIndex);
+            }
+            if (fromIndex > toIndex)
+            {
+                throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ')');
+            }
             this.original = list;
-            this.parent = null;
             this.offset = fromIndex;
             this.size = toIndex - fromIndex;
-        }
-
-        protected SubList(SubList<T> parent, int fromIndex, int toIndex)
-        {
-            // Always point to the first MutableList
-            this.original = parent.original;
-            this.parent = parent;
-            this.offset = parent.offset + fromIndex;
-            this.size = toIndex - fromIndex;
-        }
-
-        @Override
-        public MutableList<T> subList(int fromIndex, int toIndex)
-        {
-            AbstractMutableList.subListRangeCheck(fromIndex, toIndex, this.size());
-            return new SubList<>(this, fromIndex, toIndex);
         }
 
         @Override
         public MutableList<T> toReversed()
         {
-            return Lists.mutable.withAll(this).reverseThis();
+            return FastList.newList(this).reverseThis();
         }
 
         protected Object writeReplace()
         {
-            return Lists.mutable.withAll(this);
+            return FastList.newList(this);
         }
 
         @Override
@@ -681,7 +695,6 @@ public abstract class AbstractMutableList<T>
         {
             this.original.add(this.offset + this.size, o);
             this.size++;
-            this.updateSize(1);
             return true;
         }
 
@@ -711,7 +724,6 @@ public abstract class AbstractMutableList<T>
             this.checkIfOutOfBounds(index);
             this.original.add(index + this.offset, element);
             this.size++;
-            this.updateSize(1);
         }
 
         @Override
@@ -720,16 +732,17 @@ public abstract class AbstractMutableList<T>
             this.checkIfOutOfBounds(index);
             T result = this.original.remove(index + this.offset);
             this.size--;
-            this.updateSize(-1);
             return result;
         }
 
         @Override
         public void clear()
         {
-            this.original.removeRange(this.offset, this.offset + this.size());
-            this.updateSize(-this.size());
-            this.size = 0;
+            for (Iterator<T> iterator = this.iterator(); iterator.hasNext(); )
+            {
+                iterator.next();
+                iterator.remove();
+            }
         }
 
         @Override
@@ -752,18 +765,7 @@ public abstract class AbstractMutableList<T>
             }
             this.original.addAll(this.offset + index, collection);
             this.size += cSize;
-            this.updateSize(cSize);
             return true;
-        }
-
-        private void updateSize(int sizeChange)
-        {
-            var p = this.parent;
-            while (p != null)
-            {
-                p.size += sizeChange;
-                p = p.parent;
-            }
         }
 
         @Override
@@ -826,7 +828,6 @@ public abstract class AbstractMutableList<T>
                 {
                     this.listIterator.remove();
                     SubList.this.size--;
-                    SubList.this.updateSize(-1);
                 }
 
                 public void set(T o)
@@ -838,9 +839,14 @@ public abstract class AbstractMutableList<T>
                 {
                     this.listIterator.add(o);
                     SubList.this.size++;
-                    SubList.this.updateSize(1);
                 }
             };
+        }
+
+        @Override
+        public MutableList<T> subList(int fromIndex, int toIndex)
+        {
+            return new SubList<>(this, fromIndex, toIndex);
         }
 
         private void checkIfOutOfBounds(int index)
@@ -875,6 +881,18 @@ public abstract class AbstractMutableList<T>
         public MutableStack<T> toStack()
         {
             return ArrayStack.newStack(this);
+        }
+
+        @Override
+        public void forEachWithIndex(ObjectIntProcedure<? super T> objectIntProcedure)
+        {
+            ListIterate.forEachWithIndex(this, objectIntProcedure);
+        }
+
+        @Override
+        public <P> void forEachWith(Procedure2<? super T, ? super P> procedure, P parameter)
+        {
+            ListIterate.forEachWith(this, procedure, parameter);
         }
     }
 
@@ -958,6 +976,34 @@ public abstract class AbstractMutableList<T>
     public MutableList<Pair<T, Integer>> zipWithIndex()
     {
         return ListIterate.zipWithIndex(this);
+    }
+
+    @Override
+    public MutableList<T> with(T element)
+    {
+        this.add(element);
+        return this;
+    }
+
+    @Override
+    public MutableList<T> without(T element)
+    {
+        this.remove(element);
+        return this;
+    }
+
+    @Override
+    public MutableList<T> withAll(Iterable<? extends T> elements)
+    {
+        this.addAllIterable(elements);
+        return this;
+    }
+
+    @Override
+    public MutableList<T> withoutAll(Iterable<? extends T> elements)
+    {
+        this.removeAllIterable(elements);
+        return this;
     }
 
     @Override

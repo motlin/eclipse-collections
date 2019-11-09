@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -22,11 +22,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -36,16 +33,15 @@ import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.UnsortedMapIterable;
-import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.block.procedure.AppendStringProcedure;
 import org.eclipse.collections.impl.block.procedure.MapCollectProcedure;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.parallel.BatchIterable;
@@ -1129,48 +1125,17 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
     @Override
     public boolean removeIf(Predicate2<? super K, ? super V> predicate)
     {
-        int previousOccupied = this.occupied;
-        for (int index = 0; index < this.table.length; index += 2)
+        int previousSize = this.size();
+        Iterator<Entry<K, V>> iterator = this.entrySet().iterator();
+        while (iterator.hasNext())
         {
-            Object cur = this.table[index];
-            if (cur == null)
+            Entry<K, V> entry = iterator.next();
+            if (predicate.accept(entry.getKey(), entry.getValue()))
             {
-                continue;
-            }
-            if (cur == CHAINED_KEY)
-            {
-                Object[] chain = (Object[]) this.table[index + 1];
-                for (int chIndex = 0; chIndex < chain.length; )
-                {
-                    if (chain[chIndex] == null)
-                    {
-                        break;
-                    }
-                    K key = this.nonSentinel(chain[chIndex]);
-                    V value = (V) chain[chIndex + 1];
-                    if (predicate.accept(key, value))
-                    {
-                        this.overwriteWithLastElementFromChain(chain, index, chIndex);
-                    }
-                    else
-                    {
-                        chIndex += 2;
-                    }
-                }
-            }
-            else
-            {
-                K key = this.nonSentinel(cur);
-                V value = (V) this.table[index + 1];
-                if (predicate.accept(key, value))
-                {
-                    this.table[index] = null;
-                    this.table[index + 1] = null;
-                    this.occupied--;
-                }
+                iterator.remove();
             }
         }
-        return previousOccupied > this.occupied;
+        return previousSize > this.size();
     }
 
     private void chainedForEachEntry(Object[] chain, Procedure2<? super K, ? super V> procedure)
@@ -2322,12 +2287,6 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         }
 
         @Override
-        public void forEach(Consumer<? super K> action)
-        {
-            UnifiedMap.this.forEachKey(action::accept);
-        }
-
-        @Override
         public void forEach(Procedure<? super K> procedure)
         {
             UnifiedMap.this.forEachKey(procedure);
@@ -2443,12 +2402,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         @Override
         public String toString()
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append('[');
-            Procedure<K> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
-            this.forEach(appendStringProcedure);
-            stringBuilder.append(']');
-            return stringBuilder.toString();
+            return Iterate.makeString(this, "[", ", ", "]");
         }
 
         @Override
@@ -2478,7 +2432,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
 
         protected Object writeReplace()
         {
-            MutableSet<K> replace = UnifiedSet.newSet(UnifiedMap.this.size());
+            UnifiedSet<K> replace = UnifiedSet.newSet(UnifiedMap.this.size());
             for (int i = 0; i < UnifiedMap.this.table.length; i += 2)
             {
                 Object cur = UnifiedMap.this.table[i];
@@ -2494,7 +2448,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
             return replace;
         }
 
-        private void chainedAddToSet(Object[] chain, MutableSet<K> replace)
+        private void chainedAddToSet(Object[] chain, UnifiedSet<K> replace)
         {
             for (int i = 0; i < chain.length; i += 2)
             {
@@ -2637,21 +2591,22 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
     {
         if (value == null)
         {
-            return other == null;
+            if (other == null)
+            {
+                return true;
+            }
         }
-        return other == value || value.equals(other);
+        else if (other == value || value.equals(other))
+        {
+            return true;
+        }
+        return false;
     }
 
     protected class EntrySet implements Set<Entry<K, V>>, Serializable, BatchIterable<Entry<K, V>>
     {
         private static final long serialVersionUID = 1L;
         private transient WeakReference<UnifiedMap<K, V>> holder = new WeakReference<>(UnifiedMap.this);
-
-        @Override
-        public void forEach(Consumer<? super Entry<K, V>> action)
-        {
-            this.forEach(action::accept);
-        }
 
         @Override
         public boolean add(Entry<K, V> entry)
@@ -2868,7 +2823,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
                 }
                 else if (cur != null)
                 {
-                    procedure.value(new WeakBoundEntry<>(UnifiedMap.this.nonSentinel(cur), (V) UnifiedMap.this.table[i + 1], this.holder));
+                    procedure.value(ImmutableEntry.of(UnifiedMap.this.nonSentinel(cur), (V) UnifiedMap.this.table[i + 1]));
                 }
             }
         }
@@ -2882,7 +2837,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
                 {
                     return;
                 }
-                procedure.value(new WeakBoundEntry<>(UnifiedMap.this.nonSentinel(cur), (V) chain[i + 1], this.holder));
+                procedure.value(ImmutableEntry.of(UnifiedMap.this.nonSentinel(cur), (V) chain[i + 1]));
             }
         }
 
@@ -2997,17 +2952,6 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         public int hashCode()
         {
             return UnifiedMap.this.hashCode();
-        }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append('[');
-            Procedure<Entry<K, V>> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
-            this.forEach(appendStringProcedure);
-            stringBuilder.append(']');
-            return stringBuilder.toString();
         }
     }
 
@@ -3308,7 +3252,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
 
         protected Object writeReplace()
         {
-            MutableList<V> replace = FastList.newList(UnifiedMap.this.size());
+            FastList<V> replace = FastList.newList(UnifiedMap.this.size());
             for (int i = 0; i < UnifiedMap.this.table.length; i += 2)
             {
                 Object cur = UnifiedMap.this.table[i];
@@ -3324,7 +3268,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
             return replace;
         }
 
-        private void chainedAddToList(Object[] chain, MutableList<V> replace)
+        private void chainedAddToList(Object[] chain, FastList<V> replace)
         {
             for (int i = 0; i < chain.length; i += 2)
             {
@@ -3340,12 +3284,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         @Override
         public String toString()
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append('[');
-            Procedure<V> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
-            this.forEach(appendStringProcedure);
-            stringBuilder.append(']');
-            return stringBuilder.toString();
+            return Iterate.makeString(this, "[", ", ", "]");
         }
     }
 
@@ -3412,5 +3351,11 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
     private boolean nonNullTableObjectEquals(Object cur, K key)
     {
         return cur == key || (cur == NULL_KEY ? key == null : cur.equals(key));
+    }
+
+    @Override
+    public ImmutableMap<K, V> toImmutable()
+    {
+        return Maps.immutable.withAll(this);
     }
 }

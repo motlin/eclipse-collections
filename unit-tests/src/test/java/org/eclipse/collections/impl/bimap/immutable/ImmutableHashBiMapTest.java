@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,15 +11,14 @@
 package org.eclipse.collections.impl.bimap.immutable;
 
 import org.eclipse.collections.api.bimap.ImmutableBiMap;
+import org.eclipse.collections.api.factory.BiMaps;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
-import org.eclipse.collections.impl.factory.BiMaps;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableHashBiMapTest extends AbstractImmutableBiMapTestCase
 {
@@ -57,7 +56,7 @@ public class ImmutableHashBiMapTest extends AbstractImmutableBiMapTestCase
     @Test
     public void testToString()
     {
-        assertEquals("{1=1, 2=2, 3=3, 4=4}", this.classUnderTest().toString());
+        Assert.assertEquals("{1=1, 2=2, 3=3, 4=4}", this.classUnderTest().toString());
     }
 
     @Test

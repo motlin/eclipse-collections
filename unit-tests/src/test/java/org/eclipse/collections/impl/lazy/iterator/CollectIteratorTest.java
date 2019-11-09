@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -14,13 +14,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.eclipse.collections.api.factory.Lists;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
 import static org.eclipse.collections.impl.factory.Iterables.iList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CollectIteratorTest
 {
@@ -28,38 +25,38 @@ public class CollectIteratorTest
     public void iterator()
     {
         Iterator<String> iterator = new CollectIterator<>(iList(Boolean.TRUE), String::valueOf);
-        assertTrue(iterator.hasNext());
-        assertEquals("true", iterator.next());
-        assertFalse(iterator.hasNext());
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("true", iterator.next());
+        Assert.assertFalse(iterator.hasNext());
     }
 
     @Test
     public void iteratorWithFunctionName()
     {
         Iterator<String> iterator = new CollectIterator<>(iList(Boolean.TRUE), String::valueOf);
-        assertTrue(iterator.hasNext());
-        assertEquals("true", iterator.next());
-        assertFalse(iterator.hasNext());
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("true", iterator.next());
+        Assert.assertFalse(iterator.hasNext());
     }
 
     @Test
     public void iteratorWithFunctionNameAndIterator()
     {
         Iterator<String> iterator = new CollectIterator<>(iList(Boolean.TRUE).iterator(), String::valueOf);
-        assertTrue(iterator.hasNext());
-        assertEquals("true", iterator.next());
-        assertFalse(iterator.hasNext());
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertEquals("true", iterator.next());
+        Assert.assertFalse(iterator.hasNext());
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void noSuchElementException()
     {
-        assertThrows(NoSuchElementException.class, () -> new CollectIterator<>(Lists.mutable.<Boolean>of(), String::valueOf).next());
+        new CollectIterator<>(Lists.mutable.<Boolean>of(), String::valueOf).next();
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void remove()
     {
-        assertThrows(UnsupportedOperationException.class, () -> new CollectIterator<>(Lists.mutable.<Boolean>of(), String::valueOf).remove());
+        new CollectIterator<>(Lists.mutable.<Boolean>of(), String::valueOf).remove();
     }
 }

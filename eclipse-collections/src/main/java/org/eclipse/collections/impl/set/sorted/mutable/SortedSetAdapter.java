@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -35,16 +35,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.SortedSets;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
@@ -61,6 +52,7 @@ import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.set.sorted.ParallelSortedSetIterable;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
+import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Functions;
@@ -68,10 +60,28 @@ import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.block.procedure.PartitionPredicate2Procedure;
 import org.eclipse.collections.impl.block.procedure.PartitionProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectInstancesOfProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.collection.mutable.AbstractCollectionAdapter;
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.NonParallelSortedSetIterable;
+import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap;
 import org.eclipse.collections.impl.partition.set.sorted.PartitionTreeSortedSet;
+import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.ListIterate;
@@ -82,7 +92,7 @@ import org.eclipse.collections.impl.utility.internal.SetIterate;
 import org.eclipse.collections.impl.utility.internal.SortedSetIterables;
 
 /**
- * This class provides a MutableSortedSet wrapper around a JDK Collections SortedSet interface instance. All the MutableSortedSet
+ * This class provides a MutableSortedSet wrapper around a JDK Collections SortedSet interface instance. All of the MutableSortedSet
  * interface methods are supported in addition to the JDK SortedSet interface methods.
  * <p>
  * To create a new wrapper around an existing SortedSet instance, use the {@link #adapt(SortedSet)} factory method.
@@ -127,6 +137,12 @@ public final class SortedSetAdapter<T>
         return SortedSets.immutable.withSortedSet(this.delegate);
     }
 
+    @Override
+    public MutableStack<T> toStack()
+    {
+        return ArrayStack.newStack(this);
+    }
+
     public static <T> MutableSortedSet<T> adapt(SortedSet<T> set)
     {
         if (set instanceof MutableSortedSet<?>)
@@ -139,7 +155,7 @@ public final class SortedSetAdapter<T>
     @Override
     public MutableSortedSet<T> clone()
     {
-        return SortedSets.mutable.withAll(this.delegate);
+        return TreeSortedSet.newSet(this.delegate);
     }
 
     @Override
@@ -157,11 +173,6 @@ public final class SortedSetAdapter<T>
     @Override
     public boolean equals(Object obj)
     {
-        if (obj == this)
-        {
-            return true;
-        }
-
         return this.delegate.equals(obj);
     }
 
@@ -303,55 +314,71 @@ public final class SortedSetAdapter<T>
     @Override
     public <V> MutableList<V> collect(Function<? super T, ? extends V> function)
     {
-        return Iterate.collect(this.delegate, function, Lists.mutable.withInitialCapacity(this.size()));
+        return Iterate.collect(this.delegate, function, FastList.newList());
     }
 
     @Override
     public MutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction)
     {
-        return this.collectBoolean(booleanFunction, BooleanLists.mutable.withInitialCapacity(this.size()));
+        BooleanArrayList result = new BooleanArrayList(this.size());
+        this.forEach(new CollectBooleanProcedure<>(booleanFunction, result));
+        return result;
     }
 
     @Override
     public MutableByteList collectByte(ByteFunction<? super T> byteFunction)
     {
-        return this.collectByte(byteFunction, ByteLists.mutable.withInitialCapacity(this.size()));
+        ByteArrayList result = new ByteArrayList(this.size());
+        this.forEach(new CollectByteProcedure<>(byteFunction, result));
+        return result;
     }
 
     @Override
     public MutableCharList collectChar(CharFunction<? super T> charFunction)
     {
-        return this.collectChar(charFunction, CharLists.mutable.withInitialCapacity(this.size()));
+        CharArrayList result = new CharArrayList(this.size());
+        this.forEach(new CollectCharProcedure<>(charFunction, result));
+        return result;
     }
 
     @Override
     public MutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction)
     {
-        return this.collectDouble(doubleFunction, DoubleLists.mutable.withInitialCapacity(this.size()));
+        DoubleArrayList result = new DoubleArrayList(this.size());
+        this.forEach(new CollectDoubleProcedure<>(doubleFunction, result));
+        return result;
     }
 
     @Override
     public MutableFloatList collectFloat(FloatFunction<? super T> floatFunction)
     {
-        return this.collectFloat(floatFunction, FloatLists.mutable.withInitialCapacity(this.size()));
+        FloatArrayList result = new FloatArrayList(this.size());
+        this.forEach(new CollectFloatProcedure<>(floatFunction, result));
+        return result;
     }
 
     @Override
     public MutableIntList collectInt(IntFunction<? super T> intFunction)
     {
-        return this.collectInt(intFunction, IntLists.mutable.withInitialCapacity(this.size()));
+        IntArrayList result = new IntArrayList(this.size());
+        this.forEach(new CollectIntProcedure<>(intFunction, result));
+        return result;
     }
 
     @Override
     public MutableLongList collectLong(LongFunction<? super T> longFunction)
     {
-        return this.collectLong(longFunction, LongLists.mutable.withInitialCapacity(this.size()));
+        LongArrayList result = new LongArrayList(this.size());
+        this.forEach(new CollectLongProcedure<>(longFunction, result));
+        return result;
     }
 
     @Override
     public MutableShortList collectShort(ShortFunction<? super T> shortFunction)
     {
-        return this.collectShort(shortFunction, ShortLists.mutable.withInitialCapacity(this.size()));
+        ShortArrayList result = new ShortArrayList(this.size());
+        this.forEach(new CollectShortProcedure<>(shortFunction, result));
+        return result;
     }
 
     @Override
@@ -359,13 +386,13 @@ public final class SortedSetAdapter<T>
             Predicate<? super T> predicate,
             Function<? super T, ? extends V> function)
     {
-        return Iterate.collectIf(this.delegate, predicate, function, Lists.mutable.empty());
+        return Iterate.collectIf(this.delegate, predicate, function, FastList.newList());
     }
 
     @Override
     public <V> MutableList<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
-        return Iterate.flatCollect(this.delegate, function, Lists.mutable.empty());
+        return Iterate.flatCollect(this.delegate, function, FastList.newList());
     }
 
     @Override
@@ -401,7 +428,7 @@ public final class SortedSetAdapter<T>
     @Override
     public <P, V> MutableList<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
-        return Iterate.collectWith(this.delegate, function, parameter, Lists.mutable.empty());
+        return Iterate.collectWith(this.delegate, function, parameter, FastList.newList());
     }
 
     @Override
@@ -410,10 +437,10 @@ public final class SortedSetAdapter<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            MutableList<Pair<T, S>> target = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
+            FastList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
             return Iterate.zip(this.delegate, that, target);
         }
-        return Iterate.zip(this.delegate, that, Lists.mutable.empty());
+        return Iterate.zip(this.delegate, that, FastList.newList());
     }
 
     @Override
@@ -431,7 +458,7 @@ public final class SortedSetAdapter<T>
     @Override
     public MutableSortedSet<T> distinct()
     {
-        return SortedSets.mutable.withAll(this);
+        return TreeSortedSet.newSet(this);
     }
 
     @Override
@@ -672,6 +699,12 @@ public final class SortedSetAdapter<T>
     public void reverseForEachWithIndex(ObjectIntProcedure<? super T> procedure)
     {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEachWithIndex() not implemented yet");
+    }
+
+    @Override
+    public LazyIterable<T> asReversed()
+    {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".asReversed() not implemented yet");
     }
 
     @Override

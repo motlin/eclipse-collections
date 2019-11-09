@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Comparator;
 
 import org.eclipse.collections.api.LazyIterable;
-import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.sorted.ImmutableSortedBag;
 import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
 import org.eclipse.collections.api.bag.sorted.SortedBag;
@@ -33,11 +32,9 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
-import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
@@ -47,7 +44,6 @@ import org.eclipse.collections.api.list.primitive.MutableFloatList;
 import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.list.primitive.MutableLongList;
 import org.eclipse.collections.api.list.primitive.MutableShortList;
-import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.multimap.sortedbag.MutableSortedBagMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
@@ -216,30 +212,6 @@ public class UnmodifiableSortedBag<T>
     public void forEachWithOccurrences(ObjectIntProcedure<? super T> procedure)
     {
         this.getSortedBag().forEachWithOccurrences(procedure);
-    }
-
-    @Override
-    public boolean anySatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.getSortedBag().anySatisfyWithOccurrences(predicate);
-    }
-
-    @Override
-    public boolean allSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.getSortedBag().allSatisfyWithOccurrences(predicate);
-    }
-
-    @Override
-    public boolean noneSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.getSortedBag().noneSatisfyWithOccurrences(predicate);
-    }
-
-    @Override
-    public T detectWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.getSortedBag().detectWithOccurrences(predicate);
     }
 
     @Override
@@ -562,29 +534,5 @@ public class UnmodifiableSortedBag<T>
     public MutableSortedSet<T> selectUnique()
     {
         return this.getSortedBag().selectUnique();
-    }
-
-    @Override
-    public <V> MutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
-    {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        this.forEachWithOccurrences((each, occurrences) -> result.addToValue(groupBy.valueOf(each), function.intValueOf(each) * (long) occurrences));
-        return result;
-    }
-
-    @Override
-    public <V> MutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
-    {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        this.forEachWithOccurrences((each, occurrences) -> result.addToValue(
-                groupBy.valueOf(each),
-                function.longValueOf(each) * (long) occurrences));
-        return result;
-    }
-
-    @Override
-    public RichIterable<T> distinctView()
-    {
-        return this.getSortedBag().distinctView();
     }
 }

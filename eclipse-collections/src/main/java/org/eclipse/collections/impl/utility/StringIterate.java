@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -24,19 +24,20 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.CharProcedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Maps;
-import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
+import org.eclipse.collections.impl.block.factory.primitive.CharPredicates;
 import org.eclipse.collections.impl.block.factory.primitive.CharToCharFunctions;
 import org.eclipse.collections.impl.block.function.primitive.CharFunction;
 import org.eclipse.collections.impl.block.function.primitive.CodePointFunction;
 import org.eclipse.collections.impl.block.predicate.CodePointPredicate;
 import org.eclipse.collections.impl.block.procedure.primitive.CodePointProcedure;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.string.immutable.CharAdapter;
 import org.eclipse.collections.impl.string.immutable.CodePointAdapter;
 import org.eclipse.collections.impl.string.immutable.CodePointList;
@@ -45,7 +46,7 @@ import org.eclipse.collections.impl.tuple.Tuples;
 /**
  * A string is essentially an array of characters. In Smalltalk a String is a subclass of ArrayedCollection, which means
  * it supports the Collection protocol. StringIterate implements the methods available on the collection protocol that
- * make sense for Strings. Some methods are over-specialized, in the form of englishToUppercase() which is a fast
+ * make sense for Strings. Some of the methods are over-specialized, in the form of englishToUppercase() which is a fast
  * form of uppercase, but does not work for different locales.
  */
 public final class StringIterate
@@ -192,7 +193,7 @@ public final class StringIterate
      */
     public static MutableSet<String> tokensToSet(String string, String separator)
     {
-        MutableSet<String> set = Sets.mutable.empty();
+        MutableSet<String> set = UnifiedSet.newSet();
         for (StringTokenizer stringTokenizer = new StringTokenizer(string, separator); stringTokenizer.hasMoreTokens(); )
         {
             String token = stringTokenizer.nextToken();
@@ -218,12 +219,12 @@ public final class StringIterate
             String pairSeparator,
             String keyValueSeparator)
     {
-        MutableMap<String, String> map = Maps.mutable.empty();
+        MutableMap<String, String> map = UnifiedMap.newMap();
         for (StringTokenizer tokenizer = new StringTokenizer(string, pairSeparator); tokenizer.hasMoreTokens(); )
         {
             String token = tokenizer.nextToken();
             String key = token.substring(0, token.indexOf(keyValueSeparator));
-            String value = token.substring(token.indexOf(keyValueSeparator) + 1);
+            String value = token.substring(token.indexOf(keyValueSeparator) + 1, token.length());
             map.put(key, value);
         }
         return map;
@@ -241,12 +242,12 @@ public final class StringIterate
             Function<String, K> keyFunction,
             Function<String, V> valueFunction)
     {
-        MutableMap<K, V> map = Maps.mutable.empty();
+        MutableMap<K, V> map = UnifiedMap.newMap();
         for (StringTokenizer tokenizer = new StringTokenizer(string, separator); tokenizer.hasMoreTokens(); )
         {
             String token = tokenizer.nextToken();
             String key = token.substring(0, token.indexOf(keyValueSeparator));
-            String value = token.substring(token.indexOf(keyValueSeparator) + 1);
+            String value = token.substring(token.indexOf(keyValueSeparator) + 1, token.length());
             map.put(keyFunction.valueOf(key), valueFunction.valueOf(value));
         }
         return map;
@@ -601,7 +602,7 @@ public final class StringIterate
 
     public static String englishToUpperCase(String string)
     {
-        if (StringIterate.anySatisfyChar(string, Character::isLowerCase))
+        if (StringIterate.anySatisfyChar(string, CharPredicates.isLowerCase()))
         {
             return StringIterate.collectChar(string, CharToCharFunctions.toUpperCase());
         }
@@ -610,7 +611,7 @@ public final class StringIterate
 
     public static String englishToLowerCase(String string)
     {
-        if (StringIterate.anySatisfyChar(string, Character::isUpperCase))
+        if (StringIterate.anySatisfyChar(string, CharPredicates.isUpperCase()))
         {
             return StringIterate.collectChar(string, CharToCharFunctions.toLowerCase());
         }
@@ -802,7 +803,7 @@ public final class StringIterate
     }
 
     /**
-     * @return true if all the characters in the {@code string} answer true for the specified {@code predicate}.
+     * @return true if all of the characters in the {@code string} answer true for the specified {@code predicate}.
      * @deprecated since 7.0. Use {@link #allSatisfyChar(String, CharPredicate)} instead.
      */
     @Deprecated
@@ -812,7 +813,7 @@ public final class StringIterate
     }
 
     /**
-     * @return true if all the characters in the {@code string} answer true for the specified {@code predicate}.
+     * @return true if all of the characters in the {@code string} answer true for the specified {@code predicate}.
      * @since 7.0
      */
     public static boolean allSatisfyChar(String string, CharPredicate predicate)
@@ -829,7 +830,7 @@ public final class StringIterate
     }
 
     /**
-     * @return true if all the code points in the {@code string} answer true for the specified {@code predicate}.
+     * @return true if all of the code points in the {@code string} answer true for the specified {@code predicate}.
      * @deprecated since 7.0. Use {@link #allSatisfyCodePoint(String, CodePointPredicate)} instead.
      */
     @Deprecated
@@ -839,7 +840,7 @@ public final class StringIterate
     }
 
     /**
-     * @return true if all the code points in the {@code string} answer true for the specified {@code predicate}.
+     * @return true if all of the code points in the {@code string} answer true for the specified {@code predicate}.
      * @since 7.0
      */
     public static boolean allSatisfyCodePoint(String string, CodePointPredicate predicate)
@@ -914,7 +915,7 @@ public final class StringIterate
     }
 
     /**
-     * @return a new string with all the characters that return true for the specified {@code predicate}.
+     * @return a new string with all of the characters that return true for the specified {@code predicate}.
      * @deprecated since 7.0. Use {@link #selectChar(String, CharPredicate)} instead.
      */
     @Deprecated
@@ -924,7 +925,7 @@ public final class StringIterate
     }
 
     /**
-     * @return a new string with all the characters that return true for the specified {@code predicate}.
+     * @return a new string with all of the characters that return true for the specified {@code predicate}.
      * @since 7.0
      */
     public static String selectChar(String string, CharPredicate predicate)
@@ -943,7 +944,7 @@ public final class StringIterate
     }
 
     /**
-     * @return a new string with all the code points that return true for the specified {@code predicate}.
+     * @return a new string with all of the code points that return true for the specified {@code predicate}.
      * @deprecated since 7.0. Use {@link #selectCodePoint(String, CodePointPredicate)} instead.
      */
     @Deprecated
@@ -953,7 +954,7 @@ public final class StringIterate
     }
 
     /**
-     * @return a new string with all the code points that return true for the specified {@code predicate}.
+     * @return a new string with all of the code points that return true for the specified {@code predicate}.
      * @since 7.0
      */
     public static String selectCodePoint(String string, CodePointPredicate predicate)
@@ -973,7 +974,7 @@ public final class StringIterate
     }
 
     /**
-     * @return a new string excluding all the characters that return true for the specified {@code predicate}.
+     * @return a new string excluding all of the characters that return true for the specified {@code predicate}.
      * @deprecated since 7.0. Use {@link #rejectChar(String, CharPredicate)} instead.
      */
     @Deprecated
@@ -983,7 +984,7 @@ public final class StringIterate
     }
 
     /**
-     * @return a new string excluding all the characters that return true for the specified {@code predicate}.
+     * @return a new string excluding all of the characters that return true for the specified {@code predicate}.
      * @since 7.0
      */
     public static String rejectChar(String string, CharPredicate predicate)
@@ -1002,7 +1003,7 @@ public final class StringIterate
     }
 
     /**
-     * @return a new string excluding all the code points that return true for the specified {@code predicate}.
+     * @return a new string excluding all of the code points that return true for the specified {@code predicate}.
      * @deprecated since 7.0. Use {@link #rejectCodePoint(String, CodePointPredicate)} instead.
      */
     @Deprecated
@@ -1012,7 +1013,7 @@ public final class StringIterate
     }
 
     /**
-     * @return a new string excluding all the code points that return true for the specified {@code predicate}.
+     * @return a new string excluding all of the code points that return true for the specified {@code predicate}.
      * @since 7.0
      */
     public static String rejectCodePoint(String string, CodePointPredicate predicate)
@@ -1061,7 +1062,7 @@ public final class StringIterate
 
     public static boolean isEmpty(String string)
     {
-        return string == null || string.isEmpty();
+        return string == null || string.length() == 0;
     }
 
     public static boolean isEmptyOrWhitespace(String string)
@@ -1131,7 +1132,7 @@ public final class StringIterate
 
     public static MutableList<Character> toList(String string)
     {
-        MutableList<Character> characters = Lists.mutable.withInitialCapacity(string.length());
+        MutableList<Character> characters = FastList.newList(string.length());
         StringIterate.forEachChar(string, new AddCharacterToCollection(characters));
         return characters;
     }
@@ -1173,7 +1174,7 @@ public final class StringIterate
 
     public static MutableSet<Character> toSet(String string)
     {
-        MutableSet<Character> characters = Sets.mutable.empty();
+        MutableSet<Character> characters = UnifiedSet.newSet();
         StringIterate.forEachChar(string, new AddCharacterToCollection(characters));
         return characters;
     }
@@ -1200,7 +1201,7 @@ public final class StringIterate
             return FastList.newList();
         }
 
-        MutableList<String> result = Lists.mutable.withInitialCapacity((length + size - 1) / size);
+        MutableList<String> result = FastList.newList((length + size - 1) / size);
 
         int startOffset = 0;
         while (startOffset < length)
@@ -1223,7 +1224,7 @@ public final class StringIterate
 
     public static MutableSet<Character> toUppercaseSet(String string)
     {
-        MutableSet<Character> characters = Sets.mutable.empty();
+        MutableSet<Character> characters = UnifiedSet.newSet();
         StringIterate.forEachChar(string, new AddUppercaseCharacterToCollection(characters));
         return characters;
     }
@@ -1239,14 +1240,14 @@ public final class StringIterate
 
     public static MutableSet<Character> toLowercaseSet(String string)
     {
-        MutableSet<Character> characters = Sets.mutable.empty();
+        MutableSet<Character> characters = UnifiedSet.newSet();
         StringIterate.forEachChar(string, new AddLowercaseCharacterToCollection(characters));
         return characters;
     }
 
     public static Twin<String> splitAtIndex(String aString, int index)
     {
-        return Tuples.twin(aString.substring(0, index), aString.substring(index));
+        return Tuples.twin(aString.substring(0, index), aString.substring(index, aString.length()));
     }
 
     private static final class AddCharacterToCollection implements CharProcedure

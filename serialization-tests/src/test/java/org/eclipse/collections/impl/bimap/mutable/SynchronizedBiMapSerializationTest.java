@@ -10,7 +10,7 @@
 
 package org.eclipse.collections.impl.bimap.mutable;
 
-import org.eclipse.collections.impl.factory.BiMaps;
+import org.eclipse.collections.api.factory.BiMaps;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 

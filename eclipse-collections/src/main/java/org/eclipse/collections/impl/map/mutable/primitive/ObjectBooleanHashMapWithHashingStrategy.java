@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -45,9 +45,6 @@ import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.collection.primitive.ImmutableBooleanCollection;
 import org.eclipse.collections.api.collection.primitive.MutableBooleanCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.BooleanBags;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ObjectBooleanMaps;
 import org.eclipse.collections.api.iterator.BooleanIterator;
 import org.eclipse.collections.api.iterator.MutableBooleanIterator;
 import org.eclipse.collections.api.list.MutableList;
@@ -61,8 +58,12 @@ import org.eclipse.collections.api.tuple.primitive.ObjectBooleanPair;
 import org.eclipse.collections.impl.bag.mutable.primitive.BooleanHashBag;
 import org.eclipse.collections.impl.collection.mutable.primitive.SynchronizedBooleanCollection;
 import org.eclipse.collections.impl.collection.mutable.primitive.UnmodifiableBooleanCollection;
+import org.eclipse.collections.impl.factory.primitive.BooleanBags;
+import org.eclipse.collections.impl.factory.primitive.BooleanLists;
+import org.eclipse.collections.impl.factory.primitive.ObjectBooleanMaps;
 import org.eclipse.collections.impl.lazy.AbstractLazyIterable;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
+import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.BooleanHashSet;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
@@ -179,13 +180,7 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
 
     public static <K> ObjectBooleanHashMapWithHashingStrategy<K> newMap(ObjectBooleanHashMapWithHashingStrategy<K> map)
     {
-        //noinspection rawtypes
         return new ObjectBooleanHashMapWithHashingStrategy<>(map.hashingStrategy, map);
-    }
-
-    public static <K> ObjectBooleanHashMapWithHashingStrategy<K> newMapWithInitialCapacity(HashingStrategy<? super K> hashingStrategy, int initialCapacity)
-    {
-        return new ObjectBooleanHashMapWithHashingStrategy<>(hashingStrategy, initialCapacity);
     }
 
     public static <K> ObjectBooleanHashMapWithHashingStrategy<K> newWithKeysValues(HashingStrategy<? super K> hashingStrategy, K key, boolean value)
@@ -398,25 +393,6 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
     }
 
     @Override
-    public boolean[] toArray(boolean[] result)
-    {
-        if (result.length < this.size())
-        {
-            result = new boolean[this.size()];
-        }
-        int index = 0;
-        for (int i = 0; i < this.keys.length; i++)
-        {
-            if (ObjectBooleanHashMapWithHashingStrategy.isNonSentinel(this.keys[i]))
-            {
-                result[index] = this.values.get(i);
-                index++;
-            }
-        }
-        return result;
-    }
-
-    @Override
     public boolean contains(boolean value)
     {
         return this.containsValue(value);
@@ -537,7 +513,7 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
     @Override
     public <V> MutableCollection<V> collect(BooleanToObjectFunction<? extends V> function)
     {
-        MutableList<V> result = Lists.mutable.withInitialCapacity(this.size());
+        MutableList<V> result = FastList.newList(this.size());
         for (int i = 0; i < this.keys.length; i++)
         {
             if (ObjectBooleanHashMapWithHashingStrategy.isNonSentinel(this.keys[i]))
@@ -742,20 +718,6 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
         }
         this.addKeyValueAtIndex(key, value, index);
         return value;
-    }
-
-    @Override
-    public boolean getAndPut(K key, boolean putValue, boolean defaultValue)
-    {
-        int index = this.probe(key);
-        if (ObjectBooleanHashMapWithHashingStrategy.isNonSentinel(this.keys[index]) && this.nullSafeEquals(this.toNonSentinel(this.keys[index]), key))
-        {
-            boolean existingValue = this.values.get(index);
-            this.values.set(index, putValue);
-            return existingValue;
-        }
-        this.addKeyValueAtIndex(key, putValue, index);
-        return defaultValue;
     }
 
     @Override
@@ -1072,11 +1034,17 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
     {
         if (key == null)
         {
-            return other == null;
+            if (other == null)
+            {
+                return true;
+            }
         }
-        if (key != NULL_KEY && other != null)
+        else if (key != NULL_KEY && other != null)
         {
-            return this.hashingStrategy.equals(key, this.toNonSentinel(other));
+            if (this.hashingStrategy.equals(key, this.toNonSentinel(other)))
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -1126,20 +1094,6 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
         return Math.min(capacity - 1, capacity / OCCUPIED_DATA_RATIO);
     }
 
-    /**
-    * @since 12.0
-    */
-    public boolean trimToSize()
-    {
-        int newCapacity = this.smallestPowerOfTwoGreaterThan(this.size());
-        if (this.keys.length > newCapacity)
-        {
-            this.rehash(newCapacity);
-            return true;
-        }
-        return false;
-    }
-
     private void rehashAndGrow()
     {
         this.rehash(this.keys.length << 1);
@@ -1163,7 +1117,7 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
         }
     }
 
-    protected void allocateTable(int sizeToAllocate)
+    private void allocateTable(int sizeToAllocate)
     {
         this.keys = new Object[sizeToAllocate];
         this.values = new BitSet(sizeToAllocate);
@@ -1575,12 +1529,6 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
         public boolean[] toArray()
         {
             return ObjectBooleanHashMapWithHashingStrategy.this.toArray();
-        }
-
-        @Override
-        public boolean[] toArray(boolean[] target)
-        {
-            return ObjectBooleanHashMapWithHashingStrategy.this.toArray(target);
         }
 
         @Override

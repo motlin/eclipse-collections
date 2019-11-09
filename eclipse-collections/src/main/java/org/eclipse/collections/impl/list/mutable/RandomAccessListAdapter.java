@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -20,24 +20,55 @@ import org.eclipse.collections.api.block.HashingStrategy;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
+import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
+import org.eclipse.collections.api.block.function.primitive.ByteFunction;
+import org.eclipse.collections.api.block.function.primitive.CharFunction;
+import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
+import org.eclipse.collections.api.block.function.primitive.FloatFunction;
+import org.eclipse.collections.api.block.function.primitive.IntFunction;
+import org.eclipse.collections.api.block.function.primitive.LongFunction;
+import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.list.primitive.MutableBooleanList;
+import org.eclipse.collections.api.list.primitive.MutableByteList;
+import org.eclipse.collections.api.list.primitive.MutableCharList;
+import org.eclipse.collections.api.list.primitive.MutableDoubleList;
+import org.eclipse.collections.api.list.primitive.MutableFloatList;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
+import org.eclipse.collections.api.list.primitive.MutableLongList;
+import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.ListIterate;
 import org.eclipse.collections.impl.utility.internal.RandomAccessListIterate;
 
 /**
- * This class provides a MutableList wrapper around a JDK Collections List interface instance. All the MutableList
+ * This class provides a MutableList wrapper around a JDK Collections List interface instance. All of the MutableList
  * interface methods are supported in addition to the JDK List interface methods.
  * <p>
  * To create a new wrapper around an existing List instance, use the {@link #adapt(List)} factory method.
@@ -102,7 +133,7 @@ public final class RandomAccessListAdapter<T>
     @Override
     public MutableList<T> clone()
     {
-        return Lists.mutable.withAll(this.delegate);
+        return FastList.newList(this.delegate);
     }
 
     /**
@@ -113,6 +144,12 @@ public final class RandomAccessListAdapter<T>
     public MutableList<T> newEmpty()
     {
         return Lists.mutable.empty();
+    }
+
+    @Override
+    public void forEach(Procedure<? super T> procedure)
+    {
+        this.each(procedure);
     }
 
     @Override
@@ -312,13 +349,77 @@ public final class RandomAccessListAdapter<T>
     @Override
     public <V> MutableList<V> collect(Function<? super T, ? extends V> function)
     {
-        return RandomAccessListIterate.collect(this.delegate, function, Lists.mutable.withInitialCapacity(this.delegate.size()));
+        return RandomAccessListIterate.collect(this.delegate, function, FastList.newList(this.delegate.size()));
+    }
+
+    @Override
+    public MutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction)
+    {
+        BooleanArrayList result = new BooleanArrayList(this.size());
+        this.forEach(new CollectBooleanProcedure<>(booleanFunction, result));
+        return result;
+    }
+
+    @Override
+    public MutableByteList collectByte(ByteFunction<? super T> byteFunction)
+    {
+        ByteArrayList result = new ByteArrayList(this.size());
+        this.forEach(new CollectByteProcedure<>(byteFunction, result));
+        return result;
+    }
+
+    @Override
+    public MutableCharList collectChar(CharFunction<? super T> charFunction)
+    {
+        CharArrayList result = new CharArrayList(this.size());
+        this.forEach(new CollectCharProcedure<>(charFunction, result));
+        return result;
+    }
+
+    @Override
+    public MutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction)
+    {
+        DoubleArrayList result = new DoubleArrayList(this.size());
+        this.forEach(new CollectDoubleProcedure<>(doubleFunction, result));
+        return result;
+    }
+
+    @Override
+    public MutableFloatList collectFloat(FloatFunction<? super T> floatFunction)
+    {
+        FloatArrayList result = new FloatArrayList(this.size());
+        this.forEach(new CollectFloatProcedure<>(floatFunction, result));
+        return result;
+    }
+
+    @Override
+    public MutableIntList collectInt(IntFunction<? super T> intFunction)
+    {
+        IntArrayList result = new IntArrayList(this.size());
+        this.forEach(new CollectIntProcedure<>(intFunction, result));
+        return result;
+    }
+
+    @Override
+    public MutableLongList collectLong(LongFunction<? super T> longFunction)
+    {
+        LongArrayList result = new LongArrayList(this.size());
+        this.forEach(new CollectLongProcedure<>(longFunction, result));
+        return result;
+    }
+
+    @Override
+    public MutableShortList collectShort(ShortFunction<? super T> shortFunction)
+    {
+        ShortArrayList result = new ShortArrayList(this.size());
+        this.forEach(new CollectShortProcedure<>(shortFunction, result));
+        return result;
     }
 
     @Override
     public <V> MutableList<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
-        return RandomAccessListIterate.flatCollect(this.delegate, function, Lists.mutable.withInitialCapacity(this.delegate.size()));
+        return RandomAccessListIterate.flatCollect(this.delegate, function, FastList.newList(this.delegate.size()));
     }
 
     @Override
@@ -356,7 +457,7 @@ public final class RandomAccessListAdapter<T>
     @Override
     public <P, V> MutableList<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
-        return RandomAccessListIterate.collectWith(this.delegate, function, parameter, Lists.mutable.withInitialCapacity(this.delegate.size()));
+        return RandomAccessListIterate.collectWith(this.delegate, function, parameter, FastList.newList(this.delegate.size()));
     }
 
     @Override
@@ -374,13 +475,13 @@ public final class RandomAccessListAdapter<T>
     @Override
     public <S> MutableList<Pair<T, S>> zip(Iterable<S> that)
     {
-        return RandomAccessListIterate.zip(this.delegate, that, Lists.mutable.withInitialCapacity(this.delegate.size()));
+        return RandomAccessListIterate.zip(this.delegate, that, FastList.newList(this.delegate.size()));
     }
 
     @Override
     public MutableList<Pair<T, Integer>> zipWithIndex()
     {
-        return RandomAccessListIterate.zipWithIndex(this.delegate, Lists.mutable.withInitialCapacity(this.delegate.size()));
+        return RandomAccessListIterate.zipWithIndex(this.delegate, FastList.newList(this.delegate.size()));
     }
 
     @Override

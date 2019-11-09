@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -12,7 +12,6 @@ package org.eclipse.collections.impl.set.immutable;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
@@ -33,14 +32,6 @@ import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.BooleanSets;
-import org.eclipse.collections.api.factory.primitive.ByteSets;
-import org.eclipse.collections.api.factory.primitive.CharSets;
-import org.eclipse.collections.api.factory.primitive.DoubleSets;
-import org.eclipse.collections.api.factory.primitive.FloatSets;
-import org.eclipse.collections.api.factory.primitive.IntSets;
-import org.eclipse.collections.api.factory.primitive.LongSets;
-import org.eclipse.collections.api.factory.primitive.ShortSets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.multimap.set.ImmutableSetMultimap;
@@ -81,12 +72,27 @@ import org.eclipse.collections.impl.block.procedure.PartitionProcedure;
 import org.eclipse.collections.impl.block.procedure.RejectProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectInstancesOfProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.collection.immutable.AbstractImmutableCollection;
-import org.eclipse.collections.impl.lazy.parallel.set.NonParallelUnsortedSetIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.eclipse.collections.impl.partition.set.PartitionUnifiedSet;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
+import org.eclipse.collections.impl.set.mutable.primitive.BooleanHashSet;
+import org.eclipse.collections.impl.set.mutable.primitive.ByteHashSet;
+import org.eclipse.collections.impl.set.mutable.primitive.CharHashSet;
+import org.eclipse.collections.impl.set.mutable.primitive.DoubleHashSet;
+import org.eclipse.collections.impl.set.mutable.primitive.FloatHashSet;
+import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
+import org.eclipse.collections.impl.set.mutable.primitive.LongHashSet;
+import org.eclipse.collections.impl.set.mutable.primitive.ShortHashSet;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.internal.SetIterables;
 
@@ -113,7 +119,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     {
         if (!this.contains(element))
         {
-            MutableSet<T> result = Sets.mutable.withAll(this);
+            MutableSet<T> result = UnifiedSet.newSet(this);
             result.add(element);
             return result.toImmutable();
         }
@@ -125,7 +131,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     {
         if (this.contains(element))
         {
-            MutableSet<T> result = Sets.mutable.withAll(this);
+            MutableSet<T> result = UnifiedSet.newSet(this);
             result.remove(element);
             return result.toImmutable();
         }
@@ -135,7 +141,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public ImmutableSet<T> newWithAll(Iterable<? extends T> elements)
     {
-        MutableSet<T> result = Sets.mutable.withAll(elements);
+        MutableSet<T> result = UnifiedSet.newSet(elements);
         result.addAll(this);
         return result.toImmutable();
     }
@@ -143,7 +149,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public ImmutableSet<T> newWithoutAll(Iterable<? extends T> elements)
     {
-        MutableSet<T> result = Sets.mutable.withAll(this);
+        MutableSet<T> result = UnifiedSet.newSet(this);
         this.removeAllFrom(elements, result);
         return result.toImmutable();
     }
@@ -186,23 +192,23 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public PartitionImmutableSet<T> partition(Predicate<? super T> predicate)
     {
-        PartitionMutableSet<T> partitionMutableSet = new PartitionUnifiedSet<>();
-        this.forEach(new PartitionProcedure<>(predicate, partitionMutableSet));
-        return partitionMutableSet.toImmutable();
+        PartitionMutableSet<T> partitionUnifiedSet = new PartitionUnifiedSet<>();
+        this.forEach(new PartitionProcedure<>(predicate, partitionUnifiedSet));
+        return partitionUnifiedSet.toImmutable();
     }
 
     @Override
     public <P> PartitionImmutableSet<T> partitionWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        PartitionMutableSet<T> partitionMutableSet = new PartitionUnifiedSet<>();
-        this.forEach(new PartitionPredicate2Procedure<>(predicate, parameter, partitionMutableSet));
-        return partitionMutableSet.toImmutable();
+        PartitionMutableSet<T> partitionUnifiedSet = new PartitionUnifiedSet<>();
+        this.forEach(new PartitionPredicate2Procedure<>(predicate, parameter, partitionUnifiedSet));
+        return partitionUnifiedSet.toImmutable();
     }
 
     @Override
     public <S> ImmutableSet<S> selectInstancesOf(Class<S> clazz)
     {
-        MutableSet<S> result = Sets.mutable.withInitialCapacity(this.size());
+        MutableSet<S> result = UnifiedSet.newSet(this.size());
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
         return result.toImmutable();
     }
@@ -210,7 +216,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public <V> ImmutableSet<V> collect(Function<? super T, ? extends V> function)
     {
-        MutableSet<V> result = Sets.mutable.empty();
+        MutableSet<V> result = UnifiedSet.newSet();
         this.forEach(new CollectProcedure<>(function, result));
         return result.toImmutable();
     }
@@ -218,57 +224,65 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public ImmutableBooleanSet collectBoolean(BooleanFunction<? super T> booleanFunction)
     {
-        MutableBooleanSet result = BooleanSets.mutable.empty();
-        return this.collectBoolean(booleanFunction, result).toImmutable();
+        MutableBooleanSet result = new BooleanHashSet();
+        this.forEach(new CollectBooleanProcedure<>(booleanFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableByteSet collectByte(ByteFunction<? super T> byteFunction)
     {
-        MutableByteSet result = ByteSets.mutable.empty();
-        return this.collectByte(byteFunction, result).toImmutable();
+        MutableByteSet result = new ByteHashSet();
+        this.forEach(new CollectByteProcedure<>(byteFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableCharSet collectChar(CharFunction<? super T> charFunction)
     {
-        MutableCharSet result = CharSets.mutable.empty();
-        return this.collectChar(charFunction, result).toImmutable();
+        MutableCharSet result = new CharHashSet(this.size());
+        this.forEach(new CollectCharProcedure<>(charFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableDoubleSet collectDouble(DoubleFunction<? super T> doubleFunction)
     {
-        MutableDoubleSet result = DoubleSets.mutable.empty();
-        return this.collectDouble(doubleFunction, result).toImmutable();
+        MutableDoubleSet result = new DoubleHashSet(this.size());
+        this.forEach(new CollectDoubleProcedure<>(doubleFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableFloatSet collectFloat(FloatFunction<? super T> floatFunction)
     {
-        MutableFloatSet result = FloatSets.mutable.empty();
-        return this.collectFloat(floatFunction, result).toImmutable();
+        MutableFloatSet result = new FloatHashSet(this.size());
+        this.forEach(new CollectFloatProcedure<>(floatFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableIntSet collectInt(IntFunction<? super T> intFunction)
     {
-        MutableIntSet result = IntSets.mutable.empty();
-        return this.collectInt(intFunction, result).toImmutable();
+        MutableIntSet result = new IntHashSet(this.size());
+        this.forEach(new CollectIntProcedure<>(intFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableLongSet collectLong(LongFunction<? super T> longFunction)
     {
-        MutableLongSet result = LongSets.mutable.empty();
-        return this.collectLong(longFunction, result).toImmutable();
+        MutableLongSet result = new LongHashSet(this.size());
+        this.forEach(new CollectLongProcedure<>(longFunction, result));
+        return result.toImmutable();
     }
 
     @Override
     public ImmutableShortSet collectShort(ShortFunction<? super T> shortFunction)
     {
-        MutableShortSet result = ShortSets.mutable.empty();
-        return this.collectShort(shortFunction, result).toImmutable();
+        MutableShortSet result = new ShortHashSet(this.size());
+        this.forEach(new CollectShortProcedure<>(shortFunction, result));
+        return result.toImmutable();
     }
 
     @Override
@@ -280,7 +294,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public <V> ImmutableSet<V> collectIf(Predicate<? super T> predicate, Function<? super T, ? extends V> function)
     {
-        MutableSet<V> result = Sets.mutable.empty();
+        MutableSet<V> result = UnifiedSet.newSet();
         this.forEach(new CollectIfProcedure<>(result, function, predicate));
         return result.toImmutable();
     }
@@ -288,7 +302,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public <V> ImmutableSet<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
-        MutableSet<V> result = Sets.mutable.empty();
+        MutableSet<V> result = UnifiedSet.newSet();
         this.forEach(new FlatCollectProcedure<>(function, result));
         return result.toImmutable();
     }
@@ -361,10 +375,10 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            MutableSet<Pair<T, S>> target = UnifiedSet.newSet(Math.min(this.size(), thatSize));
+            UnifiedSet<Pair<T, S>> target = UnifiedSet.newSet(Math.min(this.size(), thatSize));
             return this.zip(that, target).toImmutable();
         }
-        return this.zip(that, Sets.mutable.empty()).toImmutable();
+        return this.zip(that, UnifiedSet.newSet()).toImmutable();
     }
 
     /**
@@ -374,13 +388,13 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Deprecated
     public ImmutableSet<Pair<T, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(Sets.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.zipWithIndex(UnifiedSet.newSet(this.size())).toImmutable();
     }
 
     @Override
     protected MutableCollection<T> newMutable(int size)
     {
-        return Sets.mutable.withInitialCapacity(size);
+        return UnifiedSet.newSet(size);
     }
 
     @Override
@@ -458,11 +472,6 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public ParallelUnsortedSetIterable<T> asParallel(ExecutorService executorService, int batchSize)
     {
-        Objects.requireNonNull(executorService);
-        if (batchSize < 1)
-        {
-            throw new IllegalArgumentException("batchSize must be greater than zero, but was: " + batchSize);
-        }
-        return new NonParallelUnsortedSetIterable<>(this);
+        return this.toSet().asParallel(executorService, batchSize);
     }
 }

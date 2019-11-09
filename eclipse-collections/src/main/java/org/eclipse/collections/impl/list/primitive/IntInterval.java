@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2019 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,7 +11,6 @@
 package org.eclipse.collections.impl.list.primitive;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -31,9 +30,6 @@ import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.IntIntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.IntProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.IntBags;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.IntSets;
 import org.eclipse.collections.api.iterator.IntIterator;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
@@ -41,15 +37,18 @@ import org.eclipse.collections.api.list.primitive.ImmutableIntList;
 import org.eclipse.collections.api.list.primitive.IntList;
 import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.set.primitive.MutableIntSet;
-import org.eclipse.collections.api.stack.primitive.MutableIntStack;
 import org.eclipse.collections.api.tuple.primitive.IntIntPair;
 import org.eclipse.collections.api.tuple.primitive.IntObjectPair;
-import org.eclipse.collections.impl.factory.primitive.IntStacks;
+import org.eclipse.collections.impl.bag.mutable.primitive.IntHashBag;
+import org.eclipse.collections.impl.block.factory.primitive.IntPredicates;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
 import org.eclipse.collections.impl.lazy.primitive.CollectIntToObjectIterable;
 import org.eclipse.collections.impl.lazy.primitive.LazyIntIterableAdapter;
 import org.eclipse.collections.impl.lazy.primitive.ReverseIntIterable;
 import org.eclipse.collections.impl.lazy.primitive.SelectIntIterable;
 import org.eclipse.collections.impl.list.IntervalUtils;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
 
@@ -64,14 +63,12 @@ public final class IntInterval
     private final int from;
     private final int to;
     private final int step;
-    private transient int size;
 
     private IntInterval(int from, int to, int step)
     {
         this.from = from;
         this.to = to;
         this.step = step;
-        this.size = IntervalUtils.intSize(this.from, this.to, this.step);
     }
 
     /**
@@ -101,8 +98,7 @@ public final class IntInterval
      */
     public IntInterval to(int newTo)
     {
-        int adjustedStep = IntervalUtils.calculateAdjustedStep(this.from, newTo, this.step);
-        return IntInterval.fromToBy(this.from, newTo, adjustedStep);
+        return IntInterval.fromToBy(this.from, newTo, this.step);
     }
 
     /**
@@ -139,8 +135,7 @@ public final class IntInterval
      */
     public static IntInterval oneTo(int count)
     {
-        int adjustedStep = IntervalUtils.calculateAdjustedStep(1, count, 1);
-        return IntInterval.oneToBy(count, adjustedStep);
+        return IntInterval.oneToBy(count, 1);
     }
 
     /**
@@ -148,6 +143,10 @@ public final class IntInterval
      */
     public static IntInterval oneToBy(int count, int step)
     {
+        if (count < 1)
+        {
+            throw new IllegalArgumentException("Only positive ranges allowed using oneToBy");
+        }
         return IntInterval.fromToBy(1, count, step);
     }
 
@@ -156,8 +155,7 @@ public final class IntInterval
      */
     public static IntInterval zeroTo(int count)
     {
-        int adjustedStep = IntervalUtils.calculateAdjustedStep(0, count, 1);
-        return IntInterval.zeroToBy(count, adjustedStep);
+        return IntInterval.zeroToBy(count, 1);
     }
 
     /**
@@ -251,7 +249,7 @@ public final class IntInterval
     }
 
     /**
-     * Returns true if the IntInterval contains all the specified int values.
+     * Returns true if the IntInterval contains all of the specified int values.
      */
     @Override
     public boolean containsAll(int... values)
@@ -282,7 +280,6 @@ public final class IntInterval
     /**
      * Returns true if the IntInterval contains none of the specified int values.
      */
-    @Override
     public boolean containsNone(int... values)
     {
         for (int value : values)
@@ -322,6 +319,12 @@ public final class IntInterval
                 procedure.value((int) i, index++);
             }
         }
+    }
+
+    @Override
+    public void forEach(IntProcedure procedure)
+    {
+        this.each(procedure);
     }
 
     private boolean goForward()
@@ -384,6 +387,19 @@ public final class IntInterval
         for (int i = 0; i < this.size(); i++)
         {
             if (!predicate.accept(this.get(i)))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean noneSatisfy(IntPredicate predicate)
+    {
+        for (int i = 0; i < this.size(); i++)
+        {
+            if (predicate.accept(this.get(i)))
             {
                 return false;
             }
@@ -482,16 +498,16 @@ public final class IntInterval
     @Override
     public ImmutableIntList subList(int fromIndex, int toIndex)
     {
-        return IntInterval.fromToBy(this.get(fromIndex), this.get(toIndex - 1), this.step);
+        throw new UnsupportedOperationException("subList not yet implemented!");
     }
 
     /**
-     * Returns the size of the interval.
+     * Calculates and returns the size of the interval.
      */
     @Override
     public int size()
     {
-        return this.size;
+        return IntervalUtils.intSize(this.from, this.to, this.step);
     }
 
     @Override
@@ -585,18 +601,6 @@ public final class IntInterval
     {
         int[] result = new int[this.size()];
         this.forEachWithIndex((each, index) -> result[index] = each);
-        return result;
-    }
-
-    @Override
-    public int[] toArray(int[] result)
-    {
-        if (result.length < this.size())
-        {
-            result = new int[this.size()];
-        }
-        int[] finalBypass = result;
-        this.forEachWithIndex((each, index) -> finalBypass[index] = each);
         return result;
     }
 
@@ -744,13 +748,13 @@ public final class IntInterval
     @Override
     public ImmutableIntList select(IntPredicate predicate)
     {
-        return IntLists.mutable.withAll(new SelectIntIterable(this, predicate)).toImmutable();
+        return IntArrayList.newList(new SelectIntIterable(this, predicate)).toImmutable();
     }
 
     @Override
     public ImmutableIntList reject(IntPredicate predicate)
     {
-        return IntLists.mutable.withAll(new SelectIntIterable(this, value -> !predicate.accept(value))).toImmutable();
+        return IntArrayList.newList(new SelectIntIterable(this, IntPredicates.not(predicate))).toImmutable();
     }
 
     @Override
@@ -774,7 +778,12 @@ public final class IntInterval
     @Override
     public long sum()
     {
-        return (long) this.size() * ((long) this.getFirst() + (long) this.getLast()) / 2L;
+        long sum = 0L;
+        for (IntIterator intIterator = this.intIterator(); intIterator.hasNext(); )
+        {
+            sum += intIterator.next();
+        }
+        return sum;
     }
 
     @Override
@@ -812,14 +821,21 @@ public final class IntInterval
     @Override
     public double average()
     {
-        // for an arithmetic sequence its median and its average are the same
-        return this.median();
+        return (double) this.sum() / (double) this.size();
     }
 
     @Override
     public double median()
     {
-        return ((double) this.getFirst() + (double) this.getLast()) / 2.0;
+        int[] sortedArray = this.toSortedArray();
+        int middleIndex = sortedArray.length >> 1;
+        if (sortedArray.length > 1 && (sortedArray.length & 1) == 0)
+        {
+            int first = sortedArray[middleIndex];
+            int second = sortedArray[middleIndex - 1];
+            return ((double) first + (double) second) / 2.0;
+        }
+        return (double) sortedArray[middleIndex];
     }
 
     @Override
@@ -839,25 +855,25 @@ public final class IntInterval
     @Override
     public MutableIntList toList()
     {
-        return IntLists.mutable.withAll(this);
+        return IntArrayList.newList(this);
     }
 
     @Override
     public MutableIntList toSortedList()
     {
-        return IntLists.mutable.withAll(this).sortThis();
+        return IntArrayList.newList(this).sortThis();
     }
 
     @Override
     public MutableIntSet toSet()
     {
-        return IntSets.mutable.withAll(this);
+        return IntHashSet.newSet(this);
     }
 
     @Override
     public MutableIntBag toBag()
     {
-        return IntBags.mutable.withAll(this);
+        return IntHashBag.newBag(this);
     }
 
     @Override
@@ -875,25 +891,25 @@ public final class IntInterval
     @Override
     public ImmutableIntList newWith(int element)
     {
-        return IntLists.mutable.withAll(this).with(element).toImmutable();
+        return IntArrayList.newList(this).with(element).toImmutable();
     }
 
     @Override
     public ImmutableIntList newWithout(int element)
     {
-        return IntLists.mutable.withAll(this).without(element).toImmutable();
+        return IntArrayList.newList(this).without(element).toImmutable();
     }
 
     @Override
     public ImmutableIntList newWithAll(IntIterable elements)
     {
-        return IntLists.mutable.withAll(this).withAll(elements).toImmutable();
+        return IntArrayList.newList(this).withAll(elements).toImmutable();
     }
 
     @Override
     public ImmutableIntList newWithoutAll(IntIterable elements)
     {
-        return IntLists.mutable.withAll(this).withoutAll(elements).toImmutable();
+        return IntArrayList.newList(this).withoutAll(elements).toImmutable();
     }
 
     @Override
@@ -930,12 +946,6 @@ public final class IntInterval
     public Spliterator.OfInt spliterator()
     {
         return new IntIntervalSpliterator(this.from, this.to, this.step);
-    }
-
-    @Override
-    public MutableIntStack toStack()
-    {
-        return IntStacks.mutable.withAll(this);
     }
 
     private class IntIntervalIterator implements IntIterator
@@ -1040,12 +1050,5 @@ public final class IntInterval
             }
             return this.current >= this.to;
         }
-    }
-
-    private void readObject(ObjectInputStream ois)
-            throws IOException, ClassNotFoundException
-    {
-        ois.defaultReadObject();
-        this.size = IntervalUtils.intSize(this.from, this.to, this.step);
     }
 }

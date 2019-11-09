@@ -10,11 +10,11 @@
 
 package org.eclipse.collections.impl.lazy.parallel.set.sorted;
 
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.ParallelListIterable;
 import org.eclipse.collections.impl.block.factory.Comparators;
-import org.eclipse.collections.impl.factory.SortedSets;
 import org.eclipse.collections.impl.lazy.parallel.list.ParallelListIterableTestCase;
 import org.eclipse.collections.impl.list.mutable.FastList;
 

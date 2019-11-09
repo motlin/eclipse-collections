@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,6 +11,7 @@
 package org.eclipse.collections.impl;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
@@ -24,6 +25,9 @@ import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
+import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
+import org.eclipse.collections.api.block.function.primitive.ByteFunction;
+import org.eclipse.collections.api.block.function.primitive.CharFunction;
 import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
 import org.eclipse.collections.api.block.function.primitive.DoubleObjectToDoubleFunction;
 import org.eclipse.collections.api.block.function.primitive.FloatFunction;
@@ -32,17 +36,25 @@ import org.eclipse.collections.api.block.function.primitive.IntFunction;
 import org.eclipse.collections.api.block.function.primitive.IntObjectToIntFunction;
 import org.eclipse.collections.api.block.function.primitive.LongFunction;
 import org.eclipse.collections.api.block.function.primitive.LongObjectToLongFunction;
+import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.collection.primitive.MutableBooleanCollection;
+import org.eclipse.collections.api.collection.primitive.MutableByteCollection;
+import org.eclipse.collections.api.collection.primitive.MutableCharCollection;
+import org.eclipse.collections.api.collection.primitive.MutableDoubleCollection;
+import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
+import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
+import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
+import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.BiMaps;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.SortedBags;
 import org.eclipse.collections.api.factory.SortedMaps;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.MutableList;
@@ -53,6 +65,7 @@ import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
@@ -83,6 +96,14 @@ import org.eclipse.collections.impl.block.procedure.SumOfFloatProcedure;
 import org.eclipse.collections.impl.block.procedure.SumOfIntProcedure;
 import org.eclipse.collections.impl.block.procedure.SumOfLongProcedure;
 import org.eclipse.collections.impl.block.procedure.ZipWithIndexProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.block.procedure.primitive.InjectIntoDoubleProcedure;
 import org.eclipse.collections.impl.block.procedure.primitive.InjectIntoFloatProcedure;
 import org.eclipse.collections.impl.block.procedure.primitive.InjectIntoIntProcedure;
@@ -110,6 +131,30 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     public boolean containsAllArguments(Object... elements)
     {
         return ArrayIterate.allSatisfyWith(elements, Predicates2.in(), this);
+    }
+
+    @Override
+    public Object[] toArray()
+    {
+        Object[] result = new Object[this.size()];
+        this.forEachWithIndex((each, index) -> result[index] = each);
+        return result;
+    }
+
+    @Override
+    public <E> E[] toArray(E[] array)
+    {
+        int size = this.size();
+        E[] result = array.length < size
+                ? (E[]) Array.newInstance(array.getClass().getComponentType(), size)
+                : array;
+
+        this.forEachWithIndex((each, index) -> result[index] = (E) each);
+        if (result.length > size)
+        {
+            result[size] = null;
+        }
+        return result;
     }
 
     @Override
@@ -173,7 +218,7 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     @Override
     public MutableSortedBag<T> toSortedBag()
     {
-        MutableSortedBag<T> sortedBag = SortedBags.mutable.empty();
+        MutableSortedBag<T> sortedBag = TreeBag.newBag();
         this.forEachWith(Procedures2.addToCollection(), sortedBag);
         return sortedBag;
     }
@@ -181,7 +226,7 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     @Override
     public MutableSortedBag<T> toSortedBag(Comparator<? super T> comparator)
     {
-        MutableSortedBag<T> sortedBag = SortedBags.mutable.empty(comparator);
+        MutableSortedBag<T> sortedBag = TreeBag.newBag(comparator);
         this.forEachWith(Procedures2.addToCollection(), sortedBag);
         return sortedBag;
     }
@@ -224,10 +269,10 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     }
 
     @Override
-    public <KK extends Comparable<? super KK>, NK, NV> MutableSortedMap<NK, NV> toSortedMapBy(
-            Function<? super NK, KK> sortBy,
-            Function<? super T, ? extends NK> keyFunction,
-            Function<? super T, ? extends NV> valueFunction)
+    public <KK extends Comparable<? super KK>, K, V> MutableSortedMap<K, V> toSortedMapBy(
+            Function<? super K, KK> sortBy,
+            Function<? super T, ? extends K> keyFunction,
+            Function<? super T, ? extends V> valueFunction)
     {
         return this.toSortedMap(Comparators.byFunction(sortBy), keyFunction, valueFunction);
     }
@@ -558,7 +603,7 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     /**
      * Returns a string with the elements of the iterable separated by commas with spaces and
      * enclosed in square brackets.
-     *
+     * <p>
      * <pre>
      * Assert.assertEquals("[]", Lists.mutable.empty().toString());
      * Assert.assertEquals("[1]", Lists.mutable.with(1).toString());
@@ -577,14 +622,14 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     @Override
     public void appendString(Appendable appendable, String separator)
     {
-        Procedure<T> appendStringProcedure = new AppendStringProcedure<>(appendable, separator);
+        AppendStringProcedure<T> appendStringProcedure = new AppendStringProcedure<>(appendable, separator);
         this.forEach(appendStringProcedure);
     }
 
     @Override
     public void appendString(Appendable appendable, String start, String separator, String end)
     {
-        Procedure<T> appendStringProcedure = new AppendStringProcedure<>(appendable, separator);
+        AppendStringProcedure<T> appendStringProcedure = new AppendStringProcedure<>(appendable, separator);
         try
         {
             appendable.append(start);
@@ -601,6 +646,62 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     public boolean containsAll(Collection<?> collection)
     {
         return this.containsAllIterable(collection);
+    }
+
+    @Override
+    public <R extends MutableBooleanCollection> R collectBoolean(BooleanFunction<? super T> booleanFunction, R target)
+    {
+        this.forEach(new CollectBooleanProcedure<>(booleanFunction, target));
+        return target;
+    }
+
+    @Override
+    public <R extends MutableByteCollection> R collectByte(ByteFunction<? super T> byteFunction, R target)
+    {
+        this.forEach(new CollectByteProcedure<>(byteFunction, target));
+        return target;
+    }
+
+    @Override
+    public <R extends MutableCharCollection> R collectChar(CharFunction<? super T> charFunction, R target)
+    {
+        this.forEach(new CollectCharProcedure<>(charFunction, target));
+        return target;
+    }
+
+    @Override
+    public <R extends MutableDoubleCollection> R collectDouble(DoubleFunction<? super T> doubleFunction, R target)
+    {
+        this.forEach(new CollectDoubleProcedure<>(doubleFunction, target));
+        return target;
+    }
+
+    @Override
+    public <R extends MutableFloatCollection> R collectFloat(FloatFunction<? super T> floatFunction, R target)
+    {
+        this.forEach(new CollectFloatProcedure<>(floatFunction, target));
+        return target;
+    }
+
+    @Override
+    public <R extends MutableIntCollection> R collectInt(IntFunction<? super T> intFunction, R target)
+    {
+        this.forEach(new CollectIntProcedure<>(intFunction, target));
+        return target;
+    }
+
+    @Override
+    public <R extends MutableLongCollection> R collectLong(LongFunction<? super T> longFunction, R target)
+    {
+        this.forEach(new CollectLongProcedure<>(longFunction, target));
+        return target;
+    }
+
+    @Override
+    public <R extends MutableShortCollection> R collectShort(ShortFunction<? super T> shortFunction, R target)
+    {
+        this.forEach(new CollectShortProcedure<>(shortFunction, target));
+        return target;
     }
 
     /**

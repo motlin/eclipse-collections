@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2017 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -18,21 +18,15 @@ import java.util.Set;
 
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.factory.Sets;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link SetAdapter}.
@@ -53,7 +47,7 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
         collection.add(collection);
         String simpleName = collection.getClass().getSimpleName();
         String string = collection.toString();
-        assertTrue(
+        Assert.assertTrue(
                 ("[1, (this " + simpleName + ")]").equals(string)
                         || ("[(this " + simpleName + "), 1]").equals(string));
     }
@@ -129,10 +123,10 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
         set4.add(2);
         set4.add(3);
         set4.add(4);
-        assertNotEquals(set1, null);
+        Assert.assertNotEquals(set1, null);
         Verify.assertEqualsAndHashCode(set1, set1);
         Verify.assertEqualsAndHashCode(set1, set2);
-        assertNotEquals(set2, set3);
+        Assert.assertNotEquals(set2, set3);
         Verify.assertEqualsAndHashCode(set3, set4);
     }
 
@@ -150,7 +144,7 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
         MutableCollection<Integer> deserializedCollection = SerializeTestHelper.serializeDeserialize(collection);
         Verify.assertSize(5, deserializedCollection);
         Verify.assertContainsAll(deserializedCollection, 1, 2, 3, 4, 5);
-        assertEquals(collection, deserializedCollection);
+        Assert.assertEquals(collection, deserializedCollection);
     }
 
     @Override
@@ -167,16 +161,16 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
     @Test
     public void getFirst()
     {
-        assertNotNull(this.newWith(1, 2, 3).getFirst());
-        assertNull(this.newWith().getFirst());
+        Assert.assertNotNull(this.newWith(1, 2, 3).getFirst());
+        Assert.assertNull(this.newWith().getFirst());
     }
 
     @Override
     @Test
     public void getLast()
     {
-        assertNotNull(this.newWith(1, 2, 3).getLast());
-        assertNull(this.newWith().getLast());
+        Assert.assertNotNull(this.newWith(1, 2, 3).getLast());
+        Assert.assertNull(this.newWith().getLast());
     }
 
     @Override
@@ -215,8 +209,8 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
     @Test
     public void adaptNull()
     {
-        assertThrows(NullPointerException.class, () -> new SetAdapter<>(null));
+        Verify.assertThrows(NullPointerException.class, () -> new SetAdapter<>(null));
 
-        assertThrows(NullPointerException.class, () -> SetAdapter.adapt(null));
+        Verify.assertThrows(NullPointerException.class, () -> SetAdapter.adapt(null));
     }
 }

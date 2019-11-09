@@ -1,4 +1,4 @@
-import "copyrightAndOthers.stg"
+import "copyright.stg"
 import "primitiveEquals.stg"
 import "primitiveHashCode.stg"
 import "primitiveLiteral.stg"
@@ -12,7 +12,7 @@ class(primitive) ::= <<
 >>
 
 body(type, name) ::= <<
-<copyrightAndOthers()>
+<copyright()>
 
 package org.eclipse.collections.impl.bag.immutable.primitive;
 
@@ -32,22 +32,22 @@ import org.eclipse.collections.api.block.function.primitive.Object<name>ToObject
 import org.eclipse.collections.api.block.predicate.primitive.<name>Predicate;
 import org.eclipse.collections.api.block.procedure.primitive.<name>IntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.<name>Procedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.iterator.<name>Iterator;
+import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.primitive.Mutable<name>List;
+import org.eclipse.collections.api.set.primitive.Immutable<name>Set;
 import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
+import org.eclipse.collections.api.tuple.primitive.<name>IntPair;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.bag.mutable.primitive.<name>HashBag;
-import org.eclipse.collections.impl.factory.Bags;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.<name>Bags;
-import org.eclipse.collections.impl.iterator.Singleton<name>Iterator;
+import org.eclipse.collections.impl.factory.primitive.<name>Sets;
+import org.eclipse.collections.impl.iterator.Unmodifiable<name>Iterator;
 import org.eclipse.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
 import org.eclipse.collections.impl.list.mutable.primitive.<name>ArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.<name>HashSet;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.tuple.primitive.<name>IntPair;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
-import org.eclipse.collections.api.set.primitive.Immutable<name>Set;
-import org.eclipse.collections.impl.factory.primitive.<name>Sets;
 
 /**
  * Immutable<name>SingletonBag is an optimization for {@link Immutable<name>Bag} of size 1.
@@ -140,6 +140,12 @@ final class Immutable<name>SingletonBag implements Immutable<name>Bag, Serializa
         return true;
     }
 
+    @Override
+    public void forEach(<name>Procedure procedure)
+    {
+        this.each(procedure);
+    }
+
     /**
      * @since 7.0.
      */
@@ -210,7 +216,7 @@ final class Immutable<name>SingletonBag implements Immutable<name>Bag, Serializa
     @Override
     public \<V> ImmutableBag\<V> collect(<name>ToObjectFunction\<? extends V> function)
     {
-        return Bags.immutable.with(function.valueOf(this.element1));
+        return HashBag.newBagWith(function.valueOf(this.element1)).toImmutable();
     }
 
     @Override
@@ -341,20 +347,6 @@ final class Immutable<name>SingletonBag implements Immutable<name>Bag, Serializa
     }
 
     @Override
-    public <type>[] toArray(<type>[] target)
-    {
-        if (target.length \< 1)
-        {
-            target = new <type>[]{this.element1};
-        }
-        else
-        {
-            target[0] = this.element1;
-        }
-        return target;
-    }
-
-    @Override
     public String toString()
     {
         return '[' + this.makeString() + ']';
@@ -410,7 +402,7 @@ final class Immutable<name>SingletonBag implements Immutable<name>Bag, Serializa
     @Override
     public <name>Iterator <type>Iterator()
     {
-        return new Singleton<name>Iterator(element1);
+        return new Unmodifiable<name>Iterator(<name>HashBag.newBagWith(this.element1).<type>Iterator());
     }
 }
 

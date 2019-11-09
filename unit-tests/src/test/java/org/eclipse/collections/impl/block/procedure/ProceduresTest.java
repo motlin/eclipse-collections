@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -19,23 +19,16 @@ import java.util.List;
 
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 import org.eclipse.collections.impl.block.factory.Procedures;
-import org.eclipse.collections.impl.block.procedure.checked.ThrowingProcedure;
 import org.eclipse.collections.impl.list.Interval;
+import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ProceduresTest
 {
@@ -46,15 +39,6 @@ public class ProceduresTest
                 RuntimeException.class,
                 IOException.class,
                 () -> Procedures.throwing(a -> { throw new IOException(); }).value(null));
-    }
-
-    @Test
-    public void throwingWithSuccessfulCompletion()
-    {
-        StringBuilder builder = new StringBuilder("a");
-        ThrowingProcedure<StringBuilder> throwingProcedure = stringBuilder -> stringBuilder.append("Visited");
-        Procedures.throwing(throwingProcedure).value(builder);
-        assertEquals("aVisited", builder.toString());
     }
 
     @Test
@@ -74,7 +58,7 @@ public class ProceduresTest
                         a -> { throw new IOException(); },
                         this::throwMyException)
                         .value(null));
-        assertThrows(
+        Verify.assertThrows(
                 NullPointerException.class,
                 () -> Procedures.throwing(
                         a -> { throw new NullPointerException(); },
@@ -90,14 +74,12 @@ public class ProceduresTest
     @Test
     public void println()
     {
-        MutableList<Integer> newAssertValues = Lists.mutable.of(1);
-        try (TestPrintStream stream = new TestPrintStream(newAssertValues))
+        try (TestPrintStream stream = new TestPrintStream(FastList.newListWith(1)))
         {
             Procedure<Integer> result = Procedures.println(stream);
             result.value(1);
             stream.shutdown();
         }
-        Verify.assertEmpty(newAssertValues);
     }
 
     @Test
@@ -108,33 +90,8 @@ public class ProceduresTest
         appender.value(1);
         appender.value(2);
         appender.value(3);
-        assertEquals("init123", appendable.toString());
-        assertEquals("init123", appender.toString());
-    }
-
-    @Test
-    public void appendWithException()
-    {
-        assertThrows(RuntimeException.class, () -> Procedures.append(new Appendable()
-        {
-            @Override
-            public Appendable append(CharSequence csq) throws IOException
-            {
-                throw new IOException();
-            }
-
-            @Override
-            public Appendable append(CharSequence csq, int start, int end) throws IOException
-            {
-                throw new IOException();
-            }
-
-            @Override
-            public Appendable append(char c) throws IOException
-            {
-                throw new IOException();
-            }
-        }).value("abc"));
+        Assert.assertEquals("init123", appendable.toString());
+        Assert.assertEquals("init123", appender.toString());
     }
 
     @Test
@@ -149,27 +106,7 @@ public class ProceduresTest
         Procedure<String> procedure = Procedures.fromObjectIntProcedure(objectIntProcedure);
         numberStrings.forEach(procedure);
 
-        assertEquals(expectedResults, actualResults);
-    }
-
-    @Test
-    public void fromProcedureWithInt()
-    {
-        MutableList<ObjectIntPair> list = Lists.mutable.empty();
-        Procedure<String> procedure =
-                Procedures.fromObjectIntProcedure((each, parameter) -> list.add(PrimitiveTuples.pair(each, parameter)));
-        procedure.value("strOne");
-        procedure.value("strTwo");
-        assertEquals(Lists.mutable.of(PrimitiveTuples.pair("strOne", 0),
-                PrimitiveTuples.pair("strTwo", 1)), list);
-    }
-
-    @Test
-    public void noop()
-    {
-        Procedure<Object> noop = Procedures.noop();
-        noop.value("abc");
-        assertNotNull(noop);
+        Assert.assertEquals(expectedResults, actualResults);
     }
 
     @Test
@@ -179,7 +116,7 @@ public class ProceduresTest
         integers.add(null);
         MutableList<Integer> result = Lists.mutable.of();
         integers.forEach(Procedures.synchronizedEach(CollectionAddProcedure.on(result)));
-        assertEquals(result, integers);
+        Assert.assertEquals(result, integers);
     }
 
     @Test
@@ -201,7 +138,7 @@ public class ProceduresTest
     {
         Procedure<Object> defaultBlock = each -> { throw new BlockCalledException(); };
         CaseProcedure<Object> undertest = Procedures.caseDefault(defaultBlock);
-        assertThrows(BlockCalledException.class, () -> undertest.value(1));
+        Verify.assertThrows(BlockCalledException.class, () -> undertest.value(1));
     }
 
     @Test
@@ -209,7 +146,7 @@ public class ProceduresTest
     {
         Procedure<Object> caseBlock = each -> { throw new BlockCalledException(); };
         CaseProcedure<Object> undertest = Procedures.caseDefault(DoNothingProcedure.DO_NOTHING, ignored -> true, caseBlock);
-        assertThrows(BlockCalledException.class, () -> undertest.value(1));
+        Verify.assertThrows(BlockCalledException.class, () -> undertest.value(1));
     }
 
     private static final class TestPrintStream
@@ -231,7 +168,7 @@ public class ProceduresTest
             }
             catch (IOException ex)
             {
-                fail("Failed to marshal an object: " + ex.getMessage());
+                Assert.fail("Failed to marshal an object: " + ex.getMessage());
             }
             return null;
         }
@@ -240,7 +177,7 @@ public class ProceduresTest
         public void println(Object x)
         {
             super.println(x);
-            assertEquals(this.assertValues.remove(0), x);
+            Assert.assertEquals(this.assertValues.remove(0), x);
         }
 
         private void shutdown()

@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.collections.api.bimap.ImmutableBiMap;
+import org.eclipse.collections.api.factory.BiMaps;
 import org.eclipse.collections.impl.block.factory.Functions;
-import org.eclipse.collections.impl.factory.BiMaps;
 import org.eclipse.collections.impl.map.immutable.ImmutableMapIterableTestCase;
 import org.junit.jupiter.api.Test;
 

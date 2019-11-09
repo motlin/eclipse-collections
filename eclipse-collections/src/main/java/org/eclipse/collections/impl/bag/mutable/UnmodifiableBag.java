@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -17,7 +17,6 @@ import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
@@ -42,14 +41,11 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
-import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.Bags;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.bag.MutableBagMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.bag.PartitionMutableBag;
@@ -327,30 +323,6 @@ public class UnmodifiableBag<T>
         this.getMutableBag().forEachWithOccurrences(objectIntProcedure);
     }
 
-    @Override
-    public boolean anySatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.getMutableBag().anySatisfyWithOccurrences(predicate);
-    }
-
-    @Override
-    public boolean allSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.getMutableBag().allSatisfyWithOccurrences(predicate);
-    }
-
-    @Override
-    public boolean noneSatisfyWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.getMutableBag().noneSatisfyWithOccurrences(predicate);
-    }
-
-    @Override
-    public T detectWithOccurrences(ObjectIntPredicate<? super T> predicate)
-    {
-        return this.getMutableBag().detectWithOccurrences(predicate);
-    }
-
     /**
      * @since 9.1.
      */
@@ -399,18 +371,6 @@ public class UnmodifiableBag<T>
     }
 
     @Override
-    public MutableBag<T> withOccurrences(T element, int occurrences)
-    {
-        throw new UnsupportedOperationException("Cannot call withOccurrences() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableBag<T> withoutOccurrences(T element, int occurrences)
-    {
-        throw new UnsupportedOperationException("Cannot call withoutOccurrences() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
     public MutableBag<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withAll() on " + this.getClass().getSimpleName());
@@ -433,6 +393,7 @@ public class UnmodifiableBag<T>
 
         private MutableBag<T> mutableBag;
 
+        @SuppressWarnings("UnusedDeclaration")
         public UnmodifiableBagSerializationProxy()
         {
             // Empty constructor for Externalizable class
@@ -476,31 +437,5 @@ public class UnmodifiableBag<T>
     public MutableSet<T> selectUnique()
     {
         return this.getMutableBag().selectUnique();
-    }
-
-    @Override
-    public <V> MutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
-    {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        this.forEachWithOccurrences((each, occurrences) -> result.addToValue(
-                groupBy.valueOf(each),
-                function.intValueOf(each) * (long) occurrences));
-        return result;
-    }
-
-    @Override
-    public <V> MutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
-    {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
-        this.forEachWithOccurrences((each, occurrences) -> result.addToValue(
-                groupBy.valueOf(each),
-                function.longValueOf(each) * (long) occurrences));
-        return result;
-    }
-
-    @Override
-    public RichIterable<T> distinctView()
-    {
-        return this.getMutableBag().distinctView();
     }
 }

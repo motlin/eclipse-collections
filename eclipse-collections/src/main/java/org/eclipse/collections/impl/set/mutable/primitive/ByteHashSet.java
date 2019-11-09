@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -20,7 +20,6 @@ import java.util.NoSuchElementException;
 
 import org.eclipse.collections.api.ByteIterable;
 import org.eclipse.collections.api.LazyByteIterable;
-import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.primitive.MutableByteBag;
 import org.eclipse.collections.api.block.function.primitive.ByteToObjectFunction;
@@ -28,9 +27,6 @@ import org.eclipse.collections.api.block.function.primitive.ObjectByteToObjectFu
 import org.eclipse.collections.api.block.predicate.primitive.BytePredicate;
 import org.eclipse.collections.api.block.procedure.primitive.ByteProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.ByteBags;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
 import org.eclipse.collections.api.iterator.ByteIterator;
 import org.eclipse.collections.api.iterator.MutableByteIterator;
 import org.eclipse.collections.api.list.MutableList;
@@ -40,11 +36,13 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.primitive.ByteSet;
 import org.eclipse.collections.api.set.primitive.ImmutableByteSet;
 import org.eclipse.collections.api.set.primitive.MutableByteSet;
-import org.eclipse.collections.api.tuple.primitive.ByteBytePair;
+import org.eclipse.collections.impl.bag.mutable.primitive.ByteHashBag;
 import org.eclipse.collections.impl.block.procedure.checked.primitive.CheckedByteProcedure;
 import org.eclipse.collections.impl.factory.primitive.ByteSets;
 import org.eclipse.collections.impl.lazy.primitive.LazyByteIterableAdapter;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
 import org.eclipse.collections.impl.set.immutable.primitive.ImmutableByteSetSerializationProxy;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 public final class ByteHashSet implements MutableByteSet, Externalizable
 {
@@ -76,12 +74,6 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         }
     }
 
-    public ByteHashSet(byte... elements)
-    {
-        this();
-        this.addAll(elements);
-    }
-
     public ByteHashSet(ByteHashSet set)
     {
         this.size = set.size;
@@ -91,10 +83,10 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         this.bitGroup2 = set.bitGroup2;
     }
 
-    @Override
-    public MutableSet<Byte> boxed()
+    public ByteHashSet(byte... elements)
     {
-        return new BoxedMutableByteSet(this);
+        this();
+        this.addAll(elements);
     }
 
     public static ByteHashSet newSet(ByteIterable source)
@@ -232,13 +224,6 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         }
 
         return ((this.bitGroup4 >>> value) & 1L) != 0;
-    }
-
-    @Override
-    public LazyIterable<ByteBytePair> cartesianProduct(
-            ByteSet set)
-    {
-        return ByteSets.cartesianProduct(this, set);
     }
 
     @Override
@@ -574,27 +559,6 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
     }
 
     @Override
-    public byte[] toArray(byte[] array)
-    {
-        if (array.length < this.size())
-        {
-            array = new byte[this.size()];
-        }
-        int index = 0;
-
-        ByteIterator iterator = this.byteIterator();
-
-        while (iterator.hasNext())
-        {
-            byte nextByte = iterator.next();
-            array[index] = nextByte;
-            index++;
-        }
-
-        return array;
-    }
-
-    @Override
     public boolean containsAll(byte... source)
     {
         for (byte item : source)
@@ -698,7 +662,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
     @Override
     public <V> MutableSet<V> collect(ByteToObjectFunction<? extends V> function)
     {
-        MutableSet<V> target = Sets.mutable.withInitialCapacity(this.size());
+        MutableSet<V> target = UnifiedSet.newSet(this.size());
 
         this.forEach(each -> target.add(function.valueOf(each)));
 
@@ -791,19 +755,19 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
     @Override
     public MutableByteList toList()
     {
-        return ByteLists.mutable.withAll(this);
+        return ByteArrayList.newList(this);
     }
 
     @Override
     public MutableByteSet toSet()
     {
-        return ByteSets.mutable.withAll(this);
+        return ByteHashSet.newSet(this);
     }
 
     @Override
     public MutableByteBag toBag()
     {
-        return ByteBags.mutable.withAll(this);
+        return ByteHashBag.newBag(this);
     }
 
     @Override
@@ -948,7 +912,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
     @Override
     public MutableByteList toSortedList()
     {
-        return ByteLists.mutable.withAll(this).sortThis();
+        return ByteArrayList.newList(this).sortThis();
     }
 
     @Override
@@ -1059,12 +1023,6 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
             this.bitGroup1 = bitGroup1;
             this.bitGroup2 = bitGroup2;
             this.size = size;
-        }
-
-        @Override
-        public LazyIterable<ByteBytePair> cartesianProduct(ByteSet set)
-        {
-            return ByteSets.cartesianProduct(this, set);
         }
 
         @Override
@@ -1225,27 +1183,6 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         }
 
         @Override
-        public byte[] toArray(byte[] array)
-        {
-            if (array.length < this.size())
-            {
-                array = new byte[this.size()];
-            }
-            int index = 0;
-
-            ByteIterator iterator = this.byteIterator();
-
-            while (iterator.hasNext())
-            {
-                byte nextByte = iterator.next();
-                array[index] = nextByte;
-                index++;
-            }
-
-            return array;
-        }
-
-        @Override
         public boolean contains(byte value)
         {
             if (value <= MAX_BYTE_GROUP_1)
@@ -1365,7 +1302,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         @Override
         public <V> ImmutableSet<V> collect(ByteToObjectFunction<? extends V> function)
         {
-            MutableSet<V> target = Sets.mutable.withInitialCapacity(this.size());
+            MutableSet<V> target = UnifiedSet.newSet(this.size());
 
             this.forEach(each -> target.add(function.valueOf(each)));
 
@@ -1458,19 +1395,19 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         @Override
         public MutableByteList toList()
         {
-            return ByteLists.mutable.withAll(this);
+            return ByteArrayList.newList(this);
         }
 
         @Override
         public MutableByteSet toSet()
         {
-            return ByteSets.mutable.withAll(this);
+            return ByteHashSet.newSet(this);
         }
 
         @Override
         public MutableByteBag toBag()
         {
-            return ByteBags.mutable.withAll(this);
+            return ByteHashBag.newBag(this);
         }
 
         @Override
@@ -1590,7 +1527,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         @Override
         public MutableByteList toSortedList()
         {
-            return ByteLists.mutable.withAll(this).sortThis();
+            return ByteArrayList.newList(this).sortThis();
         }
 
         @Override

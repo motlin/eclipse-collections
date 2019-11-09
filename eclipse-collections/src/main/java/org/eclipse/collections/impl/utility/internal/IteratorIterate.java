@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -52,16 +52,6 @@ import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Maps;
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
@@ -75,8 +65,18 @@ import org.eclipse.collections.impl.block.factory.Functions0;
 import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
 import org.eclipse.collections.impl.block.procedure.NonMutatingAggregationProcedure;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -385,7 +385,7 @@ public final class IteratorIterate
             Iterator<T> iterator,
             BooleanFunction<? super T> booleanFunction)
     {
-        MutableBooleanCollection result = BooleanLists.mutable.empty();
+        MutableBooleanCollection result = new BooleanArrayList();
         while (iterator.hasNext())
         {
             result.add(booleanFunction.booleanValueOf(iterator.next()));
@@ -415,7 +415,7 @@ public final class IteratorIterate
             Iterator<T> iterator,
             ByteFunction<? super T> byteFunction)
     {
-        MutableByteCollection result = ByteLists.mutable.empty();
+        MutableByteCollection result = new ByteArrayList();
         while (iterator.hasNext())
         {
             result.add(byteFunction.byteValueOf(iterator.next()));
@@ -424,7 +424,8 @@ public final class IteratorIterate
     }
 
     /**
-     * @see Iterate#collectByte(Iterable, ByteFunction, MutableByteCollection)
+     * @see Iterate#collectByte(Iterable, ByteFunction,
+     * MutableByteCollection)
      */
     public static <T, R extends MutableByteCollection> R collectByte(
             Iterator<T> iterator,
@@ -445,7 +446,7 @@ public final class IteratorIterate
             Iterator<T> iterator,
             CharFunction<? super T> charFunction)
     {
-        MutableCharCollection result = CharLists.mutable.empty();
+        MutableCharCollection result = new CharArrayList();
         while (iterator.hasNext())
         {
             result.add(charFunction.charValueOf(iterator.next()));
@@ -454,7 +455,8 @@ public final class IteratorIterate
     }
 
     /**
-     * @see Iterate#collectChar(Iterable, CharFunction, MutableCharCollection)
+     * @see Iterate#collectChar(Iterable, CharFunction,
+     * MutableCharCollection)
      */
     public static <T, R extends MutableCharCollection> R collectChar(
             Iterator<T> iterator,
@@ -475,7 +477,7 @@ public final class IteratorIterate
             Iterator<T> iterator,
             DoubleFunction<? super T> doubleFunction)
     {
-        MutableDoubleCollection result = DoubleLists.mutable.empty();
+        MutableDoubleCollection result = new DoubleArrayList();
         while (iterator.hasNext())
         {
             result.add(doubleFunction.doubleValueOf(iterator.next()));
@@ -484,7 +486,8 @@ public final class IteratorIterate
     }
 
     /**
-     * @see Iterate#collectDouble(Iterable, DoubleFunction, MutableDoubleCollection)
+     * @see Iterate#collectDouble(Iterable, DoubleFunction,
+     * MutableDoubleCollection)
      */
     public static <T, R extends MutableDoubleCollection> R collectDouble(
             Iterator<T> iterator,
@@ -505,7 +508,7 @@ public final class IteratorIterate
             Iterator<T> iterator,
             FloatFunction<? super T> floatFunction)
     {
-        MutableFloatCollection result = FloatLists.mutable.empty();
+        MutableFloatCollection result = new FloatArrayList();
         while (iterator.hasNext())
         {
             result.add(floatFunction.floatValueOf(iterator.next()));
@@ -514,7 +517,8 @@ public final class IteratorIterate
     }
 
     /**
-     * @see Iterate#collectFloat(Iterable, FloatFunction, MutableFloatCollection)
+     * @see Iterate#collectFloat(Iterable, FloatFunction,
+     * MutableFloatCollection)
      */
     public static <T, R extends MutableFloatCollection> R collectFloat(
             Iterator<T> iterator,
@@ -535,7 +539,7 @@ public final class IteratorIterate
             Iterator<T> iterator,
             IntFunction<? super T> intFunction)
     {
-        MutableIntCollection result = IntLists.mutable.empty();
+        MutableIntCollection result = new IntArrayList();
         while (iterator.hasNext())
         {
             result.add(intFunction.intValueOf(iterator.next()));
@@ -544,7 +548,8 @@ public final class IteratorIterate
     }
 
     /**
-     * @see Iterate#collectInt(Iterable, IntFunction, MutableIntCollection)
+     * @see Iterate#collectInt(Iterable, IntFunction,
+     * MutableIntCollection)
      */
     public static <T, R extends MutableIntCollection> R collectInt(
             Iterator<T> iterator,
@@ -565,7 +570,7 @@ public final class IteratorIterate
             Iterator<T> iterator,
             LongFunction<? super T> longFunction)
     {
-        MutableLongCollection result = LongLists.mutable.empty();
+        MutableLongCollection result = new LongArrayList();
         while (iterator.hasNext())
         {
             result.add(longFunction.longValueOf(iterator.next()));
@@ -574,7 +579,8 @@ public final class IteratorIterate
     }
 
     /**
-     * @see Iterate#collectLong(Iterable, LongFunction, MutableLongCollection)
+     * @see Iterate#collectLong(Iterable, LongFunction,
+     * MutableLongCollection)
      */
     public static <T, R extends MutableLongCollection> R collectLong(
             Iterator<T> iterator,
@@ -595,7 +601,7 @@ public final class IteratorIterate
             Iterator<T> iterator,
             ShortFunction<? super T> shortFunction)
     {
-        MutableShortCollection result = ShortLists.mutable.empty();
+        MutableShortCollection result = new ShortArrayList();
         while (iterator.hasNext())
         {
             result.add(shortFunction.shortValueOf(iterator.next()));
@@ -604,7 +610,8 @@ public final class IteratorIterate
     }
 
     /**
-     * @see Iterate#collectShort(Iterable, ShortFunction, MutableShortCollection)
+     * @see Iterate#collectShort(Iterable, ShortFunction,
+     * MutableShortCollection)
      */
     public static <T, R extends MutableShortCollection> R collectShort(
             Iterator<T> iterator,
@@ -1097,10 +1104,20 @@ public final class IteratorIterate
      * @deprecated in 7.0.
      */
     @Deprecated
-    public static <T, R extends List<T>> R distinct(Iterator<T> iterator, R targetCollection)
+    public static <T, R extends List<T>> R distinct(
+            Iterator<T> iterator,
+            R targetCollection)
     {
-        Set<T> seenSoFar = Sets.mutable.empty();
-        return IteratorIterate.select(iterator, seenSoFar::add, targetCollection);
+        Set<T> seenSoFar = UnifiedSet.newSet();
+        while (iterator.hasNext())
+        {
+            T item = iterator.next();
+            if (seenSoFar.add(item))
+            {
+                targetCollection.add(item);
+            }
+        }
+        return targetCollection;
     }
 
     /**
@@ -1117,7 +1134,7 @@ public final class IteratorIterate
     public static <T> MutableList<T> distinct(Iterator<T> iterator, HashingStrategy<? super T> hashingStrategy)
     {
         Set<T> seenSoFar = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
-        MutableList<T> result = FastList.newList();
+        FastList<T> result = FastList.newList();
         while (iterator.hasNext())
         {
             T item = iterator.next();
@@ -1297,7 +1314,7 @@ public final class IteratorIterate
             Function<? super T, ? extends V> groupBy,
             Function<? super T, BigDecimal> function)
     {
-        MutableMap<V, BigDecimal> result = Maps.mutable.empty();
+        MutableMap<V, BigDecimal> result = UnifiedMap.newMap();
         while (iterator.hasNext())
         {
             T item = iterator.next();
@@ -1311,7 +1328,7 @@ public final class IteratorIterate
             Function<? super T, ? extends V> groupBy,
             Function<? super T, BigInteger> function)
     {
-        MutableMap<V, BigInteger> result = Maps.mutable.empty();
+        MutableMap<V, BigInteger> result = UnifiedMap.newMap();
         while (iterator.hasNext())
         {
             T item = iterator.next();
@@ -1326,7 +1343,7 @@ public final class IteratorIterate
             Function0<? extends V> zeroValueFactory,
             Procedure2<? super V, ? super T> mutatingAggregator)
     {
-        MutableMap<K, V> map = Maps.mutable.empty();
+        MutableMap<K, V> map = UnifiedMap.newMap();
         IteratorIterate.forEach(iterator, new MutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, mutatingAggregator));
         return map;
     }
@@ -1337,7 +1354,7 @@ public final class IteratorIterate
             Function0<? extends V> zeroValueFactory,
             Function2<? super V, ? super T, ? extends V> nonMutatingAggregator)
     {
-        MutableMap<K, V> map = Maps.mutable.empty();
+        MutableMap<K, V> map = UnifiedMap.newMap();
         IteratorIterate.forEach(iterator, new NonMutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, nonMutatingAggregator));
         return map;
     }

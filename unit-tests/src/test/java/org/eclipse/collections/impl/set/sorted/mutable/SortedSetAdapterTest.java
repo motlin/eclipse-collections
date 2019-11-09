@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2017 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -19,22 +19,17 @@ import java.util.TreeSet;
 
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.factory.SortedSets;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link SortedSetAdapter}.
@@ -80,31 +75,31 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void detectLastIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).detectLastIndex(each -> each % 2 == 0));
+        this.newWith(1, 2, 3).detectLastIndex(each -> each % 2 == 0);
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void reverseForEach()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEach(each -> fail("Should not be evaluated")));
+        this.newWith(1, 2, 3).reverseForEach(each -> Assert.fail("Should not be evaluated"));
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void reverseForEachWithIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> fail("Should not be evaluated")));
+        this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> Assert.fail("Should not be evaluated"));
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void toReversed()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).toReversed());
+        this.newWith(1, 2, 3).toReversed();
     }
 
     @Test
@@ -164,11 +159,11 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
         MutableSortedSet<Integer> set4 = TreeSortedSet.newSetWith(2, 3, 4);
 
         Verify.assertEqualsAndHashCode(set1, set1);
-        assertEquals(UnifiedSet.newSetWith(1, 2, 3), set1);
-        assertEquals(UnifiedSet.newSetWith(1, 2, 3), set2);
+        Assert.assertEquals(UnifiedSet.newSetWith(1, 2, 3), set1);
+        Assert.assertEquals(UnifiedSet.newSetWith(1, 2, 3), set2);
 
-        assertEquals(set1, set2);
-        assertNotEquals(set2, set3);
+        Assert.assertEquals(set1, set2);
+        Assert.assertNotEquals(set2, set3);
         Verify.assertEqualsAndHashCode(set3, set4);
         Verify.assertSortedSetsEqual(TreeSortedSet.newSetWith(Collections.reverseOrder(), 1, 2, 3), set2);
     }
@@ -199,9 +194,9 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
     public void getFirst()
     {
         super.getFirst();
-        assertEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getFirst());
-        assertEquals(Integer.valueOf(3), this.newWith(Collections.reverseOrder(), 1, 2, 3).getFirst());
-        assertThrows(NoSuchElementException.class, () -> new SortedSetAdapter<>(new TreeSet<>()).getFirst());
+        Assert.assertEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getFirst());
+        Assert.assertEquals(Integer.valueOf(3), this.newWith(Collections.reverseOrder(), 1, 2, 3).getFirst());
+        Verify.assertThrows(NoSuchElementException.class, () -> new SortedSetAdapter<>(new TreeSet<>()).getFirst());
     }
 
     @Override
@@ -209,10 +204,10 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
     public void getLast()
     {
         super.getLast();
-        assertNotNull(this.newWith(1, 2, 3).getLast());
-        assertEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getLast());
-        assertEquals(Integer.valueOf(1), this.newWith(Collections.reverseOrder(), 1, 2, 3).getLast());
-        assertThrows(NoSuchElementException.class, () -> new SortedSetAdapter<>(new TreeSet<>()).getLast());
+        Assert.assertNotNull(this.newWith(1, 2, 3).getLast());
+        Assert.assertEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getLast());
+        Assert.assertEquals(Integer.valueOf(1), this.newWith(Collections.reverseOrder(), 1, 2, 3).getLast());
+        Verify.assertThrows(NoSuchElementException.class, () -> new SortedSetAdapter<>(new TreeSet<>()).getLast());
     }
 
     @Override
@@ -252,7 +247,7 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
     @Test
     public void adaptNull()
     {
-        assertThrows(NullPointerException.class, () -> new SortedSetAdapter<>(null));
-        assertThrows(NullPointerException.class, () -> SortedSetAdapter.adapt(null));
+        Verify.assertThrows(NullPointerException.class, () -> new SortedSetAdapter<>(null));
+        Verify.assertThrows(NullPointerException.class, () -> SortedSetAdapter.adapt(null));
     }
 }

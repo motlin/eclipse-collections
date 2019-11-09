@@ -1,4 +1,4 @@
-import "copyrightAndOthers.stg"
+import "copyright.stg"
 import "primitiveEquals.stg"
 import "primitiveHashCode.stg"
 import "primitiveLiteral.stg"
@@ -10,19 +10,15 @@ skipBoolean() ::= "true"
 fileName(primitive) ::= "AbstractMutable<primitive.name>KeySet"
 
 class(primitive) ::= <<
-<body(primitive.type, primitive.name, primitive.wrapperName)>
+<body(primitive.type, primitive.name)>
 >>
 
-body(type, name, wrapperName) ::= <<
-<copyrightAndOthers()>
+body(type, name) ::= <<
+<copyright()>
 
 package org.eclipse.collections.impl.map.mutable.primitive;
 
 import java.io.IOException;
-import java.io.Externalizable;
-import java.io.ObjectInput;
-import java.io.ObjectStreamException;
-import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -34,34 +30,30 @@ import org.eclipse.collections.api.block.function.primitive.<name>ToObjectFuncti
 import org.eclipse.collections.api.block.function.primitive.Object<name>ToObjectFunction;
 import org.eclipse.collections.api.block.predicate.primitive.<name>Predicate;
 import org.eclipse.collections.api.block.procedure.primitive.<name>Procedure;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.iterator.<name>Iterator;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.Mutable<name>List;
+import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.api.set.primitive.<name>Set;
 import org.eclipse.collections.api.set.primitive.Immutable<name>Set;
+import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
 import org.eclipse.collections.impl.bag.mutable.primitive.<name>HashBag;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.<name>Sets;
 import org.eclipse.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
 import org.eclipse.collections.impl.list.mutable.primitive.<name>ArrayList;
-import org.eclipse.collections.api.set.primitive.<name>Set;
-import org.eclipse.collections.api.set.MutableSet;
-import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
-import org.eclipse.collections.impl.factory.Sets;
-import org.eclipse.collections.impl.set.mutable.primitive.BoxedMutable<name>Set;
 import org.eclipse.collections.impl.set.mutable.primitive.<name>HashSet;
 import org.eclipse.collections.impl.set.mutable.primitive.Synchronized<name>Set;
 import org.eclipse.collections.impl.set.mutable.primitive.Unmodifiable<name>Set;
-import org.eclipse.collections.api.LazyIterable;
-import org.eclipse.collections.api.tuple.primitive.<name><name>Pair;
 
 /**
  * This file was automatically generated from template file abstractMutablePrimitiveKeySet.stg.
  *
  * @since 6.0.
  */
-public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, Externalizable
+public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set
 {
-    private static final long serialVersionUID = 1L;
     private static final <type> EMPTY_KEY = <(literal.(type))("0")>;
     private static final <type> REMOVED_KEY = <(literal.(type))("1")>;
 
@@ -80,12 +72,6 @@ public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, E
         return !isEmptyKey(key) && !isRemovedKey(key);
     }
 
-    @Override
-    public MutableSet\<<wrapperName>\> boxed()
-    {
-        return new BoxedMutable<name>Set(this);
-    }
-
     protected abstract <type> getKeyAtIndex(int index);
 
     protected abstract int getTableSize();
@@ -93,6 +79,12 @@ public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, E
     protected abstract Mutable<name>KeysMap getOuter();
 
     protected abstract AbstractSentinelValues getSentinelValues();
+
+    @Override
+    public void forEach(<name>Procedure procedure)
+    {
+        this.each(procedure);
+    }
 
     /**
      * @since 7.0.
@@ -169,6 +161,30 @@ public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, E
         for (int i = 0; i \< this.getTableSize(); i++)
         {
             if (isNonSentinel(this.getKeyAtIndex(i)) && !predicate.accept(this.getKeyAtIndex(i)))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean noneSatisfy(<name>Predicate predicate)
+    {
+        if (this.getSentinelValues() != null)
+        {
+            if (this.getSentinelValues().containsZeroKey && predicate.accept(EMPTY_KEY))
+            {
+                return false;
+            }
+            if (this.getSentinelValues().containsOneKey && predicate.accept(REMOVED_KEY))
+            {
+                return false;
+            }
+        }
+        for (int i = 0; i \< this.getTableSize(); i++)
+        {
+            if (isNonSentinel(this.getKeyAtIndex(i)) && predicate.accept(this.getKeyAtIndex(i)))
             {
                 return false;
             }
@@ -565,7 +581,7 @@ public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, E
     public <type>[] toArray()
     {
         int size = this.getOuter().size();
-        <type>[] result = new <type>[size];
+        final <type>[] result = new <type>[size];
         this.getOuter().forEachKey(new <name>Procedure()
         {
             private int index;
@@ -573,30 +589,6 @@ public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, E
             public void value(<type> each)
             {
                 result[this.index] = each;
-                this.index++;
-            }
-        });
-        return result;
-    }
-
-    @Override
-    public <type>[] toArray(<type>[] result)
-    {
-        int size = this.getOuter().size();
-        if (result.length \< size)
-        {
-            result = new <type>[size];
-        }
-
-        <type>[] finalBypass = result;
-
-        this.getOuter().forEachKey(new <name>Procedure()
-        {
-            private int index;
-
-            public void value(<type> each)
-            {
-                finalBypass[this.index] = each;
                 this.index++;
             }
         });
@@ -634,12 +626,6 @@ public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, E
             }
         }
         return true;
-    }
-
-    @Override
-    public LazyIterable\<<name><name>Pair> cartesianProduct(<name>Set set)
-    {
-        return <name>Sets.cartesianProduct(this, set);
     }
 
     @Override
@@ -870,68 +856,6 @@ public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, E
             }
         }
         return result;
-    }
-
-    public Object writeReplace() throws ObjectStreamException
-    {
-        return new SerRep(this);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException
-    {
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-    {
-    }
-
-    private static class SerRep implements Externalizable
-    {
-        private static final long serialVersionUID = 1L;
-
-        private transient AbstractMutable<name>KeySet original;
-        private transient <name>HashSet deserialized;
-
-        @SuppressWarnings("RedundantModifier")
-        public SerRep()
-        {
-            // for Externalizable
-        }
-
-        private SerRep(AbstractMutable<name>KeySet original)
-        {
-            this.original = original;
-        }
-
-        @Override
-        public void writeExternal(ObjectOutput out) throws IOException
-        {
-            out.writeInt(this.original.size());
-            <name>Iterator it = this.original.<type>Iterator();
-            while (it.hasNext())
-            {
-                out.write<name>(it.next());
-            }
-        }
-
-        @Override
-        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-        {
-            int unread = in.readInt();
-            this.deserialized = new <name>HashSet(unread);
-            while (unread > 0)
-            {
-                this.deserialized.add(in.read<name>());
-                unread--;
-            }
-        }
-
-        private Object readResolve() throws ObjectStreamException
-        {
-            return this.deserialized;
-        }
     }
 }
 

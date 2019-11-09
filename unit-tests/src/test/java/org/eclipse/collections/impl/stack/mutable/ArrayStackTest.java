@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2017 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,11 +10,10 @@
 
 package org.eclipse.collections.impl.stack.mutable;
 
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.stack.MutableStack;
-import org.eclipse.collections.impl.factory.Stacks;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.eclipse.collections.impl.test.Verify;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link ArrayStack}.
@@ -49,62 +48,69 @@ public class ArrayStackTest extends MutableStackTestCase
     public void takeWhile()
     {
         ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.takeWhile(null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.takeWhile(null));
     }
 
     @Test
     public void dropWhile()
     {
         ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.dropWhile(null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.dropWhile(null));
     }
 
     @Test
     public void partitionWhile()
     {
         ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.partitionWhile(null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.partitionWhile(null));
+    }
+
+    @Test
+    public void distinct()
+    {
+        ArrayStack<Object> arrayStack = new ArrayStack<>();
+        Verify.assertThrows(UnsupportedOperationException.class, arrayStack::distinct);
     }
 
     @Test
     public void indexOf()
     {
         ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.indexOf(null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.indexOf(null));
     }
 
     @Test
     public void corresponds()
     {
         ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.corresponds(null, null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.corresponds(null, null));
     }
 
     @Test
     public void hasSameElements()
     {
         ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.hasSameElements(null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.hasSameElements(null));
     }
 
     @Test
     public void forEach_exception()
     {
-        MutableStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.forEach(0, 1, null));
+        ArrayStack<Object> arrayStack = new ArrayStack<>();
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.forEach(0, 1, null));
     }
 
     @Test
     public void forEachWithIndex_exception()
     {
-        MutableStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.forEachWithIndex(0, 1, null));
+        ArrayStack<Object> arrayStack = new ArrayStack<>();
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.forEachWithIndex(0, 1, null));
     }
 
     @Test
     public void detectIndex()
     {
         ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.detectIndex(null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> arrayStack.detectIndex(null));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,7 +11,6 @@
 package org.eclipse.collections.impl.multimap.bag;
 
 import org.eclipse.collections.api.bag.MutableBag;
-import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.multimap.bag.BagMultimap;
 import org.eclipse.collections.api.multimap.bag.MutableBagMultimap;
@@ -22,10 +21,8 @@ import org.eclipse.collections.impl.multimap.AbstractMutableMultimapTestCase;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Assert;
+import org.junit.Test;
 
 public abstract class AbstractMutableBagMultimapTestCase extends AbstractMutableMultimapTestCase
 {
@@ -60,27 +57,14 @@ public abstract class AbstractMutableBagMultimapTestCase extends AbstractMutable
     @Override
     protected abstract <V> MutableBag<V> createCollection(V... args);
 
-    @Test
-    public void forEachKeyMutableBag()
-    {
-        MutableBag<Pair<Integer, MutableBag<String>>> collection = Bags.mutable.empty();
-        MutableBagMultimap<Integer, String> multimap =
-                this.newMultimapWithKeysValues(2, "2", 2, "1", 3, "3", 3, "3");
-        multimap.forEachKeyMutableBag((key, values) -> collection.add(Tuples.pair(key, values)));
-        MutableBag<Pair<Integer, MutableCollection<String>>> expected = Bags.mutable.with(
-                Tuples.pair(2, this.createCollection("2", "1")),
-                Tuples.pair(3, this.createCollection("3", "3")));
-        assertEquals(expected, collection);
-    }
-
     @Override
     @Test
     public void flip()
     {
         BagMultimap<String, Integer> multimap = this.newMultimapWithKeysValues("Less than 2", 1, "Less than 3", 1, "Less than 3", 2, "Less than 3", 2);
         BagMultimap<Integer, String> flipped = multimap.flip();
-        assertEquals(Bags.immutable.with("Less than 3", "Less than 3"), flipped.get(2));
-        assertEquals(Bags.immutable.with("Less than 2", "Less than 3"), flipped.get(1));
+        Assert.assertEquals(Bags.immutable.with("Less than 3", "Less than 3"), flipped.get(2));
+        Assert.assertEquals(Bags.immutable.with("Less than 2", "Less than 3"), flipped.get(1));
     }
 
     @Override
@@ -212,7 +196,7 @@ public abstract class AbstractMutableBagMultimapTestCase extends AbstractMutable
     {
         MutableBagMultimap<String, String> multimap = this.newMultimap();
 
-        assertThrows(IllegalArgumentException.class, () -> multimap.putOccurrences("1", "a", -1));
+        Verify.assertThrows(IllegalArgumentException.class, () -> multimap.putOccurrences("1", "a", -1));
 
         multimap.putOccurrences("1", "a", 0);
         Verify.assertEmpty(multimap);
@@ -229,7 +213,7 @@ public abstract class AbstractMutableBagMultimapTestCase extends AbstractMutable
         Verify.assertSize(3, multimap);
         Verify.assertBagsEqual(HashBag.newBagWith("b", "b", "b"), multimap.get("2"));
 
-        assertThrows(IllegalArgumentException.class, () -> multimap.putOccurrences("2", "b", -1));
+        Verify.assertThrows(IllegalArgumentException.class, () -> multimap.putOccurrences("2", "b", -1));
 
         multimap.putOccurrences("2", "c", 2);
         Verify.assertSize(5, multimap);

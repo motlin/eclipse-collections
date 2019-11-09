@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
 import org.eclipse.collections.api.bag.primitive.MutableByteBag;
@@ -26,7 +27,6 @@ import org.eclipse.collections.api.bag.primitive.MutableIntBag;
 import org.eclipse.collections.api.bag.primitive.MutableLongBag;
 import org.eclipse.collections.api.bag.primitive.MutableShortBag;
 import org.eclipse.collections.api.block.function.Function;
-import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
@@ -39,10 +39,8 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
-import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.ImmutableMap;
-import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.multimap.bag.MutableBagMultimap;
 import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
@@ -54,6 +52,7 @@ import org.eclipse.collections.impl.collection.mutable.SynchronizedMutableCollec
 import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
 import org.eclipse.collections.impl.map.AbstractSynchronizedMapIterable;
 import org.eclipse.collections.impl.set.mutable.SynchronizedMutableSet;
+import org.eclipse.collections.impl.utility.LazyIterate;
 
 /**
  * A synchronized view of a {@link MutableMap}. It is imperative that the user manually synchronize on the collection when iterating over it using the
@@ -112,32 +111,6 @@ public class SynchronizedMutableMap<K, V>
         {
             this.put(key, value);
             return this;
-        }
-    }
-
-    @Override
-    public MutableMap<K, V> withMap(Map<? extends K, ? extends V> map)
-    {
-        synchronized (this.lock)
-        {
-            this.putAll(map);
-            return this;
-        }
-    }
-
-    @Override
-    public MutableMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
-    {
-        this.putAllMapIterable(mapIterable);
-        return this;
-    }
-
-    @Override
-    public void putAllMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
-    {
-        synchronized (this.lock)
-        {
-            mapIterable.forEachKeyValue(this.getDelegate()::put);
         }
     }
 
@@ -257,15 +230,6 @@ public class SynchronizedMutableMap<K, V>
         synchronized (this.lock)
         {
             return this.getDelegate().collectValues(function);
-        }
-    }
-
-    @Override
-    public <R> MutableMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function)
-    {
-        synchronized (this.lock)
-        {
-            return this.getDelegate().collectKeysUnique(function);
         }
     }
 
@@ -412,51 +376,6 @@ public class SynchronizedMutableMap<K, V>
     }
 
     /**
-     * @since 11.0
-     */
-    @Override
-    public <KK, VV> MutableMap<KK, VV> aggregateBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function0<? extends VV> zeroValueFactory,
-            Function2<? super VV, ? super V, ? extends VV> nonMutatingAggregator)
-    {
-        return (MutableMap<KK, VV>) super.aggregateBy(groupBy, zeroValueFactory, nonMutatingAggregator);
-    }
-
-    /**
-     * @since 11.0
-     */
-    @Override
-    public <K1, V1, V2> MutableMap<K1, V2> aggregateBy(
-            Function<? super K, ? extends K1> keyFunction,
-            Function<? super V, ? extends V1> valueFunction,
-            Function0<? extends V2> zeroValueFactory,
-            Function2<? super V2, ? super V1, ? extends V2> nonMutatingAggregator)
-    {
-        return (MutableMap<K1, V2>) super.aggregateBy(keyFunction, valueFunction, zeroValueFactory, nonMutatingAggregator);
-    }
-
-    /**
-     * @since 12.0
-     */
-    @Override
-    public <KK, VV> MutableMap<KK, VV> aggregateInPlaceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function0<? extends VV> zeroValueFactory,
-            Procedure2<? super VV, ? super V> mutatingAggregator)
-    {
-        return (MutableMap<KK, VV>) super.aggregateInPlaceBy(groupBy, zeroValueFactory, mutatingAggregator);
-    }
-
-    @Override
-    public <KK> MutableMap<KK, V> reduceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function2<? super V, ? super V, ? extends V> reduceFunction)
-    {
-        return (MutableMap<KK, V>) super.reduceBy(groupBy, reduceFunction);
-    }
-
-    /**
      * @deprecated in 6.0. Use {@link OrderedIterable#zip(Iterable)} instead.
      */
     @Override
@@ -515,6 +434,18 @@ public class SynchronizedMutableMap<K, V>
         {
             return SynchronizedMutableSet.of(this.getDelegate().entrySet(), this.lock);
         }
+    }
+
+    @Override
+    public RichIterable<K> keysView()
+    {
+        return LazyIterate.adapt(this.keySet());
+    }
+
+    @Override
+    public RichIterable<V> valuesView()
+    {
+        return LazyIterate.adapt(this.values());
     }
 
     @Override

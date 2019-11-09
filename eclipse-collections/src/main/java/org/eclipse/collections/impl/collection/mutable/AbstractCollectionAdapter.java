@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -21,6 +21,7 @@ import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
 import org.eclipse.collections.api.bimap.MutableBiMap;
+import org.eclipse.collections.api.block.SerializableComparator;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
@@ -51,14 +52,8 @@ import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
 import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
-import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.BiMaps;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.SortedBags;
-import org.eclipse.collections.api.factory.SortedSets;
-import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
@@ -71,12 +66,20 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.Twin;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
+import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
+import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.block.procedure.BiMapCollectProcedure;
 import org.eclipse.collections.impl.block.procedure.MapCollectProcedure;
+import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
+import org.eclipse.collections.impl.block.procedure.NonMutatingAggregationProcedure;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectDoubleHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectLongHashMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -136,6 +139,12 @@ public abstract class AbstractCollectionAdapter<T>
     {
         this.forEach(procedure);
         return this;
+    }
+
+    @Override
+    public void forEach(Procedure<? super T> procedure)
+    {
+        this.each(procedure);
     }
 
     @Override
@@ -320,28 +329,28 @@ public abstract class AbstractCollectionAdapter<T>
     @Override
     public <V> MutableObjectLongMap<V> sumByInt(Function<? super T, ? extends V> groupBy, IntFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
+        ObjectLongHashMap<V> result = ObjectLongHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByIntFunction(groupBy, function));
     }
 
     @Override
     public <V> MutableObjectDoubleMap<V> sumByFloat(Function<? super T, ? extends V> groupBy, FloatFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
+        ObjectDoubleHashMap<V> result = ObjectDoubleHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByFloatFunction(groupBy, function));
     }
 
     @Override
     public <V> MutableObjectLongMap<V> sumByLong(Function<? super T, ? extends V> groupBy, LongFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
+        ObjectLongHashMap<V> result = ObjectLongHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByLongFunction(groupBy, function));
     }
 
     @Override
     public <V> MutableObjectDoubleMap<V> sumByDouble(Function<? super T, ? extends V> groupBy, DoubleFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
+        ObjectDoubleHashMap<V> result = ObjectDoubleHashMap.newMap();
         return this.injectInto(result, PrimitiveFunctions.sumByDoubleFunction(groupBy, function));
     }
 
@@ -382,9 +391,21 @@ public abstract class AbstractCollectionAdapter<T>
     }
 
     @Override
+    public MutableBooleanCollection collectBoolean(BooleanFunction<? super T> booleanFunction)
+    {
+        return Iterate.collectBoolean(this.getDelegate(), booleanFunction);
+    }
+
+    @Override
     public <R extends MutableBooleanCollection> R collectBoolean(BooleanFunction<? super T> booleanFunction, R target)
     {
         return Iterate.collectBoolean(this.getDelegate(), booleanFunction, target);
+    }
+
+    @Override
+    public MutableByteCollection collectByte(ByteFunction<? super T> byteFunction)
+    {
+        return Iterate.collectByte(this.getDelegate(), byteFunction);
     }
 
     @Override
@@ -394,9 +415,21 @@ public abstract class AbstractCollectionAdapter<T>
     }
 
     @Override
+    public MutableCharCollection collectChar(CharFunction<? super T> charFunction)
+    {
+        return Iterate.collectChar(this.getDelegate(), charFunction);
+    }
+
+    @Override
     public <R extends MutableCharCollection> R collectChar(CharFunction<? super T> charFunction, R target)
     {
         return Iterate.collectChar(this.getDelegate(), charFunction, target);
+    }
+
+    @Override
+    public MutableDoubleCollection collectDouble(DoubleFunction<? super T> doubleFunction)
+    {
+        return Iterate.collectDouble(this.getDelegate(), doubleFunction);
     }
 
     @Override
@@ -406,9 +439,21 @@ public abstract class AbstractCollectionAdapter<T>
     }
 
     @Override
+    public MutableFloatCollection collectFloat(FloatFunction<? super T> floatFunction)
+    {
+        return Iterate.collectFloat(this.getDelegate(), floatFunction);
+    }
+
+    @Override
     public <R extends MutableFloatCollection> R collectFloat(FloatFunction<? super T> floatFunction, R target)
     {
         return Iterate.collectFloat(this.getDelegate(), floatFunction, target);
+    }
+
+    @Override
+    public MutableIntCollection collectInt(IntFunction<? super T> intFunction)
+    {
+        return Iterate.collectInt(this.getDelegate(), intFunction);
     }
 
     @Override
@@ -418,9 +463,21 @@ public abstract class AbstractCollectionAdapter<T>
     }
 
     @Override
+    public MutableLongCollection collectLong(LongFunction<? super T> longFunction)
+    {
+        return Iterate.collectLong(this.getDelegate(), longFunction);
+    }
+
+    @Override
     public <R extends MutableLongCollection> R collectLong(LongFunction<? super T> longFunction, R target)
     {
         return Iterate.collectLong(this.getDelegate(), longFunction, target);
+    }
+
+    @Override
+    public MutableShortCollection collectShort(ShortFunction<? super T> shortFunction)
+    {
+        return Iterate.collectShort(this.getDelegate(), shortFunction);
     }
 
     @Override
@@ -688,6 +745,12 @@ public abstract class AbstractCollectionAdapter<T>
     }
 
     @Override
+    public <V extends Comparable<? super V>> MutableList<T> toSortedListBy(Function<? super T, ? extends V> function)
+    {
+        return this.toSortedList(Comparators.byFunction(function));
+    }
+
+    @Override
     public MutableSortedSet<T> toSortedSet()
     {
         return TreeSortedSet.newSet(null, this);
@@ -696,31 +759,44 @@ public abstract class AbstractCollectionAdapter<T>
     @Override
     public MutableSortedSet<T> toSortedSet(Comparator<? super T> comparator)
     {
-        return SortedSets.mutable.withAll(comparator, this);
+        return TreeSortedSet.newSet(comparator, this);
+    }
+
+    @Override
+    public <V extends Comparable<? super V>> MutableSortedSet<T> toSortedSetBy(
+            Function<? super T, ? extends V> function)
+    {
+        return this.toSortedSet(Comparators.byFunction(function));
     }
 
     @Override
     public MutableSet<T> toSet()
     {
-        return Sets.mutable.withAll(this.getDelegate());
+        return UnifiedSet.newSet(this.getDelegate());
     }
 
     @Override
     public MutableBag<T> toBag()
     {
-        return Bags.mutable.withAll(this.getDelegate());
+        return HashBag.newBag(this.getDelegate());
     }
 
     @Override
     public MutableSortedBag<T> toSortedBag()
     {
-        return SortedBags.mutable.withAll(this.getDelegate());
+        return TreeBag.newBag(this.getDelegate());
     }
 
     @Override
     public MutableSortedBag<T> toSortedBag(Comparator<? super T> comparator)
     {
-        return SortedBags.mutable.withAll(comparator, this.getDelegate());
+        return TreeBag.newBag(comparator, this.getDelegate());
+    }
+
+    @Override
+    public <V extends Comparable<? super V>> MutableSortedBag<T> toSortedBagBy(Function<? super T, ? extends V> function)
+    {
+        return this.toSortedBag(Comparators.byFunction(function));
     }
 
     @Override
@@ -728,7 +804,7 @@ public abstract class AbstractCollectionAdapter<T>
             Function<? super T, ? extends K> keyFunction,
             Function<? super T, ? extends V> valueFunction)
     {
-        MutableMap<K, V> map = UnifiedMap.newMap(this.size());
+        UnifiedMap<K, V> map = UnifiedMap.newMap(this.size());
         map.collectKeysAndValues(this.getDelegate(), keyFunction, valueFunction);
         return map;
     }
@@ -757,6 +833,16 @@ public abstract class AbstractCollectionAdapter<T>
             Function<? super T, ? extends K> keyFunction,
             Function<? super T, ? extends V> valueFunction)
     {
+        return TreeSortedMap.<K, V>newMap(comparator).collectKeysAndValues(this.getDelegate(), keyFunction, valueFunction);
+    }
+
+    @Override
+    public <KK extends Comparable<? super KK>, K, V> MutableSortedMap<K, V> toSortedMapBy(
+            Function<? super K, KK> sortBy,
+            Function<? super T, ? extends K> keyFunction,
+            Function<? super T, ? extends V> valueFunction)
+    {
+        SerializableComparator<K> comparator = Comparators.byFunction(sortBy);
         return TreeSortedMap.<K, V>newMap(comparator).collectKeysAndValues(this.getDelegate(), keyFunction, valueFunction);
     }
 
@@ -884,5 +970,27 @@ public abstract class AbstractCollectionAdapter<T>
     public RichIterable<RichIterable<T>> chunk(int size)
     {
         return MutableCollectionIterate.chunk(this, size);
+    }
+
+    @Override
+    public <K, V> MutableMap<K, V> aggregateInPlaceBy(
+            Function<? super T, ? extends K> groupBy,
+            Function0<? extends V> zeroValueFactory,
+            Procedure2<? super V, ? super T> mutatingAggregator)
+    {
+        MutableMap<K, V> map = UnifiedMap.newMap();
+        this.forEach(new MutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, mutatingAggregator));
+        return map;
+    }
+
+    @Override
+    public <K, V> MutableMap<K, V> aggregateBy(
+            Function<? super T, ? extends K> groupBy,
+            Function0<? extends V> zeroValueFactory,
+            Function2<? super V, ? super T, ? extends V> nonMutatingAggregator)
+    {
+        MutableMap<K, V> map = UnifiedMap.newMap();
+        this.forEach(new NonMutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, nonMutatingAggregator));
+        return map;
     }
 }

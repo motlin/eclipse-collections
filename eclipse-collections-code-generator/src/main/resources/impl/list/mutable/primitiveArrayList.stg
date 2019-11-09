@@ -8,10 +8,10 @@ targetPath() ::= "org/eclipse/collections/impl/list/mutable/primitive"
 fileName(primitive) ::= "<primitive.name>ArrayList"
 
 class(primitive) ::= <<
-<body(primitive.type, primitive.name, primitive.wrapperName)>
+<body(primitive.type, primitive.name)>
 >>
 
-body(type, name, wrapperName) ::= <<
+body(type, name) ::= <<
 <copyrightAndOthers()>
 
 package org.eclipse.collections.impl.list.mutable.primitive;
@@ -28,41 +28,38 @@ import java.util.NoSuchElementException;
 import org.eclipse.collections.api.<name>Iterable;
 import org.eclipse.collections.api.Lazy<name>Iterable;
 import org.eclipse.collections.api.RichIterable;
-import org.eclipse.collections.api.block.comparator.primitive.<name>Comparator;
+import org.eclipse.collections.api.block.function.primitive.<name>ToObjectFunction;
 import org.eclipse.collections.api.block.function.primitive.Object<name>IntToObjectFunction;
 import org.eclipse.collections.api.block.function.primitive.Object<name>ToObjectFunction;
-import org.eclipse.collections.api.block.function.primitive.<name>ToObjectFunction;
 import org.eclipse.collections.api.block.predicate.primitive.<name>Predicate;
 import org.eclipse.collections.api.block.procedure.primitive.<name>IntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.<name>Procedure;
 import org.eclipse.collections.api.collection.primitive.Mutable<name>Collection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.iterator.Mutable<name>Iterator;
 import org.eclipse.collections.api.iterator.<name>Iterator;
+import org.eclipse.collections.api.iterator.Mutable<name>Iterator;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.<name>List;
 import org.eclipse.collections.api.list.primitive.Immutable<name>List;
 import org.eclipse.collections.api.list.primitive.Mutable<name>List;
 import org.eclipse.collections.api.set.primitive.<name>Set;
 import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
-import org.eclipse.collections.api.stack.primitive.Mutable<name>Stack;
 import org.eclipse.collections.api.tuple.primitive.<name><name>Pair;
 import org.eclipse.collections.api.tuple.primitive.<name>ObjectPair;
 import org.eclipse.collections.impl.factory.primitive.<name>Lists;
-import org.eclipse.collections.impl.factory.primitive.<name>Stacks;
 import org.eclipse.collections.impl.lazy.primitive.Reverse<name>Iterable;
+import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.primitive.Abstract<name>Iterable;
 import org.eclipse.collections.impl.set.mutable.primitive.<name>HashSet;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.eclipse.collections.impl.utility.primitive.<name>QuickSort;
 <if(primitive.specializedStream)>
 import java.util.Spliterator;
 import java.util.Spliterators;<endif>
 
 
 /**
- * <name>ArrayList is similar to FastList, and is memory-optimized for <type> primitives.
+ * <name>ArrayList is similar to {@link FastList}, and is memory-optimized for <type> primitives.
  * This file was automatically generated from template file primitiveArrayList.stg.
  *
  * @since 3.0.
@@ -115,16 +112,6 @@ public class <name>ArrayList extends Abstract<name>Iterable
         newList.size = size;
         Arrays.fill(newList.items, value);
         return newList;
-    }
-
-    /**
-     * Creates a new list by first copying the array passed in.
-     */
-    public static <name>ArrayList wrapCopy(<type>... array)
-    {
-        <type>[] newArray = new <type>[array.length];
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        return new <name>ArrayList(newArray);
     }
 
     @Override
@@ -508,14 +495,6 @@ public class <name>ArrayList extends Abstract<name>Iterable
     }
 
     @Override
-    public void swap(int index1, int index2)
-    {
-        <type> value = this.get(index1);
-        this.items[index1] = this.items[index2];
-        this.items[index2] = value;
-    }
-
-    @Override
     public <name>ArrayList with(<type> element)
     {
         this.add(element);
@@ -578,6 +557,12 @@ public class <name>ArrayList extends Abstract<name>Iterable
     public Mutable<name>Iterator <type>Iterator()
     {
         return new Internal<name>Iterator();
+    }
+
+    @Override
+    public void forEach(<name>Procedure procedure)
+    {
+        this.each(procedure);
     }
 
     /**
@@ -695,6 +680,12 @@ public class <name>ArrayList extends Abstract<name>Iterable
     }
 
     @Override
+    public boolean noneSatisfy(<name>Predicate predicate)
+    {
+        return !this.anySatisfy(predicate);
+    }
+
+    @Override
     public <name>ArrayList select(<name>Predicate predicate)
     {
         return this.select(predicate, new <name>ArrayList());
@@ -757,7 +748,7 @@ public class <name>ArrayList extends Abstract<name>Iterable
     @Override
     public \<V> MutableList\<V> collect(<name>ToObjectFunction\<? extends V> function)
     {
-        return this.collect(function, Lists.mutable.withInitialCapacity(this.size));
+        return this.collect(function, FastList.newList(this.size));
     }
 
     /**
@@ -862,17 +853,6 @@ public class <name>ArrayList extends Abstract<name>Iterable
     }
 
     @Override
-    public <type>[] toArray(<type>[] target)
-    {
-        if (target.length \< this.size)
-        {
-            target = new <type>[this.size];
-        }
-        System.arraycopy(this.items, 0, target, 0, this.size);
-        return target;
-    }
-
-    @Override
     public boolean equals(Object otherList)
     {
         if (otherList == this)
@@ -952,7 +932,15 @@ public class <name>ArrayList extends Abstract<name>Iterable
     @Override
     public Immutable<name>List toImmutable()
     {
-        return <name>Lists.immutable.withAll(this);
+        if (this.size == 0)
+        {
+            return <name>Lists.immutable.empty();
+        }
+        if (this.size == 1)
+        {
+            return <name>Lists.immutable.with(this.items[0]);
+        }
+        return <name>Lists.immutable.with(this.toArray());
     }
 
     @Override
@@ -1003,13 +991,6 @@ public class <name>ArrayList extends Abstract<name>Iterable
     }
 
     @Override
-    public <name>ArrayList sortThis(<name>Comparator comparator)
-    {
-        <name>QuickSort.sort(this.items, 0, this.size() - 1, comparator);
-        return this;
-    }
-
-    @Override
     public <name>ArrayList toReversed()
     {
         return <name>ArrayList.newList(this.asReversed());
@@ -1024,8 +1005,18 @@ public class <name>ArrayList extends Abstract<name>Iterable
     @Override
     public Mutable<name>List distinct()
     {
+        <name>ArrayList target = new <name>ArrayList();
         Mutable<name>Set seenSoFar = new <name>HashSet(this.size());
-        return this.select(seenSoFar::add);
+
+        for (int i = 0; i \< this.size; i++)
+        {
+            <type> each = this.items[i];
+            if (seenSoFar.add(each))
+            {
+                target.add(each);
+            }
+        }
+        return target;
     }
 
     @Override
@@ -1076,18 +1067,6 @@ public class <name>ArrayList extends Abstract<name>Iterable
             target.add(PrimitiveTuples.pair(this.items[i], iterator.next()));
         }
         return target;
-    }
-
-    @Override
-    public MutableList\<<wrapperName>\> boxed()
-    {
-        return new BoxedMutable<name>List(this);
-    }
-
-    @Override
-    public Mutable<name>Stack toStack()
-    {
-        return <name>Stacks.mutable.withAll(this);
     }
 
     private class Internal<name>Iterator implements Mutable<name>Iterator

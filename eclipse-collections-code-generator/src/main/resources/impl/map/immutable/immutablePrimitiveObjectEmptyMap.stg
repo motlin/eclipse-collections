@@ -41,14 +41,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.eclipse.collections.api.BooleanIterable;
-import org.eclipse.collections.api.ByteIterable;
-import org.eclipse.collections.api.CharIterable;
-import org.eclipse.collections.api.DoubleIterable;
-import org.eclipse.collections.api.FloatIterable;
-import org.eclipse.collections.api.IntIterable;
-import org.eclipse.collections.api.LongIterable;
-import org.eclipse.collections.api.ShortIterable;
+import org.eclipse.collections.api.<name>Iterable;
 import org.eclipse.collections.api.Lazy<name>Iterable;
 import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.RichIterable;
@@ -95,7 +88,13 @@ import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
 import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
+import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.BiMaps;
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Maps;
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.factory.SortedMaps;
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MutableMap;
@@ -116,13 +115,8 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.primitive.<name>ObjectPair;
 import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
-import org.eclipse.collections.impl.factory.Bags;
-import org.eclipse.collections.impl.factory.BiMaps;
-import org.eclipse.collections.impl.factory.Maps;
+import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.factory.Multimaps;
-import org.eclipse.collections.impl.factory.Sets;
-import org.eclipse.collections.impl.factory.SortedMaps;
-import org.eclipse.collections.impl.factory.SortedSets;
 import org.eclipse.collections.impl.factory.primitive.BooleanBags;
 import org.eclipse.collections.impl.factory.primitive.ByteBags;
 import org.eclipse.collections.impl.factory.primitive.CharBags;
@@ -135,6 +129,7 @@ import org.eclipse.collections.impl.factory.primitive.ObjectDoubleMaps;
 import org.eclipse.collections.impl.factory.primitive.ObjectLongMaps;
 <if(!primitive.longPrimitive)><if(!primitive.doublePrimitive)>import org.eclipse.collections.impl.factory.primitive.Object<name>Maps;<endif><endif>
 import org.eclipse.collections.impl.lazy.LazyIterableAdapter;
+import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.primitive.<name>ObjectHashMap;
 import org.eclipse.collections.impl.partition.bag.PartitionHashBag;
 import org.eclipse.collections.impl.set.mutable.primitive.<name>HashSet;
@@ -389,70 +384,6 @@ final class Immutable<name>ObjectEmptyMap\<V> implements Immutable<name>ObjectMa
     }
 
     @Override
-    public \<R extends MutableByteCollection> R flatCollectByte(
-            Function\<? super V, ? extends ByteIterable> function,
-            R target)
-    {
-        return target;
-    }
-
-    @Override
-    public \<R extends MutableCharCollection> R flatCollectChar(
-            Function\<? super V, ? extends CharIterable> function,
-            R target)
-    {
-        return target;
-    }
-
-    @Override
-    public \<R extends MutableIntCollection> R flatCollectInt(
-            Function\<? super V, ? extends IntIterable> function,
-            R target)
-    {
-        return target;
-    }
-
-    @Override
-    public \<R extends MutableShortCollection> R flatCollectShort(
-            Function\<? super V, ? extends ShortIterable> function,
-            R target)
-    {
-        return target;
-    }
-
-    @Override
-    public \<R extends MutableDoubleCollection> R flatCollectDouble(
-            Function\<? super V, ? extends DoubleIterable> function,
-            R target)
-    {
-        return target;
-    }
-
-    @Override
-    public \<R extends MutableFloatCollection> R flatCollectFloat(
-            Function\<? super V, ? extends FloatIterable> function,
-            R target)
-    {
-        return target;
-    }
-
-    @Override
-    public \<R extends MutableLongCollection> R flatCollectLong(
-            Function\<? super V, ? extends LongIterable> function,
-            R target)
-    {
-        return target;
-    }
-
-    @Override
-    public \<R extends MutableBooleanCollection> R flatCollectBoolean(
-            Function\<? super V, ? extends BooleanIterable> function,
-            R target)
-    {
-        return target;
-    }
-
-    @Override
     public V detect(Predicate\<? super V> predicate)
     {
         return null;
@@ -627,6 +558,12 @@ final class Immutable<name>ObjectEmptyMap\<V> implements Immutable<name>ObjectMa
     }
 
     @Override
+    public \<VV extends Comparable\<? super VV>\> MutableSortedBag\<V> toSortedBagBy(Function\<? super V, ? extends VV> function)
+    {
+        return TreeBag.newBag(Comparators.byFunction(function));
+    }
+
+    @Override
     public \<NK, NV> MutableMap\<NK, NV> toMap(Function\<? super V, ? extends NK> keyFunction, Function\<? super V, ? extends NV> valueFunction)
     {
         return Maps.mutable.with();
@@ -665,7 +602,7 @@ final class Immutable<name>ObjectEmptyMap\<V> implements Immutable<name>ObjectMa
     @Override
     public LazyIterable\<V> asLazy()
     {
-        return new LazyIterableAdapter\<>(Lists.immutable.\<V>empty());
+        return new LazyIterableAdapter\<>(FastList.\<V>newListWith());
     }
 
     @Override
@@ -918,6 +855,12 @@ final class Immutable<name>ObjectEmptyMap\<V> implements Immutable<name>ObjectMa
     }
 
     @Override
+    public \<K, VV> ImmutableMap\<K, VV> aggregateInPlaceBy(Function\<? super V, ? extends K> groupBy, Function0\<? extends VV> zeroValueFactory, Procedure2\<? super VV, ? super V> mutatingAggregator)
+    {
+        return Maps.immutable.empty();
+    }
+
+    @Override
     public \<VV extends Comparable\<? super VV>\> V maxBy(Function\<? super V, ? extends VV> function)
     {
         throw new NoSuchElementException();
@@ -951,6 +894,12 @@ final class Immutable<name>ObjectEmptyMap\<V> implements Immutable<name>ObjectMa
     public \<VV, R extends Collection\<VV>\> R collectIf(Predicate\<? super V> predicate, Function\<? super V, ? extends VV> function, R target)
     {
         return target;
+    }
+
+    @Override
+    public \<K, VV> ImmutableMap\<K, VV> aggregateBy(Function\<? super V, ? extends K> groupBy, Function0\<? extends VV> zeroValueFactory, Function2\<? super VV, ? super V, ? extends VV> nonMutatingAggregator)
+    {
+        return Maps.immutable.empty();
     }
 
     @Override

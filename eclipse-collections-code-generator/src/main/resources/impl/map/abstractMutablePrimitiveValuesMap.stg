@@ -1,4 +1,4 @@
-import "copyrightAndOthers.stg"
+import "copyright.stg"
 import "primitiveEquals.stg"
 import "primitiveHashCode.stg"
 import "primitiveLiteral.stg"
@@ -14,7 +14,7 @@ class(primitive) ::= <<
 >>
 
 body(type, name) ::= <<
-<copyrightAndOthers()>
+<copyright()>
 
 package org.eclipse.collections.impl.map.mutable.primitive;
 
@@ -33,16 +33,16 @@ import org.eclipse.collections.api.block.procedure.primitive.<name>Procedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.collection.primitive.Immutable<name>Collection;
 import org.eclipse.collections.api.collection.primitive.Mutable<name>Collection;
-import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.iterator.<name>Iterator;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.Mutable<name>List;
 import org.eclipse.collections.api.map.primitive.Mutable<name>ValuesMap;
 import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.bag.mutable.primitive.<name>HashBag;
 import org.eclipse.collections.impl.collection.mutable.primitive.Synchronized<name>Collection;
 import org.eclipse.collections.impl.collection.mutable.primitive.Unmodifiable<name>Collection;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.<name>Bags;
 import org.eclipse.collections.impl.factory.primitive.<name>Lists;
 import org.eclipse.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
@@ -178,6 +178,12 @@ public abstract class AbstractMutable<name>ValuesMap extends Abstract<name>Itera
         return this.getOccupiedWithData() != 0 || (this.getSentinelValues() != null && this.getSentinelValues().size() != 0);
     }
 
+    @Override
+    public void forEach(<name>Procedure procedure)
+    {
+        this.each(procedure);
+    }
+
     /**
      * @since 7.0.
      */
@@ -245,20 +251,6 @@ public abstract class AbstractMutable<name>ValuesMap extends Abstract<name>Itera
     }
 
     @Override
-    public <type>[] toArray(<type>[] target)
-    {
-        if (target.length \< this.size())
-        {
-            target = new <type>[this.size()];
-        }
-        int index = 0;
-
-        <forEachValue(template = {target[index] = <value>;<\n>index++})>
-
-        return target;
-    }
-
-    @Override
     public Mutable<name>Bag select(<name>Predicate predicate)
     {
         return this.select(predicate, new <name>HashBag());
@@ -273,7 +265,7 @@ public abstract class AbstractMutable<name>ValuesMap extends Abstract<name>Itera
     @Override
     public \<V> MutableBag\<V> collect(<name>ToObjectFunction\<? extends V> function)
     {
-        return this.collect(function, Bags.mutable.withInitialCapacity(this.size()));
+        return this.collect(function, HashBag.newBag(this.size()));
     }
 
     @Override
@@ -320,6 +312,12 @@ public abstract class AbstractMutable<name>ValuesMap extends Abstract<name>Itera
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean noneSatisfy(<name>Predicate predicate)
+    {
+        return !this.anySatisfy(predicate);
     }
 
     @Override
@@ -655,6 +653,12 @@ result = nextSum})>
         }
 
         @Override
+        public void forEach(<name>Procedure procedure)
+        {
+            this.each(procedure);
+        }
+
+        @Override
         public void each(<name>Procedure procedure)
         {
             AbstractMutable<name>ValuesMap.this.each(procedure);
@@ -743,12 +747,6 @@ result = nextSum})>
         public <type>[] toArray()
         {
             return AbstractMutable<name>ValuesMap.this.toArray();
-        }
-
-        @Override
-        public <type>[] toArray(<type>[] target)
-        {
-            return AbstractMutable<name>ValuesMap.this.toArray(target);
         }
     }
 }

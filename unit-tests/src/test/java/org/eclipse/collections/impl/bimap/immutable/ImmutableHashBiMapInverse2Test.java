@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,17 +11,16 @@
 package org.eclipse.collections.impl.bimap.immutable;
 
 import org.eclipse.collections.api.bimap.ImmutableBiMap;
+import org.eclipse.collections.api.factory.BiMaps;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.multimap.set.ImmutableSetMultimap;
 import org.eclipse.collections.impl.IntegerWithCast;
-import org.eclipse.collections.impl.factory.BiMaps;
 import org.eclipse.collections.impl.map.MapIterableTestCase;
 import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.eclipse.collections.impl.tuple.Tuples;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableHashBiMapInverse2Test extends MapIterableTestCase
 {
@@ -62,7 +61,7 @@ public class ImmutableHashBiMapInverse2Test extends MapIterableTestCase
         ImmutableBiMap<Integer, String> map = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
         ImmutableBiMap<String, Integer> result = map.flipUniqueValues();
         ImmutableBiMap<String, Integer> expectedMap = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3);
-        assertEquals(expectedMap, result);
+        Assert.assertEquals(expectedMap, result);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class ImmutableHashBiMapInverse2Test extends MapIterableTestCase
         ImmutableBiMap<Integer, String> map = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
         ImmutableSetMultimap<String, Integer> result = map.flip();
         UnifiedSetMultimap<String, Integer> expected = UnifiedSetMultimap.newMultimap(Tuples.pair("1", 1), Tuples.pair("2", 2), Tuples.pair("3", 3));
-        assertEquals(expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     @Override
@@ -82,12 +81,12 @@ public class ImmutableHashBiMapInverse2Test extends MapIterableTestCase
         ImmutableBiMap<IntegerWithCast, String> map = this.newMapWithKeysValues(
                 new IntegerWithCast(0), "Test 2",
                 null, "Test 1");
-        assertEquals(
+        Assert.assertEquals(
                 this.newMapWithKeysValues(
                         new IntegerWithCast(0), "Test 2",
                         null, "Test 1"),
                 map);
-        assertEquals("Test 2", map.get(new IntegerWithCast(0)));
-        assertEquals("Test 1", map.get(null));
+        Assert.assertEquals("Test 2", map.get(new IntegerWithCast(0)));
+        Assert.assertEquals("Test 1", map.get(null));
     }
 }

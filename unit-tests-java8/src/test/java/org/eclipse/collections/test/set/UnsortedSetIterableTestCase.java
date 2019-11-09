@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,10 +10,14 @@
 
 package org.eclipse.collections.test.set;
 
+import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.UnsortedSetIterable;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
+import static org.hamcrest.Matchers.isOneOf;
+import static org.junit.Assert.assertThat;
 
 public interface UnsortedSetIterableTestCase extends SetIterableTestCase, TransformsToUnsortedSetTrait, UnsortedSetLikeTestTrait
 {
@@ -30,6 +34,20 @@ public interface UnsortedSetIterableTestCase extends SetIterableTestCase, Transf
     default <T> MutableSet<T> newMutableForTransform(T... elements)
     {
         return Sets.mutable.with(elements);
+    }
+
+    @Override
+    @Test
+    default void RichIterable_toString()
+    {
+        RichIterable<Integer> iterable = this.newWith(3, 2, 1);
+        assertThat(iterable.toString(), isOneOf(
+                "[3, 2, 1]",
+                "[3, 1, 2]",
+                "[2, 3, 1]",
+                "[2, 1, 3]",
+                "[1, 3, 2]",
+                "[1, 2, 3]"));
     }
 
     @Override

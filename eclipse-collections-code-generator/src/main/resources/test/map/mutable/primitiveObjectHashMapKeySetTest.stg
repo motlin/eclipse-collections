@@ -21,21 +21,16 @@ body(type, name, wrapperName) ::= <<
 package org.eclipse.collections.impl.map.mutable.primitive;
 
 import org.eclipse.collections.api.<name>Iterable;
-import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
+import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.block.factory.primitive.<name>Predicates;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.<name>Sets;
 import org.eclipse.collections.impl.list.mutable.primitive.<name>ArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.Abstract<name>SetTestCase;
 import org.eclipse.collections.impl.test.Verify;
-
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link <name>ObjectHashMap#keySet()}.
@@ -62,53 +57,53 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void addAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().addAll(new <name>ArrayList()));
+        this.classUnderTest().addAll(new <name>ArrayList());
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void add()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().add(<(literal.(type))("0")>));
+        this.classUnderTest().add(<(literal.(type))("0")>);
     }
 
     <if(primitive.floatingPoint)><NaNTests()><endif>
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void addAllArray()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().addAll(<(literal.(type))("0")>, <(literal.(type))("1")>));
+        this.classUnderTest().addAll(<(literal.(type))("0")>, <(literal.(type))("1")>);
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void with()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().with(<(literal.(type))("0")>));
+        this.classUnderTest().with(<(literal.(type))("0")>);
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void without()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().without(<(literal.(type))("0")>));
+        this.classUnderTest().without(<(literal.(type))("0")>);
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void withAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().withAll(new <name>ArrayList()));
+        this.classUnderTest().withAll(new <name>ArrayList());
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void withoutAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().withoutAll(new <name>ArrayList()));
+        this.classUnderTest().withoutAll(new <name>ArrayList());
     }
 
     @Override
@@ -124,7 +119,7 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
         Verify.assertEqualsAndHashCode(set1, set4);
         Verify.assertEqualsAndHashCode(set2, set3);
         Verify.assertEqualsAndHashCode(set2, set4);
-        assertNotEquals(set1, set5);
+        Assert.assertNotEquals(set1, set5);
     }
 
     @Override
@@ -132,7 +127,7 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
     public void noneSatisfy()
     {
         super.noneSatisfy();
-        assertFalse(this.newWith(<(literal.(type))("0")>, <(literal.(type))("1")>, <(literal.(type))("2")>).noneSatisfy(<name>Predicates.equal(<(literal.(type))("0")>)));
+        Assert.assertFalse(this.newWith(<(literal.(type))("0")>, <(literal.(type))("1")>, <(literal.(type))("2")>).noneSatisfy(<name>Predicates.equal(<(literal.(type))("0")>)));
     }
 
     @Override
@@ -140,7 +135,7 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
     public void sum()
     {
         super.sum();
-        assertEquals(<(wideLiteral.(type))("3")>, this.newWith(<(literal.(type))("0")>, <(literal.(type))("1")>, <(literal.(type))("2")>).sum()<wideDelta.(type)>);
+        Assert.assertEquals(<(wideLiteral.(type))("3")>, this.newWith(<(literal.(type))("0")>, <(literal.(type))("1")>, <(literal.(type))("2")>).sum()<wideDelta.(type)>);
     }
 
     @Override
@@ -148,8 +143,8 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
     {
         Mutable<name>Set set1 = this.newWith(<(literal.(type))("0")>, <(literal.(type))("1")>, <(literal.(type))("31")>, <(literal.(type))("32")>);
         Mutable<name>Set set2 = this.newWith(<(literal.(type))("32")>, <(literal.(type))("31")>, <(literal.(type))("1")>, <(literal.(type))("0")>);
-        assertEquals(set1.hashCode(), set2.hashCode());
-        assertEquals(this.newObjectCollectionWith(<(literal.(type))("0")>, <(literal.(type))("1")>, <(literal.(type))("31")>, <(literal.(type))("32")>).hashCode(), set1.hashCode());
+        Assert.assertEquals(set1.hashCode(), set2.hashCode());
+        Assert.assertEquals(this.newObjectCollectionWith(<(literal.(type))("0")>, <(literal.(type))("1")>, <(literal.(type))("31")>, <(literal.(type))("32")>).hashCode(), set1.hashCode());
     }
 
     @Override
@@ -157,7 +152,7 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
     public void chunk()
     {
         <name>Iterable iterable = this.classUnderTest();
-        assertEquals(
+        Assert.assertEquals(
                 Lists.mutable.with(
                         <name>Sets.mutable.with(<["1"]:(literal.(type))(); separator=", ">),
                         <name>Sets.mutable.with(<["2"]:(literal.(type))(); separator=", ">),
@@ -165,7 +160,7 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
                 iterable.chunk(1).toSet());
 
         MutableSet\<<name>Iterable> chunked = iterable.chunk(2).toSet();
-        assertTrue(
+        Assert.assertTrue(
                 Lists.mutable.with(
                         <name>Sets.mutable.with(<["1", "2"]:(literal.(type))(); separator=", ">),
                         <name>Sets.mutable.with(<["3"]:(literal.(type))(); separator=", ">)).toSet().equals(chunked)
@@ -176,16 +171,16 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
                         <name>Sets.mutable.with(<["1", "3"]:(literal.(type))(); separator=", ">),
                         <name>Sets.mutable.with(<["2"]:(literal.(type))(); separator=", ">)).toSet().equals(chunked));
 
-        assertEquals(
+        Assert.assertEquals(
                 Lists.mutable.with(
                         <name>Sets.mutable.with(<["1", "2", "3"]:(literal.(type))(); separator=", ">)).toSet(),
                 iterable.chunk(3).toSet());
-        assertEquals(
+        Assert.assertEquals(
                 Lists.mutable.with(<name>Sets.mutable.with(<["1", "2", "3"]:(literal.(type))(); separator=", ">)).toSet(),
                 iterable.chunk(4).toSet());
 
-        assertThrows(IllegalArgumentException.class, () -> iterable.chunk(0));
-        assertThrows(IllegalArgumentException.class, () -> iterable.chunk(-1));
+        Verify.assertThrows(IllegalArgumentException.class, () -> iterable.chunk(0));
+        Verify.assertThrows(IllegalArgumentException.class, () -> iterable.chunk(-1));
     }
 }
 
@@ -193,26 +188,24 @@ public class <name>ObjectHashMapKeySetTest extends Abstract<name>SetTestCase
 
 NaNTests() ::= <<
 @Override
-@Test
+@Test(expected = UnsupportedOperationException.class)
 public void add_NaN()
 {
-    assertThrows(UnsupportedOperationException.class, () -> this.newWith(<wrapperName>.NaN).add(<wrapperName>.NaN));
+    this.newWith(<wrapperName>.NaN).add(<wrapperName>.NaN);
 }
 
 @Override
-@Test
+@Test(expected = UnsupportedOperationException.class)
 public void add_POSITIVE_INFINITY()
 {
-    assertThrows(UnsupportedOperationException.class, () ->
-            this.newWith(<wrapperName>.POSITIVE_INFINITY).add(<wrapperName>.POSITIVE_INFINITY));
+    this.newWith(<wrapperName>.POSITIVE_INFINITY).add(<wrapperName>.POSITIVE_INFINITY);
 }
 
 @Override
-@Test
+@Test(expected = UnsupportedOperationException.class)
 public void add_NEGATIVE_INFINITY()
 {
-    assertThrows(UnsupportedOperationException.class, () ->
-            this.newWith(<wrapperName>.NEGATIVE_INFINITY).add(<wrapperName>.NEGATIVE_INFINITY));
+    this.newWith(<wrapperName>.NEGATIVE_INFINITY).add(<wrapperName>.NEGATIVE_INFINITY);
 }
 
 >>

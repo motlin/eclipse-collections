@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -24,17 +24,17 @@ import org.eclipse.collections.api.block.procedure.primitive.BooleanProcedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.collection.primitive.ImmutableBooleanCollection;
 import org.eclipse.collections.api.collection.primitive.MutableBooleanCollection;
-import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.BooleanBags;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
 import org.eclipse.collections.api.iterator.BooleanIterator;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.map.primitive.MutableBooleanValuesMap;
 import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.collection.mutable.primitive.SynchronizedBooleanCollection;
 import org.eclipse.collections.impl.collection.mutable.primitive.UnmodifiableBooleanCollection;
+import org.eclipse.collections.impl.factory.primitive.BooleanBags;
+import org.eclipse.collections.impl.factory.primitive.BooleanLists;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
 import org.eclipse.collections.impl.primitive.AbstractBooleanIterable;
 import org.eclipse.collections.impl.set.mutable.primitive.BooleanHashSet;
@@ -314,7 +314,7 @@ public abstract class AbstractMutableBooleanValuesMap extends AbstractBooleanIte
     @Override
     public <V> MutableBag<V> collect(BooleanToObjectFunction<? extends V> function)
     {
-        MutableBag<V> target = Bags.mutable.withInitialCapacity(this.size());
+        MutableBag<V> target = HashBag.newBag(this.size());
         if (this.getSentinelValues() != null)
         {
             if (this.getSentinelValues().containsZeroKey)
@@ -443,40 +443,6 @@ public abstract class AbstractMutableBooleanValuesMap extends AbstractBooleanIte
     public boolean[] toArray()
     {
         boolean[] array = new boolean[this.size()];
-        int index = 0;
-
-        if (this.getSentinelValues() != null)
-        {
-            if (this.getSentinelValues().containsZeroKey)
-            {
-                array[index] = this.getSentinelValues().zeroValue;
-                index++;
-            }
-            if (this.getSentinelValues().containsOneKey)
-            {
-                array[index] = this.getSentinelValues().oneValue;
-                index++;
-            }
-        }
-        for (int i = 0; i < this.getTableSize(); i++)
-        {
-            if (this.isNonSentinelAtIndex(i))
-            {
-                array[index] = this.getValueAtIndex(i);
-                index++;
-            }
-        }
-
-        return array;
-    }
-
-    @Override
-    public boolean[] toArray(boolean[] array)
-    {
-        if (array.length < this.size())
-        {
-            array = new boolean[this.size()];
-        }
         int index = 0;
 
         if (this.getSentinelValues() != null)
@@ -782,12 +748,6 @@ public abstract class AbstractMutableBooleanValuesMap extends AbstractBooleanIte
         public boolean[] toArray()
         {
             return AbstractMutableBooleanValuesMap.this.toArray();
-        }
-
-        @Override
-        public boolean[] toArray(boolean[] target)
-        {
-            return AbstractMutableBooleanValuesMap.this.toArray(target);
         }
     }
 }

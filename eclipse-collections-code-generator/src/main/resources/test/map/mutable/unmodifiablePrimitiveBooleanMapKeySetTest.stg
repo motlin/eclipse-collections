@@ -21,6 +21,7 @@ body(type, name, wrapperName) ::= <<
 package org.eclipse.collections.impl.map.mutable.primitive;
 
 import org.eclipse.collections.api.<name>Iterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.iterator.Mutable<name>Iterator;
 import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
 import org.eclipse.collections.api.set.MutableSet;

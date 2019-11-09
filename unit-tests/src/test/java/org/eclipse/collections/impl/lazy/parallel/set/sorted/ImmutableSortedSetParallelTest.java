@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,12 +10,10 @@
 
 package org.eclipse.collections.impl.lazy.parallel.set.sorted;
 
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.set.sorted.ParallelSortedSetIterable;
 import org.eclipse.collections.impl.block.factory.Comparators;
-import org.eclipse.collections.impl.factory.SortedSets;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Test;
 
 public class ImmutableSortedSetParallelTest extends ParallelSortedSetIterableTestCase
 {
@@ -31,15 +29,15 @@ public class ImmutableSortedSetParallelTest extends ParallelSortedSetIterableTes
         return SortedSets.immutable.with(Comparators.reverseNaturalOrder(), littleElements).asParallel(this.executorService, this.batchSize);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void asParallel_small_batch()
     {
-        assertThrows(IllegalArgumentException.class, () -> SortedSets.immutable.with(Comparators.reverseNaturalOrder(), 4, 3, 2, 1).asParallel(this.executorService, 0));
+        SortedSets.immutable.with(Comparators.reverseNaturalOrder(), 4, 3, 2, 1).asParallel(this.executorService, 0);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void asParallel_null_executorService()
     {
-        assertThrows(NullPointerException.class, () -> SortedSets.immutable.with(Comparators.reverseNaturalOrder(), 4, 3, 2, 1).asParallel(null, 2));
+        SortedSets.immutable.with(Comparators.reverseNaturalOrder(), 4, 3, 2, 1).asParallel(null, 2);
     }
 }

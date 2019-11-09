@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.MutableBag;
@@ -48,8 +47,9 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.factory.BiMaps;
-import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
@@ -116,9 +116,16 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
     {
         if (value == null)
         {
-            return other == null;
+            if (other == null)
+            {
+                return true;
+            }
         }
-        return other == value || value.equals(other);
+        else if (other == value || value.equals(other))
+        {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -269,7 +276,11 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
     @Override
     public void putAll(Map<? extends K, ? extends V> map)
     {
-        map.forEach(this::put);
+        Set<? extends Map.Entry<? extends K, ? extends V>> entries = map.entrySet();
+        for (Map.Entry<? extends K, ? extends V> entry : entries)
+        {
+            this.put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
@@ -288,6 +299,22 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
     public V removeKey(K key)
     {
         return this.remove(key);
+    }
+
+    @Override
+    public boolean removeIf(Predicate2<? super K, ? super V> predicate)
+    {
+        int previousSize = this.size();
+        Iterator<Entry<K, V>> iterator = this.entrySet().iterator();
+        while (iterator.hasNext())
+        {
+            Entry<K, V> entry = iterator.next();
+            if (predicate.accept(entry.getKey(), entry.getValue()))
+            {
+                iterator.remove();
+            }
+        }
+        return previousSize > this.size();
     }
 
     @Override
@@ -487,12 +514,6 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
     }
 
     @Override
-    public <R> MutableBiMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function)
-    {
-        return MapIterate.collectKeysUnique(this.delegate, function, BiMaps.mutable.empty());
-    }
-
-    @Override
     public <VV> MutableBag<VV> collect(Function<? super V, ? extends VV> function)
     {
         return this.delegate.collect(function);
@@ -571,7 +592,7 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
     @Deprecated
     public MutableSet<Pair<V, Integer>> zipWithIndex()
     {
-        return this.delegate.zipWithIndex(Sets.mutable.withInitialCapacity(this.size()));
+        return this.delegate.zipWithIndex(UnifiedSet.newSet(this.size()));
     }
 
     @Override
@@ -596,10 +617,10 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            MutableSet<Pair<V, S>> target = UnifiedSet.newSet(Math.min(this.size(), thatSize));
+            UnifiedSet<Pair<V, S>> target = UnifiedSet.newSet(Math.min(this.size(), thatSize));
             return this.delegate.zip(that, target);
         }
-        return this.delegate.zip(that, Sets.mutable.empty());
+        return this.delegate.zip(that, UnifiedSet.newSet());
     }
 
     @Override
@@ -650,6 +671,18 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
     public <VV> MutableBiMap<VV, V> groupByUniqueKey(Function<? super V, ? extends VV> function)
     {
         return new HashBiMap<>(this.delegate.groupByUniqueKey(function));
+    }
+
+    @Override
+    public <K2, V2> MutableMap<K2, V2> aggregateBy(Function<? super V, ? extends K2> groupBy, Function0<? extends V2> zeroValueFactory, Function2<? super V2, ? super V, ? extends V2> nonMutatingAggregator)
+    {
+        return this.delegate.aggregateBy(groupBy, zeroValueFactory, nonMutatingAggregator);
+    }
+
+    @Override
+    public <K2, V2> MutableMap<K2, V2> aggregateInPlaceBy(Function<? super V, ? extends K2> groupBy, Function0<? extends V2> zeroValueFactory, Procedure2<? super V2, ? super V> mutatingAggregator)
+    {
+        return this.delegate.aggregateInPlaceBy(groupBy, zeroValueFactory, mutatingAggregator);
     }
 
     @Override
@@ -725,7 +758,7 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         }
     }
 
-    protected class KeySet implements Set<K>, Serializable
+    private class KeySet implements Set<K>, Serializable
     {
         @Override
         public boolean equals(Object obj)
@@ -836,12 +869,6 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         }
 
         @Override
-        public void forEach(Consumer<? super K> action)
-        {
-            AbstractMutableBiMap.this.forEachKey(action::accept);
-        }
-
-        @Override
         public Iterator<K> iterator()
         {
             return AbstractMutableBiMap.this.inverse().iterator();
@@ -850,18 +877,18 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         @Override
         public String toString()
         {
-            return AbstractMutableBiMap.this.delegate.keySet().toString();
+            return Iterate.makeString(this, "[", ", ", "]");
         }
 
         protected Object writeReplace()
         {
-            MutableSet<K> replace = Sets.mutable.withInitialCapacity(AbstractMutableBiMap.this.size());
+            MutableSet<K> replace = UnifiedSet.newSet(AbstractMutableBiMap.this.size());
             AbstractMutableBiMap.this.forEachKey(CollectionAddProcedure.on(replace));
             return replace;
         }
     }
 
-    protected class ValuesCollection implements Collection<V>
+    private class ValuesCollection implements Collection<V>
     {
         @Override
         public int size()
@@ -968,18 +995,12 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         @Override
         public String toString()
         {
-            return AbstractMutableBiMap.this.delegate.values().toString();
+            return Iterate.makeString(this, "[", ", ", "]");
         }
     }
 
-    protected class EntrySet implements Set<Map.Entry<K, V>>
+    private class EntrySet implements Set<Map.Entry<K, V>>
     {
-        @Override
-        public void forEach(Consumer<? super Entry<K, V>> action)
-        {
-            AbstractMutableBiMap.this.delegate.forEachKeyValue((key, value) -> action.accept(new InternalEntry(key, value)));
-        }
-
         @Override
         public boolean equals(Object obj)
         {
@@ -998,12 +1019,6 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         public int hashCode()
         {
             return AbstractMutableBiMap.this.hashCode();
-        }
-
-        @Override
-        public String toString()
-        {
-            return AbstractMutableBiMap.this.delegate.entrySet().toString();
         }
 
         @Override

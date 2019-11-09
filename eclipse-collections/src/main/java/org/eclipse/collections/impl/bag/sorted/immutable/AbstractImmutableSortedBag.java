@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.bag.MutableBag;
@@ -37,15 +38,7 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.SortedBags;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.ImmutableBooleanList;
@@ -61,14 +54,23 @@ import org.eclipse.collections.api.multimap.sortedbag.ImmutableSortedBagMultimap
 import org.eclipse.collections.api.partition.bag.sorted.PartitionImmutableSortedBag;
 import org.eclipse.collections.api.partition.bag.sorted.PartitionMutableSortedBag;
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
-import org.eclipse.collections.api.set.sorted.MutableSortedSet;
+import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 import org.eclipse.collections.impl.bag.immutable.AbstractImmutableBagIterable;
+import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap;
 import org.eclipse.collections.impl.partition.bag.sorted.PartitionTreeBag;
@@ -155,25 +157,25 @@ abstract class AbstractImmutableSortedBag<T>
     @Override
     public ImmutableSortedBag<T> select(Predicate<? super T> predicate)
     {
-        return this.select(predicate, SortedBags.mutable.empty(this.comparator())).toImmutable();
+        return this.select(predicate, TreeBag.newBag(this.comparator())).toImmutable();
     }
 
     @Override
     public <P> ImmutableSortedBag<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return this.selectWith(predicate, parameter, SortedBags.mutable.empty(this.comparator())).toImmutable();
+        return this.selectWith(predicate, parameter, TreeBag.newBag(this.comparator())).toImmutable();
     }
 
     @Override
     public ImmutableSortedBag<T> reject(Predicate<? super T> predicate)
     {
-        return this.reject(predicate, SortedBags.mutable.empty(this.comparator())).toImmutable();
+        return this.reject(predicate, TreeBag.newBag(this.comparator())).toImmutable();
     }
 
     @Override
     public <P> ImmutableSortedBag<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return this.rejectWith(predicate, parameter, SortedBags.mutable.empty(this.comparator())).toImmutable();
+        return this.rejectWith(predicate, parameter, TreeBag.newBag(this.comparator())).toImmutable();
     }
 
     @Override
@@ -223,49 +225,49 @@ abstract class AbstractImmutableSortedBag<T>
     @Override
     public ImmutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction)
     {
-        return this.collectBoolean(booleanFunction, BooleanLists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.collectBoolean(booleanFunction, new BooleanArrayList(this.size())).toImmutable();
     }
 
     @Override
     public ImmutableByteList collectByte(ByteFunction<? super T> byteFunction)
     {
-        return this.collectByte(byteFunction, ByteLists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.collectByte(byteFunction, new ByteArrayList(this.size())).toImmutable();
     }
 
     @Override
     public ImmutableCharList collectChar(CharFunction<? super T> charFunction)
     {
-        return this.collectChar(charFunction, CharLists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.collectChar(charFunction, new CharArrayList(this.size())).toImmutable();
     }
 
     @Override
     public ImmutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction)
     {
-        return this.collectDouble(doubleFunction, DoubleLists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.collectDouble(doubleFunction, new DoubleArrayList(this.size())).toImmutable();
     }
 
     @Override
     public ImmutableFloatList collectFloat(FloatFunction<? super T> floatFunction)
     {
-        return this.collectFloat(floatFunction, FloatLists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.collectFloat(floatFunction, new FloatArrayList(this.size())).toImmutable();
     }
 
     @Override
     public ImmutableIntList collectInt(IntFunction<? super T> intFunction)
     {
-        return this.collectInt(intFunction, IntLists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.collectInt(intFunction, new IntArrayList(this.size())).toImmutable();
     }
 
     @Override
     public ImmutableLongList collectLong(LongFunction<? super T> longFunction)
     {
-        return this.collectLong(longFunction, LongLists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.collectLong(longFunction, new LongArrayList(this.size())).toImmutable();
     }
 
     @Override
     public ImmutableShortList collectShort(ShortFunction<? super T> shortFunction)
     {
-        return this.collectShort(shortFunction, ShortLists.mutable.withInitialCapacity(this.size())).toImmutable();
+        return this.collectShort(shortFunction, new ShortArrayList(this.size())).toImmutable();
     }
 
     @Override
@@ -283,7 +285,7 @@ abstract class AbstractImmutableSortedBag<T>
     @Override
     public ImmutableSortedBag<T> selectByOccurrences(IntPredicate predicate)
     {
-        MutableSortedBag<T> result = SortedBags.mutable.empty(this.comparator());
+        MutableSortedBag<T> result = TreeBag.newBag(this.comparator());
         this.forEachWithOccurrences((each, occurrences) ->
         {
             if (predicate.accept(occurrences))
@@ -298,7 +300,7 @@ abstract class AbstractImmutableSortedBag<T>
     public <S> ImmutableSortedBag<S> selectInstancesOf(Class<S> clazz)
     {
         Comparator<? super S> comparator = (Comparator<? super S>) this.comparator();
-        MutableSortedBag<S> result = SortedBags.mutable.empty(comparator);
+        MutableSortedBag<S> result = TreeBag.newBag(comparator);
         this.forEachWithOccurrences((each, occurrences) ->
         {
             if (clazz.isInstance(each))
@@ -316,7 +318,7 @@ abstract class AbstractImmutableSortedBag<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            list = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
+            list = FastList.newList(Math.min(this.size(), thatSize));
         }
         else
         {
@@ -376,7 +378,7 @@ abstract class AbstractImmutableSortedBag<T>
         Comparator<? super T> comparator = this.comparator() == null
                 ? Comparators.naturalOrder()
                 : this.comparator();
-        MutableSortedSet<Pair<T, Integer>> pairs = TreeSortedSet.newSet(
+        TreeSortedSet<Pair<T, Integer>> pairs = TreeSortedSet.newSet(
                 Comparators.<Pair<T, Integer>>chain(
                         Comparators.byFunction(Functions.firstOfPair(), comparator),
                         Comparators.byFunction(Functions.secondOfPair())));
@@ -417,6 +419,12 @@ abstract class AbstractImmutableSortedBag<T>
     }
 
     @Override
+    public MutableStack<T> toStack()
+    {
+        return Stacks.mutable.withAll(this);
+    }
+
+    @Override
     public RichIterable<RichIterable<T>> chunk(int size)
     {
         if (size <= 0)
@@ -426,7 +434,7 @@ abstract class AbstractImmutableSortedBag<T>
 
         MutableList<RichIterable<T>> result = Lists.mutable.empty();
         T[] objects = (T[]) this.toArray();
-        MutableCollection<T> batch = SortedBags.mutable.empty(this.comparator());
+        MutableCollection<T> batch = TreeBag.newBag(this.comparator());
         int j = 0;
 
         while (j < objects.length)
@@ -451,5 +459,11 @@ abstract class AbstractImmutableSortedBag<T>
     public int detectLastIndex(Predicate<? super T> predicate)
     {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectLastIndex() not implemented yet");
+    }
+
+    @Override
+    public LazyIterable<T> asReversed()
+    {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".asReversed() not implemented yet");
     }
 }

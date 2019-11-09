@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -50,16 +50,6 @@ import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Maps;
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
@@ -81,8 +71,18 @@ import org.eclipse.collections.impl.block.factory.HashingStrategies;
 import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
 import org.eclipse.collections.impl.block.procedure.NonMutatingAggregationProcedure;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.internal.InternalArrayIterate;
@@ -387,7 +387,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableBooleanList result = BooleanLists.mutable.withInitialCapacity(size);
+            MutableBooleanList result = new BooleanArrayList(size);
             return ArrayListIterate.collectBooleanFromInternalArray(list, booleanFunction, size, result);
         }
         return RandomAccessListIterate.collectBoolean(list, booleanFunction);
@@ -426,7 +426,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableByteList result = ByteLists.mutable.withInitialCapacity(size);
+            MutableByteList result = new ByteArrayList(size);
             return ArrayListIterate.collectByteFromInternalArray(list, byteFunction, size, result);
         }
         return RandomAccessListIterate.collectByte(list, byteFunction);
@@ -469,7 +469,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableCharList result = CharLists.mutable.withInitialCapacity(size);
+            MutableCharList result = new CharArrayList(size);
             return ArrayListIterate.collectCharFromInternalArray(list, charFunction, size, result);
         }
         return RandomAccessListIterate.collectChar(list, charFunction);
@@ -512,7 +512,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableDoubleList result = DoubleLists.mutable.withInitialCapacity(size);
+            MutableDoubleList result = new DoubleArrayList(size);
             return ArrayListIterate.collectDoubleFromInternalArray(list, doubleFunction, size, result);
         }
         return RandomAccessListIterate.collectDouble(list, doubleFunction);
@@ -555,7 +555,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableFloatList result = FloatLists.mutable.withInitialCapacity(size);
+            MutableFloatList result = new FloatArrayList(size);
             return ArrayListIterate.collectFloatFromInternalArray(list, floatFunction, size, result);
         }
         return RandomAccessListIterate.collectFloat(list, floatFunction);
@@ -598,7 +598,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableIntList result = IntLists.mutable.withInitialCapacity(size);
+            MutableIntList result = new IntArrayList(size);
             return ArrayListIterate.collectIntFromInternalArray(list, intFunction, size, result);
         }
         return RandomAccessListIterate.collectInt(list, intFunction);
@@ -637,7 +637,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableLongList result = LongLists.mutable.withInitialCapacity(size);
+            MutableLongList result = new LongArrayList(size);
             return ArrayListIterate.collectLongFromInternalArray(list, longFunction, size, result);
         }
         return RandomAccessListIterate.collectLong(list, longFunction);
@@ -680,7 +680,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableShortList result = ShortLists.mutable.withInitialCapacity(size);
+            MutableShortList result = new ShortArrayList(size);
             return ArrayListIterate.collectShortFromInternalArray(list, shortFunction, size, result);
         }
         return RandomAccessListIterate.collectShort(list, shortFunction);
@@ -811,7 +811,7 @@ public final class ArrayListIterate
      * Iterates over the section of the list covered by the specified indexes. The indexes are both inclusive. If the
      * from is less than the to, the list is iterated in forward order. If the from is greater than the to, then the
      * list is iterated in the reverse order.
-     *
+     * <p>
      * <pre>e.g.
      * ArrayList&lt;People&gt; people = new ArrayList&lt;People&gt;(FastList.newListWith(ted, mary, bob, sally));
      * ArrayListIterate.forEach(people, 0, 1, new Procedure&lt;Person&gt;()
@@ -845,7 +845,7 @@ public final class ArrayListIterate
      * from is less than the to, the list is iterated in forward order. If the from is greater than the to, then the
      * list is iterated in the reverse order. The index passed into the ObjectIntProcedure is the actual index of the
      * range.
-     *
+     * <p>
      * <pre>e.g.
      * ArrayList&lt;People&gt; people = new ArrayList&lt;People&gt;(FastList.newListWith(ted, mary, bob, sally));
      * ArrayListIterate.forEachWithIndex(people, 0, 1, new ObjectIntProcedure&lt;Person&gt;()
@@ -1301,9 +1301,9 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            PartitionMutableList<T> partitionMutableList = new PartitionFastList<>();
-            MutableList<T> selected = partitionMutableList.getSelected();
-            MutableList<T> rejected = partitionMutableList.getRejected();
+            PartitionFastList<T> partitionFastList = new PartitionFastList<>();
+            MutableList<T> selected = partitionFastList.getSelected();
+            MutableList<T> rejected = partitionFastList.getRejected();
 
             T[] elements = ArrayListIterate.getInternalArray(list);
             for (int i = 0; i < size; i++)
@@ -1312,7 +1312,7 @@ public final class ArrayListIterate
                 MutableList<T> bucket = predicate.accept(each) ? selected : rejected;
                 bucket.add(each);
             }
-            return partitionMutableList;
+            return partitionFastList;
         }
         return RandomAccessListIterate.partition(list, predicate);
     }
@@ -1322,9 +1322,9 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            PartitionMutableList<T> partitionMutableList = new PartitionFastList<>();
-            MutableList<T> selected = partitionMutableList.getSelected();
-            MutableList<T> rejected = partitionMutableList.getRejected();
+            PartitionFastList<T> partitionFastList = new PartitionFastList<>();
+            MutableList<T> selected = partitionFastList.getSelected();
+            MutableList<T> rejected = partitionFastList.getRejected();
 
             T[] elements = ArrayListIterate.getInternalArray(list);
             for (int i = 0; i < size; i++)
@@ -1333,7 +1333,7 @@ public final class ArrayListIterate
                 MutableList<T> bucket = predicate.accept(each, parameter) ? selected : rejected;
                 bucket.add(each);
             }
-            return partitionMutableList;
+            return partitionFastList;
         }
         return RandomAccessListIterate.partitionWith(list, predicate, parameter);
     }
@@ -1566,7 +1566,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableSet<T> seenSoFar = Sets.mutable.empty();
+            MutableSet<T> seenSoFar = UnifiedSet.newSet();
             T[] elements = ArrayListIterate.getInternalArray(list);
             for (int i = 0; i < size; i++)
             {
@@ -1586,7 +1586,7 @@ public final class ArrayListIterate
     public static <T> ArrayList<T> distinct(ArrayList<T> list, HashingStrategy<? super T> hashingStrategy)
     {
         int size = list.size();
-        MutableSet<T> seenSoFar = new UnifiedSetWithHashingStrategy<>(hashingStrategy);
+        MutableSet<T> seenSoFar = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
         ArrayList<T> result = new ArrayList<>();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
@@ -1821,7 +1821,7 @@ public final class ArrayListIterate
             ArrayList<T> list,
             Function<? super T, ? extends V> function)
     {
-        return ArrayListIterate.groupByUniqueKey(list, function, Maps.mutable.empty());
+        return ArrayListIterate.groupByUniqueKey(list, function, UnifiedMap.newMap());
     }
 
     /**
@@ -1863,7 +1863,7 @@ public final class ArrayListIterate
         {
             int xSize = xs.size();
             int ySize = Iterate.sizeOf(ys);
-            MutableList<Pair<X, Y>> target = FastList.newList(Math.min(xSize, ySize));
+            FastList<Pair<X, Y>> target = FastList.newList(Math.min(xSize, ySize));
             return ArrayListIterate.zip(xs, ys, target);
         }
         return ArrayListIterate.zip(xs, ys, FastList.newList());
@@ -1893,7 +1893,7 @@ public final class ArrayListIterate
      */
     public static <T> MutableList<Pair<T, Integer>> zipWithIndex(ArrayList<T> list)
     {
-        return ArrayListIterate.zipWithIndex(list, Lists.mutable.withInitialCapacity(list.size()));
+        return ArrayListIterate.zipWithIndex(list, FastList.newList(list.size()));
     }
 
     /**
@@ -2026,7 +2026,7 @@ public final class ArrayListIterate
             Function0<? extends V> zeroValueFactory,
             Procedure2<? super V, ? super T> mutatingAggregator)
     {
-        MutableMap<K, V> map = Maps.mutable.empty();
+        MutableMap<K, V> map = UnifiedMap.newMap();
         ArrayListIterate.forEach(list, new MutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, mutatingAggregator));
         return map;
     }
@@ -2037,7 +2037,7 @@ public final class ArrayListIterate
             Function0<? extends V> zeroValueFactory,
             Function2<? super V, ? super T, ? extends V> nonMutatingAggregator)
     {
-        MutableMap<K, V> map = Maps.mutable.empty();
+        MutableMap<K, V> map = UnifiedMap.newMap();
         ArrayListIterate.forEach(list, new NonMutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, nonMutatingAggregator));
         return map;
     }

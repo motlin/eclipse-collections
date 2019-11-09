@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -54,18 +54,6 @@ import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Maps;
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
@@ -77,8 +65,6 @@ import org.eclipse.collections.api.list.primitive.MutableLongList;
 import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
-import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
-import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.map.primitive.ObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.ObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
@@ -91,9 +77,20 @@ import org.eclipse.collections.impl.block.factory.Functions0;
 import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
 import org.eclipse.collections.impl.block.procedure.NonMutatingAggregationProcedure;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectDoubleHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectLongHashMap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -335,7 +332,7 @@ public final class RandomAccessListIterate
             List<T> list,
             Function<? super T, ? extends A> function)
     {
-        return RandomAccessListIterate.collect(list, function, Lists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collect(list, function, FastList.newList(list.size()));
     }
 
     /**
@@ -359,7 +356,7 @@ public final class RandomAccessListIterate
      */
     public static <T, A> MutableList<A> collectWithIndex(List<T> list, ObjectIntToObjectFunction<? super T, ? extends A> function)
     {
-        return RandomAccessListIterate.collectWithIndex(list, function, Lists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectWithIndex(list, function, FastList.newList(list.size()));
     }
 
     /**
@@ -381,7 +378,7 @@ public final class RandomAccessListIterate
             List<T> list,
             BooleanFunction<? super T> booleanFunction)
     {
-        return RandomAccessListIterate.collectBoolean(list, booleanFunction, BooleanLists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectBoolean(list, booleanFunction, new BooleanArrayList(list.size()));
     }
 
     /**
@@ -407,7 +404,7 @@ public final class RandomAccessListIterate
             List<T> list,
             ByteFunction<? super T> byteFunction)
     {
-        return RandomAccessListIterate.collectByte(list, byteFunction, ByteLists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectByte(list, byteFunction, new ByteArrayList(list.size()));
     }
 
     /**
@@ -433,7 +430,7 @@ public final class RandomAccessListIterate
             List<T> list,
             CharFunction<? super T> charFunction)
     {
-        return RandomAccessListIterate.collectChar(list, charFunction, CharLists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectChar(list, charFunction, new CharArrayList(list.size()));
     }
 
     /**
@@ -459,7 +456,7 @@ public final class RandomAccessListIterate
             List<T> list,
             DoubleFunction<? super T> doubleFunction)
     {
-        return RandomAccessListIterate.collectDouble(list, doubleFunction, DoubleLists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectDouble(list, doubleFunction, new DoubleArrayList(list.size()));
     }
 
     /**
@@ -485,7 +482,7 @@ public final class RandomAccessListIterate
             List<T> list,
             FloatFunction<? super T> floatFunction)
     {
-        return RandomAccessListIterate.collectFloat(list, floatFunction, FloatLists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectFloat(list, floatFunction, new FloatArrayList(list.size()));
     }
 
     /**
@@ -511,7 +508,7 @@ public final class RandomAccessListIterate
             List<T> list,
             IntFunction<? super T> intFunction)
     {
-        return RandomAccessListIterate.collectInt(list, intFunction, IntLists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectInt(list, intFunction, new IntArrayList(list.size()));
     }
 
     /**
@@ -537,7 +534,7 @@ public final class RandomAccessListIterate
             List<T> list,
             LongFunction<? super T> longFunction)
     {
-        return RandomAccessListIterate.collectLong(list, longFunction, LongLists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectLong(list, longFunction, new LongArrayList(list.size()));
     }
 
     /**
@@ -563,7 +560,7 @@ public final class RandomAccessListIterate
             List<T> list,
             ShortFunction<? super T> shortFunction)
     {
-        return RandomAccessListIterate.collectShort(list, shortFunction, ShortLists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.collectShort(list, shortFunction, new ShortArrayList(list.size()));
     }
 
     /**
@@ -589,7 +586,7 @@ public final class RandomAccessListIterate
             List<T> list,
             Function<? super T, ? extends Iterable<A>> function)
     {
-        return RandomAccessListIterate.flatCollect(list, function, Lists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.flatCollect(list, function, FastList.newList(list.size()));
     }
 
     /**
@@ -632,7 +629,7 @@ public final class RandomAccessListIterate
      * Iterates over the section of the list covered by the specified indexes. The indexes are both inclusive. If the
      * from is less than the to, the list is iterated in forward order. If the from is greater than the to, then the
      * list is iterated in the reverse order.
-     *
+     * <p>
      * <pre>e.g.
      * MutableList&lt;People&gt; people = FastList.newListWith(ted, mary, bob, sally);
      * ListIterate.forEach(people, 0, 1, new Procedure&lt;Person&gt;()
@@ -670,7 +667,7 @@ public final class RandomAccessListIterate
      * from is less than the to, the list is iterated in forward order. If the from is greater than the to, then the
      * list is iterated in the reverse order. The index passed into the ObjectIntProcedure is the actual index of the
      * range.
-     *
+     * <p>
      * <pre>e.g.
      * MutableList&lt;People&gt; people = FastList.newListWith(ted, mary, bob, sally);
      * ListIterate.forEachWithIndex(people, 0, 1, new ObjectIntProcedure&lt;Person&gt;()
@@ -876,7 +873,7 @@ public final class RandomAccessListIterate
             Function<? super T, ? extends V> groupBy,
             Function<? super T, BigDecimal> function)
     {
-        MutableMap<V, BigDecimal> result = Maps.mutable.empty();
+        MutableMap<V, BigDecimal> result = UnifiedMap.newMap();
         int size = list.size();
         for (int i = 0; i < size; i++)
         {
@@ -891,7 +888,7 @@ public final class RandomAccessListIterate
             Function<? super T, ? extends V> groupBy,
             Function<? super T, BigInteger> function)
     {
-        MutableMap<V, BigInteger> result = Maps.mutable.empty();
+        MutableMap<V, BigInteger> result = UnifiedMap.newMap();
         int size = list.size();
         for (int i = 0; i < size; i++)
         {
@@ -1079,34 +1076,34 @@ public final class RandomAccessListIterate
 
     public static <T> PartitionMutableList<T> partition(List<T> list, Predicate<? super T> predicate)
     {
-        PartitionMutableList<T> partitionMutableList = new PartitionFastList<>();
+        PartitionFastList<T> partitionFastList = new PartitionFastList<>();
 
         int size = list.size();
         for (int i = 0; i < size; i++)
         {
             T each = list.get(i);
             MutableList<T> bucket = predicate.accept(each)
-                    ? partitionMutableList.getSelected()
-                    : partitionMutableList.getRejected();
+                    ? partitionFastList.getSelected()
+                    : partitionFastList.getRejected();
             bucket.add(each);
         }
-        return partitionMutableList;
+        return partitionFastList;
     }
 
     public static <T, P> PartitionMutableList<T> partitionWith(List<T> list, Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        PartitionMutableList<T> partitionMutableList = new PartitionFastList<>();
+        PartitionFastList<T> partitionFastList = new PartitionFastList<>();
 
         int size = list.size();
         for (int i = 0; i < size; i++)
         {
             T each = list.get(i);
             MutableList<T> bucket = predicate.accept(each, parameter)
-                    ? partitionMutableList.getSelected()
-                    : partitionMutableList.getRejected();
+                    ? partitionFastList.getSelected()
+                    : partitionFastList.getRejected();
             bucket.add(each);
         }
-        return partitionMutableList;
+        return partitionFastList;
     }
 
     public static <T> boolean removeIf(List<T> list, Predicate<? super T> predicate)
@@ -1264,8 +1261,17 @@ public final class RandomAccessListIterate
     @Deprecated
     public static <T, R extends List<T>> R distinct(List<T> list, R targetList)
     {
-        MutableSet<T> seenSoFar = Sets.mutable.empty();
-        return RandomAccessListIterate.select(list, seenSoFar::add, targetList);
+        MutableSet<T> seenSoFar = UnifiedSet.newSet();
+        int size = list.size();
+        for (int i = 0; i < size; i++)
+        {
+            T item = list.get(i);
+            if (seenSoFar.add(item))
+            {
+                targetList.add(item);
+            }
+        }
+        return targetList;
     }
 
     /**
@@ -1282,7 +1288,7 @@ public final class RandomAccessListIterate
     public static <T> MutableList<T> distinct(List<T> list, HashingStrategy<? super T> hashingStrategy)
     {
         MutableSet<T> seenSoFar = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
-        MutableList<T> result = FastList.newList();
+        FastList<T> result = FastList.newList();
         int size = list.size();
         for (int i = 0; i < size; i++)
         {
@@ -1304,7 +1310,7 @@ public final class RandomAccessListIterate
         {
             throw new IllegalArgumentException("Count must be greater than zero, but was: " + count);
         }
-        return RandomAccessListIterate.take(list, count, Lists.mutable.withInitialCapacity(Math.min(list.size(), count)));
+        return RandomAccessListIterate.take(list, count, FastList.newList(Math.min(list.size(), count)));
     }
 
     /**
@@ -1333,7 +1339,7 @@ public final class RandomAccessListIterate
         {
             throw new IllegalArgumentException("Count must be greater than zero, but was: " + count);
         }
-        return RandomAccessListIterate.drop(list, count, Lists.mutable.withInitialCapacity(list.size() - Math.min(list.size(), count)));
+        return RandomAccessListIterate.drop(list, count, FastList.newList(list.size() - Math.min(list.size(), count)));
     }
 
     /**
@@ -1599,7 +1605,7 @@ public final class RandomAccessListIterate
         {
             int listSize = list.size();
             int iterableSize = Iterate.sizeOf(iterable);
-            MutableList<Pair<X, Y>> target = FastList.newList(Math.min(listSize, iterableSize));
+            FastList<Pair<X, Y>> target = FastList.newList(Math.min(listSize, iterableSize));
             return RandomAccessListIterate.zip(list, iterable, target);
         }
         return RandomAccessListIterate.zip(list, iterable, FastList.newList());
@@ -1621,7 +1627,7 @@ public final class RandomAccessListIterate
 
     public static <T> MutableList<Pair<T, Integer>> zipWithIndex(List<T> list)
     {
-        return RandomAccessListIterate.zipWithIndex(list, Lists.mutable.withInitialCapacity(list.size()));
+        return RandomAccessListIterate.zipWithIndex(list, FastList.newList(list.size()));
     }
 
     public static <T, R extends Collection<Pair<T, Integer>>> R zipWithIndex(
@@ -1642,7 +1648,7 @@ public final class RandomAccessListIterate
             Function0<? extends V> zeroValueFactory,
             Procedure2<? super V, ? super T> mutatingAggregator)
     {
-        MutableMap<K, V> map = Maps.mutable.empty();
+        MutableMap<K, V> map = UnifiedMap.newMap();
         RandomAccessListIterate.forEach(list, new MutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, mutatingAggregator));
         return map;
     }
@@ -1653,7 +1659,7 @@ public final class RandomAccessListIterate
             Function0<? extends V> zeroValueFactory,
             Function2<? super V, ? super T, ? extends V> nonMutatingAggregator)
     {
-        MutableMap<K, V> map = Maps.mutable.empty();
+        MutableMap<K, V> map = UnifiedMap.newMap();
         RandomAccessListIterate.forEach(list, new NonMutatingAggregationProcedure<>(map, groupBy, zeroValueFactory, nonMutatingAggregator));
         return map;
     }
@@ -1731,7 +1737,7 @@ public final class RandomAccessListIterate
             Function<? super T, ? extends V> groupBy,
             IntFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
+        ObjectLongHashMap<V> result = ObjectLongHashMap.newMap();
         for (int i = 0; i < list.size(); i++)
         {
             T item = list.get(i);
@@ -1745,7 +1751,7 @@ public final class RandomAccessListIterate
             Function<? super T, ? extends V> groupBy,
             LongFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
+        ObjectLongHashMap<V> result = ObjectLongHashMap.newMap();
         for (int i = 0; i < list.size(); i++)
         {
             T item = list.get(i);
@@ -1759,7 +1765,7 @@ public final class RandomAccessListIterate
             Function<? super T, ? extends V> groupBy,
             FloatFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
+        ObjectDoubleHashMap<V> result = ObjectDoubleHashMap.newMap();
         for (int i = 0; i < list.size(); i++)
         {
             T item = list.get(i);
@@ -1773,7 +1779,7 @@ public final class RandomAccessListIterate
             Function<? super T, ? extends V> groupBy,
             DoubleFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
+        ObjectDoubleHashMap<V> result = ObjectDoubleHashMap.newMap();
         for (int i = 0; i < list.size(); i++)
         {
             T item = list.get(i);

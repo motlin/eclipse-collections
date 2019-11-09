@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -18,7 +18,6 @@ import java.util.NoSuchElementException;
 
 import org.eclipse.collections.api.BooleanIterable;
 import org.eclipse.collections.api.LazyBooleanIterable;
-import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
 import org.eclipse.collections.api.block.function.primitive.BooleanToObjectFunction;
@@ -26,8 +25,6 @@ import org.eclipse.collections.api.block.function.primitive.ObjectBooleanToObjec
 import org.eclipse.collections.api.block.predicate.primitive.BooleanPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.BooleanBags;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
 import org.eclipse.collections.api.iterator.BooleanIterator;
 import org.eclipse.collections.api.iterator.MutableBooleanIterator;
 import org.eclipse.collections.api.list.MutableList;
@@ -36,10 +33,11 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.primitive.BooleanSet;
 import org.eclipse.collections.api.set.primitive.ImmutableBooleanSet;
 import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
-import org.eclipse.collections.api.tuple.primitive.BooleanBooleanPair;
+import org.eclipse.collections.impl.bag.mutable.primitive.BooleanHashBag;
 import org.eclipse.collections.impl.block.factory.primitive.BooleanPredicates;
 import org.eclipse.collections.impl.factory.primitive.BooleanSets;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 public class BooleanHashSet implements MutableBooleanSet, Externalizable
@@ -51,21 +49,6 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
     // state = 2 ==> [T]
     // state = 3 ==> [T, F]
     private int state;
-
-    public BooleanHashSet()
-    {
-    }
-
-    public BooleanHashSet(boolean... elements)
-    {
-        this();
-        this.addAll(elements);
-    }
-
-    public BooleanHashSet(BooleanHashSet set)
-    {
-        this.state = set.state;
-    }
 
     private static class EmptyBooleanIterator implements MutableBooleanIterator
     {
@@ -120,12 +103,6 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
             this.currentIndex = -1;
             BooleanHashSet.this.remove(false);
         }
-    }
-
-    @Override
-    public MutableSet<Boolean> boxed()
-    {
-        return new BoxedMutableBooleanSet(this);
     }
 
     private class TrueBooleanIterator implements MutableBooleanIterator
@@ -213,6 +190,21 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
         }
     }
 
+    public BooleanHashSet()
+    {
+    }
+
+    public BooleanHashSet(BooleanHashSet set)
+    {
+        this.state = set.state;
+    }
+
+    public BooleanHashSet(boolean... elements)
+    {
+        this();
+        this.addAll(elements);
+    }
+
     public static BooleanHashSet newSetWith(boolean... source)
     {
         return new BooleanHashSet(source);
@@ -226,15 +218,6 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
         }
 
         return BooleanHashSet.newSetWith(source.toArray());
-    }
-
-    /**
-     * @since 11.0.
-     */
-    @Override
-    public BooleanHashSet newEmpty()
-    {
-        return new BooleanHashSet();
     }
 
     @Override
@@ -380,6 +363,12 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
             default:
                 throw new AssertionError("Invalid state");
         }
+    }
+
+    @Override
+    public void forEach(BooleanProcedure procedure)
+    {
+        this.each(procedure);
     }
 
     /**
@@ -579,7 +568,7 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
     @Override
     public <V> MutableSet<V> collect(BooleanToObjectFunction<? extends V> function)
     {
-        MutableSet<V> target = UnifiedSet.newSet(this.size());
+        UnifiedSet<V> target = UnifiedSet.newSet(this.size());
         switch (this.state)
         {
             case 0:
@@ -610,43 +599,6 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
                 return new boolean[]{true};
             case 3:
                 return new boolean[]{false, true};
-            default:
-                throw new AssertionError("Invalid state");
-        }
-    }
-
-    @Override
-    public boolean[] toArray(boolean[] target)
-    {
-        int requiredSize = 0;
-        if (this.state == 1 || this.state == 2)
-        {
-            requiredSize = 1;
-        }
-        else if (this.state == 3)
-        {
-            requiredSize = 2;
-        }
-
-        if (target.length < requiredSize)
-        {
-            target = new boolean[requiredSize];
-        }
-
-        switch (this.state)
-        {
-            case 0:
-                return target;
-            case 1:
-                target[0] = false;
-                return target;
-            case 2:
-                target[0] = true;
-                return target;
-            case 3:
-                target[0] = false;
-                target[1] = true;
-                return target;
             default:
                 throw new AssertionError("Invalid state");
         }
@@ -810,13 +762,6 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
     }
 
     @Override
-    public LazyIterable<BooleanBooleanPair> cartesianProduct(
-            BooleanSet set)
-    {
-        return BooleanSets.cartesianProduct(this, set);
-    }
-
-    @Override
     public boolean equals(Object obj)
     {
         if (this == obj)
@@ -924,19 +869,19 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
     @Override
     public MutableBooleanList toList()
     {
-        return BooleanLists.mutable.withAll(this);
+        return BooleanArrayList.newList(this);
     }
 
     @Override
     public MutableBooleanSet toSet()
     {
-        return BooleanSets.mutable.withAll(this);
+        return BooleanHashSet.newSet(this);
     }
 
     @Override
     public MutableBooleanBag toBag()
     {
-        return BooleanBags.mutable.withAll(this);
+        return BooleanHashBag.newBag(this);
     }
 
     @Override

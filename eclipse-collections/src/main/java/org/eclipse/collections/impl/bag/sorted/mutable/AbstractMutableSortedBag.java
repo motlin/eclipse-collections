@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -37,14 +37,6 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.SortedBags;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
@@ -59,6 +51,14 @@ import org.eclipse.collections.api.partition.bag.sorted.PartitionMutableSortedBa
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.bag.mutable.AbstractMutableBagIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.partition.bag.sorted.PartitionTreeBag;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -109,7 +109,7 @@ public abstract class AbstractMutableSortedBag<T>
     public <S> MutableSortedBag<S> selectInstancesOf(Class<S> clazz)
     {
         Comparator<? super S> comparator = (Comparator<? super S>) this.comparator();
-        MutableSortedBag<S> result = SortedBags.mutable.empty(comparator);
+        MutableSortedBag<S> result = TreeBag.newBag(comparator);
         this.forEachWithOccurrences((each, occurrences) -> {
             if (clazz.isInstance(each))
             {
@@ -122,14 +122,14 @@ public abstract class AbstractMutableSortedBag<T>
     @Override
     public MutableSortedBag<T> takeWhile(Predicate<? super T> predicate)
     {
-        MutableSortedBag<T> result = SortedBags.mutable.empty(this.comparator());
+        MutableSortedBag<T> result = TreeBag.newBag(this.comparator());
         return IterableIterate.takeWhile(this, predicate, result);
     }
 
     @Override
     public MutableSortedBag<T> dropWhile(Predicate<? super T> predicate)
     {
-        MutableSortedBag<T> result = SortedBags.mutable.empty(this.comparator());
+        MutableSortedBag<T> result = TreeBag.newBag(this.comparator());
         return IterableIterate.dropWhile(this, predicate, result);
     }
 
@@ -163,25 +163,25 @@ public abstract class AbstractMutableSortedBag<T>
     @Override
     public MutableSortedBag<T> select(Predicate<? super T> predicate)
     {
-        return this.select(predicate, SortedBags.mutable.empty(this.comparator()));
+        return this.select(predicate, TreeBag.newBag(this.comparator()));
     }
 
     @Override
     public <P> MutableSortedBag<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return this.selectWith(predicate, parameter, SortedBags.mutable.empty(this.comparator()));
+        return this.selectWith(predicate, parameter, TreeBag.newBag(this.comparator()));
     }
 
     @Override
     public MutableSortedBag<T> reject(Predicate<? super T> predicate)
     {
-        return this.reject(predicate, SortedBags.mutable.empty(this.comparator()));
+        return this.reject(predicate, TreeBag.newBag(this.comparator()));
     }
 
     @Override
     public <P> MutableSortedBag<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return this.rejectWith(predicate, parameter, SortedBags.mutable.empty(this.comparator()));
+        return this.rejectWith(predicate, parameter, TreeBag.newBag(this.comparator()));
     }
 
     @Override
@@ -218,7 +218,7 @@ public abstract class AbstractMutableSortedBag<T>
     @Override
     public <V> MutableList<V> collect(Function<? super T, ? extends V> function)
     {
-        return this.collect(function, Lists.mutable.withInitialCapacity(this.size()));
+        return this.collect(function, FastList.newList(this.size()));
     }
 
     @Override
@@ -233,7 +233,7 @@ public abstract class AbstractMutableSortedBag<T>
     @Override
     public <V> MutableList<V> collectWithIndex(ObjectIntToObjectFunction<? super T, ? extends V> function)
     {
-        return this.collectWithIndex(function, Lists.mutable.withInitialCapacity(this.size()));
+        return this.collectWithIndex(function, FastList.newList(this.size()));
     }
 
     /**
@@ -275,49 +275,49 @@ public abstract class AbstractMutableSortedBag<T>
     @Override
     public MutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction)
     {
-        return this.collectBoolean(booleanFunction, BooleanLists.mutable.empty());
+        return this.collectBoolean(booleanFunction, new BooleanArrayList());
     }
 
     @Override
     public MutableByteList collectByte(ByteFunction<? super T> byteFunction)
     {
-        return this.collectByte(byteFunction, ByteLists.mutable.empty());
+        return this.collectByte(byteFunction, new ByteArrayList());
     }
 
     @Override
     public MutableCharList collectChar(CharFunction<? super T> charFunction)
     {
-        return this.collectChar(charFunction, CharLists.mutable.empty());
+        return this.collectChar(charFunction, new CharArrayList());
     }
 
     @Override
     public MutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction)
     {
-        return this.collectDouble(doubleFunction, DoubleLists.mutable.empty());
+        return this.collectDouble(doubleFunction, new DoubleArrayList());
     }
 
     @Override
     public MutableFloatList collectFloat(FloatFunction<? super T> floatFunction)
     {
-        return this.collectFloat(floatFunction, FloatLists.mutable.empty());
+        return this.collectFloat(floatFunction, new FloatArrayList());
     }
 
     @Override
     public MutableIntList collectInt(IntFunction<? super T> intFunction)
     {
-        return this.collectInt(intFunction, IntLists.mutable.empty());
+        return this.collectInt(intFunction, new IntArrayList());
     }
 
     @Override
     public MutableLongList collectLong(LongFunction<? super T> longFunction)
     {
-        return this.collectLong(longFunction, LongLists.mutable.empty());
+        return this.collectLong(longFunction, new LongArrayList());
     }
 
     @Override
     public MutableShortList collectShort(ShortFunction<? super T> shortFunction)
     {
-        return this.collectShort(shortFunction, ShortLists.mutable.empty());
+        return this.collectShort(shortFunction, new ShortArrayList());
     }
 
     @Override
@@ -326,7 +326,7 @@ public abstract class AbstractMutableSortedBag<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            MutableList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
+            FastList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
             return this.zip(that, target);
         }
         return this.zip(that, FastList.newList());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,21 +10,21 @@
 
 package org.eclipse.collections.impl.multimap.bag;
 
-import org.eclipse.collections.api.bag.ImmutableBag;
-import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.multimap.bag.ImmutableBagMultimap;
 import org.eclipse.collections.api.multimap.bag.MutableBagMultimap;
+import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.multimap.AbstractImmutableMultimapTestCase;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableBagMultimapTest extends AbstractImmutableMultimapTestCase
 {
@@ -49,33 +49,14 @@ public class ImmutableBagMultimapTest extends AbstractImmutableMultimapTestCase
     @Test
     public void forEachKeyMultiValue()
     {
-        MutableBag<Pair<String, Iterable<Integer>>> collection = Bags.mutable.empty();
+        MutableSet<Pair<String, Iterable<Integer>>> collection = UnifiedSet.newSet();
         HashBagMultimap<String, Integer> multimap = HashBagMultimap.newMultimap();
         multimap.put("Two", 2);
         multimap.put("Two", 1);
         multimap.put("Three", 3);
         multimap.put("Three", 3);
         multimap.toImmutable().forEachKeyMultiValues((key, values) -> collection.add(Tuples.pair(key, values)));
-        MutableBag<Pair<String, MutableBag<Integer>>> expected = Bags.mutable.with(
-                Tuples.pair("Two", Bags.mutable.with(2, 1)),
-                Tuples.pair("Three", Bags.mutable.with(3, 3)));
-        assertEquals(expected, collection);
-    }
-
-    @Test
-    public void forEachKeyImmutableBag()
-    {
-        MutableBag<Pair<String, ImmutableBag<Integer>>> collection = Bags.mutable.empty();
-        HashBagMultimap<String, Integer> multimap = HashBagMultimap.newMultimap();
-        multimap.put("Two", 2);
-        multimap.put("Two", 1);
-        multimap.put("Three", 3);
-        multimap.put("Three", 3);
-        multimap.toImmutable().forEachKeyImmutableBag((key, values) -> collection.add(Tuples.pair(key, values)));
-        ImmutableBag<Pair<String, ImmutableBag<Integer>>> expected = Bags.immutable.with(
-                Tuples.pair("Two", Bags.immutable.with(2, 1)),
-                Tuples.pair("Three", Bags.immutable.with(3, 3)));
-        assertEquals(expected, collection);
+        Assert.assertEquals(UnifiedSet.newSetWith(Tuples.pair("Two", HashBag.newBagWith(2, 1)), Tuples.pair("Three", HashBag.newBagWith(3, 3))), collection);
     }
 
     @Override
@@ -88,8 +69,8 @@ public class ImmutableBagMultimapTest extends AbstractImmutableMultimapTestCase
                 .newWith("Less than 3", 2)
                 .newWith("Less than 3", 2);
         ImmutableBagMultimap<Integer, String> flipped = multimap.flip();
-        assertEquals(Bags.immutable.with("Less than 3", "Less than 3"), flipped.get(2));
-        assertEquals(Bags.immutable.with("Less than 2", "Less than 3"), flipped.get(1));
+        Assert.assertEquals(Bags.immutable.with("Less than 3", "Less than 3"), flipped.get(2));
+        Assert.assertEquals(Bags.immutable.with("Less than 2", "Less than 3"), flipped.get(1));
     }
 
     @Override

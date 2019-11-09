@@ -12,9 +12,9 @@ package org.eclipse.collections.impl.jmh.set.sorted;
 
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
-import org.eclipse.collections.impl.factory.SortedSets;
 import org.eclipse.collections.impl.list.Interval;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;

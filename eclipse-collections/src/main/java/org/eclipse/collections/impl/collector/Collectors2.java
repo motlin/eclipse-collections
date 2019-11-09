@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -58,11 +58,8 @@ import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.factory.SortedBags;
-import org.eclipse.collections.api.factory.SortedMaps;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.factory.Stacks;
-import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
@@ -70,8 +67,6 @@ import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
-import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
-import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.multimap.ImmutableMultimap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.multimap.bag.ImmutableBagMultimap;
@@ -93,6 +88,8 @@ import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.factory.Multimaps;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectDoubleHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectLongHashMap;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -113,102 +110,7 @@ import org.eclipse.collections.impl.utility.Iterate;
 public final class Collectors2
 {
     private static final Collector.Characteristics[] EMPTY_CHARACTERISTICS = {};
-
     private static final Collector<?, ?, String> DEFAULT_MAKE_STRING = Collectors2.makeString(", ");
-
-    private static final Collector<?, ?, ?> DEFAULT_IMMUTABLE_LIST_COLLECTOR = Collector.of(
-            Lists.mutable::empty,
-            MutableList::add,
-            MutableList::withAll,
-            MutableList::toImmutable,
-            EMPTY_CHARACTERISTICS);
-
-    private static final Collector<?, ?, ?> DEFAULT_MUTABLE_LIST_COLLECTOR = Collector.of(
-            Lists.mutable::empty,
-            MutableList::add,
-            MutableList::withAll,
-            EMPTY_CHARACTERISTICS);
-
-    private static final Collector<?, ?, ?> DEFAULT_MUTABLE_SORTED_LIST_COLLECTOR = Collector.of(
-            Lists.mutable::empty,
-            MutableList::add,
-            MutableList::withAll,
-            MutableList::sortThis,
-            EMPTY_CHARACTERISTICS);
-
-    private static final Collector<?, ?, ?> DEFAULT_IMMUTABLE_SORTED_LIST_COLLECTOR = Collector.of(
-            Lists.mutable::empty,
-            MutableList::add,
-            MutableList::withAll,
-            list -> list.sortThis().toImmutable(),
-            EMPTY_CHARACTERISTICS);
-
-
-    private static final Collector<?, ?, ?> DEFAULT_MUTABLE_SET_COLLECTOR = Collector.of(
-            Sets.mutable::empty,
-            MutableSet::add,
-            MutableSet::withAll,
-            Collector.Characteristics.UNORDERED);
-
-    private static final Collector<?, ?, ?> DEFAULT_IMMUTABLE_SET_COLLECTOR = Collector.of(
-            Sets.mutable::empty,
-            MutableSet::add,
-            MutableSet::withAll,
-            MutableSet::toImmutable,
-            Collector.Characteristics.UNORDERED);
-
-    private static final Collector<?, ?, ?> DEFAULT_MUTABLE_SORTED_SET_COLLECTOR = Collector.of(
-            SortedSets.mutable::empty,
-            MutableSortedSet::add,
-            MutableSortedSet::withAll,
-            Collector.Characteristics.UNORDERED);
-
-    private static final Collector<?, ?, ?> DEFAULT_IMMUTABLE_SORTED_SET_COLLECTOR = Collector.of(
-            SortedSets.mutable::empty,
-            MutableSortedSet::add,
-            MutableSortedSet::withAll,
-            MutableSortedSet::toImmutable,
-            Collector.Characteristics.UNORDERED);
-
-    private static final Collector<?, ?, ?> DEFAULT_IMMUTABLE_BAG_COLLECTOR = Collector.of(
-            Bags.mutable::empty,
-            MutableBag::add,
-            MutableBag::withAll,
-            MutableBag::toImmutable,
-            Collector.Characteristics.UNORDERED);
-
-    private static final Collector<?, ?, ?> DEFAULT_MUTABLE_BAG_COLLECTOR = Collector.of(
-            Bags.mutable::empty,
-            MutableBag::add,
-            MutableBag::withAll,
-            Collector.Characteristics.UNORDERED);
-
-    private static final Collector<?, ?, ?> DEFAULT_MUTABLE_SORTED_BAG_COLLECTOR = Collector.of(
-            SortedBags.mutable::empty,
-            MutableSortedBag::add,
-            MutableSortedBag::withAll,
-            Collector.Characteristics.UNORDERED);
-
-    private static final Collector<?, ?, ?> DEFAULT_IMMUTABLE_SORTED_BAG_COLLECTOR = Collector.of(
-            SortedBags.mutable::empty,
-            MutableSortedBag::add,
-            MutableSortedBag::withAll,
-            MutableSortedBag::toImmutable,
-            Collector.Characteristics.UNORDERED);
-
-    private static final Collector<?, ?, ?> DEFAULT_IMMUTABLE_STACK_COLLECTOR = Collector.of(
-            Lists.mutable::empty,
-            MutableList::add,
-            MutableList::withAll,
-            Stacks.immutable::ofAll,
-            EMPTY_CHARACTERISTICS);
-
-    private static final Collector<?, ?, ?> DEFAULT_MUTABLE_STACK_COLLECTOR = Collector.of(
-            Lists.mutable::empty,
-            MutableList::add,
-            MutableList::withAll,
-            Stacks.mutable::ofAll,
-            EMPTY_CHARACTERISTICS);
 
     private Collectors2()
     {
@@ -230,7 +132,6 @@ public final class Collectors2
      * </p>
      * {@code System.out.println(Interval.oneTo(5).makeString());}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, String> makeString()
     {
         return (Collector<T, ?, String>) DEFAULT_MAKE_STRING;
@@ -292,10 +193,13 @@ public final class Collectors2
      * </p>
      * {@code MutableList<Integer> numbers = Interval.oneTo(5).toList();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, MutableList<T>> toList()
     {
-        return (Collector<T, ?, MutableList<T>>) DEFAULT_MUTABLE_LIST_COLLECTOR;
+        return Collector.of(
+                Lists.mutable::empty,
+                MutableList::add,
+                MutableList::withAll,
+                EMPTY_CHARACTERISTICS);
     }
 
     /**
@@ -308,10 +212,14 @@ public final class Collectors2
      * </p>
      * {@code ImmutableList<Integer> numbers = Interval.oneTo(5).toList().toImmutable();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, ImmutableList<T>> toImmutableList()
     {
-        return (Collector<T, ?, ImmutableList<T>>) DEFAULT_IMMUTABLE_LIST_COLLECTOR;
+        return Collector.<T, MutableList<T>, ImmutableList<T>>of(
+                Lists.mutable::empty,
+                MutableList::add,
+                MutableList::withAll,
+                MutableList::toImmutable,
+                EMPTY_CHARACTERISTICS);
     }
 
     /**
@@ -324,10 +232,13 @@ public final class Collectors2
      * </p>
      * {@code MutableSet<Integer> set = Interval.oneTo(5).toSet();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, MutableSet<T>> toSet()
     {
-        return (Collector<T, ?, MutableSet<T>>) DEFAULT_MUTABLE_SET_COLLECTOR;
+        return Collector.of(
+                Sets.mutable::empty,
+                MutableSet::add,
+                MutableSet::withAll,
+                Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -340,10 +251,14 @@ public final class Collectors2
      * </p>
      * {@code ImmutableSet<Integer> set = Interval.oneTo(5).toSet().toImmutable();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, ImmutableSet<T>> toImmutableSet()
     {
-        return (Collector<T, ?, ImmutableSet<T>>) DEFAULT_IMMUTABLE_SET_COLLECTOR;
+        return Collector.<T, MutableSet<T>, ImmutableSet<T>>of(
+                Sets.mutable::empty,
+                MutableSet::add,
+                MutableSet::withAll,
+                MutableSet::toImmutable,
+                Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -356,10 +271,13 @@ public final class Collectors2
      * </p>
      * {@code MutableSortedSet<Integer> set = Interval.oneTo(5).toSortedSet();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, MutableSortedSet<T>> toSortedSet()
     {
-        return (Collector<T, ?, MutableSortedSet<T>>) DEFAULT_MUTABLE_SORTED_SET_COLLECTOR;
+        return Collector.of(
+                SortedSets.mutable::empty,
+                MutableSortedSet::add,
+                MutableSortedSet::withAll,
+                Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -372,10 +290,14 @@ public final class Collectors2
      * </p>
      * {@code ImmutableSortedSet<Integer> set = Interval.oneTo(5).toSortedSet().toImmutable();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, ImmutableSortedSet<T>> toImmutableSortedSet()
     {
-        return (Collector<T, ?, ImmutableSortedSet<T>>) DEFAULT_IMMUTABLE_SORTED_SET_COLLECTOR;
+        return Collector.<T, MutableSortedSet<T>, ImmutableSortedSet<T>>of(
+                SortedSets.mutable::empty,
+                MutableSortedSet::add,
+                MutableSortedSet::withAll,
+                MutableSortedSet::toImmutable,
+                Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -433,21 +355,6 @@ public final class Collectors2
     }
 
     /**
-     * <p>Returns the elements as a ImmutableSortedSet using the specified function to compare each element.</p>
-     * <p>Examples:</p>
-     * {@code ImmutableSortedSet<Integer> set1 = Interval.oneTo(5).stream().collect(Collectors2.toImmutableSortedSetBy(Object::toString));}<br>
-     * {@code ImmutableSortedSet<Integer> set2 = Interval.oneTo(5).reduceInPlace(Collectors2.toImmutableSortedSetBy(Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toImmutableSortedSetBy(Function)}.
-     * </p>
-     * {@code ImmutableSortedSet<Integer> set = Interval.oneTo(5).toImmutableSortedSetBy(Object::toString);}
-     */
-    public static <T, V extends Comparable<? super V>> Collector<T, ?, ImmutableSortedSet<T>> toImmutableSortedSetBy(Function<? super T, ? extends V> function)
-    {
-        return Collectors2.toImmutableSortedSet(Comparators.byFunction(function));
-    }
-
-    /**
      * <p>Returns the elements as a MutableBag.</p>
      * <p>Examples:</p>
      * {@code MutableBag<Integer> bag1 = Interval.oneTo(5).stream().collect(Collectors2.toBag());}<br>
@@ -457,10 +364,13 @@ public final class Collectors2
      * </p>
      * {@code MutableBag<Integer> bag = Interval.oneTo(5).toBag();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, MutableBag<T>> toBag()
     {
-        return (Collector<T, ?, MutableBag<T>>) Collectors2.DEFAULT_MUTABLE_BAG_COLLECTOR;
+        return Collector.of(
+                Bags.mutable::empty,
+                MutableBag::add,
+                MutableBag::withAll,
+                Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -473,10 +383,14 @@ public final class Collectors2
      * </p>
      * {@code ImmutableBag<Integer> bag = Interval.oneTo(5).toBag().toImmutable();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, ImmutableBag<T>> toImmutableBag()
     {
-        return (Collector<T, ?, ImmutableBag<T>>) DEFAULT_IMMUTABLE_BAG_COLLECTOR;
+        return Collector.<T, MutableBag<T>, ImmutableBag<T>>of(
+                Bags.mutable::empty,
+                MutableBag::add,
+                MutableBag::withAll,
+                MutableBag::toImmutable,
+                Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -489,10 +403,14 @@ public final class Collectors2
      * </p>
      * {@code MutableList<Integer> list = Interval.oneTo(5).toSortedList();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, MutableList<T>> toSortedList()
     {
-        return (Collector<T, ?, MutableList<T>>) DEFAULT_MUTABLE_SORTED_LIST_COLLECTOR;
+        return Collector.<T, MutableList<T>, MutableList<T>>of(
+                Lists.mutable::empty,
+                MutableList::add,
+                MutableList::withAll,
+                MutableList::sortThis,
+                EMPTY_CHARACTERISTICS);
     }
 
     /**
@@ -505,10 +423,14 @@ public final class Collectors2
      * </p>
      * {@code ImmutableList<Integer> list = Interval.oneTo(5).toSortedList().toImmutable();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, ImmutableList<T>> toImmutableSortedList()
     {
-        return (Collector<T, ?, ImmutableList<T>>) DEFAULT_IMMUTABLE_SORTED_LIST_COLLECTOR;
+        return Collector.<T, MutableList<T>, ImmutableList<T>>of(
+                Lists.mutable::empty,
+                MutableList::add,
+                MutableList::withAll,
+                list -> list.sortThis().toImmutable(),
+                EMPTY_CHARACTERISTICS);
     }
 
     /**
@@ -567,21 +489,6 @@ public final class Collectors2
     }
 
     /**
-     * <p>Returns the elements as a ImmutableList that has been sorted using the specified comparator.</p>
-     * <p>Examples:</p>
-     * {@code ImmutableList<Integer> list1 = Interval.oneTo(5).stream().collect(Collectors2.toImmutableSortedListBy(Object::toString));}<br>
-     * {@code ImmutableList<Integer> list2 = Interval.oneTo(5).reduceInPlace(Collectors2.toImmutableSortedListBy(Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toImmutableSortedListBy(Function)}}
-     * </p>
-     * {@code ImmutableList<Integer> list = Interval.oneTo(5).toImmutableSortedListBy(Object::toString);}
-     */
-    public static <T, V extends Comparable<? super V>> Collector<T, ?, ImmutableList<T>> toImmutableSortedListBy(Function<? super T, ? extends V> function)
-    {
-        return Collectors2.toImmutableSortedList(Comparators.byFunction(function));
-    }
-
-    /**
      * <p>Returns the elements as a MutableSortedBag.</p>
      * <p>Examples:</p>
      * {@code MutableSortedBag<Integer> bag1 = Interval.oneTo(5).stream().collect(Collectors2.toSortedBag());}<br>
@@ -591,10 +498,13 @@ public final class Collectors2
      * </p>
      * {@code MutableSortedBag<Integer> bag = Interval.oneTo(5).toSortedBag();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, MutableSortedBag<T>> toSortedBag()
     {
-        return (Collector<T, ?, MutableSortedBag<T>>) DEFAULT_MUTABLE_SORTED_BAG_COLLECTOR;
+        return Collector.of(
+                SortedBags.mutable::empty,
+                MutableSortedBag::add,
+                MutableSortedBag::withAll,
+                Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -607,10 +517,14 @@ public final class Collectors2
      * </p>
      * {@code ImmutableSortedBag<Integer> bag = Interval.oneTo(5).toSortedBag().toImmutable();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, ImmutableSortedBag<T>> toImmutableSortedBag()
     {
-        return (Collector<T, ?, ImmutableSortedBag<T>>) DEFAULT_IMMUTABLE_SORTED_BAG_COLLECTOR;
+        return Collector.<T, MutableSortedBag<T>, ImmutableSortedBag<T>>of(
+                SortedBags.mutable::empty,
+                MutableSortedBag::add,
+                MutableSortedBag::withAll,
+                MutableSortedBag::toImmutable,
+                Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -668,21 +582,6 @@ public final class Collectors2
     }
 
     /**
-     * <p>Returns the elements as a ImmutableSortedBag using the specified function.</p>
-     * <p>Examples:</p>
-     * {@code ImmutableSortedBag<Integer> bag1 = Interval.oneTo(5).stream().collect(Collectors2.toImmutableSortedBagBy(Object::toString));}<br>
-     * {@code ImmutableSortedBag<Integer> bag2 = Interval.oneTo(5).reduceInPlace(Collectors2.toImmutableSortedBagBy(Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toImmutableSortedBagBy(Function)}}
-     * </p>
-     * {@code ImmutableSortedBag<Integer> bag = Interval.oneTo(5).toImmutableSortedBagBy(Object::toString);}
-     */
-    public static <T, V extends Comparable<? super V>> Collector<T, ?, ImmutableSortedBag<T>> toImmutableSortedBagBy(Function<? super T, ? extends V> function)
-    {
-        return Collectors2.toImmutableSortedBag(Comparators.byFunction(function));
-    }
-
-    /**
      * <p>Returns the elements as a MutableStack.</p>
      * <p>Examples:</p>
      * {@code MutableStack<Integer> stack1 = Interval.oneTo(5).stream().collect(Collectors2.toStack());}<br>
@@ -692,10 +591,14 @@ public final class Collectors2
      * </p>
      * {@code MutableStack<Integer> stack = Interval.oneTo(5).toList().toStack();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, MutableStack<T>> toStack()
     {
-        return (Collector<T, ?, MutableStack<T>>) DEFAULT_MUTABLE_STACK_COLLECTOR;
+        return Collector.<T, MutableList<T>, MutableStack<T>>of(
+                Lists.mutable::empty,
+                MutableList::add,
+                MutableList::withAll,
+                Stacks.mutable::ofAll,
+                EMPTY_CHARACTERISTICS);
     }
 
     /**
@@ -708,10 +611,14 @@ public final class Collectors2
      * </p>
      * {@code ImmutableStack<Integer> stack = Interval.oneTo(5).toList().toStack().toImmutable();}
      */
-    @SuppressWarnings("unchecked")
     public static <T> Collector<T, ?, ImmutableStack<T>> toImmutableStack()
     {
-        return (Collector<T, ?, ImmutableStack<T>>) DEFAULT_IMMUTABLE_STACK_COLLECTOR;
+        return Collector.<T, MutableList<T>, ImmutableStack<T>>of(
+                Lists.mutable::empty,
+                MutableList::add,
+                MutableList::withAll,
+                Stacks.immutable::ofAll,
+                EMPTY_CHARACTERISTICS);
     }
 
     /**
@@ -789,87 +696,6 @@ public final class Collectors2
     }
 
     /**
-     * <p>Returns the elements as a MutableSortedMap that has been sorted after applying the keyFunction and valueFunction to each element.</p>
-     * <p>Examples:</p>
-     * {@code MutableSortedMap<Integer, String> map1 =
-     * Interval.oneTo(5).stream().collect(Collectors2.toSortedMap(Functions.identity(), Object::toString));}<br>
-     * {@code MutableSortedMap<Integer, String> map2 =
-     * Interval.oneTo(5).reduceInPlace(Collectors2.toSortedMap(Functions.identity(), Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toSortedMap(Function, Function)}}
-     * </p>
-     * {@code MutableSortedMap<Integer, String> map = Interval.oneTo(5).toSortedMap(Functions.identity(), Object::toString);}
-     *
-     * @since 11.0
-     */
-    public static <T, K, V> Collector<T, ?, MutableSortedMap<K, V>> toSortedMap(
-            Function<? super T, ? extends K> keyFunction,
-            Function<? super T, ? extends V> valueFunction)
-    {
-        return Collector.of(
-                SortedMaps.mutable::empty,
-                (map, each) -> map.put(keyFunction.valueOf(each), valueFunction.valueOf(each)),
-                (r1, r2) ->
-                {
-                    r1.putAll(r2);
-                    return r1;
-                },
-                EMPTY_CHARACTERISTICS);
-    }
-
-    /**
-     * <p>Returns the elements as a MutableSortedMap that has been sorted using the specified comparator after applying the keyFunction and valueFunction to each element.</p>
-     * <p>Examples:</p>
-     * {@code MutableSortedMap<Integer, String> map1 =
-     * Interval.oneTo(5).stream().collect(Collectors2.toSortedMap(Comparators.naturalOrder(), Functions.identity(), Object::toString));}<br>
-     * {@code MutableSortedMap<Integer, String> map2 =
-     * Interval.oneTo(5).reduceInPlace(Collectors2.toSortedMap(Comparators.naturalOrder(), Functions.identity(), Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toSortedMap(Comparator, Function, Function)} (Comparator)}}
-     * </p>
-     * {@code MutableSortedMap<Integer, String> map = Interval.oneTo(5).toSortedMap(Comparators.naturalOrder(), Functions.identity(), Object::toString);}
-     *
-     * @since 11.0
-     */
-    public static <T, K, V> Collector<T, ?, MutableSortedMap<K, V>> toSortedMap(
-            Comparator<? super K> comparator,
-            Function<? super T, ? extends K> keyFunction,
-            Function<? super T, ? extends V> valueFunction)
-    {
-        return Collector.of(
-                () -> SortedMaps.mutable.with(comparator),
-                (map, each) -> map.put(keyFunction.valueOf(each), valueFunction.valueOf(each)),
-                (r1, r2) ->
-                {
-                    r1.putAll(r2);
-                    return r1;
-                },
-                Collector.Characteristics.UNORDERED);
-    }
-
-    /**
-     * <p>Returns the elements as a MutableSortedMap that has been sorted using the specified comparator after applying the keyFunction and valueFunction to each element.</p>
-     * <p>Examples:</p>
-     * {@code MutableSortedMap<Integer, String> map1 =
-     * Interval.oneTo(5).stream().collect(Collectors2.toSortedMap(Object::toString, Functions.identity(), Object::toString));}<br>
-     * {@code MutableSortedMap<Integer, String> map2 =
-     * Interval.oneTo(5).reduceInPlace(Collectors2.toSortedMap(Object::toString, Functions.identity(), Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toSortedMapBy(Function, Function, Function)}
-     * </p>
-     * {@code MutableSortedMap<Integer, String> map = Interval.oneTo(5).toSortedMapBy(Object::toString, Functions.identity(), Object::toString);}
-     *
-     * @since 11.0
-     */
-    public static <T, KK extends Comparable<? super KK>, K, V> Collector<T, ?, MutableSortedMap<K, V>> toSortedMapBy(
-            Function<? super K, KK> sortBy,
-            Function<? super T, ? extends K> keyFunction,
-            Function<? super T, ? extends V> valueFunction)
-    {
-        return Collectors2.toSortedMap(Comparators.byFunction(sortBy), keyFunction, valueFunction);
-    }
-
-    /**
      * <p>Returns the elements as an ImmutableMap applying the keyFunction and valueFunction to each element.</p>
      * <p>Examples:</p>
      * {@code ImmutableMap<Integer, String> map1 =
@@ -898,90 +724,7 @@ public final class Collectors2
     }
 
     /**
-     * <p>Returns the elements as a ImmutableSortedMap that has been sorted after applying the keyFunction and valueFunction to each element.</p>
-     * <p>Examples:</p>
-     * {@code ImmutableSortedMap<Integer, String> map1 =
-     * Interval.oneTo(5).stream().collect(Collectors2.toImmutableSortedMap(Functions.identity(), Object::toString));}<br>
-     * {@code ImmutableSortedMap<Integer, String> map2 =
-     * Interval.oneTo(5).reduceInPlace(Collectors2.toImmutableSortedMap(Functions.identity(), Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toSortedMap(Function, Function)}} followed by: @{@link MutableSortedMap#toImmutable()}.
-     * </p>
-     * {@code ImmutableSortedMap<Integer, String> map = Interval.oneTo(5).toSortedMap(Functions.identity(), Object::toString).toImmutable();}
-     *
-     * @since 11.0
-     */
-    public static <T, K, V> Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-            Function<? super T, ? extends K> keyFunction,
-            Function<? super T, ? extends V> valueFunction)
-    {
-        return Collector.<T, MutableSortedMap<K, V>, ImmutableSortedMap<K, V>>of(
-                SortedMaps.mutable::empty,
-                (map, each) -> map.put(keyFunction.valueOf(each), valueFunction.valueOf(each)),
-                (r1, r2) ->
-                {
-                    r1.putAll(r2);
-                    return r1;
-                },
-                MutableSortedMap::toImmutable,
-                EMPTY_CHARACTERISTICS);
-    }
-
-    /**
-     * <p>Returns the elements as a ImmutableSortedMap that has been sorted using the specified comparator after applying the keyFunction and valueFunction to each element.</p>
-     * <p>Examples:</p>
-     * {@code ImmutableSortedMap<Integer, String> map1 =
-     * Interval.oneTo(5).stream().collect(Collectors2.toImmutableSortedMap(Comparators.naturalOrder(), Functions.identity(), Object::toString));}<br>
-     * {@code ImmutableSortedMap<Integer, String> map2 =
-     * Interval.oneTo(5).reduceInPlace(Collectors2.toImmutableSortedMap(Comparators.naturalOrder(), Functions.identity(), Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toSortedMap(Comparator, Function, Function)}} followed by: @{@link MutableSortedMap#toImmutable()}.
-     * </p>
-     * {@code ImmutableSortedMap<Integer, String> map = Interval.oneTo(5).toSortedMap(Comparators.naturalOrder(), Functions.identity(), Object::toString).toImmutable();}
-     *
-     * @since 11.0
-     */
-    public static <T, K, V> Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-            Comparator<? super K> comparator,
-            Function<? super T, ? extends K> keyFunction,
-            Function<? super T, ? extends V> valueFunction)
-    {
-        return Collector.<T, MutableSortedMap<K, V>, ImmutableSortedMap<K, V>>of(
-                () -> SortedMaps.mutable.with(comparator),
-                (map, each) -> map.put(keyFunction.valueOf(each), valueFunction.valueOf(each)),
-                (r1, r2) ->
-                {
-                    r1.putAll(r2);
-                    return r1;
-                },
-                MutableSortedMap::toImmutable,
-                EMPTY_CHARACTERISTICS);
-    }
-
-    /**
-     * <p>Returns the elements as a ImmutableSortedMap that has been sorted using the specified comparator.</p>
-     * <p>Examples:</p>
-     * {@code ImmutableSortedMap<Integer, String> map1 =
-     * Interval.oneTo(5).stream().collect(Collectors2.toImmutableSortedMap(Object::toString, Functions.identity(), Object::toString));}<br>
-     * {@code ImmutableSortedMap<Integer, String> map2 =
-     * Interval.oneTo(5).reduceInPlace(Collectors2.toImmutableSortedMap(Object::toString, Functions.identity(), Object::toString));}
-     * <p>
-     * Equivalent to using @{@link RichIterable#toSortedMapBy(Function, Function, Function)} followed by: @{@link MutableSortedMap#toImmutable()}.
-     * </p>
-     * {@code ImmutableSortedMap<Integer, String> map = Interval.oneTo(5).toSortedMap(Object::toString, Functions.identity(), Object::toString).toImmutable();}
-     *
-     * @since 11.0
-     */
-    public static <T, KK extends Comparable<? super KK>, K, V> Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMapBy(
-            Function<? super K, KK> sortBy,
-            Function<? super T, ? extends K> keyFunction,
-            Function<? super T, ? extends V> valueFunction)
-    {
-        return Collectors2.toImmutableSortedMap(Comparators.byFunction(sortBy), keyFunction, valueFunction);
-    }
-
-    /**
-     * Returns the counts of all the values returned by applying the specified function to each
+     * Returns the counts of all of the values returned by applying the specified function to each
      * item of the Stream.
      *
      * @since 9.1
@@ -1166,7 +909,10 @@ public final class Collectors2
     {
         return Collector.of(
                 supplier,
-                (map, each) -> map.updateValueWith(groupBy.valueOf(each), zeroValueFactory, aggregator, each),
+                (map, each) ->
+                {
+                    map.updateValueWith(groupBy.valueOf(each), zeroValueFactory, aggregator, each);
+                },
                 (r1, r2) ->
                 {
                     r2.forEachKeyValue((key, value) -> r1.updateValueWith(key, zeroValueFactory, aggregator, value));
@@ -1461,7 +1207,7 @@ public final class Collectors2
         Function2<MutableObjectLongMap<V>, T, MutableObjectLongMap<V>> accumulator =
                 PrimitiveFunctions.sumByIntFunction(groupBy, function);
         return Collector.of(
-                ObjectLongMaps.mutable::empty,
+                ObjectLongHashMap::newMap,
                 accumulator::value,
                 (map1, map2) ->
                 {
@@ -1491,7 +1237,7 @@ public final class Collectors2
         Function2<MutableObjectLongMap<V>, T, MutableObjectLongMap<V>> accumulator =
                 PrimitiveFunctions.sumByLongFunction(groupBy, function);
         return Collector.of(
-                ObjectLongMaps.mutable::empty,
+                ObjectLongHashMap::newMap,
                 accumulator::value,
                 (map1, map2) ->
                 {
@@ -1521,7 +1267,7 @@ public final class Collectors2
         Function2<MutableObjectDoubleMap<V>, T, MutableObjectDoubleMap<V>> accumulator =
                 PrimitiveFunctions.sumByFloatFunction(groupBy, function);
         return Collector.of(
-                ObjectDoubleMaps.mutable::empty,
+                ObjectDoubleHashMap::newMap,
                 accumulator::value,
                 (map1, map2) ->
                 {
@@ -1551,7 +1297,7 @@ public final class Collectors2
         Function2<MutableObjectDoubleMap<V>, T, MutableObjectDoubleMap<V>> accumulator =
                 PrimitiveFunctions.sumByDoubleFunction(groupBy, function);
         return Collector.of(
-                ObjectDoubleMaps.mutable::empty,
+                ObjectDoubleHashMap::newMap,
                 accumulator::value,
                 (map1, map2) ->
                 {
@@ -1646,13 +1392,13 @@ public final class Collectors2
      * commonly called filter. The new collection is created as the result of evaluating the provided Supplier.</p>
      * <p>Examples:</p>
      * {@code MutableList<Integer> evens1 =
-     * Interval.oneTo(10).stream().collect(Collectors2.select(e -> e % 2 == 0, Lists.mutable::empty));}<br>
+     * Interval.oneTo(10).stream().collect(Collectors2.select(e ->  e % 2 == 0, Lists.mutable::empty));}<br>
      * {@code MutableList<Integer> evens2 =
-     * Interval.oneTo(10).reduceInPlace(Collectors2.select(e -> e % 2 == 0, Lists.mutable::empty));}<br>
+     * Interval.oneTo(10).reduceInPlace(Collectors2.select(e ->  e % 2 == 0, Lists.mutable::empty));}<br>
      * <p>
      * Equivalent to using @{@link RichIterable#select(Predicate, Collection)}
      * </p>
-     * {@code MutableList<Integer> evens = Interval.oneTo(10).select(e -> e % 2 == 0, Lists.mutable.empty());}
+     * {@code MutableList<Integer> evens = Interval.oneTo(10).select(e ->  e % 2 == 0, Lists.mutable.empty());}
      */
     public static <T, R extends Collection<T>> Collector<T, ?, R> select(Predicate<? super T> predicate, Supplier<R> supplier)
     {
@@ -1674,13 +1420,13 @@ public final class Collectors2
      * The new collection is created as the result of evaluating the provided Supplier.</p>
      * <p>Examples:</p>
      * {@code MutableList<Integer> evens1 =
-     * Interval.oneTo(10).stream().collect(Collectors2.selectWith((e, p) -> e % p == 0, 2, Lists.mutable::empty));}<br>
+     * Interval.oneTo(10).stream().collect(Collectors2.selectWith((e, p) ->  e % p == 0, 2, Lists.mutable::empty));}<br>
      * {@code MutableList<Integer> evens2 =
-     * Interval.oneTo(10).reduceInPlace(Collectors2.selectWith((e, p) -> e % p == 0, 2, Lists.mutable::empty));}<br>
+     * Interval.oneTo(10).reduceInPlace(Collectors2.selectWith((e, p) ->  e % p == 0, 2, Lists.mutable::empty));}<br>
      * <p>
      * Equivalent to using @{@link RichIterable#selectWith(Predicate2, Object, Collection)}
      * </p>
-     * {@code MutableList<Integer> evens = Interval.oneTo(10).selectWith((e, p) -> e % p == 0, 2, Lists.mutable.empty());}
+     * {@code MutableList<Integer> evens = Interval.oneTo(10).selectWith((e, p) ->  e % p == 0, 2, Lists.mutable.empty());}
      */
     public static <T, P, R extends Collection<T>> Collector<T, ?, R> selectWith(
             Predicate2<? super T, ? super P> predicate,
@@ -1705,13 +1451,13 @@ public final class Collectors2
      * commonly called filterNot. The new collection is created as the result of evaluating the provided Supplier.</p>
      * <p>Examples:</p>
      * {@code MutableList<Integer> odds1 =
-     * Interval.oneTo(10).stream().collect(Collectors2.reject(e -> e % 2 == 0, Lists.mutable::empty));}<br>
+     * Interval.oneTo(10).stream().collect(Collectors2.reject(e ->  e % 2 == 0, Lists.mutable::empty));}<br>
      * {@code MutableList<Integer> odds2 =
-     * Interval.oneTo(10).reduceInPlace(Collectors2.reject(e -> e % 2 == 0, Lists.mutable::empty));}<br>
+     * Interval.oneTo(10).reduceInPlace(Collectors2.reject(e ->  e % 2 == 0, Lists.mutable::empty));}<br>
      * <p>
      * Equivalent to using @{@link RichIterable#reject(Predicate, Collection)}
      * </p>
-     * {@code MutableList<Integer> odds = Interval.oneTo(10).reject(e -> e % 2 == 0, Lists.mutable.empty());}
+     * {@code MutableList<Integer> odds = Interval.oneTo(10).reject(e ->  e % 2 == 0, Lists.mutable.empty());}
      */
     public static <T, R extends Collection<T>> Collector<T, ?, R> reject(Predicate<? super T> predicate, Supplier<R> supplier)
     {
@@ -1733,13 +1479,13 @@ public final class Collectors2
      * The new collection is created as the result of evaluating the provided Supplier.</p>
      * <p>Examples:</p>
      * {@code MutableList<Integer> odds1 =
-     * Interval.oneTo(10).stream().collect(Collectors2.rejectWith((e, p) -> e % p == 0, 2, Lists.mutable::empty));}<br>
+     * Interval.oneTo(10).stream().collect(Collectors2.rejectWith((e, p) ->  e % p == 0, 2, Lists.mutable::empty));}<br>
      * {@code MutableList<Integer> odds2 =
-     * Interval.oneTo(10).reduceInPlace(Collectors2.rejectWith((e, p) -> e % p == 0, 2, Lists.mutable::empty));}<br>
+     * Interval.oneTo(10).reduceInPlace(Collectors2.rejectWith((e, p) ->  e % p == 0, 2, Lists.mutable::empty));}<br>
      * <p>
      * Equivalent to using @{@link RichIterable#rejectWith(Predicate2, Object, Collection)}
      * </p>
-     * {@code MutableList<Integer> odds = Interval.oneTo(10).rejectWith((e, p) -> e % p == 0, 2, Lists.mutable.empty());}
+     * {@code MutableList<Integer> odds = Interval.oneTo(10).rejectWith((e, p) ->  e % p == 0, 2, Lists.mutable.empty());}
      */
     public static <T, P, R extends Collection<T>> Collector<T, ?, R> rejectWith(
             Predicate2<? super T, ? super P> predicate,
@@ -2187,3 +1933,4 @@ public final class Collectors2
         };
     }
 }
+

@@ -39,6 +39,8 @@ import org.eclipse.collections.api.block.procedure.primitive.<name2>Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.<name1><name2>Procedure;
 <if(!sameTwoPrimitives)>import org.eclipse.collections.api.block.procedure.primitive.<name1>Procedure;<endif>
 import org.eclipse.collections.api.collection.primitive.Mutable<name2>Collection;
+import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.iterator.<name2>Iterator;
 import org.eclipse.collections.api.list.primitive.Mutable<name2>List;
 import org.eclipse.collections.api.map.primitive.<name1><name2>Map;
@@ -49,8 +51,6 @@ import org.eclipse.collections.api.set.primitive.Mutable<name2>Set;
 import org.eclipse.collections.api.tuple.primitive.<name1><name2>Pair;
 import org.eclipse.collections.impl.bag.mutable.primitive.<name2>HashBag;
 import org.eclipse.collections.impl.collection.mutable.primitive.Unmodifiable<name2>Collection;
-import org.eclipse.collections.impl.factory.Bags;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.<name1><name2>Maps;
 <if(!primitive2.booleanPrimitive)><if(!sameTwoPrimitives)>import org.eclipse.collections.impl.factory.primitive.<name2><name1>Maps;<endif><endif>
 import org.eclipse.collections.impl.factory.primitive.<name1>Lists;

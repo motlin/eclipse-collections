@@ -34,19 +34,19 @@ import org.eclipse.collections.api.block.function.primitive.Object<name>ToObject
 import org.eclipse.collections.api.block.predicate.primitive.<name>Predicate;
 import org.eclipse.collections.api.block.procedure.primitive.<name>IntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.<name>Procedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.iterator.<name>Iterator;
+import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.Mutable<name>List;
+import org.eclipse.collections.api.set.primitive.Immutable<name>Set;
 import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
+import org.eclipse.collections.api.tuple.primitive.<name>IntPair;
 import org.eclipse.collections.impl.bag.mutable.primitive.<name>HashBag;
 import org.eclipse.collections.impl.block.procedure.checked.primitive.Checked<name>IntProcedure;
-import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.<name>Bags;
-import org.eclipse.collections.impl.iterator.Unmodifiable<name>Iterator;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.tuple.primitive.<name>IntPair;
-import org.eclipse.collections.api.set.primitive.Immutable<name>Set;
 import org.eclipse.collections.impl.factory.primitive.<name>Sets;
+import org.eclipse.collections.impl.iterator.Unmodifiable<name>Iterator;
 
 /**
  * Immutable<name>HashBag is the non-modifiable equivalent of {@link <name>HashBag}.

@@ -11,9 +11,9 @@
 package org.eclipse.collections.impl.bimap.immutable;
 
 import org.eclipse.collections.api.bimap.ImmutableBiMap;
+import org.eclipse.collections.api.factory.BiMaps;
 import org.eclipse.collections.api.multimap.set.ImmutableSetMultimap;
 import org.eclipse.collections.impl.IntegerWithCast;
-import org.eclipse.collections.impl.factory.BiMaps;
 import org.eclipse.collections.impl.map.MapIterableTestCase;
 import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.eclipse.collections.impl.tuple.Tuples;

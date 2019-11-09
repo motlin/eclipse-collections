@@ -11,11 +11,11 @@
 package org.eclipse.collections.impl.lazy.parallel.set.sorted;
 
 import org.eclipse.collections.api.block.function.Function;
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.set.ParallelUnsortedSetIterable;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.IntegerPredicates;
 import org.eclipse.collections.impl.block.function.NegativeIntervalFunction;
-import org.eclipse.collections.impl.factory.SortedSets;
 import org.eclipse.collections.impl.lazy.parallel.set.ParallelUnsortedSetIterableTestCase;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.junit.jupiter.api.Test;

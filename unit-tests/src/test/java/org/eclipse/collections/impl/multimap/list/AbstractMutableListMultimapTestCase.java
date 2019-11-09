@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2019 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,25 +11,21 @@
 package org.eclipse.collections.impl.multimap.list;
 
 import org.eclipse.collections.api.factory.Bags;
-import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.multimap.bag.MutableBagMultimap;
 import org.eclipse.collections.api.multimap.bag.UnsortedBagMultimap;
 import org.eclipse.collections.api.multimap.list.ListMultimap;
 import org.eclipse.collections.api.multimap.list.MutableListMultimap;
-import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.multimap.AbstractMutableMultimapTestCase;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
-import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Assert;
+import org.junit.Test;
 
 public abstract class AbstractMutableListMultimapTestCase extends AbstractMutableMultimapTestCase
 {
@@ -64,27 +60,14 @@ public abstract class AbstractMutableListMultimapTestCase extends AbstractMutabl
     @Override
     protected abstract <V> MutableList<V> createCollection(V... args);
 
-    @Test
-    public void forEachKeyMutableList()
-    {
-        MutableSet<Pair<Integer, MutableList<String>>> collection = UnifiedSet.newSet();
-        MutableListMultimap<Integer, String> multimap =
-                this.newMultimapWithKeysValues(2, "2", 2, "1", 3, "3", 3, "3");
-        multimap.forEachKeyMutableList((key, values) -> collection.add(Tuples.pair(key, values)));
-        MutableSet<Pair<Integer, MutableList<String>>> expected = Sets.mutable.with(
-                Tuples.pair(2, this.createCollection("2", "1")),
-                Tuples.pair(3, this.createCollection("3", "3")));
-        assertEquals(expected, collection);
-    }
-
     @Override
     @Test
     public void flip()
     {
         ListMultimap<String, Integer> multimap = this.newMultimapWithKeysValues("Less than 2", 1, "Less than 3", 1, "Less than 3", 2, "Less than 3", 2);
         UnsortedBagMultimap<Integer, String> flipped = multimap.flip();
-        assertEquals(Bags.immutable.with("Less than 3", "Less than 3"), flipped.get(2));
-        assertEquals(Bags.immutable.with("Less than 2", "Less than 3"), flipped.get(1));
+        Assert.assertEquals(Bags.immutable.with("Less than 3", "Less than 3"), flipped.get(2));
+        Assert.assertEquals(Bags.immutable.with("Less than 2", "Less than 3"), flipped.get(1));
     }
 
     @Test
@@ -93,7 +76,7 @@ public abstract class AbstractMutableListMultimapTestCase extends AbstractMutabl
     {
         MutableMultimap<String, Integer> multimap =
                 this.newMultimapWithKeysValues("One", 1, "One", 2);
-        assertEquals("{One=[1, 2]}", multimap.toString());
+        Assert.assertEquals("{One=[1, 2]}", multimap.toString());
     }
 
     @Override
@@ -108,7 +91,7 @@ public abstract class AbstractMutableListMultimapTestCase extends AbstractMutabl
         MutableListMultimap<String, Integer> selectedMultimap = multimap.selectKeysValues((key, value) -> "Two".equals(key) && (value % 2 == 0));
         MutableListMultimap<String, Integer> expectedMultimap = FastListMultimap.newMultimap();
         expectedMultimap.putAll("Two", FastList.newListWith(2, 4, 2));
-        assertEquals(expectedMultimap, selectedMultimap);
+        Assert.assertEquals(expectedMultimap, selectedMultimap);
         Verify.assertListsEqual(expectedMultimap.get("Two"), selectedMultimap.get("Two"));
     }
 
@@ -124,7 +107,7 @@ public abstract class AbstractMutableListMultimapTestCase extends AbstractMutabl
         MutableListMultimap<String, Integer> rejectedMultimap = multimap.rejectKeysValues((key, value) -> "Two".equals(key) || (value % 2 == 0));
         MutableListMultimap<String, Integer> expectedMultimap = FastListMultimap.newMultimap();
         expectedMultimap.putAll("One", FastList.newListWith(1, 3, 1));
-        assertEquals(expectedMultimap, rejectedMultimap);
+        Assert.assertEquals(expectedMultimap, rejectedMultimap);
         Verify.assertListsEqual(expectedMultimap.get("One"), rejectedMultimap.get("One"));
     }
 

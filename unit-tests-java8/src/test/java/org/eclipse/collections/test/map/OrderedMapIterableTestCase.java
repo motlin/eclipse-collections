@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Two Sigma.
+ * Copyright (c) 2018 Two Sigma.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,21 +10,18 @@
 
 package org.eclipse.collections.test.map;
 
-import java.util.LinkedHashMap;
-
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MapIterable;
-import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.api.map.OrderedMap;
-import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.test.OrderedIterableTestCase;
 import org.eclipse.collections.test.list.TransformsToListTrait;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
-import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.eclipse.collections.impl.test.Verify.assertThrows;
+import static org.eclipse.collections.test.IterableTestCase.assertEquals;
 
 public interface OrderedMapIterableTestCase extends MapIterableTestCase, OrderedIterableTestCase, TransformsToListTrait
 {
@@ -33,17 +30,6 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
 
     @Override
     <K, V> OrderedMap<K, V> newWithKeysValues(Object... elements);
-
-    @Override
-    default <K, V> MapIterable<K, V> newWithTransformedKeysValues(Object... elements)
-    {
-        MutableOrderedMap<K, V> result = OrderedMapAdapter.adapt(new LinkedHashMap<>());
-        for (int i = 0; i < elements.length; i += 2)
-        {
-            result.put((K) elements[i], (V) elements[i + 1]);
-        }
-        return result.asUnmodifiable();
-    }
 
     @Override
     default <T> ListIterable<T> getExpectedFiltered(T... elements)
@@ -57,16 +43,25 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         return Lists.mutable.with(elements);
     }
 
+    @Override
+    @Test
+    default void RichIterable_toString()
+    {
+        Assert.assertEquals(
+                "{10=4, 9=4, 8=4, 7=4, 6=3, 5=3, 4=3, 3=2, 2=2, 1=1}",
+                this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).toString());
+    }
+
     @Test
     default void take()
     {
         OrderedMap<Integer, String> orderedMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three");
-        assertIterablesEqual(this.newWithKeysValues(), orderedMap.take(0));
-        assertIterablesEqual(this.newWithKeysValues(3, "Three"), orderedMap.take(1));
-        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), orderedMap.take(2));
-        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.take(3));
-        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.take(4));
-        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.take(Integer.MAX_VALUE));
+        assertEquals(this.newWithKeysValues(), orderedMap.take(0));
+        assertEquals(this.newWithKeysValues(3, "Three"), orderedMap.take(1));
+        assertEquals(this.newWithKeysValues(3, "Three", 2, "Two"), orderedMap.take(2));
+        assertEquals(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.take(3));
+        assertEquals(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.take(4));
+        assertEquals(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.take(Integer.MAX_VALUE));
         assertThrows(IllegalArgumentException.class, () -> orderedMap.take(-1));
     }
 
@@ -74,29 +69,19 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     default void drop()
     {
         OrderedMap<Integer, String> orderedMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three");
-        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.drop(0));
-        assertIterablesEqual(this.newWithKeysValues(2, "Two", 1, "Three"), orderedMap.drop(1));
-        assertIterablesEqual(this.newWithKeysValues(1, "Three"), orderedMap.drop(2));
-        assertIterablesEqual(this.newWithKeysValues(), orderedMap.drop(3));
-        assertIterablesEqual(this.newWithKeysValues(), orderedMap.drop(4));
-        assertIterablesEqual(this.newWithKeysValues(), orderedMap.drop(Integer.MAX_VALUE));
+        assertEquals(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.drop(0));
+        assertEquals(this.newWithKeysValues(2, "Two", 1, "Three"), orderedMap.drop(1));
+        assertEquals(this.newWithKeysValues(1, "Three"), orderedMap.drop(2));
+        assertEquals(this.newWithKeysValues(), orderedMap.drop(3));
+        assertEquals(this.newWithKeysValues(), orderedMap.drop(4));
+        assertEquals(this.newWithKeysValues(), orderedMap.drop(Integer.MAX_VALUE));
         assertThrows(IllegalArgumentException.class, () -> orderedMap.drop(-1));
     }
 
     @Override
-    @Test
     default void MapIterable_flipUniqueValues()
     {
         MapIterable<String, Integer> map = this.newWithKeysValues("Three", 3, "Two", 2, "One", 1);
-        MapIterable<Integer, String> result = map.flipUniqueValues();
-
-        // TODO: Set up methods like getExpectedTransformed, but for maps. Delete overrides of this method.
-        assertIterablesEqual(
-                this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"),
-                result);
-
-        assertThrows(
-                IllegalStateException.class,
-                () -> this.newWithKeysValues(1, "2", 2, "2").flipUniqueValues());
+        assertThrows(UnsupportedOperationException.class, map::flipUniqueValues);
     }
 }

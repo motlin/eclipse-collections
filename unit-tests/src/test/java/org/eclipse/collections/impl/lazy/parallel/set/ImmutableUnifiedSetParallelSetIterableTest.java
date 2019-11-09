@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,9 +13,7 @@ package org.eclipse.collections.impl.lazy.parallel.set;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.ParallelUnsortedSetIterable;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Test;
 
 public class ImmutableUnifiedSetParallelSetIterableTest extends ParallelUnsortedSetIterableTestCase
 {
@@ -37,15 +35,15 @@ public class ImmutableUnifiedSetParallelSetIterableTest extends ParallelUnsorted
         return Sets.immutable.with(littleElements).toSet();
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void asParallel_small_batch()
     {
-        assertThrows(IllegalArgumentException.class, () -> Sets.immutable.with(1, 2, 3, 4).asParallel(this.executorService, 0));
+        Sets.immutable.with(1, 2, 3, 4).asParallel(this.executorService, 0);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void asParallel_null_executorService()
     {
-        assertThrows(NullPointerException.class, () -> Sets.immutable.with(1, 2, 3, 4).asParallel(null, 2));
+        Sets.immutable.with(1, 2, 3, 4).asParallel(null, 2);
     }
 }

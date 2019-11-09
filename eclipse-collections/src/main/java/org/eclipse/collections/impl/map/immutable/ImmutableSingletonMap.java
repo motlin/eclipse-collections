@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,7 +13,6 @@ package org.eclipse.collections.impl.map.immutable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.collections.api.RichIterable;
@@ -27,6 +26,7 @@ import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.tuple.Tuples;
 
 final class ImmutableSingletonMap<K, V>
@@ -71,19 +71,19 @@ final class ImmutableSingletonMap<K, V>
     @Override
     public boolean containsKey(Object key)
     {
-        return Objects.equals(this.key1, key);
+        return Comparators.nullSafeEquals(this.key1, key);
     }
 
     @Override
     public boolean containsValue(Object value)
     {
-        return Objects.equals(this.value1, value);
+        return Comparators.nullSafeEquals(this.value1, value);
     }
 
     @Override
     public V get(Object key)
     {
-        if (Objects.equals(this.key1, key))
+        if (Comparators.nullSafeEquals(this.key1, key))
         {
             return this.value1;
         }

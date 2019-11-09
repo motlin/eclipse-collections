@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -16,7 +16,6 @@ import java.util.NoSuchElementException;
 
 import org.eclipse.collections.api.BooleanIterable;
 import org.eclipse.collections.api.LazyBooleanIterable;
-import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
 import org.eclipse.collections.api.block.function.primitive.BooleanToObjectFunction;
@@ -25,17 +24,16 @@ import org.eclipse.collections.api.block.predicate.primitive.BooleanPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanProcedure;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.BooleanBags;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
 import org.eclipse.collections.api.iterator.BooleanIterator;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.primitive.BooleanSet;
 import org.eclipse.collections.api.set.primitive.ImmutableBooleanSet;
 import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
-import org.eclipse.collections.api.tuple.primitive.BooleanBooleanPair;
-import org.eclipse.collections.impl.factory.primitive.BooleanSets;
+import org.eclipse.collections.impl.bag.mutable.primitive.BooleanHashBag;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.set.mutable.primitive.BooleanHashSet;
 
 final class ImmutableFalseSet implements ImmutableBooleanSet, Serializable
 {
@@ -168,20 +166,6 @@ final class ImmutableFalseSet implements ImmutableBooleanSet, Serializable
     }
 
     @Override
-    public boolean[] toArray(boolean[] target)
-    {
-        if (target.length < 1)
-        {
-            target = new boolean[]{false};
-        }
-        else
-        {
-            target[0] = false;
-        }
-        return target;
-    }
-
-    @Override
     public boolean contains(boolean value)
     {
         return !value;
@@ -241,13 +225,6 @@ final class ImmutableFalseSet implements ImmutableBooleanSet, Serializable
     public boolean notEmpty()
     {
         return true;
-    }
-
-    @Override
-    public LazyIterable<BooleanBooleanPair> cartesianProduct(
-            BooleanSet set)
-    {
-        return BooleanSets.cartesianProduct(this, set);
     }
 
     @Override
@@ -341,19 +318,19 @@ final class ImmutableFalseSet implements ImmutableBooleanSet, Serializable
     @Override
     public MutableBooleanList toList()
     {
-        return BooleanLists.mutable.withAll(this);
+        return BooleanArrayList.newList(this);
     }
 
     @Override
     public MutableBooleanSet toSet()
     {
-        return BooleanSets.mutable.withAll(this);
+        return BooleanHashSet.newSet(this);
     }
 
     @Override
     public MutableBooleanBag toBag()
     {
-        return BooleanBags.mutable.withAll(this);
+        return BooleanHashBag.newBag(this);
     }
 
     @Override

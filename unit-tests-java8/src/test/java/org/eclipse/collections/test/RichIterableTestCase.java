@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2019 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -83,16 +83,8 @@ import org.eclipse.collections.impl.block.factory.Procedures;
 import org.eclipse.collections.impl.block.function.AddFunction;
 import org.eclipse.collections.impl.collector.Collectors2;
 import org.eclipse.collections.impl.factory.Multimaps;
-import org.eclipse.collections.impl.factory.primitive.BooleanLists;
-import org.eclipse.collections.impl.factory.primitive.ByteLists;
-import org.eclipse.collections.impl.factory.primitive.CharLists;
-import org.eclipse.collections.impl.factory.primitive.DoubleLists;
-import org.eclipse.collections.impl.factory.primitive.FloatLists;
-import org.eclipse.collections.impl.factory.primitive.IntLists;
-import org.eclipse.collections.impl.factory.primitive.LongLists;
 import org.eclipse.collections.impl.factory.primitive.ObjectDoubleMaps;
 import org.eclipse.collections.impl.factory.primitive.ObjectLongMaps;
-import org.eclipse.collections.impl.factory.primitive.ShortLists;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.primitive.IntInterval;
@@ -100,23 +92,22 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.eclipse.collections.impl.tuple.Tuples;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
-import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
-import static org.eclipse.collections.test.IterableTestCase.assertIterablesNotEqual;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.eclipse.collections.impl.test.Verify.assertThrows;
+import static org.eclipse.collections.test.IterableTestCase.assertEquals;
+import static org.eclipse.collections.test.IterableTestCase.assertNotEquals;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-@SuppressWarnings("UnnecessaryCodeBlock")
 public interface RichIterableTestCase extends IterableTestCase
 {
     @Override
@@ -133,7 +124,7 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void newMutable_sanity()
     {
-        assertIterablesEqual(this.getExpectedFiltered(3, 2, 1), this.newMutableForFilter(3, 2, 1));
+        assertEquals(this.getExpectedFiltered(3, 2, 1), this.newMutableForFilter(3, 2, 1));
     }
 
     MutableBooleanCollection newBooleanForTransform(boolean... elements);
@@ -199,27 +190,27 @@ public interface RichIterableTestCase extends IterableTestCase
             RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
             MutableCollection<Integer> result = this.newMutableForFilter();
             iterable.forEach(Procedures.cast(i -> result.add(i + 10)));
-            assertIterablesEqual(this.newMutableForFilter(13, 13, 13, 12, 12, 11), result);
+            assertEquals(this.newMutableForFilter(13, 13, 13, 12, 12, 11), result);
         }
 
         {
             RichIterable<Integer> iterable = this.newWith(2, 2, 1);
             MutableCollection<Integer> result = this.newMutableForFilter();
             iterable.forEach(Procedures.cast(i -> result.add(i + 10)));
-            assertIterablesEqual(this.newMutableForFilter(12, 12, 11), result);
+            assertEquals(this.newMutableForFilter(12, 12, 11), result);
         }
 
         {
             RichIterable<Integer> iterable = this.newWith(2, 1);
             MutableCollection<Integer> result = this.newMutableForFilter();
             iterable.forEach(Procedures.cast(i -> result.add(i + 10)));
-            assertIterablesEqual(this.newMutableForFilter(12, 11), result);
+            assertEquals(this.newMutableForFilter(12, 11), result);
         }
 
         RichIterable<Integer> iterable = this.newWith(1);
         MutableCollection<Integer> result = this.newMutableForFilter();
         iterable.forEach(Procedures.cast(i -> result.add(i + 10)));
-        assertIterablesEqual(this.newMutableForFilter(11), result);
+        assertEquals(this.newMutableForFilter(11), result);
 
         this.newWith().forEach(Procedures.cast(each -> fail()));
     }
@@ -230,7 +221,7 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         MutableCollection<Integer> result = this.newMutableForFilter();
         iterable.tap(result::add).forEach(Procedures.noop());
-        assertIterablesEqual(this.newMutableForFilter(3, 3, 3, 2, 2, 1), result);
+        assertEquals(this.newMutableForFilter(3, 3, 3, 2, 2, 1), result);
         this.newWith().tap(Procedures.cast(each -> fail()));
     }
 
@@ -240,7 +231,7 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         MutableCollection<Integer> result = this.newMutableForFilter();
         iterable.forEachWith((argument1, argument2) -> result.add(argument1 + argument2), 10);
-        assertIterablesEqual(this.newMutableForFilter(13, 13, 13, 12, 12, 11), result);
+        assertEquals(this.newMutableForFilter(13, 13, 13, 12, 12, 11), result);
     }
 
     @Test
@@ -323,7 +314,7 @@ public interface RichIterableTestCase extends IterableTestCase
     default void RichIterable_getFirst_and_getLast()
     {
         RichIterable<Integer> iterable = this.newWith(3, 2, 1);
-        assertIterablesNotEqual(iterable.getFirst(), iterable.getLast());
+        assertNotEquals(iterable.getFirst(), iterable.getLast());
     }
 
     @Test
@@ -475,90 +466,6 @@ public interface RichIterableTestCase extends IterableTestCase
     }
 
     @Test
-    default void RichIterable_containsAny()
-    {
-        RichIterable<Integer> iterable3 = this.newWith(3, 2, 1);
-
-        assertTrue(iterable3.containsAny(Lists.mutable.of(3)));
-        assertTrue(iterable3.containsAny(Lists.mutable.of(3, 2, 1)));
-        assertTrue(iterable3.containsAny(Lists.mutable.of(3, 3, 3)));
-        assertTrue(iterable3.containsAny(Lists.mutable.of(3, 3, 3, 3, 2, 2, 2, 1, 1)));
-        assertFalse(iterable3.containsAny(Lists.mutable.of(4)));
-        assertFalse(iterable3.containsAny(Lists.mutable.of(4, 4, 5)));
-        assertTrue(iterable3.containsAny(Lists.mutable.of(3, 2, 1, 0)));
-        assertFalse(iterable3.containsAny(Lists.mutable.empty()));
-
-        RichIterable<Integer> iterable2 = this.newWith(2, 1);
-
-        assertTrue(iterable2.containsAny(Lists.mutable.of(2)));
-        assertTrue(iterable2.containsAny(Lists.mutable.of(2, 1)));
-        assertTrue(iterable2.containsAny(Lists.mutable.of(2, 2, 2)));
-        assertTrue(iterable2.containsAny(Lists.mutable.of(2, 2, 2, 1, 1)));
-        assertFalse(iterable2.containsAny(Lists.mutable.of(4)));
-        assertFalse(iterable2.containsAny(Lists.mutable.of(4, 4, 5)));
-        assertTrue(iterable2.containsAny(Lists.mutable.of(2, 1, 0)));
-        assertFalse(iterable2.containsAny(Lists.mutable.empty()));
-
-        RichIterable<Integer> iterable1 = this.newWith(1);
-
-        assertTrue(iterable1.containsAny(Lists.mutable.of(1)));
-        assertTrue(iterable1.containsAny(Lists.mutable.of(1, 1, 1)));
-        assertFalse(iterable1.containsAny(Lists.mutable.of(4)));
-        assertFalse(iterable1.containsAny(Lists.mutable.of(4, 4, 5)));
-        assertTrue(iterable1.containsAny(Lists.mutable.of(2, 1, 0)));
-        assertFalse(iterable1.containsAny(Lists.mutable.empty()));
-
-        RichIterable<Integer> iterable0 = this.newWith();
-
-        assertFalse(iterable0.containsAll(Lists.mutable.of(1)));
-        assertFalse(iterable0.containsAll(Lists.mutable.of(1, 1, 1)));
-        assertFalse(iterable0.containsAll(Lists.mutable.of(4, 4, 5)));
-        assertTrue(iterable0.containsAll(Lists.mutable.empty()));
-    }
-
-    @Test
-    default void RichIterable_containsNone()
-    {
-        RichIterable<Integer> iterable3 = this.newWith(3, 2, 1);
-
-        assertFalse(iterable3.containsNone(Lists.mutable.of(3)));
-        assertFalse(iterable3.containsNone(Lists.mutable.of(3, 2, 1)));
-        assertFalse(iterable3.containsNone(Lists.mutable.of(3, 3, 3)));
-        assertFalse(iterable3.containsNone(Lists.mutable.of(3, 3, 3, 3, 2, 2, 2, 1, 1)));
-        assertTrue(iterable3.containsNone(Lists.mutable.of(4)));
-        assertTrue(iterable3.containsNone(Lists.mutable.of(4, 4, 5)));
-        assertFalse(iterable3.containsNone(Lists.mutable.of(3, 2, 1, 0)));
-        assertTrue(iterable3.containsNone(Lists.mutable.empty()));
-
-        RichIterable<Integer> iterable2 = this.newWith(2, 1);
-
-        assertFalse(iterable2.containsNone(Lists.mutable.of(2)));
-        assertFalse(iterable2.containsNone(Lists.mutable.of(2, 1)));
-        assertFalse(iterable2.containsNone(Lists.mutable.of(2, 2, 2)));
-        assertFalse(iterable2.containsNone(Lists.mutable.of(2, 2, 2, 1, 1)));
-        assertTrue(iterable2.containsNone(Lists.mutable.of(4)));
-        assertTrue(iterable2.containsNone(Lists.mutable.of(4, 4, 5)));
-        assertFalse(iterable2.containsNone(Lists.mutable.of(2, 1, 0)));
-        assertTrue(iterable2.containsNone(Lists.mutable.empty()));
-
-        RichIterable<Integer> iterable1 = this.newWith(1);
-
-        assertFalse(iterable1.containsNone(Lists.mutable.of(1)));
-        assertFalse(iterable1.containsNone(Lists.mutable.of(1, 1, 1)));
-        assertTrue(iterable1.containsNone(Lists.mutable.of(4)));
-        assertTrue(iterable1.containsNone(Lists.mutable.of(4, 4, 5)));
-        assertFalse(iterable1.containsNone(Lists.mutable.of(2, 1, 0)));
-        assertTrue(iterable1.containsNone(Lists.mutable.empty()));
-
-        RichIterable<Integer> iterable0 = this.newWith();
-
-        assertTrue(iterable0.containsNone(Lists.mutable.of(1)));
-        assertTrue(iterable0.containsNone(Lists.mutable.of(1, 1, 1)));
-        assertTrue(iterable0.containsNone(Lists.mutable.of(4, 4, 5)));
-        assertTrue(iterable0.containsNone(Lists.mutable.empty()));
-    }
-
-    @Test
     default void RichIterable_iterator_iterationOrder()
     {
         MutableCollection<Integer> iterationOrder = this.newMutableForFilter();
@@ -567,16 +474,16 @@ public interface RichIterableTestCase extends IterableTestCase
         {
             iterationOrder.add(iterator.next());
         }
-        assertIterablesEqual(this.expectedIterationOrder(), iterationOrder);
+        assertEquals(this.expectedIterationOrder(), iterationOrder);
 
         MutableCollection<Integer> expectedIterationOrder = this.expectedIterationOrder();
         MutableCollection<Integer> forEachWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().forEachWith((each, param) -> forEachWithIterationOrder.add(each), null);
-        assertIterablesEqual(expectedIterationOrder, forEachWithIterationOrder);
+        assertEquals(expectedIterationOrder, forEachWithIterationOrder);
 
         MutableCollection<Integer> forEachWithIndexIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().forEachWithIndex((each, index) -> forEachWithIndexIterationOrder.add(each));
-        assertIterablesEqual(expectedIterationOrder, forEachWithIndexIterationOrder);
+        assertEquals(expectedIterationOrder, forEachWithIndexIterationOrder);
     }
 
     @Test
@@ -588,80 +495,80 @@ public interface RichIterableTestCase extends IterableTestCase
 
         MutableCollection<Integer> selectIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().select(selectIterationOrder::add).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, selectIterationOrder);
+        assertEquals(expectedIterationOrder, selectIterationOrder);
 
         MutableCollection<Integer> selectTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().select(selectTargetIterationOrder::add, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, selectTargetIterationOrder);
+        assertEquals(expectedIterationOrder, selectTargetIterationOrder);
 
         MutableCollection<Integer> selectWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().selectWith((each, param) -> selectWithIterationOrder.add(each), null).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, selectWithIterationOrder);
+        assertEquals(expectedIterationOrder, selectWithIterationOrder);
 
         MutableCollection<Integer> selectWithTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().selectWith((each, param) -> selectWithTargetIterationOrder.add(each), null, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, selectWithTargetIterationOrder);
+        assertEquals(expectedIterationOrder, selectWithTargetIterationOrder);
 
         MutableCollection<Integer> rejectIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().reject(rejectIterationOrder::add).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, rejectIterationOrder);
+        assertEquals(expectedIterationOrder, rejectIterationOrder);
 
         MutableCollection<Integer> rejectTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().reject(rejectTargetIterationOrder::add, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, rejectTargetIterationOrder);
+        assertEquals(expectedIterationOrder, rejectTargetIterationOrder);
 
         MutableCollection<Integer> rejectWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().rejectWith((each, param) -> rejectWithIterationOrder.add(each), null).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, rejectWithIterationOrder);
+        assertEquals(expectedIterationOrder, rejectWithIterationOrder);
 
         MutableCollection<Integer> rejectWithTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().rejectWith((each, param) -> rejectWithTargetIterationOrder.add(each), null, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, rejectWithTargetIterationOrder);
+        assertEquals(expectedIterationOrder, rejectWithTargetIterationOrder);
 
         MutableCollection<Integer> partitionIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().partition(partitionIterationOrder::add);
-        assertIterablesEqual(expectedIterationOrder, partitionIterationOrder);
+        assertEquals(expectedIterationOrder, partitionIterationOrder);
 
         MutableCollection<Integer> partitionWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().partitionWith((each, param) -> partitionWithIterationOrder.add(each), null);
-        assertIterablesEqual(expectedIterationOrder, partitionWithIterationOrder);
+        assertEquals(expectedIterationOrder, partitionWithIterationOrder);
 
         MutableCollection<Integer> collectIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collect(collectIterationOrder::add).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, collectIterationOrder);
+        assertEquals(expectedIterationOrder, collectIterationOrder);
 
         MutableCollection<Integer> collectTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collect(collectTargetIterationOrder::add, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, collectTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectTargetIterationOrder);
 
         MutableCollection<Integer> collectWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectWith((each, param) -> collectWithIterationOrder.add(each), null).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, collectWithIterationOrder);
+        assertEquals(expectedIterationOrder, collectWithIterationOrder);
 
         MutableCollection<Integer> collectWithTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectWith((each, param) -> collectWithTargetIterationOrder.add(each), null, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, collectWithTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectWithTargetIterationOrder);
 
         MutableCollection<Integer> collectIfPredicateIterationOrder = this.newMutableForFilter();
         MutableCollection<Integer> collectIfFunctionIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectIf(collectIfPredicateIterationOrder::add, collectIfFunctionIterationOrder::add).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, collectIfPredicateIterationOrder);
-        assertIterablesEqual(expectedIterationOrder, collectIfFunctionIterationOrder);
+        assertEquals(expectedIterationOrder, collectIfPredicateIterationOrder);
+        assertEquals(expectedIterationOrder, collectIfFunctionIterationOrder);
 
         MutableCollection<Integer> collectIfPredicateTargetIterationOrder = this.newMutableForFilter();
         MutableCollection<Integer> collectIfFunctionTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectIf(collectIfPredicateTargetIterationOrder::add, collectIfFunctionTargetIterationOrder::add, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, collectIfPredicateTargetIterationOrder);
-        assertIterablesEqual(expectedIterationOrder, collectIfFunctionTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectIfPredicateTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectIfFunctionTargetIterationOrder);
 
         MutableCollection<Integer> collectBooleanIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectBoolean(collectBooleanIterationOrder::add).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectBooleanIterationOrder);
+        assertEquals(expectedIterationOrder, collectBooleanIterationOrder);
 
         MutableCollection<Integer> collectBooleanTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectBoolean(collectBooleanTargetIterationOrder::add, new BooleanHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectBooleanTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectBooleanTargetIterationOrder);
 
         MutableCollection<Integer> collectByteIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectByte((Integer each) ->
@@ -670,7 +577,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return (byte) 0;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectByteIterationOrder);
+        assertEquals(expectedIterationOrder, collectByteIterationOrder);
 
         MutableCollection<Integer> collectByteTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectByte((Integer each) ->
@@ -678,7 +585,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectByteTargetIterationOrder.add(each);
             return (byte) 0;
         }, new ByteHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectByteTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectByteTargetIterationOrder);
 
         MutableCollection<Integer> collectCharIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectChar((Integer each) ->
@@ -687,7 +594,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return ' ';
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectCharIterationOrder);
+        assertEquals(expectedIterationOrder, collectCharIterationOrder);
 
         MutableCollection<Integer> collectCharTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectChar((Integer each) ->
@@ -695,7 +602,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectCharTargetIterationOrder.add(each);
             return ' ';
         }, new CharHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectCharTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectCharTargetIterationOrder);
 
         MutableCollection<Integer> collectDoubleIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectDouble((Integer each) ->
@@ -704,7 +611,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return 0.0;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectDoubleIterationOrder);
+        assertEquals(expectedIterationOrder, collectDoubleIterationOrder);
 
         MutableCollection<Integer> collectDoubleTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectDouble((Integer each) ->
@@ -712,7 +619,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectDoubleTargetIterationOrder.add(each);
             return 0.0;
         }, new DoubleHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectDoubleTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectDoubleTargetIterationOrder);
 
         MutableCollection<Integer> collectFloatIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectFloat((Integer each) ->
@@ -721,7 +628,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return 0.0f;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectFloatIterationOrder);
+        assertEquals(expectedIterationOrder, collectFloatIterationOrder);
 
         MutableCollection<Integer> collectFloatTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectFloat((Integer each) ->
@@ -729,7 +636,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectFloatTargetIterationOrder.add(each);
             return 0.0f;
         }, new FloatHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectFloatTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectFloatTargetIterationOrder);
 
         MutableCollection<Integer> collectIntIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectInt((Integer each) ->
@@ -738,7 +645,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return 0;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectIntIterationOrder);
+        assertEquals(expectedIterationOrder, collectIntIterationOrder);
 
         MutableCollection<Integer> collectIntTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectInt((Integer each) ->
@@ -746,7 +653,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectIntTargetIterationOrder.add(each);
             return 0;
         }, new IntHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectIntTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectIntTargetIterationOrder);
 
         MutableCollection<Integer> collectLongIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectLong((Integer each) ->
@@ -755,7 +662,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return 0L;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectLongIterationOrder);
+        assertEquals(expectedIterationOrder, collectLongIterationOrder);
 
         MutableCollection<Integer> collectLongTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectLong((Integer each) ->
@@ -763,7 +670,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectLongTargetIterationOrder.add(each);
             return 0L;
         }, new LongHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectLongTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectLongTargetIterationOrder);
 
         MutableCollection<Integer> collectShortIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectShort((ShortFunction<Integer>) each -> {
@@ -771,100 +678,100 @@ public interface RichIterableTestCase extends IterableTestCase
             return (short) 0;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectShortIterationOrder);
+        assertEquals(expectedIterationOrder, collectShortIterationOrder);
 
         MutableCollection<Integer> collectShortTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectShort((ShortFunction<Integer>) each -> {
             collectShortTargetIterationOrder.add(each);
             return (short) 0;
         }, new ShortHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectShortTargetIterationOrder);
+        assertEquals(expectedIterationOrder, collectShortTargetIterationOrder);
 
         MutableCollection<Integer> flatCollectIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().flatCollect(each -> Lists.immutable.with(flatCollectIterationOrder.add(each))).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, flatCollectIterationOrder);
+        assertEquals(expectedIterationOrder, flatCollectIterationOrder);
 
         MutableCollection<Integer> flatCollectTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().flatCollect(each -> Lists.immutable.with(flatCollectTargetIterationOrder.add(each)), new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, flatCollectTargetIterationOrder);
+        assertEquals(expectedIterationOrder, flatCollectTargetIterationOrder);
 
         MutableCollection<Integer> countIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().count(countIterationOrder::add);
-        assertIterablesEqual(expectedIterationOrder, countIterationOrder);
+        assertEquals(expectedIterationOrder, countIterationOrder);
 
         MutableCollection<Integer> countWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().countWith((each, param) -> countWithIterationOrder.add(each), null);
-        assertIterablesEqual(expectedIterationOrder, countWithIterationOrder);
+        assertEquals(expectedIterationOrder, countWithIterationOrder);
 
         MutableCollection<Integer> anySatisfyIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().anySatisfy(each -> {
             anySatisfyIterationOrder.add(each);
             return false;
         });
-        assertIterablesEqual(expectedIterationOrder, anySatisfyIterationOrder);
+        assertEquals(expectedIterationOrder, anySatisfyIterationOrder);
 
         MutableCollection<Integer> anySatisfyWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().anySatisfyWith((each, param) -> {
             anySatisfyWithIterationOrder.add(each);
             return false;
         }, null);
-        assertIterablesEqual(expectedIterationOrder, anySatisfyWithIterationOrder);
+        assertEquals(expectedIterationOrder, anySatisfyWithIterationOrder);
 
         MutableCollection<Integer> allSatisfyIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().allSatisfy(each -> {
             allSatisfyIterationOrder.add(each);
             return true;
         });
-        assertIterablesEqual(expectedIterationOrder, allSatisfyIterationOrder);
+        assertEquals(expectedIterationOrder, allSatisfyIterationOrder);
 
         MutableCollection<Integer> allSatisfyWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().allSatisfyWith((each, param) -> {
             allSatisfyWithIterationOrder.add(each);
             return true;
         }, null);
-        assertIterablesEqual(expectedIterationOrder, allSatisfyWithIterationOrder);
+        assertEquals(expectedIterationOrder, allSatisfyWithIterationOrder);
 
         MutableCollection<Integer> noneSatisfyIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().noneSatisfy(each -> {
             noneSatisfyIterationOrder.add(each);
             return false;
         });
-        assertIterablesEqual(expectedIterationOrder, noneSatisfyIterationOrder);
+        assertEquals(expectedIterationOrder, noneSatisfyIterationOrder);
 
         MutableCollection<Integer> noneSatisfyWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().noneSatisfyWith((each, param) -> {
             noneSatisfyWithIterationOrder.add(each);
             return false;
         }, null);
-        assertIterablesEqual(expectedIterationOrder, noneSatisfyWithIterationOrder);
+        assertEquals(expectedIterationOrder, noneSatisfyWithIterationOrder);
 
         MutableCollection<Integer> detectIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().detect(each -> {
             detectIterationOrder.add(each);
             return false;
         });
-        assertIterablesEqual(expectedIterationOrder, detectIterationOrder);
+        assertEquals(expectedIterationOrder, detectIterationOrder);
 
         MutableCollection<Integer> detectWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().detectWith((each, param) -> {
             detectWithIterationOrder.add(each);
             return false;
         }, null);
-        assertIterablesEqual(expectedIterationOrder, detectWithIterationOrder);
+        assertEquals(expectedIterationOrder, detectWithIterationOrder);
 
         MutableCollection<Integer> detectIfNoneIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().detectIfNone(each -> {
             detectIfNoneIterationOrder.add(each);
             return false;
         }, () -> 0);
-        assertIterablesEqual(expectedIterationOrder, detectIfNoneIterationOrder);
+        assertEquals(expectedIterationOrder, detectIfNoneIterationOrder);
 
         MutableCollection<Integer> detectWithIfNoneIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().detectWithIfNone((each, param) -> {
             detectWithIfNoneIterationOrder.add(each);
             return false;
         }, null, () -> 0);
-        assertIterablesEqual(expectedIterationOrder, detectWithIfNoneIterationOrder);
+        assertEquals(expectedIterationOrder, detectWithIfNoneIterationOrder);
 
         MutableCollection<Integer> minComparatorIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().min((o1, o2) -> {
@@ -875,7 +782,7 @@ public interface RichIterableTestCase extends IterableTestCase
             minComparatorIterationOrder.add(o1);
             return 0;
         });
-        assertIterablesEqual(expectedIterationOrder, minComparatorIterationOrder);
+        assertEquals(expectedIterationOrder, minComparatorIterationOrder);
 
         MutableCollection<Integer> maxComparatorIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().max((o1, o2) -> {
@@ -886,68 +793,68 @@ public interface RichIterableTestCase extends IterableTestCase
             maxComparatorIterationOrder.add(o1);
             return 0;
         });
-        assertIterablesEqual(expectedIterationOrder, maxComparatorIterationOrder);
+        assertEquals(expectedIterationOrder, maxComparatorIterationOrder);
 
         MutableCollection<Integer> minByIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().minBy(minByIterationOrder::add);
-        assertIterablesEqual(expectedIterationOrder, minByIterationOrder);
+        assertEquals(expectedIterationOrder, minByIterationOrder);
 
         MutableCollection<Integer> maxByIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().maxBy(maxByIterationOrder::add);
-        assertIterablesEqual(expectedIterationOrder, maxByIterationOrder);
+        assertEquals(expectedIterationOrder, maxByIterationOrder);
 
         MutableCollection<Integer> groupByIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().groupBy(groupByIterationOrder::add);
-        assertIterablesEqual(expectedIterationOrder, groupByIterationOrder);
+        assertEquals(expectedIterationOrder, groupByIterationOrder);
 
         MutableCollection<Integer> groupByTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().groupBy(groupByTargetIterationOrder::add, new HashBagMultimap<>());
-        assertIterablesEqual(expectedIterationOrder, groupByTargetIterationOrder);
+        assertEquals(expectedIterationOrder, groupByTargetIterationOrder);
 
         MutableCollection<Integer> groupByEachIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().groupByEach(each -> {
             groupByEachIterationOrder.add(each);
             return Lists.immutable.with(each);
         });
-        assertIterablesEqual(expectedIterationOrder, groupByEachIterationOrder);
+        assertEquals(expectedIterationOrder, groupByEachIterationOrder);
 
         MutableCollection<Integer> groupByEachTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().groupByEach(each -> {
             groupByEachTargetIterationOrder.add(each);
             return Lists.immutable.with(each);
         }, new HashBagMultimap<>());
-        assertIterablesEqual(expectedIterationOrder, groupByEachTargetIterationOrder);
+        assertEquals(expectedIterationOrder, groupByEachTargetIterationOrder);
 
         MutableCollection<Integer> sumOfFloatIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().sumOfFloat(each -> {
             sumOfFloatIterationOrder.add(each);
             return each.floatValue();
         });
-        assertIterablesEqual(expectedIterationOrder, sumOfFloatIterationOrder);
+        assertEquals(expectedIterationOrder, sumOfFloatIterationOrder);
 
         MutableCollection<Integer> sumOfDoubleIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().sumOfDouble(each -> {
             sumOfDoubleIterationOrder.add(each);
             return each.doubleValue();
         });
-        assertIterablesEqual(expectedIterationOrder, sumOfDoubleIterationOrder);
+        assertEquals(expectedIterationOrder, sumOfDoubleIterationOrder);
 
         MutableCollection<Integer> sumOfIntIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().sumOfInt(each -> {
             sumOfIntIterationOrder.add(each);
             return each.intValue();
         });
-        assertIterablesEqual(expectedIterationOrder, sumOfIntIterationOrder);
+        assertEquals(expectedIterationOrder, sumOfIntIterationOrder);
 
         MutableCollection<Integer> sumOfLongIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().sumOfLong(each -> {
             sumOfLongIterationOrder.add(each);
             return each.longValue();
         });
-        assertIterablesEqual(expectedIterationOrder, sumOfLongIterationOrder);
+        assertEquals(expectedIterationOrder, sumOfLongIterationOrder);
 
         /*
-         * TODO: Fix sumByDouble and sumByFloat methods for bags, to only iterate once per item, not per occurrence.
+         * TODO: Fix sumByPrimitive methods for bags, to only iterate once per item, not per occurrence.
         MutableCollection<Integer> sumByDoubleIterationOrder1 = this.newMutableForFilter();
         MutableCollection<Integer> sumByDoubleIterationOrder2 = this.newMutableForFilter();
         this.getInstanceUnderTest().sumByDouble(
@@ -975,7 +882,6 @@ public interface RichIterableTestCase extends IterableTestCase
                 });
         assertEquals(expectedIterationOrder, sumByFloatIterationOrder1);
         assertEquals(expectedIterationOrder, sumByFloatIterationOrder2);
-        */
 
         MutableCollection<Integer> sumByIntIterationOrder1 = this.newMutableForFilter();
         MutableCollection<Integer> sumByIntIterationOrder2 = this.newMutableForFilter();
@@ -988,8 +894,8 @@ public interface RichIterableTestCase extends IterableTestCase
                     sumByIntIterationOrder2.add(each);
                     return 0;
                 });
-        assertIterablesEqual(expectedIterationOrder, sumByIntIterationOrder1);
-        assertIterablesEqual(expectedIterationOrder, sumByIntIterationOrder2);
+        assertEquals(expectedIterationOrder, sumByIntIterationOrder1);
+        assertEquals(expectedIterationOrder, sumByIntIterationOrder2);
 
         MutableCollection<Integer> sumByLongIterationOrder1 = this.newMutableForFilter();
         MutableCollection<Integer> sumByLongIterationOrder2 = this.newMutableForFilter();
@@ -1002,8 +908,9 @@ public interface RichIterableTestCase extends IterableTestCase
                     sumByLongIterationOrder2.add(each);
                     return 0L;
                 });
-        assertIterablesEqual(expectedIterationOrder, sumByLongIterationOrder1);
-        assertIterablesEqual(expectedIterationOrder, sumByLongIterationOrder2);
+        assertEquals(expectedIterationOrder, sumByLongIterationOrder1);
+        assertEquals(expectedIterationOrder, sumByLongIterationOrder2);
+        */
 
         MutableCollection<Integer> expectedInjectIntoIterationOrder = this.allowsDuplicates()
                 ? this.newMutableForFilter(4, 4, 4, 4, 3, 3, 3, 2, 2, 1)
@@ -1014,35 +921,35 @@ public interface RichIterableTestCase extends IterableTestCase
             injectIntoIterationOrder.add(argument2);
             return argument1 + argument2;
         });
-        assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoIterationOrder);
+        assertEquals(expectedInjectIntoIterationOrder, injectIntoIterationOrder);
 
         MutableCollection<Integer> injectIntoIntIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().injectInto(0, (IntObjectToIntFunction<Integer>) (intParameter, objectParameter) -> {
             injectIntoIntIterationOrder.add(objectParameter);
             return intParameter + objectParameter;
         });
-        assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoIntIterationOrder);
+        assertEquals(expectedInjectIntoIterationOrder, injectIntoIntIterationOrder);
 
         MutableCollection<Integer> injectIntoLongIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().injectInto(0L, (LongObjectToLongFunction<Integer>) (longParameter, objectParameter) -> {
             injectIntoLongIterationOrder.add(objectParameter);
             return longParameter + objectParameter;
         });
-        assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoLongIterationOrder);
+        assertEquals(expectedInjectIntoIterationOrder, injectIntoLongIterationOrder);
 
         MutableCollection<Integer> injectIntoDoubleIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().injectInto(0L, (DoubleObjectToDoubleFunction<Integer>) (doubleParameter, objectParameter) -> {
             injectIntoDoubleIterationOrder.add(objectParameter);
             return doubleParameter + objectParameter;
         });
-        assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoDoubleIterationOrder);
+        assertEquals(expectedInjectIntoIterationOrder, injectIntoDoubleIterationOrder);
 
         MutableCollection<Integer> injectIntoFloatIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().injectInto(0L, (FloatObjectToFloatFunction<Integer>) (floatParameter, objectParameter) -> {
             injectIntoFloatIterationOrder.add(objectParameter);
             return floatParameter + objectParameter;
         });
-        assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoFloatIterationOrder);
+        assertEquals(expectedInjectIntoIterationOrder, injectIntoFloatIterationOrder);
 
         Counter toSortedListCount = new Counter();
         this.getInstanceUnderTest().toSortedList((o1, o2) -> {
@@ -1051,12 +958,24 @@ public interface RichIterableTestCase extends IterableTestCase
         });
         assertEquals(expectedIterationOrder.size() - 1, toSortedListCount.getCount());
 
+        /*
+        MutableCollection<Integer> toSortedListByIterationOrder = this.newMutableForFilter();
+        this.getInstanceUnderTest().toSortedListBy(toSortedListByIterationOrder::add);
+        assertEquals(expectedIterationOrder.size(), toSortedListByIterationOrder.size());
+        */
+
         Counter toSortedSetCount = new Counter();
         this.getInstanceUnderTest().toSortedSet((o1, o2) -> {
             toSortedSetCount.increment();
             return 0;
         });
         assertEquals(expectedIterationOrder.size(), toSortedSetCount.getCount());
+
+        /*
+        MutableCollection<Integer> toSortedSetByIterationOrder = this.newMutableForFilter();
+        this.getInstanceUnderTest().toSortedSetBy(toSortedSetByIterationOrder::add);
+        assertEquals(expectedIterationOrder.size(), toSortedSetByIterationOrder.size());
+        */
 
         Counter toSortedBagCount = new Counter();
         this.getInstanceUnderTest().toSortedBag((o1, o2) -> {
@@ -1065,33 +984,39 @@ public interface RichIterableTestCase extends IterableTestCase
         });
         assertEquals(expectedIterationOrder.size(), toSortedBagCount.getCount());
 
+        /*
+        MutableCollection<Integer> toSortedBagByIterationOrder = this.newMutableForFilter();
+        this.getInstanceUnderTest().toSortedBagBy(toSortedBagByIterationOrder::add);
+        assertEquals(expectedIterationOrder.size(), toSortedBagByIterationOrder.size());
+        */
+
         MutableCollection<Integer> summarizeIntOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().summarizeInt(each -> {
             summarizeIntOrder.add(each);
             return 0;
         });
-        assertIterablesEqual(expectedIterationOrder, summarizeIntOrder);
+        assertEquals(expectedIterationOrder, summarizeIntOrder);
 
         MutableCollection<Integer> summarizeFloatOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().summarizeFloat(each -> {
             summarizeFloatOrder.add(each);
             return 0;
         });
-        assertIterablesEqual(expectedIterationOrder, summarizeFloatOrder);
+        assertEquals(expectedIterationOrder, summarizeFloatOrder);
 
         MutableCollection<Integer> summarizeLongOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().summarizeLong(each -> {
             summarizeLongOrder.add(each);
             return 0;
         });
-        assertIterablesEqual(expectedIterationOrder, summarizeLongOrder);
+        assertEquals(expectedIterationOrder, summarizeLongOrder);
 
         MutableCollection<Integer> summarizeDoubleOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().summarizeDouble(each -> {
             summarizeDoubleOrder.add(each);
             return 0;
         });
-        assertIterablesEqual(expectedIterationOrder, summarizeDoubleOrder);
+        assertEquals(expectedIterationOrder, summarizeDoubleOrder);
     }
 
     default MutableCollection<Integer> expectedIterationOrder()
@@ -1113,46 +1038,46 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedFiltered(4, 4, 4, 4, 2, 2),
                 iterable.select(IntegerPredicates.isEven()));
 
         {
             MutableCollection<Integer> target = this.newMutableForFilter();
             MutableCollection<Integer> result = iterable.select(IntegerPredicates.isEven(), target);
-            assertIterablesEqual(this.newMutableForFilter(4, 4, 4, 4, 2, 2), result);
+            assertEquals(this.newMutableForFilter(4, 4, 4, 4, 2, 2), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedFiltered(4, 4, 4, 4, 3, 3, 3),
                 iterable.selectWith(Predicates2.greaterThan(), 2));
 
         {
             MutableCollection<Integer> target = this.newMutableForFilter();
             MutableCollection<Integer> result = iterable.selectWith(Predicates2.greaterThan(), 2, target);
-            assertIterablesEqual(this.newMutableForFilter(4, 4, 4, 4, 3, 3, 3), result);
+            assertEquals(this.newMutableForFilter(4, 4, 4, 4, 3, 3, 3), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedFiltered(4, 4, 4, 4, 2, 2),
                 iterable.reject(IntegerPredicates.isOdd()));
 
         {
             MutableCollection<Integer> target = this.newMutableForFilter();
             MutableCollection<Integer> result = iterable.reject(IntegerPredicates.isOdd(), target);
-            assertIterablesEqual(this.newMutableForFilter(4, 4, 4, 4, 2, 2), result);
+            assertEquals(this.newMutableForFilter(4, 4, 4, 4, 2, 2), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedFiltered(4, 4, 4, 4, 3, 3, 3),
                 iterable.rejectWith(Predicates2.lessThan(), 3));
 
         MutableCollection<Integer> target = this.newMutableForFilter();
         MutableCollection<Integer> result = iterable.rejectWith(Predicates2.lessThan(), 3, target);
-        assertIterablesEqual(this.newMutableForFilter(4, 4, 4, 4, 3, 3, 3), result);
+        assertEquals(this.newMutableForFilter(4, 4, 4, 4, 3, 3, 3), result);
         assertSame(target, result);
     }
 
@@ -1161,20 +1086,20 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(-3, -3, -3, -2, -2, -1, 0, 1, 2, 2, 3, 3, 3);
         PartitionIterable<Integer> partition = iterable.partition(IntegerPredicates.isEven());
-        assertIterablesEqual(this.getExpectedFiltered(-2, -2, 0, 2, 2), partition.getSelected());
-        assertIterablesEqual(this.getExpectedFiltered(-3, -3, -3, -1, 1, 3, 3, 3), partition.getRejected());
+        assertEquals(this.getExpectedFiltered(-2, -2, 0, 2, 2), partition.getSelected());
+        assertEquals(this.getExpectedFiltered(-3, -3, -3, -1, 1, 3, 3, 3), partition.getRejected());
 
         PartitionIterable<Integer> partitionWith = iterable.partitionWith(Predicates2.greaterThan(), 0);
-        assertIterablesEqual(this.getExpectedFiltered(1, 2, 2, 3, 3, 3), partitionWith.getSelected());
-        assertIterablesEqual(this.getExpectedFiltered(-3, -3, -3, -2, -2, -1, 0), partitionWith.getRejected());
+        assertEquals(this.getExpectedFiltered(1, 2, 2, 3, 3, 3), partitionWith.getSelected());
+        assertEquals(this.getExpectedFiltered(-3, -3, -3, -2, -2, -1, 0), partitionWith.getRejected());
     }
 
     @Test
     default void RichIterable_selectInstancesOf()
     {
         RichIterable<Number> iterable = this.newWith(1, 2.0, 2.0, 3, 3, 3, 4.0, 4.0, 4.0, 4.0);
-        assertIterablesEqual(this.getExpectedFiltered(1, 3, 3, 3), iterable.selectInstancesOf(Integer.class));
-        assertIterablesEqual(this.getExpectedFiltered(1, 2.0, 2.0, 3, 3, 3, 4.0, 4.0, 4.0, 4.0), iterable.selectInstancesOf(Number.class));
+        assertEquals(this.getExpectedFiltered(1, 3, 3, 3), iterable.selectInstancesOf(Integer.class));
+        assertEquals(this.getExpectedFiltered(1, 2.0, 2.0, 3, 3, 3, 4.0, 4.0, 4.0, 4.0), iterable.selectInstancesOf(Number.class));
     }
 
     @Test
@@ -1182,24 +1107,24 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedTransformed(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
                 iterable.collect(i -> i % 10));
 
         {
             MutableCollection<Integer> target = this.newMutableForTransform();
             MutableCollection<Integer> result = iterable.collect(i -> i % 10, target);
-            assertIterablesEqual(this.newMutableForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), result);
+            assertEquals(this.newMutableForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedTransformed(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
                 iterable.collectWith((i, mod) -> i % mod, 10));
 
         MutableCollection<Integer> target = this.newMutableForTransform();
         MutableCollection<Integer> result = iterable.collectWith((i, mod) -> i % mod, 10, target);
-        assertIterablesEqual(this.newMutableForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), result);
+        assertEquals(this.newMutableForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), result);
         assertSame(target, result);
     }
 
@@ -1208,218 +1133,130 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedTransformed(3, 3, 1, 1, 3, 3, 1, 1),
                 iterable.collectIf(i -> i % 2 != 0, i -> i % 10));
 
         MutableCollection<Integer> target = this.newMutableForTransform();
         MutableCollection<Integer> result = iterable.collectIf(i -> i % 2 != 0, i -> i % 10, target);
-        assertIterablesEqual(this.newMutableForTransform(3, 3, 1, 1, 3, 3, 1, 1), result);
+        assertEquals(this.newMutableForTransform(3, 3, 1, 1, 3, 3, 1, 1), result);
         assertSame(target, result);
     }
 
     @Test
     default void RichIterable_collectPrimitive()
     {
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedBoolean(false, false, true, true, false, false),
                 this.newWith(3, 3, 2, 2, 1, 1).collectBoolean(each -> each % 2 == 0));
 
         {
             MutableBooleanCollection target = this.newBooleanForTransform();
             MutableBooleanCollection result = this.newWith(3, 3, 2, 2, 1, 1).collectBoolean(each -> each % 2 == 0, target);
-            assertIterablesEqual(this.newBooleanForTransform(false, false, true, true, false, false), result);
+            assertEquals(this.newBooleanForTransform(false, false, true, true, false, false), result);
             assertSame(target, result);
         }
 
         RichIterable<Integer> iterable = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedByte((byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1),
                 iterable.collectByte(each -> (byte) (each % 10)));
 
         {
             MutableByteCollection target = this.newByteForTransform();
             MutableByteCollection result = iterable.collectByte(each -> (byte) (each % 10), target);
-            assertIterablesEqual(this.newByteForTransform((byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1), result);
+            assertEquals(this.newByteForTransform((byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedChar((char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1, (char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1),
                 iterable.collectChar(each -> (char) (each % 10)));
 
         {
             MutableCharCollection target = this.newCharForTransform();
             MutableCharCollection result = iterable.collectChar(each -> (char) (each % 10), target);
-            assertIterablesEqual(this.newCharForTransform((char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1, (char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1), result);
+            assertEquals(this.newCharForTransform((char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1, (char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedDouble(3.0, 3.0, 2.0, 2.0, 1.0, 1.0, 3.0, 3.0, 2.0, 2.0, 1.0, 1.0),
                 iterable.collectDouble(each -> (double) (each % 10)));
 
         {
             MutableDoubleCollection target = this.newDoubleForTransform();
             MutableDoubleCollection result = iterable.collectDouble(each -> (double) (each % 10), target);
-            assertIterablesEqual(this.newDoubleForTransform(3.0, 3.0, 2.0, 2.0, 1.0, 1.0, 3.0, 3.0, 2.0, 2.0, 1.0, 1.0), result);
+            assertEquals(this.newDoubleForTransform(3.0, 3.0, 2.0, 2.0, 1.0, 1.0, 3.0, 3.0, 2.0, 2.0, 1.0, 1.0), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedFloat(3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f, 3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f),
                 iterable.collectFloat(each -> (float) (each % 10)));
 
         {
             MutableFloatCollection target = this.newFloatForTransform();
             MutableFloatCollection result = iterable.collectFloat(each -> (float) (each % 10), target);
-            assertIterablesEqual(this.newFloatForTransform(3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f, 3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f), result);
+            assertEquals(this.newFloatForTransform(3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f, 3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedInt(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
                 iterable.collectInt(each -> each % 10));
 
         {
             MutableIntCollection target = this.newIntForTransform();
             MutableIntCollection result = iterable.collectInt(each -> each % 10, target);
-            assertIterablesEqual(this.newIntForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), result);
+            assertEquals(this.newIntForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedLong(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
                 iterable.collectLong(each -> each % 10));
 
         {
             MutableLongCollection target = this.newLongForTransform();
             MutableLongCollection result = iterable.collectLong(each -> each % 10, target);
-            assertIterablesEqual(this.newLongForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), result);
+            assertEquals(this.newLongForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedShort((short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1, (short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1),
                 iterable.collectShort(each -> (short) (each % 10)));
 
         MutableShortCollection target = this.newShortForTransform();
         MutableShortCollection result = iterable.collectShort(each -> (short) (each % 10), target);
-        assertIterablesEqual(this.newShortForTransform((short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1, (short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1), result);
+        assertEquals(this.newShortForTransform((short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1, (short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1), result);
         assertSame(target, result);
     }
 
     @Test
     default void RichIterable_flatCollect()
     {
-        assertIterablesEqual(
+        assertEquals(
                 this.getExpectedTransformed(1, 2, 3, 1, 2, 1, 2, 1),
                 this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
 
-        assertIterablesEqual(
+        assertEquals(
                 this.newMutableForTransform(1, 2, 3, 1, 2, 1, 2, 1),
                 this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
-
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5),
-                this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
-
-        assertIterablesEqual(
-                this.newMutableForTransform(3, 2, 1, 2, 1, 2, 1, 1),
-                this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
     }
 
     @Test
-    default void RichIterable_flatCollect_primitive()
+    default void RichIterable_flatCollectWith()
     {
-        {
-            MutableBooleanCollection target = this.newBooleanForTransform();
-            MutableBooleanCollection result = this.newWith(3, 3, 2, 2, 1, 1).flatCollectBoolean(
-                    each -> BooleanLists.immutable.with(each % 2 == 0, each % 2 == 0),
-                    target);
-            assertIterablesEqual(this.newBooleanForTransform(false, false, false, false, true, true, true, true, false, false, false, false), result);
-            assertSame(target, result);
-        }
+        assertEquals(
+                this.getExpectedTransformed(3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5),
+                this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
 
-        RichIterable<Integer> iterable = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
-
-        {
-            MutableByteCollection target = this.newByteForTransform();
-            MutableByteCollection result = iterable.flatCollectByte(
-                    each -> ByteLists.immutable.with((byte) (each % 10), (byte) (each % 10)),
-                    target);
-            assertIterablesEqual(
-                    this.newByteForTransform((byte) 3, (byte) 3, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 3, (byte) 3, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 1, (byte) 1),
-                    result);
-            assertSame(target, result);
-        }
-
-        {
-            MutableCharCollection target = this.newCharForTransform();
-            MutableCharCollection result = iterable.flatCollectChar(
-                    each -> CharLists.immutable.with((char) (each % 10), (char) (each % 10)),
-                    target);
-            assertIterablesEqual(
-                    this.newCharForTransform((char) 3, (char) 3, (char) 3, (char) 3, (char) 2, (char) 2, (char) 2, (char) 2, (char) 1, (char) 1, (char) 1, (char) 1, (char) 3, (char) 3, (char) 3, (char) 3, (char) 2, (char) 2, (char) 2, (char) 2, (char) 1, (char) 1, (char) 1, (char) 1),
-                    result);
-            assertSame(target, result);
-        }
-
-        {
-            MutableDoubleCollection target = this.newDoubleForTransform();
-            MutableDoubleCollection result = iterable.flatCollectDouble(
-                    each -> DoubleLists.immutable.with((double) (each % 10), (double) (each % 10)),
-                    target);
-            assertIterablesEqual(
-                    this.newDoubleForTransform(3.0, 3.0, 3.0, 3.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 3.0, 3.0, 3.0, 3.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0),
-                    result);
-            assertSame(target, result);
-        }
-
-        {
-            MutableFloatCollection target = this.newFloatForTransform();
-            MutableFloatCollection result = iterable.flatCollectFloat(
-                    each -> FloatLists.immutable.with((float) (each % 10), (float) (each % 10)),
-                    target);
-            assertIterablesEqual(
-                    this.newFloatForTransform(3.0f, 3.0f, 3.0f, 3.0f, 2.0f, 2.0f, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 3.0f, 3.0f, 3.0f, 2.0f, 2.0f, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f),
-                    result);
-            assertSame(target, result);
-        }
-
-        {
-            MutableIntCollection target = this.newIntForTransform();
-            MutableIntCollection result = iterable.flatCollectInt(
-                    each -> IntLists.immutable.with(each % 10, each % 10),
-                    target);
-            assertIterablesEqual(
-                    this.newIntForTransform(3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1),
-                    result);
-            assertSame(target, result);
-        }
-
-        {
-            MutableLongCollection target = this.newLongForTransform();
-            MutableLongCollection result = iterable.flatCollectLong(
-                    each -> LongLists.immutable.with(each % 10, each % 10),
-                    target);
-            assertIterablesEqual(
-                    this.newLongForTransform(3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1),
-                    result);
-            assertSame(target, result);
-        }
-
-        {
-            MutableShortCollection target = this.newShortForTransform();
-            MutableShortCollection result = iterable.flatCollectShort(
-                    each -> ShortLists.immutable.with((short) (each % 10), (short) (each % 10)),
-                    target);
-            assertIterablesEqual(
-                    this.newShortForTransform((short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1, (short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1),
-                    result);
-            assertSame(target, result);
-        }
+        assertEquals(
+                this.newMutableForTransform(3, 2, 1, 2, 1, 2, 1, 1),
+                this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
     }
 
     @Test
@@ -1591,6 +1428,12 @@ public interface RichIterableTestCase extends IterableTestCase
         assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 2, () -> 4), is(1));
         assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(2));
         assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(3));
+    }
+
+    @Test
+    default void RichIterable_detectOptional()
+    {
+        RichIterable<Integer> iterable = this.newWith(3, 2, 1);
 
         assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(3)));
         assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(3)));
@@ -1663,23 +1506,23 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_minOptional_maxOptional()
     {
-        assertEquals(Optional.of(-1), this.newWith(-1, 0, 1).minOptional());
-        assertEquals(Optional.of(-1), this.newWith(1, 0, -1).minOptional());
+        assertEquals(Optional.of(Integer.valueOf(-1)), this.newWith(-1, 0, 1).minOptional());
+        assertEquals(Optional.of(Integer.valueOf(-1)), this.newWith(1, 0, -1).minOptional());
         assertSame(Optional.empty(), this.newWith().minOptional());
         assertThrows(NullPointerException.class, () -> this.newWith(new Object[]{null}).minOptional());
 
-        assertEquals(Optional.of(1), this.newWith(-1, 0, 1).maxOptional());
-        assertEquals(Optional.of(1), this.newWith(1, 0, -1).maxOptional());
+        assertEquals(Optional.of(Integer.valueOf(1)), this.newWith(-1, 0, 1).maxOptional());
+        assertEquals(Optional.of(Integer.valueOf(1)), this.newWith(1, 0, -1).maxOptional());
         assertSame(Optional.empty(), this.newWith().maxOptional());
         assertThrows(NullPointerException.class, () -> this.newWith(new Object[]{null}).maxOptional());
 
-        assertEquals(Optional.of(1), this.newWith(-1, 0, 1).minOptional(Comparators.reverseNaturalOrder()));
-        assertEquals(Optional.of(1), this.newWith(1, 0, -1).minOptional(Comparators.reverseNaturalOrder()));
+        assertEquals(Optional.of(Integer.valueOf(1)), this.newWith(-1, 0, 1).minOptional(Comparators.reverseNaturalOrder()));
+        assertEquals(Optional.of(Integer.valueOf(1)), this.newWith(1, 0, -1).minOptional(Comparators.reverseNaturalOrder()));
         assertSame(Optional.empty(), this.newWith().minOptional(Comparators.reverseNaturalOrder()));
         assertThrows(NullPointerException.class, () -> this.newWith(new Object[]{null}).minOptional(Comparators.reverseNaturalOrder()));
 
-        assertEquals(Optional.of(-1), this.newWith(-1, 0, 1).maxOptional(Comparators.reverseNaturalOrder()));
-        assertEquals(Optional.of(-1), this.newWith(1, 0, -1).maxOptional(Comparators.reverseNaturalOrder()));
+        assertEquals(Optional.of(Integer.valueOf(-1)), this.newWith(-1, 0, 1).maxOptional(Comparators.reverseNaturalOrder()));
+        assertEquals(Optional.of(Integer.valueOf(-1)), this.newWith(1, 0, -1).maxOptional(Comparators.reverseNaturalOrder()));
         assertSame(Optional.empty(), this.newWith().maxOptional(Comparators.reverseNaturalOrder()));
         assertThrows(NullPointerException.class, () -> this.newWith(new Object[]{null}).maxOptional(Comparators.reverseNaturalOrder()));
     }
@@ -1735,12 +1578,12 @@ public interface RichIterableTestCase extends IterableTestCase
                         Boolean.TRUE, this.newMutableForFilter(3, 3, 3, 1),
                         Boolean.FALSE, this.newMutableForFilter(4, 4, 4, 4, 2, 2));
 
-        assertIterablesEqual(expectedGroupBy, iterable.groupBy(groupByFunction).toMap());
+        assertEquals(expectedGroupBy, iterable.groupBy(groupByFunction).toMap());
 
         Function<Integer, Boolean> function = (Integer object) -> true;
         MutableMultimap<Boolean, Integer> target = this.<Integer>newWith().groupBy(function).toMutable();
         MutableMultimap<Boolean, Integer> multimap2 = iterable.groupBy(groupByFunction, target);
-        assertIterablesEqual(expectedGroupBy, multimap2.toMap());
+        assertEquals(expectedGroupBy, multimap2.toMap());
         assertSame(target, multimap2);
 
         Function<Integer, Iterable<Integer>> groupByEachFunction = integer -> Interval.fromTo(-1, -integer);
@@ -1752,11 +1595,11 @@ public interface RichIterableTestCase extends IterableTestCase
                         -2, this.newMutableForFilter(4, 4, 4, 4, 3, 3, 3, 2, 2),
                         -1, this.newMutableForFilter(4, 4, 4, 4, 3, 3, 3, 2, 2, 1));
 
-        assertIterablesEqual(expectedGroupByEach, iterable.groupByEach(groupByEachFunction).toMap());
+        assertEquals(expectedGroupByEach, iterable.groupByEach(groupByEachFunction).toMap());
 
         MutableMultimap<Integer, Integer> target2 = this.<Integer>newWith().groupByEach(groupByEachFunction).toMutable();
         Multimap<Integer, Integer> actualWithTarget = iterable.groupByEach(groupByEachFunction, target2);
-        assertIterablesEqual(expectedGroupByEach, actualWithTarget.toMap());
+        assertEquals(expectedGroupByEach, actualWithTarget.toMap());
         assertSame(target2, actualWithTarget);
     }
 
@@ -1768,11 +1611,11 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> integers = this.newWith(1, 2, 3, 4, 5, 6);
         Bag<Integer> evensAndOdds = integers.countBy(each -> Integer.valueOf(each % 2));
-        assertEquals(3, evensAndOdds.occurrencesOf(1));
-        assertEquals(3, evensAndOdds.occurrencesOf(0));
+        Assert.assertEquals(3, evensAndOdds.occurrencesOf(1));
+        Assert.assertEquals(3, evensAndOdds.occurrencesOf(0));
         Bag<Integer> evensAndOdds2 = integers.countBy(each -> Integer.valueOf(each % 2), Bags.mutable.empty());
-        assertEquals(3, evensAndOdds2.occurrencesOf(1));
-        assertEquals(3, evensAndOdds2.occurrencesOf(0));
+        Assert.assertEquals(3, evensAndOdds2.occurrencesOf(1));
+        Assert.assertEquals(3, evensAndOdds2.occurrencesOf(0));
     }
 
     /**
@@ -1783,11 +1626,11 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> integers = this.newWith(1, 2, 3, 4, 5, 6);
         Bag<Integer> evensAndOdds = integers.countByWith((each, parm) -> Integer.valueOf(each % parm), 2);
-        assertEquals(3, evensAndOdds.occurrencesOf(1));
-        assertEquals(3, evensAndOdds.occurrencesOf(0));
+        Assert.assertEquals(3, evensAndOdds.occurrencesOf(1));
+        Assert.assertEquals(3, evensAndOdds.occurrencesOf(0));
         Bag<Integer> evensAndOdds2 = integers.countByWith((each, parm) -> Integer.valueOf(each % parm), 2, Bags.mutable.empty());
-        assertEquals(3, evensAndOdds2.occurrencesOf(1));
-        assertEquals(3, evensAndOdds2.occurrencesOf(0));
+        Assert.assertEquals(3, evensAndOdds2.occurrencesOf(1));
+        Assert.assertEquals(3, evensAndOdds2.occurrencesOf(0));
     }
 
     /**
@@ -1812,7 +1655,7 @@ public interface RichIterableTestCase extends IterableTestCase
     }
 
     @Test
-    default void RichIterable_aggregateBy_aggregateInPlaceBy_reduceBy()
+    default void RichIterable_aggregateBy_aggregateInPlaceBy()
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
@@ -1834,15 +1677,6 @@ public interface RichIterableTestCase extends IterableTestCase
         assertEquals(9, aggregateInPlaceBy.get("3").intValue());
         assertEquals(4, aggregateInPlaceBy.get("2").intValue());
         assertEquals(1, aggregateInPlaceBy.get("1").intValue());
-
-        MapIterable<String, Integer> reduceBy = iterable.reduceBy(
-                Object::toString,
-                (integer1, integer2) -> integer1 + integer2);
-
-        assertEquals(16, reduceBy.get("4").intValue());
-        assertEquals(9, reduceBy.get("3").intValue());
-        assertEquals(4, reduceBy.get("2").intValue());
-        assertEquals(1, reduceBy.get("1").intValue());
     }
 
     @Test
@@ -1850,10 +1684,10 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        assertEquals(30.0f, iterable.sumOfFloat(Integer::floatValue), 0.001);
-        assertEquals(30.0, iterable.sumOfDouble(Integer::doubleValue), 0.001);
-        assertEquals(30, iterable.sumOfInt(Integer::intValue));
-        assertEquals(30L, iterable.sumOfLong(Integer::longValue));
+        Assert.assertEquals(30.0f, iterable.sumOfFloat(Integer::floatValue), 0.001);
+        Assert.assertEquals(30.0, iterable.sumOfDouble(Integer::doubleValue), 0.001);
+        Assert.assertEquals(30, iterable.sumOfInt(Integer::intValue));
+        Assert.assertEquals(30L, iterable.sumOfLong(Integer::longValue));
     }
 
     @Test
@@ -1861,19 +1695,19 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<String> iterable = this.newWith("4", "4", "4", "4", "3", "3", "3", "2", "2", "1");
 
-        assertIterablesEqual(
+        assertEquals(
                 ObjectLongMaps.immutable.with(0, 20L).newWithKeyValue(1, 10L),
                 iterable.sumByInt(s -> Integer.parseInt(s) % 2, Integer::parseInt));
 
-        assertIterablesEqual(
+        assertEquals(
                 ObjectLongMaps.immutable.with(0, 20L).newWithKeyValue(1, 10L),
                 iterable.sumByLong(s -> Integer.parseInt(s) % 2, Long::parseLong));
 
-        assertIterablesEqual(
+        assertEquals(
                 ObjectDoubleMaps.immutable.with(0, 20.0d).newWithKeyValue(1, 10.0d),
                 iterable.sumByDouble(s -> Integer.parseInt(s) % 2, Double::parseDouble));
 
-        assertIterablesEqual(
+        assertEquals(
                 ObjectDoubleMaps.immutable.with(0, 20.0d).newWithKeyValue(1, 10.0d),
                 iterable.sumByFloat(s -> Integer.parseInt(s) % 2, Float::parseFloat));
     }
@@ -1883,17 +1717,17 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> bigIterable = this.newWith(5, 5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        assertEquals(55.0f, bigIterable.summarizeFloat(Integer::floatValue).getSum(), 0.001);
-        assertEquals(55.0, bigIterable.summarizeDouble(Integer::doubleValue).getSum(), 0.001);
-        assertEquals(55, bigIterable.summarizeInt(Integer::intValue).getSum());
-        assertEquals(55L, bigIterable.summarizeLong(Integer::longValue).getSum());
+        Assert.assertEquals(55.0f, bigIterable.summarizeFloat(Integer::floatValue).getSum(), 0.001);
+        Assert.assertEquals(55.0, bigIterable.summarizeDouble(Integer::doubleValue).getSum(), 0.001);
+        Assert.assertEquals(55, bigIterable.summarizeInt(Integer::intValue).getSum());
+        Assert.assertEquals(55L, bigIterable.summarizeLong(Integer::longValue).getSum());
 
         RichIterable<Integer> littleIterable = this.newWith(5, 4, 3, 2, 1);
 
-        assertEquals(15.0f, littleIterable.summarizeFloat(Integer::floatValue).getSum(), 0.001);
-        assertEquals(15.0, littleIterable.summarizeDouble(Integer::doubleValue).getSum(), 0.001);
-        assertEquals(15, littleIterable.summarizeInt(Integer::intValue).getSum());
-        assertEquals(15L, littleIterable.summarizeLong(Integer::longValue).getSum());
+        Assert.assertEquals(15.0f, littleIterable.summarizeFloat(Integer::floatValue).getSum(), 0.001);
+        Assert.assertEquals(15.0, littleIterable.summarizeDouble(Integer::doubleValue).getSum(), 0.001);
+        Assert.assertEquals(15, littleIterable.summarizeInt(Integer::intValue).getSum());
+        Assert.assertEquals(15L, littleIterable.summarizeLong(Integer::longValue).getSum());
     }
 
     @Test
@@ -1902,37 +1736,37 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> littleIterable = this.newWith(1, 2, 3, 1, 2, 3);
         MutableBag<Integer> result =
                 littleIterable.reduceInPlace(Collectors.toCollection(Bags.mutable::empty));
-        assertEquals(Bags.immutable.with(1, 1, 2, 2, 3, 3), result);
+        Assert.assertEquals(Bags.immutable.with(1, 1, 2, 2, 3, 3), result);
 
         RichIterable<Integer> bigIterable = this.newWith(Interval.oneTo(20).toArray());
         MutableBag<Integer> bigResult =
                 bigIterable.reduceInPlace(Collectors.toCollection(Bags.mutable::empty));
-        assertEquals(Interval.oneTo(20).toBag(), bigResult);
+        Assert.assertEquals(Interval.oneTo(20).toBag(), bigResult);
 
         String joining =
                 result.collect(Object::toString).reduceInPlace(Collectors.joining(","));
-        assertEquals(result.collect(Object::toString).makeString(","), joining);
+        Assert.assertEquals(result.collect(Object::toString).makeString(","), joining);
 
         ImmutableBag<Integer> immutableBag = result.toImmutable();
         String joining2 =
                 immutableBag.collect(Object::toString).reduceInPlace(Collectors.joining(","));
-        assertEquals(immutableBag.collect(Object::toString).makeString(","), joining2);
+        Assert.assertEquals(immutableBag.collect(Object::toString).makeString(","), joining2);
 
         String joining3 =
                 result.asLazy().collect(Object::toString).reduceInPlace(Collectors.joining(","));
-        assertEquals(result.asLazy().collect(Object::toString).makeString(","), joining3);
+        Assert.assertEquals(result.asLazy().collect(Object::toString).makeString(","), joining3);
 
         Map<Boolean, List<Integer>> expected =
                 littleIterable.toList().stream().collect(Collectors.partitioningBy(each -> each % 2 == 0));
         Map<Boolean, List<Integer>> actual =
                 littleIterable.reduceInPlace(Collectors.partitioningBy(each -> each % 2 == 0));
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
 
         Map<String, List<Integer>> groupByJDK =
                 littleIterable.toList().stream().collect(Collectors.groupingBy(Object::toString));
         Map<String, List<Integer>> groupByEC =
                 result.reduceInPlace(Collectors.groupingBy(Object::toString));
-        assertEquals(groupByJDK, groupByEC);
+        Assert.assertEquals(groupByJDK, groupByEC);
     }
 
     @Test
@@ -1941,28 +1775,28 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> littleIterable = this.newWith(1, 2, 3, 1, 2, 3);
         MutableBag<Integer> result =
                 littleIterable.reduceInPlace(Bags.mutable::empty, MutableBag::add);
-        assertEquals(Bags.immutable.with(1, 1, 2, 2, 3, 3), result);
+        Assert.assertEquals(Bags.immutable.with(1, 1, 2, 2, 3, 3), result);
 
         RichIterable<Integer> bigIterable = this.newWith(Interval.oneTo(20).toArray());
         MutableBag<Integer> bigResult =
                 bigIterable.reduceInPlace(Bags.mutable::empty, MutableBag::add);
-        assertEquals(Interval.oneTo(20).toBag(), bigResult);
+        Assert.assertEquals(Interval.oneTo(20).toBag(), bigResult);
 
         String joining =
                 result.collect(Object::toString).reduceInPlace(StringBuilder::new, StringBuilder::append).toString();
-        assertEquals(result.collect(Object::toString).makeString(""), joining);
+        Assert.assertEquals(result.collect(Object::toString).makeString(""), joining);
 
         ImmutableBag<Integer> immutableBag = result.toImmutable();
         String joining2 =
                 immutableBag.collect(Object::toString).reduceInPlace(StringBuilder::new, StringBuilder::append).toString();
-        assertEquals(immutableBag.collect(Object::toString).makeString(""), joining2);
+        Assert.assertEquals(immutableBag.collect(Object::toString).makeString(""), joining2);
 
         String joining3 =
                 result.asLazy().collect(Object::toString).reduceInPlace(StringBuilder::new, StringBuilder::append).toString();
-        assertEquals(result.asLazy().collect(Object::toString).makeString(""), joining3);
+        Assert.assertEquals(result.asLazy().collect(Object::toString).makeString(""), joining3);
 
         int atomicAdd = littleIterable.reduceInPlace(AtomicInteger::new, AtomicInteger::addAndGet).get();
-        assertEquals(12, atomicAdd);
+        Assert.assertEquals(12, atomicAdd);
     }
 
     @Test
@@ -1971,20 +1805,20 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> littleIterable = this.newWith(1, 2, 3, 1, 2, 3);
         Optional<Integer> result =
                 littleIterable.reduce(Integer::sum);
-        assertEquals(12, result.get().intValue());
+        Assert.assertEquals(12, result.get().intValue());
 
         RichIterable<Integer> bigIterable = this.newWith(Interval.oneTo(20).toArray());
         Optional<Integer> bigResult =
                 bigIterable.reduce(Integer::max);
-        assertEquals(20, bigResult.get().intValue());
+        Assert.assertEquals(20, bigResult.get().intValue());
 
         Optional<Integer> max =
                 littleIterable.reduce(Integer::max);
-        assertEquals(3, max.get().intValue());
+        Assert.assertEquals(3, max.get().intValue());
 
         Optional<Integer> min =
                 littleIterable.reduce(Integer::min);
-        assertEquals(1, min.get().intValue());
+        Assert.assertEquals(1, min.get().intValue());
 
         RichIterable<Integer> iterableEmpty = this.newWith();
         Optional<Integer> resultEmpty =
@@ -2006,27 +1840,17 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        assertEquals(31, iterable.injectIntoInt(1, AddFunction.INTEGER_TO_INT));
-        assertEquals(30, iterable.injectIntoInt(0, AddFunction.INTEGER_TO_INT));
+        Assert.assertEquals(31, iterable.injectInto(1, AddFunction.INTEGER_TO_INT));
+        Assert.assertEquals(30, iterable.injectInto(0, AddFunction.INTEGER_TO_INT));
 
-        assertEquals(31L, iterable.injectIntoLong(1, AddFunction.INTEGER_TO_LONG));
-        assertEquals(30L, iterable.injectIntoLong(0, AddFunction.INTEGER_TO_LONG));
+        Assert.assertEquals(31L, iterable.injectInto(1, AddFunction.INTEGER_TO_LONG));
+        Assert.assertEquals(30L, iterable.injectInto(0, AddFunction.INTEGER_TO_LONG));
 
-        assertEquals(31.0d, iterable.injectIntoDouble(1, AddFunction.INTEGER_TO_DOUBLE), 0.001);
-        assertEquals(30.0d, iterable.injectIntoDouble(0, AddFunction.INTEGER_TO_DOUBLE), 0.001);
+        Assert.assertEquals(31.0d, iterable.injectInto(1, AddFunction.INTEGER_TO_DOUBLE), 0.001);
+        Assert.assertEquals(30.0d, iterable.injectInto(0, AddFunction.INTEGER_TO_DOUBLE), 0.001);
 
-        assertEquals(31.0f, iterable.injectIntoFloat(1, AddFunction.INTEGER_TO_FLOAT), 0.001f);
-        assertEquals(30.0f, iterable.injectIntoFloat(0, AddFunction.INTEGER_TO_FLOAT), 0.001f);
-    }
-
-    @Test
-    default void RichIterable_fused_collectMakeString()
-    {
-        RichIterable<Integer> iterable = this.newWith(0, 1, 8);
-
-        assertEquals(
-                iterable.asLazy().collect(Integer::toUnsignedString).makeString("[", ",", "]"),
-                iterable.makeString(Integer::toUnsignedString, "[", ",", "]"));
+        Assert.assertEquals(31.0f, iterable.injectInto(1, AddFunction.INTEGER_TO_FLOAT), 0.001f);
+        Assert.assertEquals(30.0f, iterable.injectInto(0, AddFunction.INTEGER_TO_FLOAT), 0.001f);
     }
 
     @Test
@@ -2076,30 +1900,26 @@ public interface RichIterableTestCase extends IterableTestCase
                 builder3.toString());
     }
 
-    @Override
     @Test
-    default void Iterable_toString()
+    default void RichIterable_toString()
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
         assertEquals(
                 "[4, 4, 4, 4, 3, 3, 3, 2, 2, 1]",
                 iterable.toString());
-        assertEquals(
-                "[4, 4, 4, 4, 3, 3, 3, 2, 2, 1]",
-                iterable.asLazy().toString());
     }
 
     @Test
     default void RichIterable_toList()
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
-        assertIterablesEqual(
+        assertEquals(
                 Lists.immutable.with(4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
                 iterable.toList());
 
         MutableList<Integer> target = Lists.mutable.empty();
         iterable.each(target::add);
-        assertIterablesEqual(
+        assertEquals(
                 target,
                 iterable.toList());
     }
@@ -2107,7 +1927,7 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_into()
     {
-        assertIterablesEqual(
+        assertEquals(
                 Lists.immutable.with(0, 4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
                 this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).into(Lists.mutable.with(0)));
     }
@@ -2117,19 +1937,19 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4),
                 iterable.toSortedList());
 
-        assertIterablesEqual(
+        assertEquals(
                 Lists.immutable.with(4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
                 iterable.toSortedList(Comparators.reverseNaturalOrder()));
 
-        assertIterablesEqual(
+        assertEquals(
                 Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4),
                 iterable.toSortedListBy(Functions.identity()));
 
-        assertIterablesEqual(
+        assertEquals(
                 Lists.immutable.with(4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
                 iterable.toSortedListBy(each -> each * -1));
     }
@@ -2137,7 +1957,7 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_toSet()
     {
-        assertIterablesEqual(
+        assertEquals(
                 Sets.immutable.with(4, 3, 2, 1),
                 this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).toSet());
     }
@@ -2147,19 +1967,19 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 SortedSets.immutable.with(1, 2, 3, 4),
                 iterable.toSortedSet());
 
-        assertIterablesEqual(
+        assertEquals(
                 SortedSets.immutable.with(Comparators.reverseNaturalOrder(), 4, 3, 2, 1),
                 iterable.toSortedSet(Comparators.reverseNaturalOrder()));
 
-        assertIterablesEqual(
+        assertEquals(
                 SortedSets.immutable.with(Comparators.byFunction(Functions.identity()), 1, 2, 3, 4),
                 iterable.toSortedSetBy(Functions.identity()));
 
-        assertIterablesEqual(
+        assertEquals(
                 SortedSets.immutable.with(Comparators.byFunction((Integer each) -> each * -1), 4, 3, 2, 1),
                 iterable.toSortedSetBy(each -> each * -1));
     }
@@ -2167,7 +1987,7 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_toBag()
     {
-        assertIterablesEqual(
+        assertEquals(
                 Bags.immutable.with(4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
                 this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).toBag());
     }
@@ -2177,19 +1997,19 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 TreeBag.newBagWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4),
                 iterable.toSortedBag());
 
-        assertIterablesEqual(
+        assertEquals(
                 TreeBag.newBagWith(Comparators.reverseNaturalOrder(), 4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
                 iterable.toSortedBag(Comparators.reverseNaturalOrder()));
 
-        assertIterablesEqual(
+        assertEquals(
                 TreeBag.newBagWith(Comparators.byFunction(Functions.identity()), 1, 2, 2, 3, 3, 3, 4, 4, 4, 4),
                 iterable.toSortedBagBy(Functions.identity()));
 
-        assertIterablesEqual(
+        assertEquals(
                 TreeBag.newBagWith(Comparators.byFunction((Integer each) -> each * -1), 4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
                 iterable.toSortedBagBy(each -> each * -1));
     }
@@ -2199,7 +2019,7 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 UnifiedMap.newMapWith(
                         Tuples.pair("13", 3),
                         Tuples.pair("12", 2),
@@ -2223,9 +2043,9 @@ public interface RichIterableTestCase extends IterableTestCase
         jdkMap.put("2", 2);
         jdkMap.put("1", 1);
 
-        assertIterablesEqual(
+        assertEquals(
                 jdkMap,
-                iterable.toMap(Object::toString, each -> each % 10, new HashMap<>()));
+                iterable.toMap(Object::toString, each -> each % 10, new HashMap<String, Integer>()));
     }
 
     @Test
@@ -2240,19 +2060,19 @@ public interface RichIterableTestCase extends IterableTestCase
                         Tuples.pair("11", 1),
                         Tuples.pair("3", 3),
                         Tuples.pair("2", 2),
-                        Tuples.pair("1", 1),
+                        Tuples.pair("1", 1)
                 };
-        assertIterablesEqual(
+        assertEquals(
                 TreeSortedMap.newMapWith(pairs),
                 iterable.toSortedMap(Object::toString, each -> each % 10));
 
-        assertIterablesEqual(
+        assertEquals(
                 TreeSortedMap.newMapWith(
                         Comparators.reverseNaturalOrder(),
                         pairs),
                 iterable.toSortedMap(Comparators.reverseNaturalOrder(), Object::toString, each -> each % 10));
 
-        assertIterablesEqual(
+        assertEquals(
                 TreeSortedMap.newMapWith(
                         Comparators.naturalOrder(),
                         pairs),
@@ -2263,7 +2083,7 @@ public interface RichIterableTestCase extends IterableTestCase
     default void RichIterable_toArray()
     {
         Object[] array = this.newWith(3, 3, 3, 2, 2, 1).toArray();
-        assertIterablesEqual(Bags.immutable.with(3, 3, 3, 2, 2, 1), HashBag.newBagWith(array));
+        assertEquals(Bags.immutable.with(3, 3, 3, 2, 2, 1), HashBag.newBagWith(array));
     }
 
     @Test

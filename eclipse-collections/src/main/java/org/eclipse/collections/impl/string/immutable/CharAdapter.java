@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -27,9 +27,6 @@ import org.eclipse.collections.api.block.predicate.primitive.CharPredicate;
 import org.eclipse.collections.api.block.procedure.primitive.CharIntProcedure;
 import org.eclipse.collections.api.block.procedure.primitive.CharProcedure;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.CharBags;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.CharSets;
 import org.eclipse.collections.api.iterator.CharIterator;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
@@ -37,13 +34,15 @@ import org.eclipse.collections.api.list.primitive.CharList;
 import org.eclipse.collections.api.list.primitive.ImmutableCharList;
 import org.eclipse.collections.api.list.primitive.MutableCharList;
 import org.eclipse.collections.api.set.primitive.MutableCharSet;
-import org.eclipse.collections.api.stack.primitive.MutableCharStack;
 import org.eclipse.collections.api.tuple.primitive.CharCharPair;
 import org.eclipse.collections.api.tuple.primitive.CharObjectPair;
-import org.eclipse.collections.impl.factory.primitive.CharStacks;
+import org.eclipse.collections.impl.bag.mutable.primitive.CharHashBag;
+import org.eclipse.collections.impl.factory.primitive.CharLists;
 import org.eclipse.collections.impl.lazy.primitive.ReverseCharIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
 import org.eclipse.collections.impl.primitive.AbstractCharIterable;
+import org.eclipse.collections.impl.set.mutable.primitive.CharHashSet;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.StringIterate;
@@ -99,12 +98,6 @@ public class CharAdapter
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        return this.length() == 0;
-    }
-
-    @Override
     public String subSequence(int start, int end)
     {
         return this.adapted.substring(start, end);
@@ -137,26 +130,15 @@ public class CharAdapter
     }
 
     @Override
-    public char[] toArray(char[] target)
-    {
-        int size = this.adapted.length();
-        if (target.length < size)
-        {
-            target = new char[size];
-        }
-
-        for (int i = 0; i < size; i++)
-        {
-            target[i] = this.adapted.charAt(i);
-        }
-
-        return target;
-    }
-
-    @Override
     public boolean contains(char expected)
     {
         return StringIterate.anySatisfyChar(this.adapted, value -> expected == value);
+    }
+
+    @Override
+    public void forEach(CharProcedure procedure)
+    {
+        this.each(procedure);
     }
 
     @Override
@@ -168,8 +150,19 @@ public class CharAdapter
     @Override
     public CharAdapter distinct()
     {
-        MutableCharSet seenSoFar = CharSets.mutable.empty();
-        return this.select(seenSoFar::add);
+        StringBuilder builder = new StringBuilder();
+        CharHashSet seenSoFar = new CharHashSet();
+
+        int size = this.size();
+        for (int i = 0; i < size; i++)
+        {
+            char each = this.get(i);
+            if (seenSoFar.add(each))
+            {
+                builder.append(each);
+            }
+        }
+        return new CharAdapter(builder.toString());
     }
 
     @Override
@@ -332,7 +325,7 @@ public class CharAdapter
     public <V> ImmutableList<V> collect(CharToObjectFunction<? extends V> function)
     {
         int size = this.size();
-        MutableList<V> list = FastList.newList(size);
+        FastList<V> list = FastList.newList(size);
         for (int i = 0; i < size; i++)
         {
             list.add(function.valueOf(this.get(i)));
@@ -385,7 +378,7 @@ public class CharAdapter
     public MutableCharList toList()
     {
         int size = this.size();
-        MutableCharList list = CharLists.mutable.withInitialCapacity(size);
+        CharArrayList list = new CharArrayList(size);
         for (int i = 0; i < size; i++)
         {
             list.add(this.get(i));
@@ -397,7 +390,7 @@ public class CharAdapter
     public MutableCharSet toSet()
     {
         int size = this.size();
-        MutableCharSet set = CharSets.mutable.empty();
+        CharHashSet set = new CharHashSet(size);
         for (int i = 0; i < size; i++)
         {
             set.add(this.get(i));
@@ -409,7 +402,7 @@ public class CharAdapter
     public MutableCharBag toBag()
     {
         int size = this.size();
-        MutableCharBag bag = CharBags.mutable.empty();
+        CharHashBag bag = new CharHashBag(size);
         for (int i = 0; i < size; i++)
         {
             bag.add(this.get(i));
@@ -605,12 +598,6 @@ public class CharAdapter
             target.add(PrimitiveTuples.pair(this.get(i), iterator.next()));
         }
         return target.toImmutable();
-    }
-
-    @Override
-    public MutableCharStack toStack()
-    {
-        return CharStacks.mutable.withAll(this);
     }
 
     private class InternalCharIterator implements CharIterator

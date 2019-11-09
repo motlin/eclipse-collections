@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -14,12 +14,8 @@ import java.util.ListIterator;
 
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableSubListTest extends AbstractImmutableListTestCase
 {
@@ -34,59 +30,59 @@ public class ImmutableSubListTest extends AbstractImmutableListTestCase
     {
         ImmutableList<Integer> subList = this.classUnderTest();
         ListIterator<Integer> iterator = subList.listIterator();
-        assertTrue(iterator.hasNext());
-        assertFalse(iterator.hasPrevious());
-        assertEquals(Integer.valueOf(1), iterator.next());
-        assertEquals(Integer.valueOf(2), iterator.next());
-        assertEquals(Integer.valueOf(3), iterator.next());
-        assertTrue(iterator.hasPrevious());
-        assertEquals(Integer.valueOf(3), iterator.previous());
-        assertEquals(Integer.valueOf(2), iterator.previous());
-        assertEquals(Integer.valueOf(1), iterator.previous());
+        Assert.assertTrue(iterator.hasNext());
+        Assert.assertFalse(iterator.hasPrevious());
+        Assert.assertEquals(Integer.valueOf(1), iterator.next());
+        Assert.assertEquals(Integer.valueOf(2), iterator.next());
+        Assert.assertEquals(Integer.valueOf(3), iterator.next());
+        Assert.assertTrue(iterator.hasPrevious());
+        Assert.assertEquals(Integer.valueOf(3), iterator.previous());
+        Assert.assertEquals(Integer.valueOf(2), iterator.previous());
+        Assert.assertEquals(Integer.valueOf(1), iterator.previous());
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testSubListListIteratorSet_throws()
     {
         ImmutableList<Integer> subList = this.classUnderTest();
         ListIterator<Integer> iterator = subList.listIterator();
-        assertThrows(UnsupportedOperationException.class, () -> iterator.set(4));
+        iterator.set(4);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testSubListListIteratorRemove_throws()
     {
         ImmutableList<Integer> subList = this.classUnderTest();
         ListIterator<Integer> iterator = subList.listIterator();
-        assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
+        iterator.remove();
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testSubListListIteratorAdd_throws()
     {
         ImmutableList<Integer> subList = this.classUnderTest();
         ListIterator<Integer> iterator = subList.listIterator();
-        assertThrows(UnsupportedOperationException.class, () -> iterator.add(4));
+        iterator.add(4);
     }
 
     @Test
     public void getOnly()
     {
         ImmutableList<Integer> list = Lists.immutable.of(1, 2, 3, 4, 5).subList(1, 2);
-        assertEquals(Integer.valueOf(2), list.getOnly());
+        Assert.assertEquals(Integer.valueOf(2), list.getOnly());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void getOnly_exception_when_empty()
     {
         ImmutableList<Integer> list = Lists.immutable.of(1, 2, 3, 4, 5).subList(1, 1);
-        assertThrows(IllegalStateException.class, () -> list.getOnly());
+        list.getOnly();
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void getOnly_exception_when_multiple_items()
     {
         ImmutableList<Integer> list = Lists.immutable.of(1, 2, 3, 4, 5).subList(1, 3);
-        assertThrows(IllegalStateException.class, () -> list.getOnly());
+        list.getOnly();
     }
 }
