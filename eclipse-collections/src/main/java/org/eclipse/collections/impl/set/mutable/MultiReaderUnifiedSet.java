@@ -44,6 +44,7 @@ import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
 import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
@@ -68,8 +69,6 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.collection.mutable.AbstractMultiReaderMutableCollection;
 import org.eclipse.collections.impl.lazy.parallel.set.MultiReaderParallelUnsortedSetIterable;
 import org.eclipse.collections.impl.utility.LazyIterate;
-
-import static org.eclipse.collections.impl.factory.Iterables.mList;
 
 /**
  * MultiReadUnifiedSet provides a thread-safe wrapper around a UnifiedSet, using a ReentrantReadWriteLock. In order to
@@ -468,7 +467,7 @@ public final class MultiReaderUnifiedSet<T>
             extends UntouchableMutableCollection<T>
             implements MutableSet<T>
     {
-        private final MutableList<UntouchableIterator<T>> requestedIterators = mList();
+        private final MutableList<UntouchableIterator<T>> requestedIterators = Lists.mutable.empty();
 
         private UntouchableMutableSet(MutableSet<T> newDelegate)
         {

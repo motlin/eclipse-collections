@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,18 +11,14 @@
 package org.eclipse.collections.impl.map.mutable.primitive;
 
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.iterator.MutableBooleanIterator;
-import org.eclipse.collections.impl.factory.Iterables;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class UnmodifiableObjectBooleanMapTest extends AbstractMutableObjectBooleanMapTestCase
 {
@@ -65,103 +61,96 @@ public class UnmodifiableObjectBooleanMapTest extends AbstractMutableObjectBoole
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void clear()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.clear());
+        this.map.clear();
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void removeKey()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.removeKey("0"));
+        this.map.removeKey("0");
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void put()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.put("0", true));
+        this.map.put("0", true);
     }
 
     @Override
-    @Test
-    public void getAndPut()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.getAndPut("0", true, false));
-    }
-
-    @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void withKeysValues()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.withKeyValue("1", true));
+        this.map.withKeyValue("1", true);
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void withoutKey()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.withoutKey("0"));
+        this.map.withoutKey("0");
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void withoutAllKeys()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.withoutAllKeys(FastList.newListWith("0", "1")));
+        this.map.withoutAllKeys(FastList.newListWith("0", "1"));
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void withAllKeyValues()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.withAllKeyValues(Iterables.iList(PrimitiveTuples.pair("1", true))));
+        this.map.withAllKeyValues(Lists.immutable.with(PrimitiveTuples.pair("1", true)));
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void putDuplicateWithRemovedSlot()
     {
         String collision1 = AbstractMutableObjectBooleanMapTestCase.generateCollisions().getFirst();
-        assertThrows(UnsupportedOperationException.class, () -> this.getEmptyMap().put(collision1, true));
+        this.getEmptyMap().put(collision1, true);
     }
 
     @Override
     @Test
     public void get()
     {
-        assertTrue(this.map.get("0"));
-        assertTrue(this.map.get("1"));
-        assertFalse(this.map.get("2"));
+        Assert.assertTrue(this.map.get("0"));
+        Assert.assertTrue(this.map.get("1"));
+        Assert.assertFalse(this.map.get("2"));
 
-        assertFalse(this.map.get("5"));
+        Assert.assertFalse(this.map.get("5"));
     }
 
     @Override
     @Test
     public void getIfAbsent()
     {
-        assertTrue(this.map.getIfAbsent("0", false));
-        assertTrue(this.map.getIfAbsent("1", false));
-        assertFalse(this.map.getIfAbsent("2", true));
+        Assert.assertTrue(this.map.getIfAbsent("0", false));
+        Assert.assertTrue(this.map.getIfAbsent("1", false));
+        Assert.assertFalse(this.map.getIfAbsent("2", true));
 
-        assertTrue(this.map.getIfAbsent("33", true));
-        assertFalse(this.map.getIfAbsent("33", false));
+        Assert.assertTrue(this.map.getIfAbsent("33", true));
+        Assert.assertFalse(this.map.getIfAbsent("33", false));
     }
 
     @Override
     @Test
     public void getIfAbsentPut_Function()
     {
-        assertTrue(this.map.getIfAbsentPut("0", () -> false));
+        Assert.assertTrue(this.map.getIfAbsentPut("0", () -> false));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void getIfAbsentPut_FunctionThrowsException()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.map.getIfAbsentPut("10", () -> false));
+        this.map.getIfAbsentPut("10", () -> false);
     }
 
     @Override
@@ -170,15 +159,15 @@ public class UnmodifiableObjectBooleanMapTest extends AbstractMutableObjectBoole
     {
         BooleanFunction<String> functionLengthEven = string -> (string.length() & 1) == 0;
 
-        assertTrue(this.map.getIfAbsentPutWith("0", functionLengthEven, "zeroValue"));
+        Assert.assertTrue(this.map.getIfAbsentPutWith("0", functionLengthEven, "zeroValue"));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void getIfAbsentPutWithThrowsException()
     {
         BooleanFunction<String> functionLengthEven = string -> (string.length() & 1) == 0;
 
-        assertThrows(UnsupportedOperationException.class, () -> this.map.getIfAbsentPutWith("10", functionLengthEven, "zeroValue"));
+        this.map.getIfAbsentPutWith("10", functionLengthEven, "zeroValue");
     }
 
     @Override
@@ -187,80 +176,80 @@ public class UnmodifiableObjectBooleanMapTest extends AbstractMutableObjectBoole
     {
         BooleanFunction<Integer> function = anObject -> anObject == null || (anObject & 1) == 0;
 
-        assertTrue(this.newWithKeysValues(0, true).getIfAbsentPutWithKey(0, function));
+        Assert.assertTrue(this.newWithKeysValues(0, true).getIfAbsentPutWithKey(0, function));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void getIfAbsentPutWithKeyThrowsException()
     {
         BooleanFunction<Integer> function = anObject -> anObject == null || (anObject & 1) == 0;
 
-        assertThrows(UnsupportedOperationException.class, () -> this.<Integer>getEmptyMap().getIfAbsentPutWithKey(10, function));
+        this.<Integer>getEmptyMap().getIfAbsentPutWithKey(10, function);
     }
 
     @Override
     @Test
     public void getOrThrow()
     {
-        assertTrue(this.map.getOrThrow("0"));
-        assertTrue(this.map.getOrThrow("1"));
-        assertFalse(this.map.getOrThrow("2"));
+        Assert.assertTrue(this.map.getOrThrow("0"));
+        Assert.assertTrue(this.map.getOrThrow("1"));
+        Assert.assertFalse(this.map.getOrThrow("2"));
 
-        assertThrows(IllegalStateException.class, () -> this.map.getOrThrow("5"));
-        assertThrows(IllegalStateException.class, () -> this.map.getOrThrow(null));
+        Verify.assertThrows(IllegalStateException.class, () -> this.map.getOrThrow("5"));
+        Verify.assertThrows(IllegalStateException.class, () -> this.map.getOrThrow(null));
     }
 
     @Override
     @Test
     public void contains()
     {
-        assertTrue(this.map.contains(true));
-        assertTrue(this.map.contains(false));
-        assertFalse(this.getEmptyMap().contains(false));
-        assertFalse(this.newWithKeysValues("0", true).contains(false));
+        Assert.assertTrue(this.map.contains(true));
+        Assert.assertTrue(this.map.contains(false));
+        Assert.assertFalse(this.getEmptyMap().contains(false));
+        Assert.assertFalse(this.newWithKeysValues("0", true).contains(false));
     }
 
     @Override
     @Test
     public void containsAllIterable()
     {
-        assertTrue(this.map.containsAll(BooleanArrayList.newListWith(true, false)));
-        assertTrue(this.map.containsAll(BooleanArrayList.newListWith(true, true)));
-        assertTrue(this.map.containsAll(BooleanArrayList.newListWith(false, false)));
-        assertFalse(this.getEmptyMap().containsAll(BooleanArrayList.newListWith(false, true)));
-        assertFalse(this.newWithKeysValues("0", true).containsAll(BooleanArrayList.newListWith(false)));
+        Assert.assertTrue(this.map.containsAll(BooleanArrayList.newListWith(true, false)));
+        Assert.assertTrue(this.map.containsAll(BooleanArrayList.newListWith(true, true)));
+        Assert.assertTrue(this.map.containsAll(BooleanArrayList.newListWith(false, false)));
+        Assert.assertFalse(this.getEmptyMap().containsAll(BooleanArrayList.newListWith(false, true)));
+        Assert.assertFalse(this.newWithKeysValues("0", true).containsAll(BooleanArrayList.newListWith(false)));
     }
 
     @Override
     @Test
     public void containsAll()
     {
-        assertTrue(this.map.containsAll(true, false));
-        assertTrue(this.map.containsAll(true, true));
-        assertTrue(this.map.containsAll(false, false));
-        assertFalse(this.getEmptyMap().containsAll(false, true));
-        assertFalse(this.newWithKeysValues("0", true).containsAll(false));
+        Assert.assertTrue(this.map.containsAll(true, false));
+        Assert.assertTrue(this.map.containsAll(true, true));
+        Assert.assertTrue(this.map.containsAll(false, false));
+        Assert.assertFalse(this.getEmptyMap().containsAll(false, true));
+        Assert.assertFalse(this.newWithKeysValues("0", true).containsAll(false));
     }
 
     @Override
     @Test
     public void containsKey()
     {
-        assertTrue(this.map.containsKey("0"));
-        assertTrue(this.map.containsKey("1"));
-        assertTrue(this.map.containsKey("2"));
-        assertFalse(this.map.containsKey("3"));
-        assertFalse(this.map.containsKey(null));
+        Assert.assertTrue(this.map.containsKey("0"));
+        Assert.assertTrue(this.map.containsKey("1"));
+        Assert.assertTrue(this.map.containsKey("2"));
+        Assert.assertFalse(this.map.containsKey("3"));
+        Assert.assertFalse(this.map.containsKey(null));
     }
 
     @Override
     @Test
     public void containsValue()
     {
-        assertTrue(this.map.containsValue(true));
-        assertTrue(this.map.containsValue(false));
-        assertFalse(this.getEmptyMap().contains(true));
-        assertFalse(this.newWithKeysValues("0", false).contains(true));
+        Assert.assertTrue(this.map.containsValue(true));
+        Assert.assertTrue(this.map.containsValue(false));
+        Assert.assertFalse(this.getEmptyMap().contains(true));
+        Assert.assertFalse(this.newWithKeysValues("0", false).contains(true));
     }
 
     @Override
@@ -281,7 +270,7 @@ public class UnmodifiableObjectBooleanMapTest extends AbstractMutableObjectBoole
     public void asUnmodifiable()
     {
         super.asUnmodifiable();
-        assertSame(this.map, this.map.asUnmodifiable());
+        Assert.assertSame(this.map, this.map.asUnmodifiable());
     }
 
     @Override
@@ -291,9 +280,9 @@ public class UnmodifiableObjectBooleanMapTest extends AbstractMutableObjectBoole
         UnmodifiableObjectBooleanMap<String> map = this.classUnderTest();
         Verify.assertNotEmpty(map);
         MutableBooleanIterator booleanIterator = map.booleanIterator();
-        assertTrue(booleanIterator.hasNext());
+        Assert.assertTrue(booleanIterator.hasNext());
         booleanIterator.next();
-        assertThrows(UnsupportedOperationException.class, booleanIterator::remove);
+        Verify.assertThrows(UnsupportedOperationException.class, booleanIterator::remove);
     }
 
     @Override
@@ -302,8 +291,8 @@ public class UnmodifiableObjectBooleanMapTest extends AbstractMutableObjectBoole
     {
         UnmodifiableObjectBooleanMap<String> map = this.classUnderTest();
         MutableBooleanIterator booleanIterator = map.booleanIterator();
-        assertTrue(booleanIterator.hasNext());
-        assertThrows(UnsupportedOperationException.class, booleanIterator::remove);
+        Assert.assertTrue(booleanIterator.hasNext());
+        Verify.assertThrows(UnsupportedOperationException.class, booleanIterator::remove);
     }
 
     @Override

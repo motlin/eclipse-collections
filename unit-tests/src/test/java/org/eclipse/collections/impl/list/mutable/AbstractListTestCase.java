@@ -65,7 +65,6 @@ import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.eclipse.collections.impl.factory.Iterables.iList;
 import static org.junit.Assert.fail;
 
 /**
@@ -997,11 +996,11 @@ public abstract class AbstractListTestCase
     public void take()
     {
         MutableList<Integer> mutableList = this.newWith(1, 2, 3, 4, 5);
-        Assert.assertEquals(iList(), mutableList.take(0));
-        Assert.assertEquals(iList(1, 2, 3), mutableList.take(3));
-        Assert.assertEquals(iList(1, 2, 3, 4), mutableList.take(mutableList.size() - 1));
+        Assert.assertEquals(Lists.immutable.empty(), mutableList.take(0));
+        Assert.assertEquals(Lists.immutable.with(1, 2, 3), mutableList.take(3));
+        Assert.assertEquals(Lists.immutable.with(1, 2, 3, 4), mutableList.take(mutableList.size() - 1));
 
-        ImmutableList<Integer> expectedList = iList(1, 2, 3, 4, 5);
+        ImmutableList<Integer> expectedList = Lists.immutable.with(1, 2, 3, 4, 5);
         Assert.assertEquals(expectedList, mutableList.take(mutableList.size()));
         Assert.assertEquals(expectedList, mutableList.take(10));
         Assert.assertEquals(expectedList, mutableList.take(Integer.MAX_VALUE));
@@ -1018,15 +1017,15 @@ public abstract class AbstractListTestCase
     public void takeWhile()
     {
         Assert.assertEquals(
-                iList(1, 2, 3),
+                Lists.immutable.with(1, 2, 3),
                 this.newWith(1, 2, 3, 4, 5).takeWhile(Predicates.lessThan(4)));
 
         Assert.assertEquals(
-                iList(1, 2, 3, 4, 5),
+                Lists.immutable.with(1, 2, 3, 4, 5),
                 this.newWith(1, 2, 3, 4, 5).takeWhile(Predicates.lessThan(10)));
 
         Assert.assertEquals(
-                iList(),
+                Lists.immutable.empty(),
                 this.newWith(1, 2, 3, 4, 5).takeWhile(Predicates.lessThan(0)));
     }
 
@@ -1034,13 +1033,13 @@ public abstract class AbstractListTestCase
     public void drop()
     {
         MutableList<Integer> mutableList = this.newWith(1, 2, 3, 4, 5);
-        Assert.assertEquals(iList(1, 2, 3, 4, 5), mutableList.drop(0));
+        Assert.assertEquals(Lists.immutable.with(1, 2, 3, 4, 5), mutableList.drop(0));
         Assert.assertNotSame(mutableList, mutableList.drop(0));
-        Assert.assertEquals(iList(4, 5), mutableList.drop(3));
-        Assert.assertEquals(iList(5), mutableList.drop(mutableList.size() - 1));
-        Assert.assertEquals(iList(), mutableList.drop(mutableList.size()));
-        Assert.assertEquals(iList(), mutableList.drop(10));
-        Assert.assertEquals(iList(), mutableList.drop(Integer.MAX_VALUE));
+        Assert.assertEquals(Lists.immutable.with(4, 5), mutableList.drop(3));
+        Assert.assertEquals(Lists.immutable.with(5), mutableList.drop(mutableList.size() - 1));
+        Assert.assertEquals(Lists.immutable.empty(), mutableList.drop(mutableList.size()));
+        Assert.assertEquals(Lists.immutable.empty(), mutableList.drop(10));
+        Assert.assertEquals(Lists.immutable.empty(), mutableList.drop(Integer.MAX_VALUE));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -1053,15 +1052,15 @@ public abstract class AbstractListTestCase
     public void dropWhile()
     {
         Assert.assertEquals(
-                iList(4, 5),
+                Lists.immutable.with(4, 5),
                 this.newWith(1, 2, 3, 4, 5).dropWhile(Predicates.lessThan(4)));
 
         Assert.assertEquals(
-                iList(),
+                Lists.immutable.empty(),
                 this.newWith(1, 2, 3, 4, 5).dropWhile(Predicates.lessThan(10)));
 
         Assert.assertEquals(
-                iList(1, 2, 3, 4, 5),
+                Lists.immutable.with(1, 2, 3, 4, 5),
                 this.newWith(1, 2, 3, 4, 5).dropWhile(Predicates.lessThan(0)));
     }
 
@@ -1069,16 +1068,16 @@ public abstract class AbstractListTestCase
     public void partitionWhile()
     {
         PartitionMutableList<Integer> partition1 = this.newWith(1, 2, 3, 4, 5).partitionWhile(Predicates.lessThan(4));
-        Assert.assertEquals(iList(1, 2, 3), partition1.getSelected());
-        Assert.assertEquals(iList(4, 5), partition1.getRejected());
+        Assert.assertEquals(Lists.immutable.with(1, 2, 3), partition1.getSelected());
+        Assert.assertEquals(Lists.immutable.with(4, 5), partition1.getRejected());
 
         PartitionMutableList<Integer> partition2 = this.newWith(1, 2, 3, 4, 5).partitionWhile(Predicates.lessThan(0));
-        Assert.assertEquals(iList(), partition2.getSelected());
-        Assert.assertEquals(iList(1, 2, 3, 4, 5), partition2.getRejected());
+        Assert.assertEquals(Lists.immutable.empty(), partition2.getSelected());
+        Assert.assertEquals(Lists.immutable.with(1, 2, 3, 4, 5), partition2.getRejected());
 
         PartitionMutableList<Integer> partition3 = this.newWith(1, 2, 3, 4, 5).partitionWhile(Predicates.lessThan(10));
-        Assert.assertEquals(iList(1, 2, 3, 4, 5), partition3.getSelected());
-        Assert.assertEquals(iList(), partition3.getRejected());
+        Assert.assertEquals(Lists.immutable.with(1, 2, 3, 4, 5), partition3.getSelected());
+        Assert.assertEquals(Lists.immutable.empty(), partition3.getRejected());
     }
 
     @Test
@@ -1086,7 +1085,7 @@ public abstract class AbstractListTestCase
     {
         Verify.assertInstanceOf(ReverseIterable.class, this.newWith().asReversed());
 
-        Verify.assertIterablesEqual(iList(4, 3, 2, 1), this.newWith(1, 2, 3, 4).asReversed());
+        Verify.assertIterablesEqual(Lists.immutable.with(4, 3, 2, 1), this.newWith(1, 2, 3, 4).asReversed());
     }
 
     @Test

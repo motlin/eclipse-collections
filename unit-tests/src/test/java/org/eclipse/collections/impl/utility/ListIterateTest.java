@@ -21,6 +21,7 @@ import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.set.MutableSet;
@@ -44,9 +45,6 @@ import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-import static org.eclipse.collections.impl.factory.Iterables.iSet;
 
 public class ListIterateTest
 {
@@ -87,8 +85,8 @@ public class ListIterateTest
         List<Integer> list = new LinkedList<>(Interval.fromTo(5, 1));
         Assert.assertEquals(4, Iterate.detectIndexWith(list, Object::equals, 1));
         Assert.assertEquals(0, Iterate.detectIndexWith(list, Object::equals, 5));
-        Assert.assertEquals(-1, Iterate.detectIndexWith(iList(), Object::equals, 5));
-        Assert.assertEquals(-1, Iterate.detectIndexWith(iSet(), Object::equals, 5));
+        Assert.assertEquals(-1, Iterate.detectIndexWith(Lists.immutable.empty(), Object::equals, 5));
+        Assert.assertEquals(-1, Iterate.detectIndexWith(Sets.immutable.empty(), Object::equals, 5));
     }
 
     @Test

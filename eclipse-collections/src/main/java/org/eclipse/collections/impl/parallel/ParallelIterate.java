@@ -32,6 +32,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.map.MutableMap;
@@ -52,8 +53,6 @@ import org.eclipse.collections.impl.map.mutable.primitive.ObjectLongHashMap;
 import org.eclipse.collections.impl.multimap.list.SynchronizedPutFastListMultimap;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
 
 /**
  * The ParallelIterate class contains several parallel algorithms that work with Collections. All of the higher
@@ -244,7 +243,7 @@ public final class ParallelIterate
             }
             else
             {
-                combiner.combineAll(iList(procedure));
+                combiner.combineAll(Lists.immutable.with(procedure));
             }
         }
         else
@@ -490,7 +489,7 @@ public final class ParallelIterate
             }
             else
             {
-                combiner.combineAll(iList(procedure));
+                combiner.combineAll(Lists.immutable.with(procedure));
             }
         }
         else
@@ -521,7 +520,7 @@ public final class ParallelIterate
             }
             else
             {
-                combiner.combineAll(iList(procedure));
+                combiner.combineAll(Lists.immutable.with(procedure));
             }
         }
         else

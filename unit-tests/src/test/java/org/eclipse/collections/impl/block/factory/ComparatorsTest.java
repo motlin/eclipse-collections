@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -14,7 +14,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -31,21 +30,15 @@ import org.eclipse.collections.api.block.function.primitive.IntFunction;
 import org.eclipse.collections.api.block.function.primitive.LongFunction;
 import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.list.Interval;
+import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.test.domain.Person;
 import org.eclipse.collections.impl.tuple.Tuples;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-import static org.eclipse.collections.impl.factory.Iterables.mList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ComparatorsTest
 {
@@ -58,59 +51,40 @@ public class ComparatorsTest
     @Test
     public void naturalOrder()
     {
-        MutableList<String> list = Lists.mutable.with("1", "4", "2", "3");
-        assertEquals(
-                Lists.mutable.with("1", "2", "3", "4"),
+        MutableList<String> list = FastList.newListWith("1", "4", "2", "3");
+        Assert.assertEquals(
+                FastList.newListWith("1", "2", "3", "4"),
                 list.sortThis(Comparators.naturalOrder()));
-        assertThrows(NullPointerException.class, () -> Lists.mutable.with("1", "2", null, "4").sortThis(Comparators.naturalOrder()));
-    }
-
-    @Test
-    public void originalNaturalOrder()
-    {
-        MutableList<String> list = Lists.mutable.with("1", "4", "2", "3");
-        assertEquals(
-                Lists.mutable.with("1", "2", "3", "4"),
-                list.sortThis(Comparators.originalNaturalOrder()));
-        assertThrows(NullPointerException.class, () -> Lists.mutable.with("1", "2", null, "4").sortThis(Comparators.naturalOrder()));
+        Verify.assertThrows(NullPointerException.class, () -> FastList.newListWith("1", "2", null, "4").sortThis(Comparators.naturalOrder()));
     }
 
     @Test
     public void reverseNaturalOrder()
     {
-        MutableList<String> list = Lists.mutable.with("1", "4", "2", "3");
-        assertEquals(
-                Lists.mutable.with("4", "3", "2", "1"),
+        MutableList<String> list = FastList.newListWith("1", "4", "2", "3");
+        Assert.assertEquals(
+                FastList.newListWith("4", "3", "2", "1"),
                 list.sortThis(Comparators.reverseNaturalOrder()));
-    }
-
-    @Test
-    public void originalReverseNaturalOrder()
-    {
-        MutableList<String> list = Lists.mutable.with("1", "4", "2", "3");
-        assertEquals(
-                Lists.mutable.with("4", "3", "2", "1"),
-                list.sortThis(Comparators.originalReverseNaturalOrder()));
     }
 
     @Test
     public void reverse()
     {
-        MutableList<String> list = Lists.mutable.with("1", "4", "2", "3");
-        assertEquals(
-                Lists.mutable.with("4", "3", "2", "1"),
+        MutableList<String> list = FastList.newListWith("1", "4", "2", "3");
+        Assert.assertEquals(
+                FastList.newListWith("4", "3", "2", "1"),
                 list.sortThis(Comparators.reverse(String::compareTo)));
-        assertThrows(NullPointerException.class, () -> Comparators.reverse(null));
+        Verify.assertThrows(NullPointerException.class, () -> Comparators.reverse(null));
     }
 
     @Test
     public void safeNullsLow()
     {
         SerializableComparator<Integer> comparator = Comparators.safeNullsLow(Comparators.byFunction(Functions.getIntegerPassThru()));
-        assertEquals(-1, comparator.compare(null, 1));
-        assertEquals(1, comparator.compare(1, null));
-        assertEquals(0, comparator.compare(null, null));
-        assertEquals(0, comparator.compare(1, 1));
+        Assert.assertEquals(-1, comparator.compare(null, 1));
+        Assert.assertEquals(1, comparator.compare(1, null));
+        Assert.assertEquals(0, comparator.compare(null, null));
+        Assert.assertEquals(0, comparator.compare(1, 1));
     }
 
     @Test
@@ -180,16 +154,16 @@ public class ComparatorsTest
     public void safeNullsHigh()
     {
         SerializableComparator<Integer> comparator = Comparators.safeNullsHigh(Comparators.byFunction(Functions.getIntegerPassThru()));
-        assertEquals(1, comparator.compare(null, 1));
-        assertEquals(-1, comparator.compare(1, null));
-        assertEquals(0, comparator.compare(null, null));
-        assertEquals(0, comparator.compare(1, 1));
+        Assert.assertEquals(1, comparator.compare(null, 1));
+        Assert.assertEquals(-1, comparator.compare(1, null));
+        Assert.assertEquals(0, comparator.compare(null, null));
+        Assert.assertEquals(0, comparator.compare(1, 1));
     }
 
     @Test
     public void chainedComparator()
     {
-        assertThrows(IllegalArgumentException.class, Comparators::chain);
+        Verify.assertThrows(IllegalArgumentException.class, (Runnable) Comparators::chain);
 
         Comparator<Person> byName = Comparators.byFunction(Person.TO_FIRST);
         Comparator<Person> byAge = Comparators.byFunction(Person.TO_AGE);
@@ -200,10 +174,10 @@ public class ComparatorsTest
         Person sheila12 = new Person("Sheila", "Smith", 12);
         Person sheila14 = new Person("Sheila", "Smith", 14);
 
-        MutableList<Person> people = mList(jim16, fred10, sheila14, sheila12, fred10, jim10);
+        MutableList<Person> people = Lists.mutable.with(jim16, fred10, sheila14, sheila12, fred10, jim10);
 
-        MutableList<Person> expectedNameThenAgeOrder = mList(fred10, fred10, jim10, jim16, sheila12, sheila14);
-        MutableList<Person> expectedAgeThenNameOrder = mList(fred10, fred10, jim10, sheila12, sheila14, jim16);
+        MutableList<Person> expectedNameThenAgeOrder = Lists.mutable.with(fred10, fred10, jim10, jim16, sheila12, sheila14);
+        MutableList<Person> expectedAgeThenNameOrder = Lists.mutable.with(fred10, fred10, jim10, sheila12, sheila14, jim16);
 
         Verify.assertListsEqual(expectedNameThenAgeOrder, people.sortThis(Comparators.chain(byName, byAge)));
         Verify.assertListsEqual(expectedAgeThenNameOrder, people.sortThis(Comparators.chain(byAge, byName)));
@@ -218,55 +192,6 @@ public class ComparatorsTest
         Verify.assertNegative(personComparator.compare(raab, white));
         Verify.assertPositive(personComparator.compare(white, raab));
         Verify.assertZero(personComparator.compare(raab, raab));
-    }
-
-    @Test
-    public void originalByFunction()
-    {
-        Person raab = new Person(null, "Raab", 0);
-        Person white = new Person(null, "White", 0);
-        Comparator<Person> personComparator = Comparators.originalByFunction(Person.TO_LAST);
-        Verify.assertNegative(personComparator.compare(raab, white));
-        Verify.assertPositive(personComparator.compare(white, raab));
-        Verify.assertZero(personComparator.compare(raab, raab));
-    }
-
-    @Test
-    public void fromFunctionsSafeNullsHigh()
-    {
-        Person bob = new Person("Bob", null, 0);
-        Person dan = new Person("Dan", "Witwicky", 0);
-        Person alice = new Person("Alice", "Liddell", 0);
-        Person carol = new Person("Carol", null, 0);
-
-        Comparator<Person> personComparator = Comparators.byFunctionNullsLast(Person::getLastName);
-        Verify.assertNegative(personComparator.compare(alice, bob));
-        Verify.assertPositive(personComparator.compare(carol, alice));
-        Verify.assertNegative(personComparator.compare(alice, dan));
-        Verify.assertZero(personComparator.compare(bob, carol));
-
-        MutableList<Person> people = Lists.mutable.of(bob, dan, carol, alice);
-        people.sortThis(personComparator);
-        assertEquals(Lists.immutable.of(alice, dan, bob, carol), people);
-    }
-
-    @Test
-    public void fromFunctionsSafeNullsLow()
-    {
-        Person bob = new Person("Bob", null, 0);
-        Person dan = new Person("Dan", "Witwicky", 0);
-        Person alice = new Person("Alice", "Liddell", 0);
-        Person carol = new Person("Carol", null, 0);
-
-        Comparator<Person> personComparator = Comparators.byFunctionNullsFirst(Person::getLastName);
-        Verify.assertPositive(personComparator.compare(alice, bob));
-        Verify.assertNegative(personComparator.compare(carol, alice));
-        Verify.assertNegative(personComparator.compare(alice, dan));
-        Verify.assertZero(personComparator.compare(bob, carol));
-
-        MutableList<Person> people = Lists.mutable.of(bob, dan, carol, alice);
-        people.sortThis(personComparator);
-        assertEquals(Lists.immutable.of(bob, carol, alice, dan), people);
     }
 
     @Test
@@ -303,86 +228,73 @@ public class ComparatorsTest
     @Test
     public void descendingCollectionSizeCompare()
     {
-        MutableList<List<Integer>> list = Lists.mutable.with(
+        MutableList<List<Integer>> list = FastList.newListWith(
                 Interval.oneTo(1),
                 Interval.oneTo(3),
                 Interval.oneTo(2));
         list.sortThis(Comparators.descendingCollectionSizeComparator());
-        assertEquals(
-                Lists.mutable.<MutableList<Integer>>with(
-                        Lists.mutable.with(1, 2, 3),
-                        Lists.mutable.with(1, 2),
-                        Lists.mutable.with(1)),
+        Assert.assertEquals(
+                FastList.<MutableList<Integer>>newListWith(
+                        FastList.newListWith(1, 2, 3),
+                        FastList.newListWith(1, 2),
+                        FastList.newListWith(1)),
                 list);
     }
 
     @Test
     public void ascendingCollectionSizeCompare()
     {
-        MutableList<List<Integer>> list = Lists.mutable.with(
+        MutableList<List<Integer>> list = FastList.newListWith(
                 Interval.oneTo(1),
                 Interval.oneTo(3),
                 Interval.oneTo(2));
         list.sortThis(Comparators.ascendingCollectionSizeComparator());
-        assertEquals(
-                Lists.mutable.<MutableList<Integer>>with(
-                        Lists.mutable.with(1),
-                        Lists.mutable.with(1, 2),
-                        Lists.mutable.with(1, 2, 3)),
+        Assert.assertEquals(
+                FastList.<MutableList<Integer>>newListWith(
+                        FastList.newListWith(1),
+                        FastList.newListWith(1, 2),
+                        FastList.newListWith(1, 2, 3)),
                 list);
     }
 
     @Test
     public void nullSafeEquals()
     {
-        assertTrue(Comparators.nullSafeEquals("Fred", "Fred"));
-        assertTrue(Comparators.nullSafeEquals(null, null));
+        Assert.assertTrue(Comparators.nullSafeEquals("Fred", "Fred"));
+        Assert.assertTrue(Comparators.nullSafeEquals(null, null));
 
-        assertFalse(Comparators.nullSafeEquals("Fred", "Jim"));
-        assertFalse(Comparators.nullSafeEquals("Fred", null));
-        assertFalse(Comparators.nullSafeEquals(null, "Jim"));
+        Assert.assertFalse(Comparators.nullSafeEquals("Fred", "Jim"));
+        Assert.assertFalse(Comparators.nullSafeEquals("Fred", null));
+        Assert.assertFalse(Comparators.nullSafeEquals(null, "Jim"));
     }
 
     @Test
     public void nullSafeCompare()
     {
-        assertEquals(0, Comparators.nullSafeCompare(null, null));
-        assertEquals(0, Comparators.nullSafeCompare("Sheila", "Sheila"));
+        Assert.assertEquals(0, Comparators.nullSafeCompare(null, null));
+        Assert.assertEquals(0, Comparators.nullSafeCompare("Sheila", "Sheila"));
 
-        assertTrue(Comparators.nullSafeCompare("Fred", "Jim") < 0);
-        assertTrue(Comparators.nullSafeCompare("Sheila", "Jim") > 0);
+        Assert.assertTrue(Comparators.nullSafeCompare("Fred", "Jim") < 0);
+        Assert.assertTrue(Comparators.nullSafeCompare("Sheila", "Jim") > 0);
 
-        assertEquals(1, Comparators.nullSafeCompare("Fred", null));
-        assertEquals(-1, Comparators.nullSafeCompare(null, "Jim"));
+        Assert.assertEquals(1, Comparators.nullSafeCompare("Fred", null));
+        Assert.assertEquals(-1, Comparators.nullSafeCompare(null, "Jim"));
     }
 
     @Test
     public void byFirstOfPair()
     {
-        MutableList<Pair<Integer, String>> list = Lists.mutable.with(Tuples.pair(3, "B"), Tuples.pair(1, "C"), Tuples.pair(2, "A"));
-        MutableList<Pair<Integer, String>> sorted = Lists.mutable.with(Tuples.pair(1, "C"), Tuples.pair(2, "A"), Tuples.pair(3, "B"));
+        MutableList<Pair<Integer, String>> list = FastList.newListWith(Tuples.pair(3, "B"), Tuples.pair(1, "C"), Tuples.pair(2, "A"));
+        MutableList<Pair<Integer, String>> sorted = FastList.newListWith(Tuples.pair(1, "C"), Tuples.pair(2, "A"), Tuples.pair(3, "B"));
         Verify.assertListsEqual(sorted, list.sortThis(Comparators.byFirstOfPair(Integer::compareTo)));
     }
 
     @Test
     public void bySecondOfPair()
     {
-        MutableList<Pair<Integer, String>> list = Lists.mutable.with(Tuples.pair(3, "B"), Tuples.pair(1, "C"), Tuples.pair(2, "A"));
-        MutableList<Pair<Integer, String>> sorted = Lists.mutable.with(Tuples.pair(2, "A"), Tuples.pair(3, "B"), Tuples.pair(1, "C"));
+        MutableList<Pair<Integer, String>> list = FastList.newListWith(Tuples.pair(3, "B"), Tuples.pair(1, "C"), Tuples.pair(2, "A"));
+        MutableList<Pair<Integer, String>> sorted = FastList.newListWith(Tuples.pair(2, "A"), Tuples.pair(3, "B"), Tuples.pair(1, "C"));
         Verify.assertListsEqual(sorted, list.sortThis(Comparators.bySecondOfPair(String::compareTo)));
-    }
-
-    @Test
-    public void fromPredicate()
-    {
-        ImmutableList<Instant> orderedInstants = Lists.immutable.with(
-                Instant.parse("2000-01-01T00:00:00Z"),
-                Instant.parse("2001-01-01T00:00:00Z"),
-                Instant.parse("2002-01-01T00:00:00Z"),
-                Instant.parse("2003-01-01T00:00:00Z"));
-        MutableList<Instant> shuffledInstants = orderedInstants.toList().shuffleThis();
-        shuffledInstants.sortThis(Comparators.fromPredicate(Instant::isBefore));
-        Verify.assertListsEqual(orderedInstants.castToList(), shuffledInstants);
     }
 
     @Test
@@ -394,9 +306,9 @@ public class ComparatorsTest
 
         Comparator<OneOfEach> comparator = Comparators.byFunction(OneOfEach.TO_DATE_VALUE, new FancyDateComparator());
 
-        assertEquals(
-                iList(april, december, february),
-                iList(february, april, december).toSortedList(comparator));
+        Assert.assertEquals(
+                Lists.immutable.with(april, december, february),
+                Lists.immutable.with(february, april, december).toSortedList(comparator));
     }
 
     public static class OneOfEach

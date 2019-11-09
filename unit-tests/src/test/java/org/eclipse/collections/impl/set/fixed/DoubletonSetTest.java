@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -27,15 +27,9 @@ import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.Tuples;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.mSet;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link DoubletonSet}.
@@ -44,7 +38,7 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
 {
     private DoubletonSet<String> set;
 
-    @BeforeEach
+    @Before
     public void setUp()
     {
         this.set = new DoubletonSet<>("1", "2");
@@ -71,11 +65,11 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
 
         Twin<String> twin3 = Tuples.twin("1", "1");
         set.with(twin3);
-        assertSame(set.getFirst(), twin1);
+        Assert.assertSame(set.getFirst(), twin1);
 
         Twin<String> twin4 = Tuples.twin("2", "2");
         set.with(twin4);
-        assertSame(set.getLast(), twin2);
+        Assert.assertSame(set.getLast(), twin2);
     }
 
     @Override
@@ -84,7 +78,7 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     {
         super.equalsAndHashCode();
         MutableSet<String> one = Sets.fixedSize.of("1", "2");
-        Verify.assertEqualsAndHashCode(one, mSet("1", "2"));
+        Verify.assertEqualsAndHashCode(one, Sets.mutable.with("1", "2"));
         Verify.assertPostSerializedEqualsAndHashCode(one);
     }
 
@@ -94,7 +88,7 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         try
         {
             this.set.remove("1");
-            fail("Cannot remove from DoubletonSet");
+            Assert.fail("Cannot remove from DoubletonSet");
         }
         catch (UnsupportedOperationException ignored)
         {
@@ -108,7 +102,7 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         try
         {
             this.set.add("1");
-            fail("Cannot add to DoubletonSet");
+            Assert.fail("Cannot add to DoubletonSet");
         }
         catch (UnsupportedOperationException ignored)
         {
@@ -122,7 +116,7 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         try
         {
             this.set.add("3");
-            fail("Cannot add to DoubletonSet");
+            Assert.fail("Cannot add to DoubletonSet");
         }
         catch (UnsupportedOperationException ignored)
         {
@@ -162,8 +156,8 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
             }
         }
         MutableSet<String> cloneSet = this.set.clone();
-        assertNotSame(cloneSet, this.set);
-        assertEquals(UnifiedSet.newSetWith("1", "2"), cloneSet);
+        Assert.assertNotSame(cloneSet, this.set);
+        Assert.assertEquals(UnifiedSet.newSetWith("1", "2"), cloneSet);
     }
 
     @Test
@@ -177,7 +171,7 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     @Test
     public void getLast()
     {
-        assertEquals("2", this.set.getLast());
+        Assert.assertEquals("2", this.set.getLast());
     }
 
     @Test
@@ -186,7 +180,7 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         MutableList<String> result = Lists.mutable.of();
         MutableSet<String> source = Sets.fixedSize.of("1", "2");
         source.forEach(CollectionAddProcedure.on(result));
-        assertEquals(FastList.newListWith("1", "2"), result);
+        Assert.assertEquals(FastList.newListWith("1", "2"), result);
     }
 
     @Test
@@ -200,8 +194,8 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
             result.add(each);
             indexSum[0] += index;
         });
-        assertEquals(FastList.newListWith("1", "2"), result);
-        assertEquals(1, indexSum[0]);
+        Assert.assertEquals(FastList.newListWith("1", "2"), result);
+        Assert.assertEquals(1, indexSum[0]);
     }
 
     @Test
@@ -210,15 +204,15 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         MutableList<String> result = Lists.mutable.of();
         MutableSet<String> source = Sets.fixedSize.of("1", "2");
         source.forEachWith(Procedures2.fromProcedure(CollectionAddProcedure.on(result)), null);
-        assertEquals(FastList.newListWith("1", "2"), result);
+        Assert.assertEquals(FastList.newListWith("1", "2"), result);
     }
 
     @Test
     public void getFirstGetLast()
     {
         MutableSet<String> source = Sets.fixedSize.of("1", "2");
-        assertEquals("1", source.getFirst());
-        assertEquals("2", source.getLast());
+        Assert.assertEquals("1", source.getFirst());
+        Assert.assertEquals("2", source.getLast());
     }
 
     @Override
@@ -232,16 +226,16 @@ public class DoubletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         set.forEach(Procedures.cast(value -> expected.putAll(-value, Interval.fromTo(value, set.size()))));
         Multimap<Integer, Integer> actual =
                 set.groupByEach(new NegativeIntervalFunction());
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
 
         Multimap<Integer, Integer> actualWithTarget =
                 set.groupByEach(new NegativeIntervalFunction(), UnifiedSetMultimap.newMultimap());
-        assertEquals(expected, actualWithTarget);
+        Assert.assertEquals(expected, actualWithTarget);
     }
 
     @Test
     public void getOnly()
     {
-        assertThrows(IllegalStateException.class, () -> this.set.getOnly());
+        Verify.assertThrows(IllegalStateException.class, () -> this.set.getOnly());
     }
 }

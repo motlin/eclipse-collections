@@ -79,8 +79,6 @@ import org.eclipse.collections.impl.lazy.parallel.list.MultiReaderParallelListIt
 import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
-import static org.eclipse.collections.impl.factory.Iterables.mList;
-
 /**
  * MultiReadFastList provides a thread-safe wrapper around a FastList, using a ReentrantReadWriteLock. In order to
  * provide true thread-safety, MultiReaderFastList does <em>not</em> implement {@code iterator()}, {@code listIterator()}, {@code listIterator(int)}, or
@@ -841,8 +839,8 @@ public final class MultiReaderFastList<T>
             extends UntouchableMutableCollection<T>
             implements MutableList<T>
     {
-        private final MutableList<UntouchableListIterator<T>> requestedIterators = mList();
-        private final MutableList<UntouchableMutableList<T>> requestedSubLists = mList();
+        private final MutableList<UntouchableListIterator<T>> requestedIterators = Lists.mutable.empty();
+        private final MutableList<UntouchableMutableList<T>> requestedSubLists = Lists.mutable.empty();
 
         private UntouchableMutableList(MutableList<T> delegate)
         {

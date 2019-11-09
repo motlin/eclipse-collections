@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.map.immutable;
 
+import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.partition.PartitionIterable;
@@ -17,10 +18,8 @@ import org.eclipse.collections.impl.block.factory.IntegerPredicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.map.MapIterableTestCase;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iSet;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableUnifiedMap2Test extends MapIterableTestCase
 {
@@ -64,8 +63,8 @@ public class ImmutableUnifiedMap2Test extends MapIterableTestCase
                 "C", 3,
                 "D", 4);
         PartitionIterable<Integer> partition = map.partition(IntegerPredicates.isEven());
-        assertEquals(iSet(2, 4), partition.getSelected().toSet());
-        assertEquals(iSet(1, 3), partition.getRejected().toSet());
+        Assert.assertEquals(Sets.immutable.with(2, 4), partition.getSelected().toSet());
+        Assert.assertEquals(Sets.immutable.with(1, 3), partition.getRejected().toSet());
     }
 
     @Override
@@ -78,7 +77,7 @@ public class ImmutableUnifiedMap2Test extends MapIterableTestCase
                 "C", 3,
                 "D", 4);
         PartitionIterable<Integer> partition = map.partitionWith(Predicates2.in(), map.select(IntegerPredicates.isEven()));
-        assertEquals(iSet(2, 4), partition.getSelected().toSet());
-        assertEquals(iSet(1, 3), partition.getRejected().toSet());
+        Assert.assertEquals(Sets.immutable.with(2, 4), partition.getSelected().toSet());
+        Assert.assertEquals(Sets.immutable.with(1, 3), partition.getRejected().toSet());
     }
 }

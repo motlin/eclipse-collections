@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,15 +10,13 @@
 
 package org.eclipse.collections.impl.list.immutable;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableDecapletonListTest extends AbstractImmutableListTestCase
 {
@@ -41,15 +39,15 @@ public class ImmutableDecapletonListTest extends AbstractImmutableListTestCase
     public void selectInstanceOf()
     {
         ImmutableList<Number> numbers = new ImmutableDecapletonList<>(1, 2.0, 3, 4.0, 5, 6.0, 7, 8.0, 9, 10.0);
-        assertEquals(
-                iList(1, 3, 5, 7, 9),
+        Assert.assertEquals(
+                Lists.immutable.with(1, 3, 5, 7, 9),
                 numbers.selectInstancesOf(Integer.class));
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void getOnly()
     {
         ImmutableList<Integer> list = this.classUnderTest();
-        assertThrows(IllegalStateException.class, () -> list.getOnly());
+        list.getOnly();
     }
 }

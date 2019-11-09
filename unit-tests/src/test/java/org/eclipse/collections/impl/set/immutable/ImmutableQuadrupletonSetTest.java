@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,13 +10,11 @@
 
 package org.eclipse.collections.impl.set.immutable;
 
+import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iSet;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableQuadrupletonSetTest
         extends AbstractImmutableSetTestCase
@@ -43,14 +41,14 @@ public class ImmutableQuadrupletonSetTest
     public void selectInstanceOf()
     {
         ImmutableSet<Number> numbers = new ImmutableQuadrupletonSet<>(1, 2.0, 3, 4.0);
-        assertEquals(
-                iSet(1, 3),
+        Assert.assertEquals(
+                Sets.immutable.with(1, 3),
                 numbers.selectInstancesOf(Integer.class));
     }
 
     @Test
     public void getOnly()
     {
-        assertThrows(IllegalStateException.class, () -> this.classUnderTest().getOnly());
+        Verify.assertThrows(IllegalStateException.class, () -> this.classUnderTest().getOnly());
     }
 }

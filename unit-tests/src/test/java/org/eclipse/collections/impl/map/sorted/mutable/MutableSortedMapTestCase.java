@@ -52,8 +52,6 @@ import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-
 /**
  * Abstract JUnit TestCase for {@link MutableSortedMap}s.
  */
@@ -369,8 +367,8 @@ public abstract class MutableSortedMapTestCase extends MutableMapIterableTestCas
                 "C", 3,
                 "D", 4);
         PartitionMutableList<Integer> partition = map.partition(IntegerPredicates.isEven());
-        Assert.assertEquals(iList(4, 2), partition.getSelected());
-        Assert.assertEquals(iList(3, 1), partition.getRejected());
+        Assert.assertEquals(Lists.immutable.with(4, 2), partition.getSelected());
+        Assert.assertEquals(Lists.immutable.with(3, 1), partition.getRejected());
     }
 
     @Override
@@ -384,8 +382,8 @@ public abstract class MutableSortedMapTestCase extends MutableMapIterableTestCas
                 "C", 3,
                 "D", 4);
         PartitionMutableList<Integer> partition = map.partitionWith(Predicates2.in(), map.select(IntegerPredicates.isEven()));
-        Assert.assertEquals(iList(4, 2), partition.getSelected());
-        Assert.assertEquals(iList(3, 1), partition.getRejected());
+        Assert.assertEquals(Lists.immutable.with(4, 2), partition.getSelected());
+        Assert.assertEquals(Lists.immutable.with(3, 1), partition.getRejected());
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -14,14 +14,12 @@ import java.io.IOException;
 
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
-import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.block.function.checked.CheckedFunction;
 import org.eclipse.collections.impl.block.function.checked.CheckedFunction0;
@@ -35,21 +33,16 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.utility.ListIterate;
 import org.eclipse.collections.impl.utility.MapIterate;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-import static org.eclipse.collections.impl.factory.Iterables.mList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class CheckedBlocksTest
 {
     @Test
     public void checkedFunction2CheckedException()
     {
-        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () ->
-        {
-            Function2<String, String, String> block =
+        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () -> {
+            CheckedFunction2<String, String, String> block =
                     new CheckedFunction2<String, String, String>()
                     {
                         @Override
@@ -65,9 +58,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedFunction2RuntimeException()
     {
-        assertThrows(LocalException.class, () ->
-        {
-            Function2<String, String, String> block =
+        Verify.assertThrows(LocalException.class, () -> {
+            CheckedFunction2<String, String, String> block =
                     new CheckedFunction2<String, String, String>()
                     {
                         @Override
@@ -83,9 +75,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedCodeBlockCheckedException()
     {
-        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () ->
-        {
-            Function0<String> function = new CheckedFunction0<String>()
+        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () -> {
+            CheckedFunction0<String> function = new CheckedFunction0<String>()
             {
                 @Override
                 public String safeValue() throws IOException
@@ -100,9 +91,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedCodeBlockRuntimeException()
     {
-        assertThrows(LocalException.class, () ->
-        {
-            Function0<String> function = new CheckedFunction0<String>()
+        Verify.assertThrows(LocalException.class, () -> {
+            CheckedFunction0<String> function = new CheckedFunction0<String>()
             {
                 @Override
                 public String safeValue()
@@ -117,9 +107,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedProcedureCheckedException()
     {
-        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () ->
-        {
-            Procedure<String> block = new CheckedProcedure<String>()
+        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () -> {
+            CheckedProcedure<String> block = new CheckedProcedure<String>()
             {
                 @Override
                 public void safeValue(String object) throws IOException
@@ -134,9 +123,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedProcedureRuntimeException()
     {
-        assertThrows(LocalException.class, () ->
-        {
-            Procedure<String> block = new CheckedProcedure<String>()
+        Verify.assertThrows(LocalException.class, () -> {
+            CheckedProcedure<String> block = new CheckedProcedure<String>()
             {
                 @Override
                 public void safeValue(String object)
@@ -151,9 +139,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedObjectIntProcedureCheckedException()
     {
-        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () ->
-        {
-            ObjectIntProcedure<String> block = new CheckedObjectIntProcedure<String>()
+        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () -> {
+            CheckedObjectIntProcedure<String> block = new CheckedObjectIntProcedure<String>()
             {
                 @Override
                 public void safeValue(String object, int index) throws IOException
@@ -168,9 +155,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedObjectIntProcedureRuntimeException()
     {
-        assertThrows(LocalException.class, () ->
-        {
-            ObjectIntProcedure<String> block = new CheckedObjectIntProcedure<String>()
+        Verify.assertThrows(LocalException.class, () -> {
+            CheckedObjectIntProcedure<String> block = new CheckedObjectIntProcedure<String>()
             {
                 @Override
                 public void safeValue(String object, int index)
@@ -185,9 +171,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedFunctionCheckedException()
     {
-        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () ->
-        {
-            Function<String, String> block =
+        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () -> {
+            CheckedFunction<String, String> block =
                     new CheckedFunction<String, String>()
                     {
                         @Override
@@ -203,9 +188,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedFunctionRuntimeException()
     {
-        assertThrows(LocalException.class, () ->
-        {
-            Function<String, String> block =
+        Verify.assertThrows(LocalException.class, () -> {
+            CheckedFunction<String, String> block =
                     new CheckedFunction<String, String>()
                     {
                         @Override
@@ -221,9 +205,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedPredicateCheckedException()
     {
-        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () ->
-        {
-            Predicate<String> block = new CheckedPredicate<String>()
+        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () -> {
+            CheckedPredicate<String> block = new CheckedPredicate<String>()
             {
                 @Override
                 public boolean safeAccept(String object) throws IOException
@@ -238,9 +221,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedPredicateRuntimeException()
     {
-        assertThrows(LocalException.class, () ->
-        {
-            Predicate<String> block = new CheckedPredicate<String>()
+        Verify.assertThrows(LocalException.class, () -> {
+            CheckedPredicate<String> block = new CheckedPredicate<String>()
             {
                 @Override
                 public boolean safeAccept(String object)
@@ -255,9 +237,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedPredicate2CheckedException()
     {
-        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () ->
-        {
-            Predicate2<String, String> block =
+        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () -> {
+            CheckedPredicate2<String, String> block =
                     new CheckedPredicate2<String, String>()
                     {
                         @Override
@@ -273,9 +254,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedPredicate2RuntimeException()
     {
-        assertThrows(LocalException.class, () ->
-        {
-            Predicate2<String, String> block =
+        Verify.assertThrows(LocalException.class, () -> {
+            CheckedPredicate2<String, String> block =
                     new CheckedPredicate2<String, String>()
                     {
                         @Override
@@ -291,9 +271,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedProcedure2CheckedException()
     {
-        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () ->
-        {
-            Procedure2<String, String> block = new CheckedProcedure2<String, String>()
+        Verify.assertThrowsWithCause(RuntimeException.class, IOException.class, () -> {
+            CheckedProcedure2<String, String> block = new CheckedProcedure2<String, String>()
             {
                 @Override
                 public void safeValue(String object, String parameter) throws IOException
@@ -308,9 +287,8 @@ public class CheckedBlocksTest
     @Test
     public void checkedProcedure2RuntimeException()
     {
-        assertThrows(LocalException.class, () ->
-        {
-            Procedure2<String, String> block = new CheckedProcedure2<String, String>()
+        Verify.assertThrows(LocalException.class, () -> {
+            CheckedProcedure2<String, String> block = new CheckedProcedure2<String, String>()
             {
                 @Override
                 public void safeValue(String object, String parameter)
@@ -332,7 +310,7 @@ public class CheckedBlocksTest
         }
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void codeBlockFailure()
     {
         Function0<Object> function = new CheckedFunction0<Object>()
@@ -344,10 +322,10 @@ public class CheckedBlocksTest
             }
         };
         MutableMap<String, Object> values = UnifiedMap.newMap();
-        assertThrows(RuntimeException.class, () -> MapIterate.getIfAbsentPut(values, "test", function));
+        MapIterate.getIfAbsentPut(values, "test", function);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void codeBlockRuntimeException()
     {
         Function0<Object> function = new CheckedFunction0<Object>()
@@ -359,7 +337,7 @@ public class CheckedBlocksTest
             }
         };
         MutableMap<String, Object> values = UnifiedMap.newMap();
-        assertThrows(RuntimeException.class, () -> MapIterate.getIfAbsentPut(values, "test", function));
+        MapIterate.getIfAbsentPut(values, "test", function);
     }
 
     @Test
@@ -377,7 +355,7 @@ public class CheckedBlocksTest
         MapIterate.getIfAbsentPut(values, "test", function);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void procedureFailure()
     {
         Procedure<Object> block = new CheckedProcedure<Object>()
@@ -388,10 +366,10 @@ public class CheckedBlocksTest
                 throw new InterruptedException();
             }
         };
-        assertThrows(RuntimeException.class, () -> iList("test").forEach(block));
+        Lists.immutable.with("test").forEach(block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void procedureRuntimeException()
     {
         Procedure<Object> block = new CheckedProcedure<Object>()
@@ -402,7 +380,7 @@ public class CheckedBlocksTest
                 throw new RuntimeException();
             }
         };
-        assertThrows(RuntimeException.class, () -> iList("test").forEach(block));
+        Lists.immutable.with("test").forEach(block);
     }
 
     @Test
@@ -415,10 +393,10 @@ public class CheckedBlocksTest
             {
             }
         };
-        iList("test").forEach(block);
+        Lists.immutable.with("test").forEach(block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void objectIntProcedureFailure()
     {
         ObjectIntProcedure<Object> block = new CheckedObjectIntProcedure<Object>()
@@ -429,10 +407,10 @@ public class CheckedBlocksTest
                 throw new InterruptedException();
             }
         };
-        assertThrows(RuntimeException.class, () -> iList("test").forEachWithIndex(block));
+        Lists.immutable.with("test").forEachWithIndex(block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void objectIntProcedureRuntimeException()
     {
         ObjectIntProcedure<Object> block = new CheckedObjectIntProcedure<Object>()
@@ -443,7 +421,7 @@ public class CheckedBlocksTest
                 throw new RuntimeException();
             }
         };
-        assertThrows(RuntimeException.class, () -> iList("test").forEachWithIndex(block));
+        Lists.immutable.with("test").forEachWithIndex(block);
     }
 
     @Test
@@ -456,10 +434,10 @@ public class CheckedBlocksTest
             {
             }
         };
-        iList("test").forEachWithIndex(block);
+        Lists.immutable.with("test").forEachWithIndex(block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void functionFailure()
     {
         Function<Object, Object> block = new CheckedFunction<Object, Object>()
@@ -470,10 +448,10 @@ public class CheckedBlocksTest
                 throw new InterruptedException();
             }
         };
-        assertThrows(RuntimeException.class, () -> iList("test").collect(block));
+        Lists.immutable.with("test").collect(block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void functionRuntimeException()
     {
         Function<Object, Object> block = new CheckedFunction<Object, Object>()
@@ -484,7 +462,7 @@ public class CheckedBlocksTest
                 throw new RuntimeException();
             }
         };
-        assertThrows(RuntimeException.class, () -> iList("test").collect(block));
+        Lists.immutable.with("test").collect(block);
     }
 
     @Test
@@ -498,10 +476,10 @@ public class CheckedBlocksTest
                 return null;
             }
         };
-        iList("test").collect(block);
+        Lists.immutable.with("test").collect(block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void predicateFailure()
     {
         Predicate<Object> block = new CheckedPredicate<Object>()
@@ -512,10 +490,10 @@ public class CheckedBlocksTest
                 throw new InterruptedException();
             }
         };
-        assertThrows(RuntimeException.class, () -> iList("test").select(block));
+        Lists.immutable.with("test").select(block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void predicateRuntimeException()
     {
         Predicate<Object> block = new CheckedPredicate<Object>()
@@ -526,35 +504,24 @@ public class CheckedBlocksTest
                 throw new RuntimeException();
             }
         };
-        assertThrows(RuntimeException.class, () -> iList("test").select(block));
+        Lists.immutable.with("test").select(block);
     }
 
     @Test
     public void predicateSuccess()
     {
-        Predicate<String> alwaysTrueBlock = new CheckedPredicate<String>()
+        Predicate<Object> block = new CheckedPredicate<Object>()
         {
             @Override
-            public boolean safeAccept(String s)
+            public boolean safeAccept(Object object)
             {
                 return true;
             }
         };
-        ImmutableList<String> list = iList("test");
-        assertEquals(list, list.select(alwaysTrueBlock));
-
-        Predicate<String> alwaysFalseBlock = new CheckedPredicate<String>()
-        {
-            @Override
-            public boolean safeAccept(String s)
-            {
-                return false;
-            }
-        };
-        Verify.assertEmpty(list.select(alwaysFalseBlock));
+        Lists.immutable.with("test").select(block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void procedure2Failure()
     {
         Procedure2<Object, Object> block = new CheckedProcedure2<Object, Object>()
@@ -565,10 +532,10 @@ public class CheckedBlocksTest
                 throw new InterruptedException();
             }
         };
-        assertThrows(RuntimeException.class, () -> ListIterate.forEachInBoth(mList("test"), mList("test"), block));
+        ListIterate.forEachInBoth(Lists.mutable.with("test"), Lists.mutable.with("test"), block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void procedure2RuntimeException()
     {
         Procedure2<Object, Object> block = new CheckedProcedure2<Object, Object>()
@@ -579,7 +546,7 @@ public class CheckedBlocksTest
                 throw new RuntimeException();
             }
         };
-        assertThrows(RuntimeException.class, () -> ListIterate.forEachInBoth(mList("test"), mList("test"), block));
+        ListIterate.forEachInBoth(Lists.mutable.with("test"), Lists.mutable.with("test"), block);
     }
 
     @Test
@@ -593,10 +560,10 @@ public class CheckedBlocksTest
                 // nop
             }
         };
-        ListIterate.forEachInBoth(mList("test"), mList("test"), block);
+        ListIterate.forEachInBoth(Lists.mutable.with("test"), Lists.mutable.with("test"), block);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void predicate2Failure()
     {
         Predicate2<Object, Object> block = new CheckedPredicate2<Object, Object>()
@@ -607,10 +574,10 @@ public class CheckedBlocksTest
                 throw new InterruptedException();
             }
         };
-        assertThrows(RuntimeException.class, () -> mList("test").selectWith(block, null));
+        Lists.mutable.with("test").selectWith(block, null);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void predicate2RuntimeException()
     {
         Predicate2<Object, Object> block = new CheckedPredicate2<Object, Object>()
@@ -621,32 +588,21 @@ public class CheckedBlocksTest
                 throw new RuntimeException();
             }
         };
-        assertThrows(RuntimeException.class, () -> mList("test").selectWith(block, null));
+        Lists.mutable.with("test").selectWith(block, null);
     }
 
     @Test
     public void predicate2Success()
     {
-        Predicate2<String, Object> alwaysTrueBlock = new CheckedPredicate2<String, Object>()
+        Predicate2<Object, Object> block = new CheckedPredicate2<Object, Object>()
         {
             @Override
-            public boolean safeAccept(String s, Object param)
+            public boolean safeAccept(Object object, Object param)
             {
                 return true;
             }
         };
-        MutableList<String> list = mList("test");
-        assertEquals(list, list.selectWith(alwaysTrueBlock, null));
-
-        Predicate2<String, Object> alwaysFalseBlock = new CheckedPredicate2<String, Object>()
-        {
-            @Override
-            public boolean safeAccept(String s, Object param)
-            {
-                return false;
-            }
-        };
-        Verify.assertEmpty(list.selectWith(alwaysFalseBlock, null));
+        Lists.mutable.with("test").selectWith(block, null);
     }
 
     @Test
@@ -660,6 +616,6 @@ public class CheckedBlocksTest
                 return argument1 + argument2;
             }
         };
-        assertEquals(Integer.valueOf(5), checkedFunction2.safeValue(2, 3));
+        Assert.assertEquals(Integer.valueOf(5), checkedFunction2.safeValue(2, 3));
     }
 }

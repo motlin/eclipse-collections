@@ -13,9 +13,8 @@ package org.eclipse.collections.impl.parallel;
 import java.util.concurrent.Executor;
 
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.utility.ArrayIterate;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
 
 /**
  * The ParallelArrayIterate class contains a parallel forEach algorithm that work with Java arrays. The forEach
@@ -81,7 +80,7 @@ public final class ParallelArrayIterate
         }
         else
         {
-            combiner.combineAll(iList(procedure));
+            combiner.combineAll(Lists.immutable.with(procedure));
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -20,6 +20,7 @@ import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MutableMap;
@@ -46,16 +47,8 @@ import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.Tuples;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-import static org.eclipse.collections.impl.factory.Iterables.iSet;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.Assert;
+import org.junit.Test;
 
 public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTestCase
 {
@@ -94,7 +87,7 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
                 Verify.assertContainsAllKeyValues(result, "1", "enO", "2", "owT", "3", "eerhT", "4", "ruoF");
                 break;
             default:
-                fail();
+                Assert.fail();
         }
     }
 
@@ -122,7 +115,7 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
                 Verify.assertContainsAllKeyValues(result, 1, "1:enO", 2, "2:owT", 3, "3:eerhT", 4, "4:ruoF");
                 break;
             default:
-                fail();
+                Assert.fail();
         }
     }
 
@@ -131,8 +124,8 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
     {
         ImmutableMap<String, String> map = this.newMapWithKeysValues("1", "One", "2", "Two", "3", "Three", "4", "Four");
 
-        assertTrue(map.allSatisfy(String.class::isInstance));
-        assertFalse(map.allSatisfy("Monkey"::equals));
+        Assert.assertTrue(map.allSatisfy(String.class::isInstance));
+        Assert.assertFalse(map.allSatisfy("Monkey"::equals));
     }
 
     @Test
@@ -140,8 +133,8 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
     {
         ImmutableMap<String, String> map = this.newMapWithKeysValues("1", "One", "2", "Two", "3", "Three", "4", "Four");
 
-        assertTrue(map.anySatisfy(String.class::isInstance));
-        assertFalse(map.anySatisfy("Monkey"::equals));
+        Assert.assertTrue(map.anySatisfy(String.class::isInstance));
+        Assert.assertFalse(map.anySatisfy("Monkey"::equals));
     }
 
     @Test
@@ -149,8 +142,8 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
     {
         ImmutableMap<String, String> map = this.newMapWithKeysValues("1", "One", "2", "Two", "3", "Three", "4", "Four");
 
-        assertTrue(map.noneSatisfy(Integer.class::isInstance));
-        assertTrue(map.noneSatisfy("Monkey"::equals));
+        Assert.assertTrue(map.noneSatisfy(Integer.class::isInstance));
+        Assert.assertTrue(map.noneSatisfy("Monkey"::equals));
     }
 
     @Test
@@ -173,41 +166,41 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals("One", defaultString);
-                assertEquals("One", delimitedString);
-                assertEquals("{One}", wrappedString);
+                Assert.assertEquals("One", defaultString);
+                Assert.assertEquals("One", delimitedString);
+                Assert.assertEquals("{One}", wrappedString);
                 break;
             case 2:
-                assertEquals(8, defaultString.length());
-                assertEquals(7, delimitedString.length());
+                Assert.assertEquals(8, defaultString.length());
+                Assert.assertEquals(7, delimitedString.length());
                 Verify.assertContains("|", delimitedString);
-                assertEquals(9, wrappedString.length());
+                Assert.assertEquals(9, wrappedString.length());
                 Verify.assertContains("|", wrappedString);
-                assertTrue(wrappedString.startsWith("{"));
-                assertTrue(wrappedString.endsWith("}"));
+                Assert.assertTrue(wrappedString.startsWith("{"));
+                Assert.assertTrue(wrappedString.endsWith("}"));
                 break;
             case 3:
-                assertEquals(15, defaultString.length());
-                assertEquals(13, delimitedString.length());
+                Assert.assertEquals(15, defaultString.length());
+                Assert.assertEquals(13, delimitedString.length());
                 Verify.assertContains("|", delimitedString);
-                assertEquals(15, wrappedString.length());
+                Assert.assertEquals(15, wrappedString.length());
                 Verify.assertContains("|", wrappedString);
-                assertTrue(wrappedString.startsWith("{"));
-                assertTrue(wrappedString.endsWith("}"));
+                Assert.assertTrue(wrappedString.startsWith("{"));
+                Assert.assertTrue(wrappedString.endsWith("}"));
                 break;
             case 4:
-                assertEquals(21, defaultString.length());
-                assertEquals(18, delimitedString.length());
+                Assert.assertEquals(21, defaultString.length());
+                Assert.assertEquals(18, delimitedString.length());
                 Verify.assertContains("|", delimitedString);
-                assertEquals(20, wrappedString.length());
+                Assert.assertEquals(20, wrappedString.length());
                 Verify.assertContains("|", wrappedString);
-                assertTrue(wrappedString.startsWith("{"));
-                assertTrue(wrappedString.endsWith("}"));
+                Assert.assertTrue(wrappedString.startsWith("{"));
+                Assert.assertTrue(wrappedString.endsWith("}"));
                 break;
             default:
-                assertEquals("", defaultString);
-                assertEquals("", delimitedString);
-                assertEquals("{}", wrappedString);
+                Assert.assertEquals("", defaultString);
+                Assert.assertEquals("", delimitedString);
+                Assert.assertEquals("{}", wrappedString);
                 break;
         }
     }
@@ -300,16 +293,16 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals(UnifiedMap.newWithKeysValues(3, "One"), actual);
+                Assert.assertEquals(UnifiedMap.newWithKeysValues(3, "One"), actual);
                 break;
             case 2:
-                assertEquals(UnifiedMap.newWithKeysValues(3, "One", 5, "Three"), actual);
+                Assert.assertEquals(UnifiedMap.newWithKeysValues(3, "One", 5, "Three"), actual);
                 break;
             case 3:
-                assertEquals(UnifiedMap.newWithKeysValues(3, "One", 5, "Three", 4, "Four"), actual);
+                Assert.assertEquals(UnifiedMap.newWithKeysValues(3, "One", 5, "Three", 4, "Four"), actual);
                 break;
             case 4:
-                assertEquals(UnifiedMap.newWithKeysValues(3, "One", 5, "Three", 4, "Four", 6, "Eleven"), actual);
+                Assert.assertEquals(UnifiedMap.newWithKeysValues(3, "One", 5, "Three", 4, "Four", 6, "Eleven"), actual);
                 break;
             default:
                 Verify.assertEmpty(actual);
@@ -352,16 +345,16 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals(iList(1), sorted);
+                Assert.assertEquals(Lists.immutable.with(1), sorted);
                 break;
             case 2:
-                assertEquals(iList(1, 2), sorted);
+                Assert.assertEquals(Lists.immutable.with(1, 2), sorted);
                 break;
             case 3:
-                assertEquals(iList(1, 2, 3), sorted);
+                Assert.assertEquals(Lists.immutable.with(1, 2, 3), sorted);
                 break;
             case 4:
-                assertEquals(iList(1, 2, 3, 4), sorted);
+                Assert.assertEquals(Lists.immutable.with(1, 2, 3, 4), sorted);
                 break;
             default:
                 Verify.assertEmpty(sorted);
@@ -372,16 +365,16 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals(iList(1), reverse);
+                Assert.assertEquals(Lists.immutable.with(1), reverse);
                 break;
             case 2:
-                assertEquals(iList(2, 1), reverse);
+                Assert.assertEquals(Lists.immutable.with(2, 1), reverse);
                 break;
             case 3:
-                assertEquals(iList(3, 2, 1), reverse);
+                Assert.assertEquals(Lists.immutable.with(3, 2, 1), reverse);
                 break;
             case 4:
-                assertEquals(iList(4, 3, 2, 1), reverse);
+                Assert.assertEquals(Lists.immutable.with(4, 3, 2, 1), reverse);
                 break;
             default:
                 Verify.assertEmpty(reverse);
@@ -398,16 +391,16 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals(iList(1), list);
+                Assert.assertEquals(Lists.immutable.with(1), list);
                 break;
             case 2:
-                assertEquals(iList(1, 2), list);
+                Assert.assertEquals(Lists.immutable.with(1, 2), list);
                 break;
             case 3:
-                assertEquals(iList(1, 2, 3), list);
+                Assert.assertEquals(Lists.immutable.with(1, 2, 3), list);
                 break;
             case 4:
-                assertEquals(iList(1, 2, 3, 4), list);
+                Assert.assertEquals(Lists.immutable.with(1, 2, 3, 4), list);
                 break;
             default:
                 Verify.assertEmpty(list);
@@ -427,19 +420,19 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals(iList(1), sizes);
+                Assert.assertEquals(Lists.immutable.with(1), sizes);
                 break;
             case 2:
-                assertEquals(iList(2), sizes);
+                Assert.assertEquals(Lists.immutable.with(2), sizes);
                 break;
             case 3:
-                assertEquals(iList(2, 1), sizes);
+                Assert.assertEquals(Lists.immutable.with(2, 1), sizes);
                 break;
             case 4:
-                assertEquals(iList(2, 2), sizes);
+                Assert.assertEquals(Lists.immutable.with(2, 2), sizes);
                 break;
             default:
-                assertEquals(0, chunks.size());
+                Assert.assertEquals(0, chunks.size());
                 break;
         }
     }
@@ -449,7 +442,7 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
     {
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
         MutableSet<String> collect = map.collect(Functions.getToString()).toSet();
-        MutableSet<String> collectToTarget = map.collect(String::valueOf, UnifiedSet.newSet());
+        UnifiedSet<String> collectToTarget = map.collect(String::valueOf, UnifiedSet.newSet());
 
         switch (map.size())
         {
@@ -481,7 +474,7 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
 
         MutableSet<String> collect = map.collectIf(Integer.class::isInstance, String::valueOf).toSet();
-        MutableSet<String> collectToTarget = map.collectIf(Integer.class::isInstance, String::valueOf, UnifiedSet.newSet());
+        UnifiedSet<String> collectToTarget = map.collectIf(Integer.class::isInstance, String::valueOf, UnifiedSet.newSet());
 
         switch (map.size())
         {
@@ -517,16 +510,16 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals(Bags.mutable.of(2), collectWith);
+                Assert.assertEquals(Bags.mutable.of(2), collectWith);
                 break;
             case 2:
-                assertEquals(Bags.mutable.of(2, 3), collectWith);
+                Assert.assertEquals(Bags.mutable.of(2, 3), collectWith);
                 break;
             case 3:
-                assertEquals(Bags.mutable.of(2, 3, 4), collectWith);
+                Assert.assertEquals(Bags.mutable.of(2, 3, 4), collectWith);
                 break;
             case 4:
-                assertEquals(Bags.mutable.of(2, 3, 4, 5), collectWith);
+                Assert.assertEquals(Bags.mutable.of(2, 3, 4, 5), collectWith);
                 break;
             default:
                 Verify.assertEmpty(collectWith);
@@ -542,20 +535,20 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertTrue(map.contains("One"));
-                assertFalse(map.contains("Two"));
+                Assert.assertTrue(map.contains("One"));
+                Assert.assertFalse(map.contains("Two"));
                 break;
             case 2:
-                assertTrue(map.contains("Two"));
-                assertFalse(map.contains("Three"));
+                Assert.assertTrue(map.contains("Two"));
+                Assert.assertFalse(map.contains("Three"));
                 break;
             case 3:
-                assertTrue(map.contains("Three"));
-                assertFalse(map.contains("Four"));
+                Assert.assertTrue(map.contains("Three"));
+                Assert.assertFalse(map.contains("Four"));
                 break;
             case 4:
-                assertTrue(map.contains("Four"));
-                assertFalse(map.contains("Five"));
+                Assert.assertTrue(map.contains("Four"));
+                Assert.assertFalse(map.contains("Five"));
                 break;
             default:
                 Verify.assertEmpty(map);
@@ -571,12 +564,12 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         if (map.isEmpty())
         {
             String value = map.getFirst();
-            assertNull(value);
+            Assert.assertNull(value);
         }
         else
         {
             String value = map.getFirst();
-            assertNotNull(value);
+            Assert.assertNotNull(value);
             Verify.assertContains(value, UnifiedSet.newSetWith("One", "Two", "Three", "Four"));
         }
     }
@@ -589,12 +582,12 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         if (map.isEmpty())
         {
             String value = map.getLast();
-            assertNull(value);
+            Assert.assertNull(value);
         }
         else
         {
             String value = map.getLast();
-            assertNotNull(value);
+            Assert.assertNotNull(value);
             Verify.assertContains(value, UnifiedSet.newSetWith("One", "Two", "Three", "Four"));
         }
     }
@@ -607,16 +600,16 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertTrue(map.containsAllIterable(iList("One")));
+                Assert.assertTrue(map.containsAllIterable(Lists.immutable.with("One")));
                 break;
             case 2:
-                assertTrue(map.containsAllIterable(iList("One", "Two")));
+                Assert.assertTrue(map.containsAllIterable(Lists.immutable.with("One", "Two")));
                 break;
             case 3:
-                assertTrue(map.containsAllIterable(iList("One", "Two", "Three")));
+                Assert.assertTrue(map.containsAllIterable(Lists.immutable.with("One", "Two", "Three")));
                 break;
             case 4:
-                assertTrue(map.containsAllIterable(iList("One", "Two", "Three", "Four")));
+                Assert.assertTrue(map.containsAllIterable(Lists.immutable.with("One", "Two", "Three", "Four")));
                 break;
             default:
                 Verify.assertEmpty(map);
@@ -632,16 +625,16 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertTrue(map.containsAllArguments("One"));
+                Assert.assertTrue(map.containsAllArguments("One"));
                 break;
             case 2:
-                assertTrue(map.containsAllArguments("One", "Two"));
+                Assert.assertTrue(map.containsAllArguments("One", "Two"));
                 break;
             case 3:
-                assertTrue(map.containsAllArguments("One", "Two", "Three"));
+                Assert.assertTrue(map.containsAllArguments("One", "Two", "Three"));
                 break;
             case 4:
-                assertTrue(map.containsAllArguments("One", "Two", "Three", "Four"));
+                Assert.assertTrue(map.containsAllArguments("One", "Two", "Three", "Four"));
                 break;
             default:
                 Verify.assertEmpty(map);
@@ -659,19 +652,19 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals(1, actual);
+                Assert.assertEquals(1, actual);
                 break;
             case 2:
-                assertEquals(1, actual);
+                Assert.assertEquals(1, actual);
                 break;
             case 3:
-                assertEquals(2, actual);
+                Assert.assertEquals(2, actual);
                 break;
             case 4:
-                assertEquals(2, actual);
+                Assert.assertEquals(2, actual);
                 break;
             default:
-                assertEquals(0, actual);
+                Assert.assertEquals(0, actual);
                 break;
         }
     }
@@ -684,15 +677,15 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         if (map.isEmpty())
         {
             String resultNotFound = map.detect(ignored -> true);
-            assertNull(resultNotFound);
+            Assert.assertNull(resultNotFound);
         }
         else
         {
             String resultFound = map.detect("One"::equals);
-            assertEquals("One", resultFound);
+            Assert.assertEquals("One", resultFound);
 
             String resultNotFound = map.detect("Five"::equals);
-            assertNull(resultNotFound);
+            Assert.assertNull(resultNotFound);
         }
     }
 
@@ -704,15 +697,15 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         if (map.isEmpty())
         {
             String resultNotFound = map.detectIfNone(ignored -> true, () -> "Zero");
-            assertEquals("Zero", resultNotFound);
+            Assert.assertEquals("Zero", resultNotFound);
         }
         else
         {
             String resultNotFound = map.detectIfNone("Five"::equals, () -> "Zero");
-            assertEquals("Zero", resultNotFound);
+            Assert.assertEquals("Zero", resultNotFound);
 
             String resultFound = map.detectIfNone("One"::equals, () -> "Zero");
-            assertEquals("One", resultFound);
+            Assert.assertEquals("One", resultFound);
         }
     }
 
@@ -726,14 +719,14 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
             Function<Integer, Iterable<Object>> fail = each -> {
                 throw new AssertionError();
             };
-            assertEquals(Bags.immutable.empty(), map.flatCollect(fail));
-            assertEquals(Bags.immutable.empty(), map.flatCollect(fail, HashBag.newBag()));
+            Assert.assertEquals(Bags.immutable.empty(), map.flatCollect(fail));
+            Assert.assertEquals(Bags.immutable.empty(), map.flatCollect(fail, HashBag.newBag()));
         }
         else
         {
             MutableBag<Integer> expected = Interval.oneTo(map.size()).flatCollect(Interval::oneTo).toBag();
-            assertEquals(expected, map.flatCollect(Interval::oneTo));
-            assertEquals(expected, map.flatCollect(Interval::oneTo, HashBag.newBag()));
+            Assert.assertEquals(expected, map.flatCollect(Interval::oneTo));
+            Assert.assertEquals(expected, map.flatCollect(Interval::oneTo, HashBag.newBag()));
         }
     }
 
@@ -766,10 +759,10 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         }
 
         Multimap<Boolean, Integer> actual = map.groupBy(isOddFunction);
-        assertEquals(HashBagMultimap.newMultimap(expected), HashBagMultimap.newMultimap(actual));
+        Assert.assertEquals(HashBagMultimap.newMultimap(expected), HashBagMultimap.newMultimap(actual));
 
         Multimap<Boolean, Integer> actualFromTarget = map.groupBy(isOddFunction, FastListMultimap.newMultimap());
-        assertEquals(HashBagMultimap.newMultimap(expected), HashBagMultimap.newMultimap(actualFromTarget));
+        Assert.assertEquals(HashBagMultimap.newMultimap(expected), HashBagMultimap.newMultimap(actualFromTarget));
     }
 
     @Test
@@ -786,18 +779,18 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         NegativeIntervalFunction function = new NegativeIntervalFunction();
         Multimap<Integer, Integer> actual = map.groupByEach(function);
         expected.forEachKey(each -> {
-            assertTrue(actual.containsKey(each));
+            Assert.assertTrue(actual.containsKey(each));
             MutableList<Integer> values = actual.get(each).toList();
             Verify.assertNotEmpty(values);
-            assertTrue(expected.get(each).containsAllIterable(values));
+            Assert.assertTrue(expected.get(each).containsAllIterable(values));
         });
 
         Multimap<Integer, Integer> actualFromTarget = map.groupByEach(function, FastListMultimap.newMultimap());
         expected.forEachKey(each -> {
-            assertTrue(actualFromTarget.containsKey(each));
+            Assert.assertTrue(actualFromTarget.containsKey(each));
             MutableList<Integer> values = actualFromTarget.get(each).toList();
             Verify.assertNotEmpty(values);
-            assertTrue(expected.get(each).containsAllIterable(values));
+            Assert.assertTrue(expected.get(each).containsAllIterable(values));
         });
     }
 
@@ -834,10 +827,10 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         }
 
         Integer actual = map.injectInto(0, AddFunction.INTEGER);
-        assertEquals(expectedInteger, actual);
+        Assert.assertEquals(expectedInteger, actual);
 
         Sum sum = map.injectInto(new IntegerSum(0), SumProcedure.number());
-        assertEquals(expectedSum, sum);
+        Assert.assertEquals(expectedSum, sum);
     }
 
     @Test
@@ -852,41 +845,41 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (map.size())
         {
             case 1:
-                assertEquals("One", defaultString);
-                assertEquals("One", delimitedString);
-                assertEquals("{One}", wrappedString);
+                Assert.assertEquals("One", defaultString);
+                Assert.assertEquals("One", delimitedString);
+                Assert.assertEquals("{One}", wrappedString);
                 break;
             case 2:
-                assertEquals(8, defaultString.length());
-                assertEquals(7, delimitedString.length());
+                Assert.assertEquals(8, defaultString.length());
+                Assert.assertEquals(7, delimitedString.length());
                 Verify.assertContains("|", delimitedString);
-                assertEquals(9, wrappedString.length());
+                Assert.assertEquals(9, wrappedString.length());
                 Verify.assertContains("|", wrappedString);
-                assertTrue(wrappedString.startsWith("{"));
-                assertTrue(wrappedString.endsWith("}"));
+                Assert.assertTrue(wrappedString.startsWith("{"));
+                Assert.assertTrue(wrappedString.endsWith("}"));
                 break;
             case 3:
-                assertEquals(15, defaultString.length());
-                assertEquals(13, delimitedString.length());
+                Assert.assertEquals(15, defaultString.length());
+                Assert.assertEquals(13, delimitedString.length());
                 Verify.assertContains("|", delimitedString);
-                assertEquals(15, wrappedString.length());
+                Assert.assertEquals(15, wrappedString.length());
                 Verify.assertContains("|", wrappedString);
-                assertTrue(wrappedString.startsWith("{"));
-                assertTrue(wrappedString.endsWith("}"));
+                Assert.assertTrue(wrappedString.startsWith("{"));
+                Assert.assertTrue(wrappedString.endsWith("}"));
                 break;
             case 4:
-                assertEquals(21, defaultString.length());
-                assertEquals(18, delimitedString.length());
+                Assert.assertEquals(21, defaultString.length());
+                Assert.assertEquals(18, delimitedString.length());
                 Verify.assertContains("|", delimitedString);
-                assertEquals(20, wrappedString.length());
+                Assert.assertEquals(20, wrappedString.length());
                 Verify.assertContains("|", wrappedString);
-                assertTrue(wrappedString.startsWith("{"));
-                assertTrue(wrappedString.endsWith("}"));
+                Assert.assertTrue(wrappedString.startsWith("{"));
+                Assert.assertTrue(wrappedString.endsWith("}"));
                 break;
             default:
-                assertEquals("", defaultString);
-                assertEquals("", delimitedString);
-                assertEquals("{}", wrappedString);
+                Assert.assertEquals("", defaultString);
+                Assert.assertEquals("", delimitedString);
+                Assert.assertEquals("{}", wrappedString);
                 break;
         }
     }
@@ -896,8 +889,8 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
     {
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
 
-        assertEquals(Integer.valueOf(1), map.min());
-        assertEquals(Integer.valueOf(1), map.min(Integer::compareTo));
+        Assert.assertEquals(Integer.valueOf(1), map.min());
+        Assert.assertEquals(Integer.valueOf(1), map.min(Integer::compareTo));
     }
 
     @Test
@@ -926,8 +919,8 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
                 break;
         }
 
-        assertEquals(max, map.max());
-        assertEquals(max, map.max(Integer::compareTo));
+        Assert.assertEquals(max, map.max());
+        Assert.assertEquals(max, map.max(Integer::compareTo));
     }
 
     @Test
@@ -935,15 +928,15 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
     {
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
 
-        assertEquals(Integer.valueOf(1), map.minBy(String::valueOf));
+        Assert.assertEquals(Integer.valueOf(1), map.minBy(String::valueOf));
     }
 
     @Test
     public void maxBy()
     {
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
-        assertEquals(Integer.valueOf(map.size()), map.maxBy(String::valueOf));
-        Verify.assertContains(Integer.valueOf(map.size()), iList(1, 2, 3, 4));
+        Assert.assertEquals(Integer.valueOf(map.size()), map.maxBy(String::valueOf));
+        Verify.assertContains(Integer.valueOf(map.size()), Lists.immutable.with(1, 2, 3, 4));
     }
 
     @Test
@@ -952,11 +945,11 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
 
         MutableSet<Integer> rejected = map.reject(IntegerPredicates.isEven()).toSet();
-        MutableSet<Integer> rejectedIntoTarget = map.reject(IntegerPredicates.isEven(), UnifiedSet.newSet());
+        UnifiedSet<Integer> rejectedIntoTarget = map.reject(IntegerPredicates.isEven(), UnifiedSet.newSet());
 
         ImmutableSet<Integer> expected = this.expectReject(map.size());
-        assertEquals(expected, rejected);
-        assertEquals(expected, rejectedIntoTarget);
+        Assert.assertEquals(expected, rejected);
+        Assert.assertEquals(expected, rejectedIntoTarget);
     }
 
     private ImmutableSet<Integer> expectReject(int size)
@@ -964,13 +957,13 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         switch (size)
         {
             case 0:
-                return iSet();
+                return Sets.immutable.empty();
             case 1:
             case 2:
-                return iSet(1);
+                return Sets.immutable.with(1);
             case 3:
             case 4:
-                return iSet(1, 3);
+                return Sets.immutable.with(1, 3);
             default:
                 throw new AssertionError();
         }
@@ -1007,8 +1000,8 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
         ImmutableSet<Integer> expected = this.expectSelect(map.size());
 
-        assertEquals(expected, map.select(IntegerPredicates.isEven()).toSet());
-        assertEquals(expected, map.select(IntegerPredicates.isEven(), UnifiedSet.newSet()));
+        Assert.assertEquals(expected, map.select(IntegerPredicates.isEven()).toSet());
+        Assert.assertEquals(expected, map.select(IntegerPredicates.isEven(), UnifiedSet.newSet()));
     }
 
     private ImmutableSet<Integer> expectSelect(int size)
@@ -1017,12 +1010,12 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         {
             case 0:
             case 1:
-                return iSet();
+                return Sets.immutable.empty();
             case 2:
             case 3:
-                return iSet(2);
+                return Sets.immutable.with(2);
             case 4:
-                return iSet(2, 4);
+                return Sets.immutable.with(2, 4);
             default:
                 throw new AssertionError();
         }
@@ -1055,8 +1048,8 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
         PartitionImmutableCollection<Integer> partition = map.partition(IntegerPredicates.isEven());
 
-        assertEquals(this.expectSelect(map.size()), partition.getSelected().toSet());
-        assertEquals(this.expectReject(map.size()), partition.getRejected().toSet());
+        Assert.assertEquals(this.expectSelect(map.size()), partition.getSelected().toSet());
+        Assert.assertEquals(this.expectReject(map.size()), partition.getRejected().toSet());
     }
 
     @Test
@@ -1065,8 +1058,8 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         ImmutableMap<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
         PartitionImmutableCollection<Integer> partition = map.partitionWith(Predicates2.in(), map.select(IntegerPredicates.isEven()));
 
-        assertEquals(this.expectSelect(map.size()), partition.getSelected().toSet());
-        assertEquals(this.expectReject(map.size()), partition.getRejected().toSet());
+        Assert.assertEquals(this.expectSelect(map.size()), partition.getSelected().toSet());
+        Assert.assertEquals(this.expectReject(map.size()), partition.getRejected().toSet());
     }
 
     @Test
@@ -1102,27 +1095,27 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
         List<Object> nullsPlusOne = Collections.nCopies(map.size() + 1, null);
 
         RichIterable<Pair<String, Object>> pairs = map.zip(nulls);
-        assertEquals(
+        Assert.assertEquals(
                 map.toSet(),
                 pairs.collect((Function<Pair<String, ?>, String>) Pair::getOne).toSet());
-        assertEquals(
+        Assert.assertEquals(
                 nulls,
                 pairs.collect((Function<Pair<?, Object>, Object>) Pair::getTwo, Lists.mutable.of()));
 
         RichIterable<Pair<String, Object>> pairsPlusOne = map.zip(nullsPlusOne);
-        assertEquals(
+        Assert.assertEquals(
                 map.toSet(),
                 pairsPlusOne.collect((Function<Pair<String, ?>, String>) Pair::getOne).toSet());
-        assertEquals(nulls, pairsPlusOne.collect((Function<Pair<?, Object>, Object>) Pair::getTwo, Lists.mutable.of()));
+        Assert.assertEquals(nulls, pairsPlusOne.collect((Function<Pair<?, Object>, Object>) Pair::getTwo, Lists.mutable.of()));
 
         if (map.notEmpty())
         {
             List<Object> nullsMinusOne = Collections.nCopies(map.size() - 1, null);
             RichIterable<Pair<String, Object>> pairsMinusOne = map.zip(nullsMinusOne);
-            assertEquals(map.size() - 1, pairsMinusOne.size());
+            Assert.assertEquals(map.size() - 1, pairsMinusOne.size());
         }
 
-        assertEquals(
+        Assert.assertEquals(
                 map.zip(nulls).toSet(),
                 map.zip(nulls, UnifiedSet.newSet()));
     }
@@ -1134,17 +1127,17 @@ public abstract class ImmutableMemoryEfficientMapTestCase extends ImmutableMapTe
 
         RichIterable<Pair<String, Integer>> pairs = map.zipWithIndex();
 
-        assertEquals(
+        Assert.assertEquals(
                 map.toSet(),
                 pairs.collect((Function<Pair<String, ?>, String>) Pair::getOne).toSet());
         if (map.notEmpty())
         {
-            assertEquals(
+            Assert.assertEquals(
                     Interval.zeroTo(map.size() - 1).toSet(),
                     pairs.collect((Function<Pair<?, Integer>, Integer>) Pair::getTwo, UnifiedSet.newSet()));
         }
 
-        assertEquals(
+        Assert.assertEquals(
                 map.zipWithIndex().toSet(),
                 map.zipWithIndex(UnifiedSet.newSet()));
     }

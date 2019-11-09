@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.collection.mutable;
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.collection.MutableCollection;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.multimap.Multimap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.partition.PartitionMutableCollection;
@@ -23,12 +24,8 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.SynchronizedMutableList;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link SynchronizedMutableCollection}.
@@ -53,7 +50,7 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
     @Override
     public void equalsAndHashCode()
     {
-        assertNotEquals(this.newWith(), this.newWith());
+        Assert.assertNotEquals(this.newWith(), this.newWith());
     }
 
     @Override
@@ -63,8 +60,8 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
         RichIterable<Integer> list = this.newWith(1, 2, 3, 4, 5, 6, 7);
         Multimap<Boolean, Integer> multimap = list.groupBy(object -> IntegerPredicates.isOdd().accept(object));
 
-        assertEquals(FastList.newListWith(1, 3, 5, 7), multimap.get(Boolean.TRUE));
-        assertEquals(FastList.newListWith(2, 4, 6), multimap.get(Boolean.FALSE));
+        Assert.assertEquals(FastList.newListWith(1, 3, 5, 7), multimap.get(Boolean.TRUE));
+        Assert.assertEquals(FastList.newListWith(2, 4, 6), multimap.get(Boolean.FALSE));
     }
 
     @Override
@@ -80,11 +77,11 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
 
         Multimap<Integer, Integer> actual =
                 underTest.groupByEach(new NegativeIntervalFunction());
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
 
         Multimap<Integer, Integer> actualWithTarget =
                 underTest.groupByEach(new NegativeIntervalFunction(), FastListMultimap.newMultimap());
-        assertEquals(expected, actualWithTarget);
+        Assert.assertEquals(expected, actualWithTarget);
     }
 
     @Override
@@ -107,8 +104,8 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
     {
         MutableCollection<Integer> integers = this.newWith(-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         PartitionMutableCollection<Integer> result = integers.partition(IntegerPredicates.isEven());
-        assertEquals(iList(-2, 0, 2, 4, 6, 8), result.getSelected());
-        assertEquals(iList(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
+        Assert.assertEquals(Lists.immutable.with(-2, 0, 2, 4, 6, 8), result.getSelected());
+        Assert.assertEquals(Lists.immutable.with(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
     }
 
     @Override
@@ -117,8 +114,8 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
     {
         MutableCollection<Integer> integers = this.newWith(-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         PartitionMutableCollection<Integer> result = integers.partitionWith(Predicates2.in(), integers.select(IntegerPredicates.isEven()));
-        assertEquals(iList(-2, 0, 2, 4, 6, 8), result.getSelected());
-        assertEquals(iList(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
+        Assert.assertEquals(Lists.immutable.with(-2, 0, 2, 4, 6, 8), result.getSelected());
+        Assert.assertEquals(Lists.immutable.with(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
     }
 
     @Override
@@ -127,8 +124,8 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
     {
         MutableCollection<Integer> coll = this.newWith(1, 2, 3);
         MutableCollection<Integer> collWith = coll.with(4);
-        assertSame(coll, collWith);
-        assertEquals(this.newWith(1, 2, 3, 4).toList(), collWith.toList());
+        Assert.assertSame(coll, collWith);
+        Assert.assertEquals(this.newWith(1, 2, 3, 4).toList(), collWith.toList());
     }
 
     @Override
@@ -137,8 +134,8 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
     {
         MutableCollection<Integer> coll = this.newWith(1, 2, 3);
         MutableCollection<Integer> collWith = coll.withAll(FastList.newListWith(4, 5));
-        assertSame(coll, collWith);
-        assertEquals(this.newWith(1, 2, 3, 4, 5).toList(), collWith.toList());
+        Assert.assertSame(coll, collWith);
+        Assert.assertEquals(this.newWith(1, 2, 3, 4, 5).toList(), collWith.toList());
     }
 
     @Override
@@ -147,10 +144,10 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
     {
         MutableCollection<Integer> coll = this.newWith(1, 2, 3);
         MutableCollection<Integer> collWithout = coll.without(2);
-        assertSame(coll, collWithout);
+        Assert.assertSame(coll, collWithout);
         MutableCollection<Integer> expectedSet = this.newWith(1, 3);
-        assertEquals(expectedSet.toList(), collWithout.toList());
-        assertEquals(expectedSet.toList(), collWithout.without(4).toList());
+        Assert.assertEquals(expectedSet.toList(), collWithout.toList());
+        Assert.assertEquals(expectedSet.toList(), collWithout.without(4).toList());
     }
 
     @Override
@@ -159,9 +156,9 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
     {
         MutableCollection<Integer> coll = this.newWith(1, 2, 3, 4, 5);
         MutableCollection<Integer> collWithout = coll.withoutAll(FastList.newListWith(2, 4));
-        assertSame(coll, collWithout);
+        Assert.assertSame(coll, collWithout);
         MutableCollection<Integer> expectedSet = this.newWith(1, 3, 5);
-        assertEquals(expectedSet.toList(), collWithout.toList());
-        assertEquals(expectedSet.toList(), collWithout.withoutAll(FastList.newListWith(2, 4)).toList());
+        Assert.assertEquals(expectedSet.toList(), collWithout.toList());
+        Assert.assertEquals(expectedSet.toList(), collWithout.withoutAll(FastList.newListWith(2, 4)).toList());
     }
 }

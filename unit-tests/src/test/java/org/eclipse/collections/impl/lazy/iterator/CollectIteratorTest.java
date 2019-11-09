@@ -17,14 +17,12 @@ import org.eclipse.collections.api.factory.Lists;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-
 public class CollectIteratorTest
 {
     @Test
     public void iterator()
     {
-        Iterator<String> iterator = new CollectIterator<>(iList(Boolean.TRUE), String::valueOf);
+        Iterator<String> iterator = new CollectIterator<>(Lists.immutable.with(Boolean.TRUE), String::valueOf);
         Assert.assertTrue(iterator.hasNext());
         Assert.assertEquals("true", iterator.next());
         Assert.assertFalse(iterator.hasNext());
@@ -33,7 +31,7 @@ public class CollectIteratorTest
     @Test
     public void iteratorWithFunctionName()
     {
-        Iterator<String> iterator = new CollectIterator<>(iList(Boolean.TRUE), String::valueOf);
+        Iterator<String> iterator = new CollectIterator<>(Lists.immutable.with(Boolean.TRUE), String::valueOf);
         Assert.assertTrue(iterator.hasNext());
         Assert.assertEquals("true", iterator.next());
         Assert.assertFalse(iterator.hasNext());
@@ -42,7 +40,7 @@ public class CollectIteratorTest
     @Test
     public void iteratorWithFunctionNameAndIterator()
     {
-        Iterator<String> iterator = new CollectIterator<>(iList(Boolean.TRUE).iterator(), String::valueOf);
+        Iterator<String> iterator = new CollectIterator<>(Lists.immutable.with(Boolean.TRUE).iterator(), String::valueOf);
         Assert.assertTrue(iterator.hasNext());
         Assert.assertEquals("true", iterator.next());
         Assert.assertFalse(iterator.hasNext());

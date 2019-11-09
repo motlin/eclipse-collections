@@ -62,8 +62,6 @@ import org.eclipse.collections.impl.test.Verify;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-
 public abstract class AbstractImmutableCollectionTestCase
 {
     public static final Predicate<Integer> ERROR_THROWING_PREDICATE = each -> {
@@ -198,7 +196,7 @@ public abstract class AbstractImmutableCollectionTestCase
         ImmutableCollection<Integer> integers = this.classUnderTest();
         Assert.assertEquals(
                 this.<Integer>newMutable().withAll(integers).select(IntegerPredicates.isOdd()),
-                integers.selectWith(Predicates2.in(), iList(1, 3, 5, 7, 9)));
+                integers.selectWith(Predicates2.in(), Lists.immutable.with(1, 3, 5, 7, 9)));
     }
 
     @Test
@@ -207,7 +205,7 @@ public abstract class AbstractImmutableCollectionTestCase
         ImmutableCollection<Integer> integers = this.classUnderTest();
         Assert.assertEquals(
                 this.<Integer>newMutable().with(101).withAll(integers).select(IntegerPredicates.isOdd()),
-                integers.selectWith(Predicates2.in(), iList(1, 3, 5, 7, 9), this.<Integer>newMutable().with(101)));
+                integers.selectWith(Predicates2.in(), Lists.immutable.with(1, 3, 5, 7, 9), this.<Integer>newMutable().with(101)));
     }
 
     @Test
@@ -216,7 +214,7 @@ public abstract class AbstractImmutableCollectionTestCase
         ImmutableCollection<Integer> integers = this.classUnderTest();
         Assert.assertEquals(
                 this.<Integer>newMutable().withAll(integers).reject(IntegerPredicates.isOdd()),
-                integers.rejectWith(Predicates2.in(), iList(1, 3, 5, 7, 9)));
+                integers.rejectWith(Predicates2.in(), Lists.immutable.with(1, 3, 5, 7, 9)));
     }
 
     @Test
@@ -225,7 +223,7 @@ public abstract class AbstractImmutableCollectionTestCase
         ImmutableCollection<Integer> integers = this.classUnderTest();
         Assert.assertEquals(
                 this.<Integer>newMutable().with(100).withAll(integers).reject(IntegerPredicates.isOdd()),
-                integers.rejectWith(Predicates2.in(), iList(1, 3, 5, 7, 9), this.<Integer>newMutable().with(100)));
+                integers.rejectWith(Predicates2.in(), Lists.immutable.with(1, 3, 5, 7, 9), this.<Integer>newMutable().with(100)));
     }
 
     @Test

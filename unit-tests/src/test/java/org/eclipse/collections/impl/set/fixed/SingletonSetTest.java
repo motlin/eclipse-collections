@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -33,20 +33,9 @@ import org.eclipse.collections.impl.set.mutable.SynchronizedMutableSet;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.Tuples;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iSet;
-import static org.eclipse.collections.impl.factory.Iterables.mSet;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link SingletonSet}.
@@ -56,7 +45,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     private SingletonSet<String> set;
     private MutableSet<Integer> intSet;
 
-    @BeforeEach
+    @Before
     public void setUp()
     {
         this.set = new SingletonSet<>("1");
@@ -82,7 +71,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         Twin<String> twin2 = Tuples.twin("1", "1");
         SingletonSet<Twin<String>> set = new SingletonSet<>(twin1);
         set.with(twin2);
-        assertSame(set.getFirst(), twin1);
+        Assert.assertSame(set.getFirst(), twin1);
     }
 
     @Override
@@ -117,7 +106,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         try
         {
             this.set.remove("1");
-            fail("Should not allow remove from SingletonSet");
+            Assert.fail("Should not allow remove from SingletonSet");
         }
         catch (UnsupportedOperationException ignored)
         {
@@ -131,7 +120,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         try
         {
             this.set.add("1");
-            fail("Should not allow adding a duplicate to SingletonSet");
+            Assert.fail("Should not allow adding a duplicate to SingletonSet");
         }
         catch (UnsupportedOperationException ignored)
         {
@@ -145,7 +134,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         try
         {
             this.set.add("2");
-            fail("Should not allow add to SingletonSet");
+            Assert.fail("Should not allow add to SingletonSet");
         }
         catch (UnsupportedOperationException ignored)
         {
@@ -172,8 +161,8 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     public void tap()
     {
         MutableList<Integer> tapResult = Lists.mutable.of();
-        assertSame(this.intSet, this.intSet.tap(tapResult::add));
-        assertEquals(this.intSet.toList(), tapResult);
+        Assert.assertSame(this.intSet, this.intSet.tap(tapResult::add));
+        Assert.assertEquals(this.intSet.toList(), tapResult);
     }
 
     @Test
@@ -242,23 +231,23 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     public void partition()
     {
         PartitionMutableSet<Integer> partition = this.intSet.partition(Predicates.lessThan(3));
-        assertEquals(mSet(1), partition.getSelected());
-        assertEquals(mSet(), partition.getRejected());
+        Assert.assertEquals(Sets.mutable.with(1), partition.getSelected());
+        Assert.assertEquals(Sets.mutable.empty(), partition.getRejected());
     }
 
     @Test
     public void partitionWith()
     {
         PartitionMutableSet<Integer> partition = this.intSet.partitionWith(Predicates2.lessThan(), 3);
-        assertEquals(mSet(1), partition.getSelected());
-        assertEquals(mSet(), partition.getRejected());
+        Assert.assertEquals(Sets.mutable.with(1), partition.getSelected());
+        Assert.assertEquals(Sets.mutable.empty(), partition.getRejected());
     }
 
     @Test
     public void selectInstancesOf()
     {
         MutableSet<Number> numbers = Sets.fixedSize.of(1);
-        assertEquals(iSet(1), numbers.selectInstancesOf(Integer.class));
+        Assert.assertEquals(Sets.immutable.with(1), numbers.selectInstancesOf(Integer.class));
         Verify.assertEmpty(numbers.selectInstancesOf(Double.class));
     }
 
@@ -284,87 +273,87 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     @Test
     public void detect()
     {
-        assertEquals(Integer.valueOf(1), this.intSet.detect(Integer.valueOf(1)::equals));
-        assertNull(this.intSet.detect(Integer.valueOf(6)::equals));
+        Assert.assertEquals(Integer.valueOf(1), this.intSet.detect(Integer.valueOf(1)::equals));
+        Assert.assertNull(this.intSet.detect(Integer.valueOf(6)::equals));
     }
 
     @Test
     public void detectWith()
     {
-        assertEquals(Integer.valueOf(1), this.intSet.detectWith(Object::equals, 1));
-        assertNull(this.intSet.detectWith(Object::equals, 6));
+        Assert.assertEquals(Integer.valueOf(1), this.intSet.detectWith(Object::equals, 1));
+        Assert.assertNull(this.intSet.detectWith(Object::equals, 6));
     }
 
     @Test
     public void detectIfNone()
     {
         Function0<Integer> function = new PassThruFunction0<>(6);
-        assertEquals(Integer.valueOf(1), this.intSet.detectIfNone(Integer.valueOf(1)::equals, function));
-        assertEquals(Integer.valueOf(6), this.intSet.detectIfNone(Integer.valueOf(6)::equals, function));
+        Assert.assertEquals(Integer.valueOf(1), this.intSet.detectIfNone(Integer.valueOf(1)::equals, function));
+        Assert.assertEquals(Integer.valueOf(6), this.intSet.detectIfNone(Integer.valueOf(6)::equals, function));
     }
 
     @Test
     public void detectWithIfNone()
     {
         Function0<Integer> function = new PassThruFunction0<>(6);
-        assertEquals(Integer.valueOf(1), this.intSet.detectWithIfNone(Object::equals, Integer.valueOf(1), function));
-        assertEquals(Integer.valueOf(6), this.intSet.detectWithIfNone(Object::equals, Integer.valueOf(6), function));
+        Assert.assertEquals(Integer.valueOf(1), this.intSet.detectWithIfNone(Object::equals, Integer.valueOf(1), function));
+        Assert.assertEquals(Integer.valueOf(6), this.intSet.detectWithIfNone(Object::equals, Integer.valueOf(6), function));
     }
 
     @Test
     public void allSatisfy()
     {
-        assertTrue(this.intSet.allSatisfy(Integer.class::isInstance));
-        assertFalse(this.intSet.allSatisfy(Integer.valueOf(2)::equals));
+        Assert.assertTrue(this.intSet.allSatisfy(Integer.class::isInstance));
+        Assert.assertFalse(this.intSet.allSatisfy(Integer.valueOf(2)::equals));
     }
 
     @Test
     public void allSatisfyWith()
     {
-        assertTrue(this.intSet.allSatisfyWith(Predicates2.instanceOf(), Integer.class));
-        assertFalse(this.intSet.allSatisfyWith(Object::equals, 2));
+        Assert.assertTrue(this.intSet.allSatisfyWith(Predicates2.instanceOf(), Integer.class));
+        Assert.assertFalse(this.intSet.allSatisfyWith(Object::equals, 2));
     }
 
     @Test
     public void anySatisfy()
     {
-        assertFalse(this.intSet.anySatisfy(String.class::isInstance));
-        assertTrue(this.intSet.anySatisfy(Integer.class::isInstance));
+        Assert.assertFalse(this.intSet.anySatisfy(String.class::isInstance));
+        Assert.assertTrue(this.intSet.anySatisfy(Integer.class::isInstance));
     }
 
     @Test
     public void anySatisfyWith()
     {
-        assertFalse(this.intSet.anySatisfyWith(Predicates2.instanceOf(), String.class));
-        assertTrue(this.intSet.anySatisfyWith(Predicates2.instanceOf(), Integer.class));
+        Assert.assertFalse(this.intSet.anySatisfyWith(Predicates2.instanceOf(), String.class));
+        Assert.assertTrue(this.intSet.anySatisfyWith(Predicates2.instanceOf(), Integer.class));
     }
 
     @Test
     public void noneSatisfy()
     {
-        assertFalse(this.intSet.noneSatisfy(Integer.class::isInstance));
-        assertTrue(this.intSet.noneSatisfy(Integer.valueOf(10)::equals));
+        Assert.assertFalse(this.intSet.noneSatisfy(Integer.class::isInstance));
+        Assert.assertTrue(this.intSet.noneSatisfy(Integer.valueOf(10)::equals));
     }
 
     @Test
     public void noneSatisfyWith()
     {
-        assertFalse(this.intSet.noneSatisfyWith(Predicates2.instanceOf(), Integer.class));
-        assertTrue(this.intSet.noneSatisfyWith(Object::equals, 10));
+        Assert.assertFalse(this.intSet.noneSatisfyWith(Predicates2.instanceOf(), Integer.class));
+        Assert.assertTrue(this.intSet.noneSatisfyWith(Object::equals, 10));
     }
 
     @Test
     public void count()
     {
-        assertEquals(1, this.intSet.count(Integer.class::isInstance));
-        assertEquals(0, this.intSet.count(String.class::isInstance));
+        Assert.assertEquals(1, this.intSet.count(Integer.class::isInstance));
+        Assert.assertEquals(0, this.intSet.count(String.class::isInstance));
     }
 
     @Test
     public void countWith()
     {
-        assertEquals(1, this.intSet.countWith(Predicates2.instanceOf(), Integer.class));
-        assertEquals(0, this.intSet.countWith(Predicates2.instanceOf(), String.class));
+        Assert.assertEquals(1, this.intSet.countWith(Predicates2.instanceOf(), Integer.class));
+        Assert.assertEquals(0, this.intSet.countWith(Predicates2.instanceOf(), String.class));
     }
 
     @Test
@@ -382,10 +371,10 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     @Test
     public void collectWith()
     {
-        assertEquals(
+        Assert.assertEquals(
                 UnifiedSet.newSetWith(2),
                 this.intSet.collectWith(AddFunction.INTEGER, 1));
-        assertEquals(
+        Assert.assertEquals(
                 FastList.newListWith(2),
                 this.intSet.collectWith(AddFunction.INTEGER, 1, FastList.newList()));
     }
@@ -393,44 +382,44 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     @Test
     public void getFirst()
     {
-        assertEquals(Integer.valueOf(1), this.intSet.getFirst());
+        Assert.assertEquals(Integer.valueOf(1), this.intSet.getFirst());
     }
 
     @Test
     public void getLast()
     {
-        assertEquals(Integer.valueOf(1), this.intSet.getLast());
+        Assert.assertEquals(Integer.valueOf(1), this.intSet.getLast());
     }
 
     @Test
     public void getOnly()
     {
-        assertEquals(Integer.valueOf(1), this.intSet.getOnly());
+        Assert.assertEquals(Integer.valueOf(1), this.intSet.getOnly());
     }
 
     @Test
     public void isEmpty()
     {
         Verify.assertNotEmpty(this.intSet);
-        assertTrue(this.intSet.notEmpty());
+        Assert.assertTrue(this.intSet.notEmpty());
     }
 
     @Test
     public void removeAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.intSet.removeAll(Lists.fixedSize.of(1, 2)));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.intSet.removeAll(Lists.fixedSize.of(1, 2)));
     }
 
     @Test
     public void retainAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.intSet.retainAll(Lists.fixedSize.of(2)));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.intSet.retainAll(Lists.fixedSize.of(2)));
     }
 
     @Test
     public void clear()
     {
-        assertThrows(UnsupportedOperationException.class, this.intSet::clear);
+        Verify.assertThrows(UnsupportedOperationException.class, this.intSet::clear);
     }
 
     @Override
@@ -442,7 +431,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         for (int i = this.intSet.size(); i-- > 0; )
         {
             Integer integer = iterator.next();
-            assertEquals(1, integer.intValue() + i);
+            Assert.assertEquals(1, integer.intValue() + i);
         }
     }
 
@@ -450,7 +439,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     public void injectInto()
     {
         Integer result = this.intSet.injectInto(1, AddFunction.INTEGER);
-        assertEquals(Integer.valueOf(2), result);
+        Assert.assertEquals(Integer.valueOf(2), result);
     }
 
     @Test
@@ -460,7 +449,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
                 1,
                 (injectedValued, item, parameter) -> injectedValued + item + parameter,
                 0);
-        assertEquals(Integer.valueOf(2), result);
+        Assert.assertEquals(Integer.valueOf(2), result);
     }
 
     @Test
@@ -484,7 +473,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     @Test
     public void removeWithPredicate()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.intSet.removeIf(Predicates.isNull()));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.intSet.removeIf(Predicates.isNull()));
     }
 
     @Test
@@ -500,13 +489,13 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     @Test
     public void toSortedList()
     {
-        assertEquals(FastList.newListWith(1), this.intSet.toSortedList(Collections.reverseOrder()));
+        Assert.assertEquals(FastList.newListWith(1), this.intSet.toSortedList(Collections.reverseOrder()));
     }
 
     @Test
     public void toSortedListBy()
     {
-        assertEquals(FastList.newListWith(1), this.intSet.toSortedListBy(Functions.getIntegerPassThru()));
+        Assert.assertEquals(FastList.newListWith(1), this.intSet.toSortedListBy(Functions.getIntegerPassThru()));
     }
 
     @Test
@@ -542,7 +531,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
             }
         }
         MutableSet<String> cloneSet = this.set.clone();
-        assertNotSame(cloneSet, this.set);
+        Assert.assertNotSame(cloneSet, this.set);
         Verify.assertEqualsAndHashCode(UnifiedSet.newSetWith("1"), cloneSet);
     }
 
@@ -559,7 +548,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     public void min_null_throws()
     {
         // Collections with one element should not throw to emulate the JDK Collections behavior
-        assertDoesNotThrow(() -> this.classUnderTestWithNull().min(String::compareTo));
+        super.min_null_throws();
     }
 
     @Test
@@ -567,7 +556,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     public void max_null_throws()
     {
         // Collections with one element should not throw to emulate the JDK Collections behavior
-        assertDoesNotThrow(() -> this.classUnderTestWithNull().max(String::compareTo));
+        super.max_null_throws();
     }
 
     @Test
@@ -575,7 +564,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     public void min_null_throws_without_comparator()
     {
         // Collections with one element should not throw to emulate the JDK Collections behavior
-        assertDoesNotThrow(() -> this.classUnderTestWithNull().min());
+        super.min_null_throws_without_comparator();
     }
 
     @Test
@@ -583,6 +572,6 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
     public void max_null_throws_without_comparator()
     {
         // Collections with one element should not throw to emulate the JDK Collections behavior
-        assertDoesNotThrow(() -> this.classUnderTestWithNull().max());
+        super.max_null_throws_without_comparator();
     }
 }

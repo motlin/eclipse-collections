@@ -42,9 +42,6 @@ import org.eclipse.collections.impl.utility.Iterate;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.eclipse.collections.impl.factory.Iterables.iMap;
-import static org.eclipse.collections.impl.factory.Iterables.mList;
-
 /**
  * Abstract JUnit TestCase for {@link MutableMapIterable}s.
  */
@@ -146,8 +143,8 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
 
         MutableMapIterable<Integer, Integer> integers = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
         Integer copy = new Integer(1);
-        Assert.assertTrue(integers.entrySet().retainAll(mList(ImmutableEntry.of(copy, copy))));
-        Assert.assertEquals(iMap(copy, copy), integers);
+        Assert.assertTrue(integers.entrySet().retainAll(Lists.mutable.with((ImmutableEntry<Integer, Integer>[]) new ImmutableEntry[]{ImmutableEntry.of(copy, copy)})));
+        Assert.assertEquals(Maps.immutable.with(copy, copy), integers);
         Assert.assertNotSame(copy, Iterate.getOnly(integers.entrySet()).getKey());
         Assert.assertNotSame(copy, Iterate.getOnly(integers.entrySet()).getValue());
     }

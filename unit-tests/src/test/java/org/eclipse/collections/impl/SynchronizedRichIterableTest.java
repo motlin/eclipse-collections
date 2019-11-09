@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -21,12 +21,8 @@ import org.eclipse.collections.impl.lazy.LazyIterableAdapter;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.factory.Iterables.iList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class SynchronizedRichIterableTest extends AbstractRichIterableTestCase
 {
@@ -50,8 +46,8 @@ public class SynchronizedRichIterableTest extends AbstractRichIterableTestCase
     {
         RichIterable<Integer> integers = this.newWith(-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         PartitionIterable<Integer> result = integers.partition(IntegerPredicates.isEven());
-        assertEquals(iList(-2, 0, 2, 4, 6, 8), result.getSelected());
-        assertEquals(iList(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
+        Assert.assertEquals(Lists.immutable.with(-2, 0, 2, 4, 6, 8), result.getSelected());
+        Assert.assertEquals(Lists.immutable.with(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
     }
 
     @Override
@@ -60,14 +56,14 @@ public class SynchronizedRichIterableTest extends AbstractRichIterableTestCase
     {
         RichIterable<Integer> integers = this.newWith(-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         PartitionIterable<Integer> result = integers.partitionWith(Predicates2.in(), FastList.newListWith(-2, 0, 2, 4, 6, 8));
-        assertEquals(iList(-2, 0, 2, 4, 6, 8), result.getSelected());
-        assertEquals(iList(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
+        Assert.assertEquals(Lists.immutable.with(-2, 0, 2, 4, 6, 8), result.getSelected());
+        Assert.assertEquals(Lists.immutable.with(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
     }
 
     @Override
     public void equalsAndHashCode()
     {
-        assertNotEquals(this.newWith(), this.newWith());
+        Assert.assertNotEquals(this.newWith(), this.newWith());
     }
 
     @Override
@@ -77,8 +73,8 @@ public class SynchronizedRichIterableTest extends AbstractRichIterableTestCase
         RichIterable<Integer> list = this.newWith(1, 2, 3, 4, 5, 6, 7);
         Multimap<Boolean, Integer> multimap = list.groupBy(object -> IntegerPredicates.isOdd().accept(object));
 
-        assertEquals(FastList.newListWith(1, 3, 5, 7), multimap.get(Boolean.TRUE));
-        assertEquals(FastList.newListWith(2, 4, 6), multimap.get(Boolean.FALSE));
+        Assert.assertEquals(FastList.newListWith(1, 3, 5, 7), multimap.get(Boolean.TRUE));
+        Assert.assertEquals(FastList.newListWith(2, 4, 6), multimap.get(Boolean.FALSE));
     }
 
     @Test
@@ -88,8 +84,8 @@ public class SynchronizedRichIterableTest extends AbstractRichIterableTestCase
         MutableMultimap<Boolean, Integer> multimap = new FastListMultimap<>();
         list.groupBy(object -> IntegerPredicates.isOdd().accept(object), multimap);
 
-        assertEquals(FastList.newListWith(1, 3, 5, 7), multimap.get(Boolean.TRUE));
-        assertEquals(FastList.newListWith(2, 4, 6), multimap.get(Boolean.FALSE));
+        Assert.assertEquals(FastList.newListWith(1, 3, 5, 7), multimap.get(Boolean.TRUE));
+        Assert.assertEquals(FastList.newListWith(2, 4, 6), multimap.get(Boolean.FALSE));
     }
 
     @Test
@@ -98,13 +94,13 @@ public class SynchronizedRichIterableTest extends AbstractRichIterableTestCase
         RichIterable<Integer> integers = this.newWith(-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9).asLazy();
         Verify.assertInstanceOf(LazyIterableAdapter.class, integers);
         PartitionIterable<Integer> result = integers.partitionWith(Predicates2.in(), FastList.newListWith(-2, 0, 2, 4, 6, 8));
-        assertEquals(iList(-2, 0, 2, 4, 6, 8), result.getSelected());
-        assertEquals(iList(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
+        Assert.assertEquals(Lists.immutable.with(-2, 0, 2, 4, 6, 8), result.getSelected());
+        Assert.assertEquals(Lists.immutable.with(-3, -1, 1, 3, 5, 7, 9), result.getRejected());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void nullCheck()
     {
-        assertThrows(IllegalArgumentException.class, () -> SynchronizedRichIterable.of(null, null));
+        SynchronizedRichIterable.of(null, null);
     }
 }
