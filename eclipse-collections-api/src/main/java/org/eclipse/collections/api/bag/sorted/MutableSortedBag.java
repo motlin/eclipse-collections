@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,6 +13,7 @@ package org.eclipse.collections.api.bag.sorted;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.MutableBagIterable;
 import org.eclipse.collections.api.block.function.Function;
+import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
@@ -27,6 +28,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
@@ -37,6 +39,7 @@ import org.eclipse.collections.api.list.primitive.MutableFloatList;
 import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.list.primitive.MutableLongList;
 import org.eclipse.collections.api.list.primitive.MutableShortList;
+import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.multimap.sortedbag.MutableSortedBagMultimap;
 import org.eclipse.collections.api.partition.bag.sorted.PartitionMutableSortedBag;
@@ -92,20 +95,6 @@ public interface MutableSortedBag<T>
     default MutableSortedBag<T> without(T element)
     {
         this.remove(element);
-        return this;
-    }
-
-    @Override
-    default MutableSortedBag<T> withOccurrences(T element, int occurrences)
-    {
-        this.addOccurrences(element, occurrences);
-        return this;
-    }
-
-    @Override
-    default MutableSortedBag<T> withoutOccurrences(T element, int occurrences)
-    {
-        this.removeOccurrences(element, occurrences);
         return this;
     }
 
@@ -266,6 +255,24 @@ public interface MutableSortedBag<T>
         return this.asLazy().flatCollect(function).toBag();
     }
 
+    /**
+     * Can return an MutableMap that's backed by a LinkedHashMap.
+     */
+    @Override
+    <K, V> MutableMap<K, V> aggregateBy(
+            Function<? super T, ? extends K> groupBy,
+            Function0<? extends V> zeroValueFactory,
+            Function2<? super V, ? super T, ? extends V> nonMutatingAggregator);
+
+    /**
+     * Can return an MutableMap that's backed by a LinkedHashMap.
+     */
+    @Override
+    <K, V> MutableMap<K, V> aggregateInPlaceBy(
+            Function<? super T, ? extends K> groupBy,
+            Function0<? extends V> zeroValueFactory,
+            Procedure2<? super V, ? super T> mutatingAggregator);
+
     @Override
     <S> MutableList<Pair<T, S>> zip(Iterable<S> that);
 
@@ -280,13 +287,4 @@ public interface MutableSortedBag<T>
 
     @Override
     MutableSortedBag<T> drop(int count);
-
-    /**
-     * @since 11.0
-     */
-    @Override
-    default ImmutableSortedBag<T> toImmutableSortedBag()
-    {
-        return this.toImmutable();
-    }
 }

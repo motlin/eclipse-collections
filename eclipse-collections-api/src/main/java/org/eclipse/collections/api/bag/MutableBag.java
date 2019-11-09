@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -34,14 +34,6 @@ import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.primitive.BooleanBags;
-import org.eclipse.collections.api.factory.primitive.ByteBags;
-import org.eclipse.collections.api.factory.primitive.CharBags;
-import org.eclipse.collections.api.factory.primitive.DoubleBags;
-import org.eclipse.collections.api.factory.primitive.FloatBags;
-import org.eclipse.collections.api.factory.primitive.IntBags;
-import org.eclipse.collections.api.factory.primitive.LongBags;
-import org.eclipse.collections.api.factory.primitive.ShortBags;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.multimap.bag.MutableBagMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
@@ -102,20 +94,6 @@ public interface MutableBag<T>
     default MutableBag<T> without(T element)
     {
         this.remove(element);
-        return this;
-    }
-
-    @Override
-    default MutableBag<T> withOccurrences(T element, int occurrences)
-    {
-        this.addOccurrences(element, occurrences);
-        return this;
-    }
-
-    @Override
-    default MutableBag<T> withoutOccurrences(T element, int occurrences)
-    {
-        this.removeOccurrences(element, occurrences);
         return this;
     }
 
@@ -217,52 +195,28 @@ public interface MutableBag<T>
     <V> MutableBag<V> collect(Function<? super T, ? extends V> function);
 
     @Override
-    default MutableByteBag collectByte(ByteFunction<? super T> byteFunction)
-    {
-        return this.collectByte(byteFunction, ByteBags.mutable.empty());
-    }
+    MutableByteBag collectByte(ByteFunction<? super T> byteFunction);
 
     @Override
-    default MutableCharBag collectChar(CharFunction<? super T> charFunction)
-    {
-        return this.collectChar(charFunction, CharBags.mutable.empty());
-    }
+    MutableCharBag collectChar(CharFunction<? super T> charFunction);
 
     @Override
-    default MutableIntBag collectInt(IntFunction<? super T> intFunction)
-    {
-        return this.collectInt(intFunction, IntBags.mutable.empty());
-    }
+    MutableIntBag collectInt(IntFunction<? super T> intFunction);
 
     @Override
-    default MutableBooleanBag collectBoolean(BooleanFunction<? super T> booleanFunction)
-    {
-        return this.collectBoolean(booleanFunction, BooleanBags.mutable.empty());
-    }
+    MutableBooleanBag collectBoolean(BooleanFunction<? super T> booleanFunction);
 
     @Override
-    default MutableDoubleBag collectDouble(DoubleFunction<? super T> doubleFunction)
-    {
-        return this.collectDouble(doubleFunction, DoubleBags.mutable.empty());
-    }
+    MutableDoubleBag collectDouble(DoubleFunction<? super T> doubleFunction);
 
     @Override
-    default MutableFloatBag collectFloat(FloatFunction<? super T> floatFunction)
-    {
-        return this.collectFloat(floatFunction, FloatBags.mutable.empty());
-    }
+    MutableFloatBag collectFloat(FloatFunction<? super T> floatFunction);
 
     @Override
-    default MutableLongBag collectLong(LongFunction<? super T> longFunction)
-    {
-        return this.collectLong(longFunction, LongBags.mutable.empty());
-    }
+    MutableLongBag collectLong(LongFunction<? super T> longFunction);
 
     @Override
-    default MutableShortBag collectShort(ShortFunction<? super T> shortFunction)
-    {
-        return this.collectShort(shortFunction, ShortBags.mutable.empty());
-    }
+    MutableShortBag collectShort(ShortFunction<? super T> shortFunction);
 
     @Override
     <P, V> MutableBag<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter);
@@ -290,15 +244,4 @@ public interface MutableBag<T>
      */
     @Override
     ImmutableBag<T> toImmutable();
-
-    /**
-     * Converts the MutableBag to the default ImmutableBag implementation.
-     *
-     * @since 11.0
-     */
-    @Override
-    default ImmutableBag<T> toImmutableBag()
-    {
-        return this.toImmutable();
-    }
 }

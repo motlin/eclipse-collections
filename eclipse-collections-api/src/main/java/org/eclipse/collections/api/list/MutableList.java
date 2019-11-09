@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.eclipse.collections.api.block.HashingStrategy;
-import org.eclipse.collections.api.block.factory.SerializableComparators;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
@@ -30,18 +29,9 @@ import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFun
 import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
-import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
 import org.eclipse.collections.api.list.primitive.MutableCharList;
@@ -60,38 +50,6 @@ import org.eclipse.collections.api.tuple.Pair;
 public interface MutableList<T>
         extends MutableCollection<T>, List<T>, Cloneable, ListIterable<T>
 {
-    @Override
-    default Object[] toArray()
-    {
-        return MutableCollection.super.toArray();
-    }
-
-    @Override
-    default <T1> T1[] toArray(T1[] a)
-    {
-        return MutableCollection.super.toArray(a);
-    }
-
-    /**
-     * This default override exists because java.util.List added a default getFirst() method in Java 21.
-     * @since 12.0
-     */
-    @Override
-    default T getFirst()
-    {
-        return this.isEmpty() ? null : this.get(0);
-    }
-
-    /**
-     * This default override exists because java.util.List added a default getLast() method in Java 21.
-     * @since 12.0
-     */
-    @Override
-    default T getLast()
-    {
-        return this.isEmpty() ? null : this.get(this.size() - 1);
-    }
-
     @Override
     default MutableList<T> with(T element)
     {
@@ -181,79 +139,29 @@ public interface MutableList<T>
         return this.collect(each -> function.valueOf(each, index[0]++));
     }
 
-    /**
-     * Returns a new MutableList with all elements of the collection that return true when evaluating the specified
-     * predicate which is supplied each element and its relative index.
-     *
-     * @since 11.0
-     */
     @Override
-    default MutableList<T> selectWithIndex(ObjectIntPredicate<? super T> predicate)
-    {
-        int[] index = {0};
-        return this.select(each -> predicate.accept(each, index[0]++));
-    }
-
-    /**
-     * Returns a new MutableList with all elements of the collection that return false when evaluating the specified
-     * predicate which is supplied each element and its relative index.
-     *
-     * @since 11.0
-     */
-    @Override
-    default MutableList<T> rejectWithIndex(ObjectIntPredicate<? super T> predicate)
-    {
-        int[] index = {0};
-        return this.reject(each -> predicate.accept(each, index[0]++));
-    }
+    MutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction);
 
     @Override
-    default MutableBooleanList collectBoolean(BooleanFunction<? super T> booleanFunction)
-    {
-        return this.collectBoolean(booleanFunction, BooleanLists.mutable.withInitialCapacity(this.size()));
-    }
+    MutableByteList collectByte(ByteFunction<? super T> byteFunction);
 
     @Override
-    default MutableByteList collectByte(ByteFunction<? super T> byteFunction)
-    {
-        return this.collectByte(byteFunction, ByteLists.mutable.withInitialCapacity(this.size()));
-    }
+    MutableCharList collectChar(CharFunction<? super T> charFunction);
 
     @Override
-    default MutableCharList collectChar(CharFunction<? super T> charFunction)
-    {
-        return this.collectChar(charFunction, CharLists.mutable.withInitialCapacity(this.size()));
-    }
+    MutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction);
 
     @Override
-    default MutableDoubleList collectDouble(DoubleFunction<? super T> doubleFunction)
-    {
-        return this.collectDouble(doubleFunction, DoubleLists.mutable.withInitialCapacity(this.size()));
-    }
+    MutableFloatList collectFloat(FloatFunction<? super T> floatFunction);
 
     @Override
-    default MutableFloatList collectFloat(FloatFunction<? super T> floatFunction)
-    {
-        return this.collectFloat(floatFunction, FloatLists.mutable.withInitialCapacity(this.size()));
-    }
+    MutableIntList collectInt(IntFunction<? super T> intFunction);
 
     @Override
-    default MutableIntList collectInt(IntFunction<? super T> intFunction)
-    {
-        return this.collectInt(intFunction, IntLists.mutable.withInitialCapacity(this.size()));
-    }
+    MutableLongList collectLong(LongFunction<? super T> longFunction);
 
     @Override
-    default MutableLongList collectLong(LongFunction<? super T> longFunction)
-    {
-        return this.collectLong(longFunction, LongLists.mutable.withInitialCapacity(this.size()));
-    }
-
-    @Override
-    default MutableShortList collectShort(ShortFunction<? super T> shortFunction)
-    {
-        return this.collectShort(shortFunction, ShortLists.mutable.withInitialCapacity(this.size()));
-    }
+    MutableShortList collectShort(ShortFunction<? super T> shortFunction);
 
     @Override
     default <P, V> MutableList<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
@@ -329,10 +237,7 @@ public interface MutableList<T>
      * Sorts the internal data structure of this list based on the natural order of the attribute returned by {@code
      * function}.
      */
-    default <V extends Comparable<? super V>> MutableList<T> sortThisBy(Function<? super T, ? extends V> function)
-    {
-        return this.sortThis(SerializableComparators.byFunction(function));
-    }
+    <V extends Comparable<? super V>> MutableList<T> sortThisBy(Function<? super T, ? extends V> function);
 
     /**
      * @since 6.0
@@ -458,22 +363,5 @@ public interface MutableList<T>
     {
         Collections.shuffle(this, random);
         return this;
-    }
-
-    /**
-     * Converts the MutableList to the default ImmutableList implementation.
-     *
-     * @since 11.0
-     */
-    @Override
-    default ImmutableList<T> toImmutableList()
-    {
-        return this.toImmutable();
-    }
-
-    @Override
-    default int indexOf(Object o)
-    {
-        return ListIterable.super.indexOf(o);
     }
 }
