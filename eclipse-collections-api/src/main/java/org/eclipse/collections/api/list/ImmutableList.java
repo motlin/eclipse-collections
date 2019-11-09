@@ -53,7 +53,25 @@ public interface ImmutableList<T>
     ImmutableList<T> newWith(T element);
 
     @Override
-    ImmutableList<T> newWithout(T element);
+    default ImmutableList<T> newWithout(T element)
+    {
+        int indexToRemove = this.indexOf(element);
+        if (indexToRemove < 0)
+        {
+            return this;
+        }
+        T[] results = (T[]) new Object[this.size() - 1];
+        int currentIndex = 0;
+        for (int i = 0; i < this.size(); i++)
+        {
+            T item = this.get(i);
+            if (i != indexToRemove)
+            {
+                results[currentIndex++] = item;
+            }
+        }
+        return Lists.immutable.with(results);
+    }
 
     @Override
     ImmutableList<T> newWithAll(Iterable<? extends T> elements);
