@@ -13,6 +13,7 @@ package org.eclipse.collections.impl.lazy;
 import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.block.procedure.CountProcedure;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
@@ -89,7 +90,7 @@ public class TakeIterableTest extends AbstractLazyIterableTestCase
     @Test
     public void forEachWithIndex()
     {
-        FastList<Integer> indices = FastList.newList(5);
+        FastList<Integer> indices = Lists.mutable.withInitialCapacity(5);
         ObjectIntProcedure<Integer> indexRecordingProcedure = (each, index) -> indices.add(index);
 
         this.takeIterable.forEachWithIndex(indexRecordingProcedure);

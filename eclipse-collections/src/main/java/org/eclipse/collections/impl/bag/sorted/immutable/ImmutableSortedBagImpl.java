@@ -31,6 +31,9 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.SortedBags;
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
@@ -41,7 +44,6 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.impl.Counter;
 import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.partition.bag.sorted.PartitionImmutableSortedBagImpl;
 import org.eclipse.collections.impl.partition.bag.sorted.PartitionTreeBag;
@@ -409,7 +411,8 @@ class ImmutableSortedBagImpl<T>
     @Override
     public <V> ImmutableList<V> collectWithIndex(ObjectIntToObjectFunction<? super T, ? extends V> function)
     {
-        return this.collectWithIndex(function, FastList.<V>newList(this.size())).toImmutable();
+        MutableList<V> target = Lists.mutable.withInitialCapacity(this.size());
+        return this.collectWithIndex(function, target).toImmutable();
     }
 
     /**

@@ -22,7 +22,6 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.CollidingInt;
 import org.eclipse.collections.impl.block.factory.Procedures;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.MultiReaderUnifiedSet;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
@@ -102,7 +101,7 @@ public class MultiReaderUnifiedSetAcceptanceTest
         {
             Assert.assertTrue(set.add(new CollidingInt(i, shift)));
         }
-        MutableList<CollidingInt> keys = FastList.newList(size);
+        MutableList<CollidingInt> keys = Lists.mutable.withInitialCapacity(size);
         set.forEach(Procedures.cast(keys::add));
         Verify.assertSize(size, keys);
         Collections.sort(keys);
@@ -131,7 +130,7 @@ public class MultiReaderUnifiedSetAcceptanceTest
         {
             Assert.assertTrue(set.add(new CollidingInt(i, shift)));
         }
-        MutableList<CollidingInt> keys = FastList.newList(size);
+        MutableList<CollidingInt> keys = Lists.mutable.withInitialCapacity(size);
         set.forEachWith((key, s) -> {
             Assert.assertEquals("foo", s);
             keys.add(key);
@@ -163,7 +162,7 @@ public class MultiReaderUnifiedSetAcceptanceTest
         {
             Assert.assertTrue(set.add(new CollidingInt(i, shift)));
         }
-        MutableList<CollidingInt> keys = FastList.newList(size);
+        MutableList<CollidingInt> keys = Lists.mutable.withInitialCapacity(size);
         int[] prevIndex = new int[1];
         set.forEachWithIndex((key, index) -> {
             Assert.assertEquals(prevIndex[0], index);

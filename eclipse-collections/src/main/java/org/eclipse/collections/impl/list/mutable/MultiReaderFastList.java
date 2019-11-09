@@ -126,7 +126,7 @@ public final class MultiReaderFastList<T>
 
     public static <T> MultiReaderFastList<T> newList(int capacity)
     {
-        return new MultiReaderFastList<>(FastList.newList(capacity));
+        return new MultiReaderFastList<>(Lists.mutable.withInitialCapacity(capacity));
     }
 
     public static <T> MultiReaderFastList<T> newList(Iterable<? extends T> iterable)

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.collections.api.block.function.Function0;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.list.MutableListFactory;
 import org.eclipse.collections.api.list.MutableList;
 

@@ -52,6 +52,7 @@ import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
 import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.multimap.MutableMultimap;
@@ -62,7 +63,6 @@ import org.eclipse.collections.impl.AbstractRichIterable;
 import org.eclipse.collections.impl.Counter;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -651,7 +651,7 @@ public abstract class AbstractBag<T>
 
     protected MutableList<ObjectIntPair<T>> toListWithOccurrences()
     {
-        MutableList<ObjectIntPair<T>> result = FastList.newList(this.sizeDistinct());
+        MutableList<ObjectIntPair<T>> result = Lists.mutable.withInitialCapacity(this.sizeDistinct());
         this.forEachWithOccurrences((each, count) -> result.add(PrimitiveTuples.pair(each, count)));
         return result;
     }
@@ -659,7 +659,7 @@ public abstract class AbstractBag<T>
     @Override
     public MutableList<T> toList()
     {
-        MutableList<T> result = FastList.newList(this.size());
+        MutableList<T> result = Lists.mutable.withInitialCapacity(this.size());
         this.forEachWithOccurrences((each, occurrences) -> {
             for (int i = 0; i < occurrences; i++)
             {
@@ -674,7 +674,7 @@ public abstract class AbstractBag<T>
     {
         MutableList<ObjectIntPair<T>> sorted = this.toListWithOccurrences().sortThis((o1, o2) -> comparator.compare(o1.getOne(), o2.getOne()));
 
-        MutableList<T> result = FastList.newList(this.size());
+        MutableList<T> result = Lists.mutable.withInitialCapacity(this.size());
         sorted.each(each -> {
             T object = each.getOne();
             int occurrences = each.getTwo();

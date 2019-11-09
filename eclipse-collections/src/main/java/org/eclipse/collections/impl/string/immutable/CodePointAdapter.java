@@ -40,7 +40,6 @@ import org.eclipse.collections.api.tuple.primitive.IntObjectPair;
 import org.eclipse.collections.impl.bag.mutable.primitive.IntHashBag;
 import org.eclipse.collections.impl.factory.primitive.IntLists;
 import org.eclipse.collections.impl.lazy.primitive.ReverseIntIterable;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
 import org.eclipse.collections.impl.primitive.AbstractIntIterable;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
@@ -393,7 +392,7 @@ public class CodePointAdapter
     @Override
     public <V> ImmutableList<V> collect(IntToObjectFunction<? extends V> function)
     {
-        FastList<V> list = FastList.newList(this.adapted.length());
+        MutableList<V> list = Lists.mutable.withInitialCapacity(this.adapted.length());
         for (int i = 0; i < this.adapted.length(); )
         {
             int codePoint = this.adapted.codePointAt(i);

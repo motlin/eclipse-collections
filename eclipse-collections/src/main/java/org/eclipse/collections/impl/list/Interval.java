@@ -44,7 +44,6 @@ import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.block.procedure.RejectProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectProcedure;
 import org.eclipse.collections.impl.lazy.AbstractLazyIterable;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.MutableListIterator;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
@@ -899,7 +898,7 @@ public final class Interval
     @Override
     public MutableList<Integer> toList()
     {
-        FastList<Integer> list = FastList.newList(this.size());
+        MutableList<Integer> list = Lists.mutable.withInitialCapacity(this.size());
         this.forEach(CollectionAddProcedure.on(list));
         return list;
     }

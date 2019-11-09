@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -720,7 +720,7 @@ public final class ListIterate
      * Iterates over the section of the list covered by the specified indexes. The indexes are both inclusive. If the
      * from is less than the to, the list is iterated in forward order. If the from is greater than the to, then the
      * list is iterated in the reverse order.
-     *
+     * <p>
      * <pre>e.g.
      * MutableList&lt;People&gt; people = FastList.newListWith(ted, mary, bob, sally);
      * ListIterate.forEach(people, 0, 1, new Procedure&lt;Person&gt;()
@@ -768,7 +768,7 @@ public final class ListIterate
      * from is less than the to, the list is iterated in forward order. If the from is greater than the to, then the
      * list is iterated in the reverse order. The index passed into the ObjectIntProcedure is the actual index of the
      * range.
-     *
+     * <p>
      * <pre>e.g.
      * MutableList&lt;People&gt; people = FastList.newListWith(ted, mary, bob, sally);
      * ListIterate.forEachWithIndex(people, 0, 1, new ObjectIntProcedure&lt;Person&gt;()
@@ -1689,7 +1689,7 @@ public final class ListIterate
         {
             int listSize = list.size();
             int iterableSize = Iterate.sizeOf(iterable);
-            MutableList<Pair<X, Y>> target = FastList.newList(Math.min(listSize, iterableSize));
+            MutableList<Pair<X, Y>> target = Lists.mutable.withInitialCapacity(Math.min(listSize, iterableSize));
             return ListIterate.zip(list, iterable, target);
         }
         return ListIterate.zip(list, iterable, FastList.newList());

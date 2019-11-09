@@ -40,7 +40,6 @@ import org.eclipse.collections.impl.bag.mutable.primitive.BooleanHashBag;
 import org.eclipse.collections.impl.factory.primitive.BooleanLists;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
 import org.eclipse.collections.impl.lazy.primitive.ReverseBooleanIterable;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.BooleanHashSet;
 
@@ -276,7 +275,7 @@ final class ImmutableBooleanArrayList
     @Override
     public <V> ImmutableList<V> collect(BooleanToObjectFunction<? extends V> function)
     {
-        FastList<V> target = FastList.newList(this.size);
+        MutableList<V> target = Lists.mutable.withInitialCapacity(this.size);
         for (int i = 0; i < this.size; i++)
         {
             target.add(function.valueOf(this.items.get(i)));

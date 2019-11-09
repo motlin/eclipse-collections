@@ -39,7 +39,6 @@ import org.eclipse.collections.api.tuple.primitive.CharObjectPair;
 import org.eclipse.collections.impl.bag.mutable.primitive.CharHashBag;
 import org.eclipse.collections.impl.factory.primitive.CharLists;
 import org.eclipse.collections.impl.lazy.primitive.ReverseCharIterable;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
 import org.eclipse.collections.impl.primitive.AbstractCharIterable;
 import org.eclipse.collections.impl.set.mutable.primitive.CharHashSet;
@@ -325,7 +324,7 @@ public class CharAdapter
     public <V> ImmutableList<V> collect(CharToObjectFunction<? extends V> function)
     {
         int size = this.size();
-        FastList<V> list = FastList.newList(size);
+        MutableList<V> list = Lists.mutable.withInitialCapacity(size);
         for (int i = 0; i < size; i++)
         {
             list.add(function.valueOf(this.get(i)));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,7 +13,6 @@ package org.eclipse.collections.impl.utility;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.eclipse.collections.api.RichIterable;
@@ -41,15 +40,6 @@ import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Maps;
-import org.eclipse.collections.api.factory.primitive.BooleanLists;
-import org.eclipse.collections.api.factory.primitive.ByteLists;
-import org.eclipse.collections.api.factory.primitive.CharLists;
-import org.eclipse.collections.api.factory.primitive.DoubleLists;
-import org.eclipse.collections.api.factory.primitive.FloatLists;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.factory.primitive.LongLists;
-import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MapIterable;
@@ -67,8 +57,24 @@ import org.eclipse.collections.impl.block.procedure.MapEntryToProcedure2;
 import org.eclipse.collections.impl.block.procedure.MapPutProcedure;
 import org.eclipse.collections.impl.block.procedure.RejectProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectBooleanProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectByteProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectCharProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectDoubleProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectFloatProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
+import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.factory.Multimaps;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList;
+import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList;
 import org.eclipse.collections.impl.map.mutable.MapAdapter;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap;
@@ -219,7 +225,7 @@ public final class MapIterate
     }
 
     /**
-     * If there is a value in the Map that the specified key, return the result of applying the specified Function
+     * If there is a value in the Map tat the specified key, return the result of applying the specified Function
      * on the value, otherwise return null.
      */
     public static <K, V, A> A ifPresentApply(
@@ -275,7 +281,7 @@ public final class MapIterate
             Map<K, V> map,
             Predicate2<? super K, ? super V> predicate)
     {
-        return MapIterate.selectMapOnEntry(map, predicate, Maps.mutable.empty());
+        return MapIterate.selectMapOnEntry(map, predicate, UnifiedMap.newMap());
     }
 
     /**
@@ -307,7 +313,7 @@ public final class MapIterate
      */
     public static <K, V> MutableMap<K, V> selectMapOnKey(Map<K, V> map, Predicate<? super K> predicate)
     {
-        MutableMap<K, V> resultMap = Maps.mutable.empty();
+        MutableMap<K, V> resultMap = UnifiedMap.newMap();
         Procedure2<K, V> mapTransferProcedure = new MapPutProcedure<>(resultMap);
         Procedure2<K, V> procedure = (key, value) -> {
             if (predicate.accept(key))
@@ -326,7 +332,7 @@ public final class MapIterate
      */
     public static <K, V> MutableMap<K, V> selectMapOnValue(Map<K, V> map, Predicate<? super V> predicate)
     {
-        MutableMap<K, V> resultMap = Maps.mutable.empty();
+        MutableMap<K, V> resultMap = UnifiedMap.newMap();
         Procedure2<K, V> mapTransferProcedure = new MapPutProcedure<>(resultMap);
         Procedure2<K, V> procedure = (key, value) -> {
             if (predicate.accept(value))
@@ -367,7 +373,7 @@ public final class MapIterate
             Map<K, V> map,
             Predicate2<? super K, ? super V> predicate)
     {
-        return MapIterate.rejectMapOnEntry(map, predicate, Maps.mutable.empty());
+        return MapIterate.rejectMapOnEntry(map, predicate, UnifiedMap.newMap());
     }
 
     /**
@@ -390,7 +396,7 @@ public final class MapIterate
     }
 
     /**
-     * Adds all the <em>keys</em> from map to the specified targetCollection.
+     * Adds all the <em>keys</em> from map to a the specified targetCollection.
      */
     public static <K, V> Collection<K> addAllKeysTo(Map<K, V> map, Collection<K> targetCollection)
     {
@@ -399,7 +405,7 @@ public final class MapIterate
     }
 
     /**
-     * Adds all the <em>values</em> from map to the specified targetCollection.
+     * Adds all the <em>values</em> from map to a the specified targetCollection.
      */
     public static <K, V> Collection<V> addAllValuesTo(Map<K, V> map, Collection<V> targetCollection)
     {
@@ -424,7 +430,7 @@ public final class MapIterate
             Map<K, V> map,
             BooleanFunction<? super V> booleanFunction)
     {
-        return collectBoolean(map, booleanFunction, BooleanLists.mutable.withInitialCapacity(map.size()));
+        return collectBoolean(map, booleanFunction, new BooleanArrayList(map.size()));
     }
 
     /**
@@ -435,7 +441,7 @@ public final class MapIterate
             BooleanFunction<? super V> booleanFunction,
             R target)
     {
-        MapIterate.forEachValue(map, each -> target.add(booleanFunction.booleanValueOf(each)));
+        MapIterate.forEachValue(map, new CollectBooleanProcedure<>(booleanFunction, target));
         return target;
     }
 
@@ -446,7 +452,7 @@ public final class MapIterate
             Map<K, V> map,
             ByteFunction<? super V> byteFunction)
     {
-        return collectByte(map, byteFunction, ByteLists.mutable.withInitialCapacity(map.size()));
+        return collectByte(map, byteFunction, new ByteArrayList(map.size()));
     }
 
     /**
@@ -457,7 +463,7 @@ public final class MapIterate
             ByteFunction<? super V> byteFunction,
             R target)
     {
-        MapIterate.forEachValue(map, each -> target.add(byteFunction.byteValueOf(each)));
+        MapIterate.forEachValue(map, new CollectByteProcedure<>(byteFunction, target));
         return target;
     }
 
@@ -468,7 +474,7 @@ public final class MapIterate
             Map<K, V> map,
             CharFunction<? super V> charFunction)
     {
-        return collectChar(map, charFunction, CharLists.mutable.withInitialCapacity(map.size()));
+        return collectChar(map, charFunction, new CharArrayList(map.size()));
     }
 
     /**
@@ -479,7 +485,7 @@ public final class MapIterate
             CharFunction<? super V> charFunction,
             R target)
     {
-        MapIterate.forEachValue(map, each -> target.add(charFunction.charValueOf(each)));
+        MapIterate.forEachValue(map, new CollectCharProcedure<>(charFunction, target));
         return target;
     }
 
@@ -490,7 +496,7 @@ public final class MapIterate
             Map<K, V> map,
             DoubleFunction<? super V> doubleFunction)
     {
-        return collectDouble(map, doubleFunction, DoubleLists.mutable.withInitialCapacity(map.size()));
+        return collectDouble(map, doubleFunction, new DoubleArrayList(map.size()));
     }
 
     /**
@@ -501,7 +507,7 @@ public final class MapIterate
             DoubleFunction<? super V> doubleFunction,
             R target)
     {
-        MapIterate.forEachValue(map, each -> target.add(doubleFunction.doubleValueOf(each)));
+        MapIterate.forEachValue(map, new CollectDoubleProcedure<>(doubleFunction, target));
         return target;
     }
 
@@ -512,7 +518,7 @@ public final class MapIterate
             Map<K, V> map,
             FloatFunction<? super V> floatFunction)
     {
-        return collectFloat(map, floatFunction, FloatLists.mutable.withInitialCapacity(map.size()));
+        return collectFloat(map, floatFunction, new FloatArrayList(map.size()));
     }
 
     /**
@@ -523,7 +529,7 @@ public final class MapIterate
             FloatFunction<? super V> floatFunction,
             R target)
     {
-        MapIterate.forEachValue(map, each -> target.add(floatFunction.floatValueOf(each)));
+        MapIterate.forEachValue(map, new CollectFloatProcedure<>(floatFunction, target));
         return target;
     }
 
@@ -534,7 +540,7 @@ public final class MapIterate
             Map<K, V> map,
             IntFunction<? super V> intFunction)
     {
-        return collectInt(map, intFunction, IntLists.mutable.withInitialCapacity(map.size()));
+        return collectInt(map, intFunction, new IntArrayList(map.size()));
     }
 
     /**
@@ -545,7 +551,7 @@ public final class MapIterate
             IntFunction<? super V> intFunction,
             R target)
     {
-        MapIterate.forEachValue(map, each -> target.add(intFunction.intValueOf(each)));
+        MapIterate.forEachValue(map, new CollectIntProcedure<>(intFunction, target));
         return target;
     }
 
@@ -556,7 +562,7 @@ public final class MapIterate
             Map<K, V> map,
             LongFunction<? super V> longFunction)
     {
-        return collectLong(map, longFunction, LongLists.mutable.withInitialCapacity(map.size()));
+        return collectLong(map, longFunction, new LongArrayList(map.size()));
     }
 
     /**
@@ -567,7 +573,7 @@ public final class MapIterate
             LongFunction<? super V> longFunction,
             R target)
     {
-        MapIterate.forEachValue(map, each -> target.add(longFunction.longValueOf(each)));
+        MapIterate.forEachValue(map, new CollectLongProcedure<>(longFunction, target));
         return target;
     }
 
@@ -578,7 +584,7 @@ public final class MapIterate
             Map<K, V> map,
             ShortFunction<? super V> shortFunction)
     {
-        return collectShort(map, shortFunction, ShortLists.mutable.withInitialCapacity(map.size()));
+        return collectShort(map, shortFunction, new ShortArrayList(map.size()));
     }
 
     /**
@@ -589,7 +595,7 @@ public final class MapIterate
             ShortFunction<? super V> shortFunction,
             R target)
     {
-        MapIterate.forEachValue(map, each -> target.add(shortFunction.shortValueOf(each)));
+        MapIterate.forEachValue(map, new CollectShortProcedure<>(shortFunction, target));
         return target;
     }
 
@@ -645,24 +651,6 @@ public final class MapIterate
         return target;
     }
 
-    public static <K, V, K2, R extends Map<K2, V>> R collectKeysUnique(
-            Map<K, V> map,
-            Function2<? super K, ? super V, ? extends K2> function,
-            R target)
-    {
-        MapIterate.forEachKeyValue(
-                map,
-                (key, value) -> {
-                    K2 newKey = function.value(key, value);
-                    V previousValue = target.put(newKey, value);
-                    if (previousValue != null)
-                    {
-                        throw new IllegalStateException("Key " + newKey + " already exists in map!");
-                    }
-                });
-        return target;
-    }
-
     /**
      * For each value of the map, the Predicate2 is evaluated with the key and value as the parameter,
      * and if true, then {@code function} is applied.
@@ -673,7 +661,7 @@ public final class MapIterate
             Function2<? super K1, ? super V1, Pair<K2, V2>> function,
             Predicate2<? super K1, ? super V1> predicate)
     {
-        return MapIterate.collectIf(map, function, predicate, Maps.mutable.empty());
+        return MapIterate.collectIf(map, function, predicate, UnifiedMap.newMap());
     }
 
     /**
@@ -708,7 +696,7 @@ public final class MapIterate
             Function<? super K1, ? extends K2> keyFunction,
             Function<? super V1, ? extends V2> valueFunction)
     {
-        return MapIterate.collect(map, keyFunction, valueFunction, Maps.mutable.empty());
+        return MapIterate.collect(map, keyFunction, valueFunction, UnifiedMap.newMap());
     }
 
     /**
@@ -787,7 +775,10 @@ public final class MapIterate
      */
     public static <K, V> void forEachKeyValue(Map<K, V> map, Procedure2<? super K, ? super V> procedure)
     {
-        Objects.requireNonNull(map, "Cannot perform a forEachKeyValue on null");
+        if (map == null)
+        {
+            throw new IllegalArgumentException("Cannot perform a forEachKeyValue on null");
+        }
 
         if (MapIterate.notEmpty(map))
         {
@@ -807,7 +798,7 @@ public final class MapIterate
      */
     public static <K, V> MutableMap<V, K> flipUniqueValues(MapIterable<K, V> mapIterable)
     {
-        MutableMap<V, K> result = Maps.mutable.empty();
+        MutableMap<V, K> result = UnifiedMap.newMap();
 
         mapIterable.forEachKeyValue((key, value) -> {
             K oldKey = result.put(value, key);

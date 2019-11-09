@@ -290,7 +290,7 @@ abstract class AbstractImmutableList<T>
     @Override
     public <S> ImmutableList<S> selectInstancesOf(Class<S> clazz)
     {
-        FastList<S> result = FastList.newList(this.size());
+        MutableList<S> result = Lists.mutable.withInitialCapacity(this.size());
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
         return result.toImmutable();
     }
@@ -787,7 +787,7 @@ abstract class AbstractImmutableList<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            FastList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
+            MutableList<Pair<T, S>> target = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
             return this.zip(that, target).toImmutable();
         }
         return this.zip(that, FastList.newList()).toImmutable();
@@ -796,7 +796,7 @@ abstract class AbstractImmutableList<T>
     @Override
     public ImmutableList<Pair<T, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(FastList.newList(this.size())).toImmutable();
+        return this.zipWithIndex(Lists.mutable.withInitialCapacity(this.size())).toImmutable();
     }
 
     @Override
@@ -840,7 +840,7 @@ abstract class AbstractImmutableList<T>
     @Override
     protected MutableCollection<T> newMutable(int size)
     {
-        return FastList.newList(size);
+        return Lists.mutable.withInitialCapacity(size);
     }
 
     @Override

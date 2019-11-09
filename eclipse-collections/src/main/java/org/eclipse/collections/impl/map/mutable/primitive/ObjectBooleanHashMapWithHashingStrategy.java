@@ -63,7 +63,6 @@ import org.eclipse.collections.impl.factory.primitive.BooleanLists;
 import org.eclipse.collections.impl.factory.primitive.ObjectBooleanMaps;
 import org.eclipse.collections.impl.lazy.AbstractLazyIterable;
 import org.eclipse.collections.impl.lazy.primitive.LazyBooleanIterableAdapter;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.BooleanHashSet;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
@@ -513,7 +512,7 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
     @Override
     public <V> MutableCollection<V> collect(BooleanToObjectFunction<? extends V> function)
     {
-        MutableList<V> result = FastList.newList(this.size());
+        MutableList<V> result = Lists.mutable.withInitialCapacity(this.size());
         for (int i = 0; i < this.keys.length; i++)
         {
             if (ObjectBooleanHashMapWithHashingStrategy.isNonSentinel(this.keys[i]))

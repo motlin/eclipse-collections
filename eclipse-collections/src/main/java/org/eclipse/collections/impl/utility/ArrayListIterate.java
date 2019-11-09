@@ -1863,7 +1863,7 @@ public final class ArrayListIterate
         {
             int xSize = xs.size();
             int ySize = Iterate.sizeOf(ys);
-            FastList<Pair<X, Y>> target = FastList.newList(Math.min(xSize, ySize));
+            MutableList<Pair<X, Y>> target = Lists.mutable.withInitialCapacity(Math.min(xSize, ySize));
             return ArrayListIterate.zip(xs, ys, target);
         }
         return ArrayListIterate.zip(xs, ys, FastList.newList());
@@ -1893,7 +1893,7 @@ public final class ArrayListIterate
      */
     public static <T> MutableList<Pair<T, Integer>> zipWithIndex(ArrayList<T> list)
     {
-        return ArrayListIterate.zipWithIndex(list, FastList.newList(list.size()));
+        return ArrayListIterate.zipWithIndex(list, Lists.mutable.withInitialCapacity(list.size()));
     }
 
     /**

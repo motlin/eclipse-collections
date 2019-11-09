@@ -318,7 +318,7 @@ abstract class AbstractImmutableSortedBag<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            list = FastList.newList(Math.min(this.size(), thatSize));
+            list = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
         }
         else
         {

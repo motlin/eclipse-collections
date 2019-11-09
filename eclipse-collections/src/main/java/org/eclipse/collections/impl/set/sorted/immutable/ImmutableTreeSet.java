@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs and others.
+ * Copyright (c) 2017 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -26,6 +26,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
@@ -49,7 +50,6 @@ import org.eclipse.collections.impl.lazy.parallel.set.sorted.SortedSetBatch;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
 import org.eclipse.collections.impl.utility.ArrayIterate;
-import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.ListIterate;
 import org.eclipse.collections.impl.utility.internal.InternalArrayIterate;
 
@@ -133,16 +133,6 @@ final class ImmutableTreeSet<T>
         return new ImmutableTreeSet<>((T[]) set.toArray(), set.comparator(), true);
     }
 
-    public static <T> ImmutableSortedSet<T> newSetFromIterable(Iterable<? extends T> iterable)
-    {
-        return new ImmutableTreeSet<>((T[]) Iterate.toArray(iterable), null, false);
-    }
-
-    public static <T> ImmutableSortedSet<T> newSetFromIterable(Comparator<? super T> comparator, Iterable<? extends T> iterable)
-    {
-        return new ImmutableTreeSet<>((T[]) Iterate.toArray(iterable), comparator, false);
-    }
-
     @Override
     public int size()
     {
@@ -220,7 +210,7 @@ final class ImmutableTreeSet<T>
     @Override
     public <V> ImmutableList<V> collectWithIndex(ObjectIntToObjectFunction<? super T, ? extends V> function)
     {
-        MutableList<V> result = FastList.newList(this.size());
+        MutableList<V> result = Lists.mutable.withInitialCapacity(this.size());
         int index = 0;
         for (T t : this.delegate)
         {

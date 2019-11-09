@@ -55,6 +55,7 @@ import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
 import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.MutableList;
@@ -108,7 +109,7 @@ import org.eclipse.collections.impl.utility.LazyIterate;
 public class ArrayStack<T> implements MutableStack<T>, Externalizable
 {
     private static final long serialVersionUID = 1L;
-    private FastList<T> delegate;
+    private MutableList<T> delegate;
 
     public ArrayStack()
     {
@@ -117,7 +118,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
 
     public ArrayStack(int initialCapacity)
     {
-        this.delegate = FastList.newList(initialCapacity);
+        this.delegate = Lists.mutable.withInitialCapacity(initialCapacity);
     }
 
     public ArrayStack(Iterable<T> items)
@@ -188,7 +189,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     public ListIterable<T> pop(int count)
     {
         this.checkNegativeCount(count);
-        MutableList<T> result = FastList.newList(count);
+        MutableList<T> result = Lists.mutable.withInitialCapacity(count);
         if (this.checkZeroCount(count))
         {
             return result;
@@ -268,7 +269,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
         this.checkEmptyStack();
         this.checkSizeLessThanCount(count);
 
-        FastList<T> result = FastList.newList(count);
+        MutableList<T> result = Lists.mutable.withInitialCapacity(count);
         for (int i = 0; i < count; i++)
         {
             result.add(this.delegate.get(this.delegate.size() - (i + 1)));

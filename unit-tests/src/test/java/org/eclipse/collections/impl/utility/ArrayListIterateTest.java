@@ -780,7 +780,7 @@ public class ArrayListIterateTest
     {
         ArrayList<Integer> list = new ArrayList<>(Interval.oneTo(101));
         Iterate.sortThis(list);
-        FastList<Integer> result = FastList.newList(101);
+        FastList<Integer> result = Lists.mutable.withInitialCapacity(101);
         ArrayListIterate.forEach(list, CollectionAddProcedure.on(result));
         Verify.assertListsEqual(list, result);
     }
@@ -803,7 +803,7 @@ public class ArrayListIterateTest
     {
         ArrayList<Integer> list = new ArrayList<>(Interval.oneTo(101));
         Iterate.sortThis(list);
-        MutableList<Integer> result = FastList.newList(101);
+        MutableList<Integer> result = Lists.mutable.withInitialCapacity(101);
         ArrayListIterate.forEachWith(
                 list,
                 Procedures2.fromProcedure(CollectionAddProcedure.on(result)),

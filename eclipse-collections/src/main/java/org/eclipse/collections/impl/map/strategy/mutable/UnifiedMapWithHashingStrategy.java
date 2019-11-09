@@ -32,7 +32,9 @@ import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
@@ -42,7 +44,6 @@ import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.procedure.MapCollectProcedure;
 import org.eclipse.collections.impl.factory.HashingStrategyMaps;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.AbstractMutableMap;
 import org.eclipse.collections.impl.parallel.BatchIterable;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
@@ -2924,7 +2925,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
 
         protected Object writeReplace()
         {
-            FastList<V> replace = FastList.newList(UnifiedMapWithHashingStrategy.this.size());
+            MutableList<V> replace = Lists.mutable.withInitialCapacity(UnifiedMapWithHashingStrategy.this.size());
             for (int i = 0; i < UnifiedMapWithHashingStrategy.this.table.length; i += 2)
             {
                 Object cur = UnifiedMapWithHashingStrategy.this.table[i];
@@ -2940,7 +2941,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             return replace;
         }
 
-        private void chainedAddToList(Object[] chain, FastList<V> replace)
+        private void chainedAddToList(Object[] chain, MutableList<V> replace)
         {
             for (int i = 0; i < chain.length; i += 2)
             {

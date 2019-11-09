@@ -36,7 +36,6 @@ import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.list.mutable.AbstractMutableList;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.ListAdapter;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.ListIterate;
@@ -207,7 +206,7 @@ public abstract class AbstractArrayAdapter<T>
     @Override
     public <V> MutableList<V> collect(Function<? super T, ? extends V> function)
     {
-        return this.collect(function, FastList.newList(this.size()));
+        return this.collect(function, Lists.mutable.withInitialCapacity(this.size()));
     }
 
     @Override

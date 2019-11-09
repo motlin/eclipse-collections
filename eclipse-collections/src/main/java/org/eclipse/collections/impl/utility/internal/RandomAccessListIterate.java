@@ -332,7 +332,7 @@ public final class RandomAccessListIterate
             List<T> list,
             Function<? super T, ? extends A> function)
     {
-        return RandomAccessListIterate.collect(list, function, FastList.newList(list.size()));
+        return RandomAccessListIterate.collect(list, function, Lists.mutable.withInitialCapacity(list.size()));
     }
 
     /**
@@ -356,7 +356,7 @@ public final class RandomAccessListIterate
      */
     public static <T, A> MutableList<A> collectWithIndex(List<T> list, ObjectIntToObjectFunction<? super T, ? extends A> function)
     {
-        return RandomAccessListIterate.collectWithIndex(list, function, FastList.newList(list.size()));
+        return RandomAccessListIterate.collectWithIndex(list, function, Lists.mutable.withInitialCapacity(list.size()));
     }
 
     /**
@@ -586,7 +586,7 @@ public final class RandomAccessListIterate
             List<T> list,
             Function<? super T, ? extends Iterable<A>> function)
     {
-        return RandomAccessListIterate.flatCollect(list, function, FastList.newList(list.size()));
+        return RandomAccessListIterate.flatCollect(list, function, Lists.mutable.withInitialCapacity(list.size()));
     }
 
     /**
@@ -1310,7 +1310,7 @@ public final class RandomAccessListIterate
         {
             throw new IllegalArgumentException("Count must be greater than zero, but was: " + count);
         }
-        return RandomAccessListIterate.take(list, count, FastList.newList(Math.min(list.size(), count)));
+        return RandomAccessListIterate.take(list, count, Lists.mutable.withInitialCapacity(Math.min(list.size(), count)));
     }
 
     /**
@@ -1339,7 +1339,7 @@ public final class RandomAccessListIterate
         {
             throw new IllegalArgumentException("Count must be greater than zero, but was: " + count);
         }
-        return RandomAccessListIterate.drop(list, count, FastList.newList(list.size() - Math.min(list.size(), count)));
+        return RandomAccessListIterate.drop(list, count, Lists.mutable.withInitialCapacity(list.size() - Math.min(list.size(), count)));
     }
 
     /**
@@ -1605,7 +1605,7 @@ public final class RandomAccessListIterate
         {
             int listSize = list.size();
             int iterableSize = Iterate.sizeOf(iterable);
-            FastList<Pair<X, Y>> target = FastList.newList(Math.min(listSize, iterableSize));
+            MutableList<Pair<X, Y>> target = Lists.mutable.withInitialCapacity(Math.min(listSize, iterableSize));
             return RandomAccessListIterate.zip(list, iterable, target);
         }
         return RandomAccessListIterate.zip(list, iterable, FastList.newList());
@@ -1627,7 +1627,7 @@ public final class RandomAccessListIterate
 
     public static <T> MutableList<Pair<T, Integer>> zipWithIndex(List<T> list)
     {
-        return RandomAccessListIterate.zipWithIndex(list, FastList.newList(list.size()));
+        return RandomAccessListIterate.zipWithIndex(list, Lists.mutable.withInitialCapacity(list.size()));
     }
 
     public static <T, R extends Collection<Pair<T, Integer>>> R zipWithIndex(

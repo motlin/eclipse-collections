@@ -218,7 +218,7 @@ public abstract class AbstractMutableSortedBag<T>
     @Override
     public <V> MutableList<V> collect(Function<? super T, ? extends V> function)
     {
-        return this.collect(function, FastList.newList(this.size()));
+        return this.collect(function, Lists.mutable.withInitialCapacity(this.size()));
     }
 
     @Override
@@ -233,7 +233,7 @@ public abstract class AbstractMutableSortedBag<T>
     @Override
     public <V> MutableList<V> collectWithIndex(ObjectIntToObjectFunction<? super T, ? extends V> function)
     {
-        return this.collectWithIndex(function, FastList.newList(this.size()));
+        return this.collectWithIndex(function, Lists.mutable.withInitialCapacity(this.size()));
     }
 
     /**
@@ -326,7 +326,7 @@ public abstract class AbstractMutableSortedBag<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            FastList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
+            MutableList<Pair<T, S>> target = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
             return this.zip(that, target);
         }
         return this.zip(that, FastList.newList());

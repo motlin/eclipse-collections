@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2019 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -12,13 +12,10 @@ package org.eclipse.collections.impl.multimap.list;
 
 import java.io.Externalizable;
 
-import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.predicate.Predicate2;
-import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
@@ -28,6 +25,7 @@ import org.eclipse.collections.api.multimap.list.ImmutableListMultimap;
 import org.eclipse.collections.api.multimap.list.MutableListMultimap;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.AbstractSynchronizedPutMultimap;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.eclipse.collections.impl.utility.ArrayIterate;
@@ -94,21 +92,9 @@ public final class SynchronizedPutFastListMultimap<K, V>
     }
 
     @Override
-    public SynchronizedPutFastListMultimap<K, V> withKeyMultiValues(K key, V... values)
-    {
-        return (SynchronizedPutFastListMultimap<K, V>) super.withKeyMultiValues(key, values);
-    }
-
-    @Override
     protected MutableList<V> createCollection()
     {
         return Lists.mutable.withInitialCapacity(1);
-    }
-
-    @Override
-    public void forEachKeyMutableList(Procedure2<? super K, ? super MutableList<V>> procedure)
-    {
-        this.getMap().forEachKeyValue((key, value) -> procedure.value(key, value.asUnmodifiable()));
     }
 
     @Override
@@ -126,7 +112,7 @@ public final class SynchronizedPutFastListMultimap<K, V>
     @Override
     public ImmutableListMultimap<K, V> toImmutable()
     {
-        MutableMap<K, ImmutableList<V>> map = Maps.mutable.empty();
+        MutableMap<K, ImmutableList<V>> map = UnifiedMap.newMap();
 
         this.map.forEachKeyValue((key, list) -> map.put(key, list.toImmutable()));
 
@@ -152,13 +138,13 @@ public final class SynchronizedPutFastListMultimap<K, V>
     }
 
     @Override
-    public FastListMultimap<K, V> selectKeysMultiValues(Predicate2<? super K, ? super RichIterable<V>> predicate)
+    public FastListMultimap<K, V> selectKeysMultiValues(Predicate2<? super K, ? super Iterable<V>> predicate)
     {
         return this.selectKeysMultiValues(predicate, FastListMultimap.newMultimap());
     }
 
     @Override
-    public FastListMultimap<K, V> rejectKeysMultiValues(Predicate2<? super K, ? super RichIterable<V>> predicate)
+    public FastListMultimap<K, V> rejectKeysMultiValues(Predicate2<? super K, ? super Iterable<V>> predicate)
     {
         return this.rejectKeysMultiValues(predicate, FastListMultimap.newMultimap());
     }

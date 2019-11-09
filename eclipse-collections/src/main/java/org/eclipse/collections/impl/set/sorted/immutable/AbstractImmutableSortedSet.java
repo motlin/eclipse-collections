@@ -353,7 +353,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            FastList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
+            MutableList<Pair<T, S>> target = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
             return Iterate.zip(this, that, target).toImmutable();
         }
         return Iterate.zip(this, that, FastList.newList()).toImmutable();
