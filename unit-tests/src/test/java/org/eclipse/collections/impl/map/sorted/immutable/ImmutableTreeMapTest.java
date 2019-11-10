@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.factory.SortedMaps;
 import org.eclipse.collections.api.list.MutableList;
@@ -93,7 +94,7 @@ public class ImmutableTreeMapTest extends ImmutableSortedMapTestCase
         LazyIterable<Pair<String, Integer>> pairs = interval.collect(Object::toString).zip(interval);
         MutableSortedMap<String, Integer> mutableSortedMap = new TreeSortedMap<>(pairs.toArray(new Pair[]{}));
         ImmutableSortedMap<String, Integer> immutableSortedMap = mutableSortedMap.toImmutable();
-        MutableList<Map.Entry<String, Integer>> entries = FastList.newList(immutableSortedMap.castToSortedMap().entrySet());
+        MutableList<Map.Entry<String, Integer>> entries = Lists.mutable.withAll(immutableSortedMap.castToSortedMap().entrySet());
         MutableList<Map.Entry<String, Integer>> sortedEntries = entries.toSortedListBy(Map.Entry::getKey);
         Assert.assertEquals(sortedEntries, entries);
     }

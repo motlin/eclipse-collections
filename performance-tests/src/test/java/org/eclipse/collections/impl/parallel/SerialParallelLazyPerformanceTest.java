@@ -312,7 +312,7 @@ public class SerialParallelLazyPerformanceTest
         Interval interval = Interval.fromTo(-(count / 2), count / 2 - 1);
         MutableList<Function0<FastList<Integer>>> generators = Lists.mutable.empty();
         generators.add(() -> {
-            FastList<Integer> integers = FastList.newList(interval);
+            FastList<Integer> integers = Lists.mutable.withAll(interval);
             if (shuffle)
             {
                 integers.shuffleThis();

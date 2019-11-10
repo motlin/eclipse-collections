@@ -29,7 +29,6 @@ import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.primitive.IntInterval;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
@@ -377,7 +376,7 @@ public class ImmutableEmptyListTest extends AbstractImmutableListTestCase
     public void equalsAndHashCode()
     {
         ImmutableList<Integer> immutable = this.classUnderTest();
-        MutableList<Integer> mutable = FastList.newList(immutable);
+        MutableList<Integer> mutable = Lists.mutable.withAll(immutable);
         Verify.assertEqualsAndHashCode(immutable, mutable);
         Verify.assertPostSerializedIdentity(immutable);
         Assert.assertNotEquals(immutable, UnifiedSet.newSet(mutable));

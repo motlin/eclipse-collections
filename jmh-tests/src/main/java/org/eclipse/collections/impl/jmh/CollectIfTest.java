@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.ParallelListIterable;
 import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
@@ -46,7 +47,7 @@ public class CollectIfTest
     private static final int BATCH_SIZE = 10_000;
     private final ExecutorService service = ParallelIterate.newPooledExecutor(CollectTest.class.getSimpleName(), true);
     private final List<Integer> integersJDK = new ArrayList<>(Interval.oneTo(SIZE));
-    private final FastList<Integer> integersEC = FastList.newList(Interval.oneTo(SIZE));
+    private final FastList<Integer> integersEC = Lists.mutable.withAll(Interval.oneTo(SIZE));
 
     @Benchmark
     public void serial_lazy_jdk()

@@ -19,12 +19,12 @@ import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.Function3;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.parallel.ParallelIterate;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.After;
@@ -72,7 +72,7 @@ public class ConcurrentHashMapAcceptanceTest
                 ConcurrentHashMap.newMap(Interval.oneTo(1000).toMap(Functions.getIntegerPassThru(), Functions.getIntegerPassThru()));
         MutableMap<Integer, MutableBag<Integer>> actual = ConcurrentHashMap.newMap();
         Procedure<Integer> procedure = each -> actual.getIfAbsentPut(each % 100, () -> HashBag.<Integer>newBag().asSynchronized()).add(each);
-        source.parallelForEachValue(FastList.newList(Collections.nCopies(5, procedure)), this.executor);
+        source.parallelForEachValue(Lists.mutable.withAll(Collections.nCopies(5, procedure)), this.executor);
         Verify.assertEqualsAndHashCode(BAG_MUTABLE_MAP, actual);
     }
 
@@ -83,7 +83,7 @@ public class ConcurrentHashMapAcceptanceTest
                 ConcurrentHashMap.newMap(Interval.oneTo(1000).toMap(Functions.getIntegerPassThru(), Functions.getIntegerPassThru()));
         MutableMap<Integer, MutableBag<Integer>> actual = ConcurrentHashMap.newMap();
         Procedure2<Integer, Integer> procedure2 = (key, value) -> actual.getIfAbsentPut(value % 100, () -> HashBag.<Integer>newBag().asSynchronized()).add(value);
-        source.parallelForEachKeyValue(FastList.newList(Collections.nCopies(5, procedure2)), this.executor);
+        source.parallelForEachKeyValue(Lists.mutable.withAll(Collections.nCopies(5, procedure2)), this.executor);
         Verify.assertEqualsAndHashCode(BAG_MUTABLE_MAP, actual);
     }
 

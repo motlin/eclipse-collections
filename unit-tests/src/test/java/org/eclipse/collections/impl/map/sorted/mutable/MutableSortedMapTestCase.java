@@ -592,7 +592,7 @@ public abstract class MutableSortedMapTestCase extends MutableMapIterableTestCas
     {
         LazyIterable<Pair<String, Integer>> pairs = Interval.oneTo(100).collect(Functions.pair(Functions.getToString(), Functions.getPassThru()));
         MutableSortedMap<String, Integer> mutableSortedMap = new TreeSortedMap<>(pairs.toArray(new Pair[]{}));
-        MutableList<Map.Entry<String, Integer>> entries = FastList.newList(mutableSortedMap.entrySet());
+        MutableList<Map.Entry<String, Integer>> entries = Lists.mutable.withAll(mutableSortedMap.entrySet());
         MutableList<Map.Entry<String, Integer>> sortedEntries = entries.toSortedListBy(Functions.getKeyFunction());
         Assert.assertEquals(sortedEntries, entries);
     }

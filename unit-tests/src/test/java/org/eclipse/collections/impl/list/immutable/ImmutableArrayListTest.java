@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -24,14 +24,8 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * JUnit test for {@link ImmutableArrayList}.
@@ -49,8 +43,8 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
     {
         ImmutableList<Integer> list = this.newList(1, 2, 3);
         ImmutableList<Integer> with = list.newWith(4);
-        assertNotEquals(list, with);
-        assertEquals(FastList.newListWith(1, 2, 3, 4), with);
+        Assert.assertNotEquals(list, with);
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4), with);
     }
 
     @Test
@@ -58,8 +52,8 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
     {
         ImmutableList<Integer> list = this.newList(1, 2, 3);
         ImmutableList<Integer> withAll = list.newWithAll(FastList.newListWith(4, 5));
-        assertNotEquals(list, withAll);
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5), withAll);
+        Assert.assertNotEquals(list, withAll);
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5), withAll);
     }
 
     @Test
@@ -67,18 +61,18 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
     {
         ImmutableList<Integer> list = this.newList(1, 2, 3, 4);
         ImmutableList<Integer> without4 = list.newWithout(4);
-        assertNotEquals(list, without4);
-        assertEquals(FastList.newListWith(1, 2, 3), without4);
+        Assert.assertNotEquals(list, without4);
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), without4);
 
         ImmutableList<Integer> without1 = list.newWithout(1);
-        assertNotEquals(list, without1);
-        assertEquals(FastList.newListWith(2, 3, 4), without1);
+        Assert.assertNotEquals(list, without1);
+        Assert.assertEquals(FastList.newListWith(2, 3, 4), without1);
 
         ImmutableList<Integer> without0 = list.newWithout(0);
-        assertSame(list, without0);
+        Assert.assertSame(list, without0);
 
         ImmutableList<Integer> without5 = list.newWithout(5);
-        assertSame(list, without5);
+        Assert.assertSame(list, without5);
     }
 
     @Test
@@ -86,17 +80,16 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
     {
         ImmutableList<Integer> list = this.newList(1, 2, 3, 4, 5);
         ImmutableList<Integer> withoutAll = list.newWithoutAll(FastList.newListWith(4, 5));
-        assertNotEquals(list, withoutAll);
-        assertEquals(FastList.newListWith(1, 2, 3), withoutAll);
-        assertEquals(FastList.newListWith(1, 2, 3), list.newWithoutAll(HashBag.newBagWith(4, 4, 5)));
+        Assert.assertNotEquals(list, withoutAll);
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), withoutAll);
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), list.newWithoutAll(HashBag.newBagWith(4, 4, 5)));
         ImmutableList<Integer> largeList = this.newList(Interval.oneTo(20).toArray());
-        ImmutableList<Integer> largeWithoutAll = largeList.newWithoutAll(FastList.newList(Interval.oneTo(10)));
-        assertEquals(FastList.newList(Interval.fromTo(11, 20)), largeWithoutAll);
+        ImmutableList<Integer> largeWithoutAll = largeList.newWithoutAll(Lists.mutable.withAll(Interval.oneTo(10)));
+        Assert.assertEquals(Lists.mutable.withAll(Interval.fromTo(11, 20)), largeWithoutAll);
         ImmutableList<Integer> largeWithoutAll2 = largeWithoutAll.newWithoutAll(Interval.fromTo(11, 15));
-        assertEquals(FastList.newList(Interval.fromTo(16, 20)), largeWithoutAll2);
-        ImmutableList<Integer> largeWithoutAll3 =
-                largeWithoutAll2.newWithoutAll(UnifiedSet.newSet(Interval.fromTo(16, 19)));
-        assertEquals(FastList.newListWith(20), largeWithoutAll3);
+        Assert.assertEquals(Lists.mutable.withAll(Interval.fromTo(16, 20)), largeWithoutAll2);
+        ImmutableList<Integer> largeWithoutAll3 = largeWithoutAll2.newWithoutAll(UnifiedSet.newSet(Interval.fromTo(16, 19)));
+        Assert.assertEquals(FastList.newListWith(20), largeWithoutAll3);
     }
 
     private ImmutableArrayList<Integer> newList(Integer... elements)
@@ -128,19 +121,19 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
     public void newListWith()
     {
         ImmutableList<Integer> collection = ImmutableArrayList.newListWith(1);
-        assertTrue(collection.notEmpty());
-        assertEquals(1, collection.size());
-        assertTrue(collection.contains(1));
+        Assert.assertTrue(collection.notEmpty());
+        Assert.assertEquals(1, collection.size());
+        Assert.assertTrue(collection.contains(1));
     }
 
     @Test
     public void newListWithVarArgs()
     {
         ImmutableList<Integer> collection = this.newListWith(1, 2, 3, 4);
-        assertTrue(collection.notEmpty());
-        assertEquals(4, collection.size());
-        assertTrue(collection.containsAllArguments(1, 2, 3, 4));
-        assertTrue(collection.containsAllIterable(Interval.oneTo(4)));
+        Assert.assertTrue(collection.notEmpty());
+        Assert.assertEquals(4, collection.size());
+        Assert.assertTrue(collection.containsAllArguments(1, 2, 3, 4));
+        Assert.assertTrue(collection.containsAllIterable(Interval.oneTo(4)));
     }
 
     @Test
@@ -157,7 +150,7 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
         ImmutableArrayList<Integer> integers = ImmutableArrayList.newListWith(1, 2, 3, 4);
         MutableMap<String, String> map =
                 integers.toMap(String::valueOf, String::valueOf);
-        assertEquals(UnifiedMap.newWithKeysValues("1", "1", "2", "2", "3", "3", "4", "4"), map);
+        Assert.assertEquals(UnifiedMap.newWithKeysValues("1", "1", "2", "2", "3", "3", "4", "4"), map);
     }
 
     @Test
@@ -165,23 +158,23 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
     {
         ImmutableList<Integer> collection = ImmutableArrayList.newListWith(1, 2, 3, 4, 5);
         ImmutableList<Integer> deserializedCollection = SerializeTestHelper.serializeDeserialize(collection);
-        assertEquals(5, deserializedCollection.size());
-        assertTrue(deserializedCollection.containsAllArguments(1, 2, 3, 4, 5));
+        Assert.assertEquals(5, deserializedCollection.size());
+        Assert.assertTrue(deserializedCollection.containsAllArguments(1, 2, 3, 4, 5));
         Verify.assertEqualsAndHashCode(collection, deserializedCollection);
     }
 
-    @Test
+    @Test(expected = IndexOutOfBoundsException.class)
     public void forEachWithIndexIllegalFrom()
     {
         MutableList<Integer> result = Lists.mutable.of();
-        assertThrows(IndexOutOfBoundsException.class, () -> this.newList(1, 2).forEachWithIndex(-1, 2, new AddToList(result)));
+        this.newList(1, 2).forEachWithIndex(-1, 2, new AddToList(result));
     }
 
-    @Test
+    @Test(expected = IndexOutOfBoundsException.class)
     public void forEachWithIndexIllegalTo()
     {
         MutableList<Integer> result = Lists.mutable.of();
-        assertThrows(IndexOutOfBoundsException.class, () -> this.newList(1, 2).forEachWithIndex(1, -2, new AddToList(result)));
+        this.newList(1, 2).forEachWithIndex(1, -2, new AddToList(result));
     }
 
     @Test
@@ -189,8 +182,8 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
     public void get()
     {
         ImmutableList<Integer> list = this.classUnderTest();
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> list.get(list.size() + 1));
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> list.get(-1));
+        Verify.assertThrows(ArrayIndexOutOfBoundsException.class, () -> list.get(list.size() + 1));
+        Verify.assertThrows(ArrayIndexOutOfBoundsException.class, () -> list.get(-1));
     }
 
     @Test
@@ -200,60 +193,57 @@ public class ImmutableArrayListTest extends AbstractImmutableListTestCase
         try
         {
             this.classUnderTest().iterator().remove();
-            fail("Should not reach here! Exception should be thrown on previous line.");
+            Assert.fail("Should not reach here! Exception should be thrown on previous line.");
         }
         catch (Exception e)
         {
-            assertTrue(e instanceof IllegalStateException || e instanceof UnsupportedOperationException);
+            Assert.assertTrue(e instanceof IllegalStateException || e instanceof UnsupportedOperationException);
         }
     }
 
     @Test
     public void groupByUniqueKey()
     {
-        assertEquals(
-                UnifiedMap.newWithKeysValues(1, 1, 2, 2, 3, 3),
-                this.classUnderTest().groupByUniqueKey(id -> id));
+        Assert.assertEquals(UnifiedMap.newWithKeysValues(1, 1, 2, 2, 3, 3), this.classUnderTest().groupByUniqueKey(id -> id));
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void groupByUniqueKey_throws()
     {
-        assertThrows(IllegalStateException.class, () -> this.classUnderTest().groupByUniqueKey(Functions.getFixedValue(1)));
+        this.classUnderTest().groupByUniqueKey(Functions.getFixedValue(1));
     }
 
     @Test
     public void groupByUniqueKey_target()
     {
-        MutableMap<Integer, Integer> integers =
-                this.classUnderTest().groupByUniqueKey(id -> id, UnifiedMap.newWithKeysValues(0, 0));
-        assertEquals(UnifiedMap.newWithKeysValues(0, 0, 1, 1, 2, 2, 3, 3), integers);
+        MutableMap<Integer, Integer> integers = this.classUnderTest().groupByUniqueKey(id -> id, UnifiedMap.newWithKeysValues(0, 0));
+        Assert.assertEquals(UnifiedMap.newWithKeysValues(0, 0, 1, 1, 2, 2, 3, 3), integers);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void groupByUniqueKey_target_throws()
     {
-        assertThrows(IllegalStateException.class, () -> this.classUnderTest().groupByUniqueKey(id -> id, UnifiedMap.newWithKeysValues(2, 2)));
+        this.classUnderTest().groupByUniqueKey(id -> id, UnifiedMap.newWithKeysValues(2, 2));
     }
 
     @Test
     public void getOnly()
     {
         ImmutableList<Integer> list = this.newList(2);
-        assertEquals(Integer.valueOf(2), list.getOnly());
+        Assert.assertEquals(Integer.valueOf(2), list.getOnly());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void getOnly_exception_when_empty()
     {
         ImmutableList<Integer> list = this.newList();
-        assertThrows(IllegalStateException.class, () -> list.getOnly());
+        list.getOnly();
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void getOnly_exception_when_multiple_items()
     {
         ImmutableList<Integer> list = this.newList(1, 2, 3);
-        assertThrows(IllegalStateException.class, () -> list.getOnly());
+        list.getOnly();
     }
 }

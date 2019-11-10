@@ -283,7 +283,7 @@ public abstract class AbstractImmutableCollectionTestCase
     {
         ImmutableCollection<Integer> integers = this.classUnderTest();
         Integer result = integers.injectInto(0, AddFunction.INTEGER);
-        Assert.assertEquals(FastList.newList(integers).injectInto(0, AddFunction.INTEGER_TO_INT), result.intValue());
+        Assert.assertEquals(Lists.mutable.withAll(integers).injectInto(0, AddFunction.INTEGER_TO_INT), result.intValue());
     }
 
     @Test
@@ -454,9 +454,9 @@ public abstract class AbstractImmutableCollectionTestCase
     @Test
     public void makeString()
     {
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).toString(), '[' + this.classUnderTest().makeString() + ']');
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).toString(), '[' + this.classUnderTest().makeString(", ") + ']');
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).toString(), this.classUnderTest().makeString("[", ", ", "]"));
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).toString(), '[' + this.classUnderTest().makeString() + ']');
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).toString(), '[' + this.classUnderTest().makeString(", ") + ']');
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).toString(), this.classUnderTest().makeString("[", ", ", "]"));
     }
 
     @Test
@@ -464,21 +464,21 @@ public abstract class AbstractImmutableCollectionTestCase
     {
         Appendable builder1 = new StringBuilder();
         this.classUnderTest().appendString(builder1);
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).toString(), '[' + builder1.toString() + ']');
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).toString(), '[' + builder1.toString() + ']');
 
         Appendable builder2 = new StringBuilder();
         this.classUnderTest().appendString(builder2, ", ");
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).toString(), '[' + builder2.toString() + ']');
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).toString(), '[' + builder2.toString() + ']');
 
         Appendable builder3 = new StringBuilder();
         this.classUnderTest().appendString(builder3, "[", ", ", "]");
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).toString(), builder3.toString());
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).toString(), builder3.toString());
     }
 
     @Test
     public void testToString()
     {
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).toString(), this.classUnderTest().toString());
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).toString(), this.classUnderTest().toString());
     }
 
     @Test
@@ -757,7 +757,7 @@ public abstract class AbstractImmutableCollectionTestCase
     public void toArray()
     {
         ImmutableCollection<Integer> integers = this.classUnderTest();
-        MutableList<Integer> copy = FastList.newList(integers);
+        MutableList<Integer> copy = Lists.mutable.withAll(integers);
         Assert.assertArrayEquals(integers.toArray(), copy.toArray());
         Assert.assertArrayEquals(integers.toArray(new Integer[integers.size()]), copy.toArray(new Integer[integers.size()]));
     }
@@ -766,7 +766,7 @@ public abstract class AbstractImmutableCollectionTestCase
     public void toSortedList()
     {
         ImmutableCollection<Integer> integers = this.classUnderTest();
-        MutableList<Integer> copy = FastList.newList(integers);
+        MutableList<Integer> copy = Lists.mutable.withAll(integers);
         MutableList<Integer> list = integers.toSortedList(Collections.reverseOrder());
         Assert.assertEquals(copy.sortThis(Collections.reverseOrder()), list);
         MutableList<Integer> list2 = integers.toSortedList();

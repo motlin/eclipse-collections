@@ -31,7 +31,6 @@ import org.eclipse.collections.impl.block.function.NegativeIntervalFunction;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.collection.immutable.AbstractImmutableCollectionTestCase;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
@@ -56,7 +55,7 @@ public abstract class AbstractImmutableSetTestCase extends AbstractImmutableColl
         MutableSet<Integer> mutable = UnifiedSet.newSet(immutable);
         Verify.assertEqualsAndHashCode(immutable, mutable);
         Verify.assertPostSerializedEqualsAndHashCode(immutable);
-        Assert.assertNotEquals(immutable, FastList.newList(mutable));
+        Assert.assertNotEquals(immutable, Lists.mutable.withAll(mutable));
     }
 
     @Test
@@ -94,7 +93,7 @@ public abstract class AbstractImmutableSetTestCase extends AbstractImmutableColl
         Assert.assertEquals(set, largeWithoutAll);
         ImmutableSet<Integer> largeWithoutAll2 = set.newWithoutAll(UnifiedSet.newSet(Interval.fromTo(151, 199)));
         Assert.assertEquals(set, largeWithoutAll2);
-        ImmutableSet<Integer> largeWithoutAll3 = set.newWithoutAll(FastList.newList(Interval.fromTo(151, 199)));
+        ImmutableSet<Integer> largeWithoutAll3 = set.newWithoutAll(Lists.mutable.withAll(Interval.fromTo(151, 199)));
         Assert.assertEquals(set, largeWithoutAll3);
     }
 
@@ -230,7 +229,7 @@ public abstract class AbstractImmutableSetTestCase extends AbstractImmutableColl
     {
         ImmutableCollection<Integer> integers = this.classUnderTest();
         MutableList<Integer> list = integers.toList();
-        Verify.assertEqualsAndHashCode(FastList.newList(integers), list);
+        Verify.assertEqualsAndHashCode(Lists.mutable.withAll(integers), list);
     }
 
     @Test

@@ -61,7 +61,7 @@ public class SingletonListTest extends AbstractMemoryEfficientMutableListTestCas
     @Test
     public void equalsAndHashCode()
     {
-        Verify.assertEqualsAndHashCode(this.list, FastList.newList(this.list));
+        Verify.assertEqualsAndHashCode(this.list, Lists.mutable.withAll(this.list));
         Verify.assertPostSerializedEqualsAndHashCode(this.list);
     }
 
@@ -89,7 +89,7 @@ public class SingletonListTest extends AbstractMemoryEfficientMutableListTestCas
     @Test
     public void addingAllToOtherList()
     {
-        MutableList<String> newList = FastList.newList(this.list);
+        MutableList<String> newList = Lists.mutable.withAll(this.list);
         newList.add("2");
         Verify.assertItemAtIndex("1", 0, newList);
         Verify.assertItemAtIndex("2", 1, newList);

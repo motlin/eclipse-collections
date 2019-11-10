@@ -115,7 +115,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
         MutableSortedBag<Integer> mutable = TreeBag.newBag(immutable);
         Verify.assertEqualsAndHashCode(mutable, immutable);
         Verify.assertPostSerializedEqualsAndHashCode(immutable);
-        Assert.assertNotEquals(FastList.newList(mutable), immutable);
+        Assert.assertNotEquals(Lists.mutable.withAll(mutable), immutable);
 
         ImmutableSortedBag<Integer> bag1 = SortedBags.immutable.of(1, 1, 1, 4);
         ImmutableSortedBag<Integer> bag2 = SortedBags.immutable.of(1, 1, 1, 3);
@@ -400,7 +400,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest(Collections.reverseOrder());
         Verify.assertEmpty(
-                FastList.newList(integers.reject(Predicates.lessThan(integers.size() + 1))));
+                Lists.mutable.withAll(integers.reject(Predicates.lessThan(integers.size() + 1))));
         Verify.assertSortedBagsEqual(
                 integers,
                 integers.reject(Predicates.greaterThan(integers.size())));
@@ -615,14 +615,14 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
         ImmutableList<Pair<Integer, Object>> pairs = immutableBag.zip(nulls);
         Assert.assertEquals(immutableBag.toList(), pairs.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne));
         Verify.assertListsEqual(FastList.newListWith(2, 1, 1, 1), pairs.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne).toList());
-        Assert.assertEquals(FastList.newList(nulls), pairs.collect((Function<Pair<?, Object>, Object>) Pair::getTwo));
+        Assert.assertEquals(Lists.mutable.withAll(nulls), pairs.collect((Function<Pair<?, Object>, Object>) Pair::getTwo));
 
         ImmutableList<Pair<Integer, Object>> pairsPlusOne = immutableBag.zip(nullsPlusOne);
         Assert.assertEquals(immutableBag.toList(), pairsPlusOne.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne));
         Verify.assertListsEqual(
                 FastList.newListWith(2, 1, 1, 1),
                 pairsPlusOne.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne).castToList());
-        Assert.assertEquals(FastList.newList(nulls), pairsPlusOne.collect((Function<Pair<?, Object>, Object>) Pair::getTwo));
+        Assert.assertEquals(Lists.mutable.withAll(nulls), pairsPlusOne.collect((Function<Pair<?, Object>, Object>) Pair::getTwo));
 
         ImmutableList<Pair<Integer, Object>> pairsMinusOne = immutableBag.zip(nullsMinusOne);
         Verify.assertListsEqual(
@@ -817,7 +817,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest();
         Integer result = integers.injectInto(0, AddFunction.INTEGER);
-        Assert.assertEquals(FastList.newList(integers).injectInto(0, AddFunction.INTEGER_TO_INT), result.intValue());
+        Assert.assertEquals(Lists.mutable.withAll(integers).injectInto(0, AddFunction.INTEGER_TO_INT), result.intValue());
     }
 
     @Override
@@ -825,7 +825,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
     public void toArray()
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest(Collections.reverseOrder());
-        MutableList<Integer> copy = FastList.newList(integers);
+        MutableList<Integer> copy = Lists.mutable.withAll(integers);
         Assert.assertArrayEquals(integers.toArray(), copy.toArray());
         Assert.assertArrayEquals(integers.toArray(new Integer[integers.size()]), copy.toArray(new Integer[integers.size()]));
         Assert.assertArrayEquals(integers.toArray(new Integer[integers.size() - 1]), copy.toArray(new Integer[integers.size() - 1]));
@@ -836,14 +836,14 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
     @Test
     public void testToString()
     {
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).toString(), this.classUnderTest().toString());
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).toString(), this.classUnderTest().toString());
     }
 
     @Override
     @Test
     public void makeString()
     {
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).makeString(), this.classUnderTest().makeString());
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).makeString(), this.classUnderTest().makeString());
     }
 
     @Override
@@ -852,7 +852,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
     {
         Appendable builder = new StringBuilder();
         this.classUnderTest().appendString(builder);
-        Assert.assertEquals(FastList.newList(this.classUnderTest()).makeString(), builder.toString());
+        Assert.assertEquals(Lists.mutable.withAll(this.classUnderTest()).makeString(), builder.toString());
     }
 
     @Test
@@ -860,7 +860,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest(Collections.reverseOrder());
         MutableList<Integer> list = integers.toList();
-        Verify.assertEqualsAndHashCode(FastList.newList(integers), list);
+        Verify.assertEqualsAndHashCode(Lists.mutable.withAll(integers), list);
     }
 
     @Override
@@ -868,7 +868,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
     public void toSortedList()
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest();
-        MutableList<Integer> copy = FastList.newList(integers);
+        MutableList<Integer> copy = Lists.mutable.withAll(integers);
         MutableList<Integer> list = integers.toSortedList(Collections.reverseOrder());
         Assert.assertEquals(copy.sortThis(Collections.reverseOrder()), list);
         MutableList<Integer> list2 = integers.toSortedList();

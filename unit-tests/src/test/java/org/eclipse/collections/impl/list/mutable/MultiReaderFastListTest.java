@@ -750,7 +750,7 @@ public class MultiReaderFastListTest extends AbstractListTestCase
     public void subListSort()
     {
         MutableList<Integer> list = Interval.from(0).to(20).addAllTo(MultiReaderFastList.newList()).subList(2, 18).sortThis();
-        Assert.assertEquals(FastList.newList(list), Interval.from(2).to(17));
+        Assert.assertEquals(Lists.mutable.withAll(list), Interval.from(2).to(17));
     }
 
     @Test

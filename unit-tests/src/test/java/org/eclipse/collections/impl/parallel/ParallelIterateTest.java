@@ -214,7 +214,7 @@ public class ParallelIterateTest
         assertEquals(35, sum4.getSum());
 
         IntegerSum sum5 = new IntegerSum(0);
-        MutableList<Integer> list5 = FastList.newList(list4);
+        MutableList<Integer> list5 = Lists.mutable.withAll(list4);
         ParallelIterate.forEach(list5, new SumProcedure(sum5), new SumCombiner(sum5));
         assertEquals(35, sum5.getSum());
 
@@ -224,7 +224,7 @@ public class ParallelIterateTest
         assertEquals(40, sum6.getSum());
 
         IntegerSum sum7 = new IntegerSum(0);
-        MutableList<Integer> list7 = FastList.newList(list6);
+        MutableList<Integer> list7 = Lists.mutable.withAll(list6);
         ParallelIterate.forEach(list7, new SumProcedure(sum7), new SumCombiner(sum7), 1, list6.size() / 2);
         assertEquals(40, sum7.getSum());
     }
@@ -253,7 +253,7 @@ public class ParallelIterateTest
         assertEquals(35, sum4.getSum());
 
         IntegerSum sum5 = new IntegerSum(0);
-        ImmutableList<Integer> list5 = FastList.newList(list4).toImmutable();
+        ImmutableList<Integer> list5 = Lists.mutable.withAll(list4).toImmutable();
         ParallelIterate.forEach(list5, new SumProcedure(sum5), new SumCombiner(sum5));
         assertEquals(35, sum5.getSum());
 
@@ -263,7 +263,7 @@ public class ParallelIterateTest
         assertEquals(40, sum6.getSum());
 
         IntegerSum sum7 = new IntegerSum(0);
-        ImmutableList<Integer> list7 = FastList.newList(list6).toImmutable();
+        ImmutableList<Integer> list7 = Lists.mutable.withAll(list6).toImmutable();
         ParallelIterate.forEach(list7, new SumProcedure(sum7), new SumCombiner(sum7), 1, list6.size() / 2);
         assertEquals(40, sum7.getSum());
     }

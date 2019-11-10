@@ -52,7 +52,7 @@ public abstract class UnifiedMapTestCase extends MutableMapTestCase
     protected static final Integer COLLISION_10 = 152;
     protected static final MutableList<Integer> COLLISIONS =
             Lists.mutable.of(COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4, COLLISION_5);
-    protected static final MutableList<Integer> MORE_COLLISIONS = FastList.newList(COLLISIONS)
+    protected static final MutableList<Integer> MORE_COLLISIONS = Lists.mutable.withAll(COLLISIONS)
             .with(COLLISION_6, COLLISION_7, COLLISION_8, COLLISION_9);
     protected static final String[] FREQUENT_COLLISIONS = {"\u9103\ufffe", "\u9104\uffdf",
             "\u9105\uffc0", "\u9106\uffa1", "\u9107\uff82", "\u9108\uff63", "\u9109\uff44",
@@ -408,7 +408,7 @@ public abstract class UnifiedMapTestCase extends MutableMapTestCase
             MutableMap<Integer, Integer> map = this.mapWithCollisionsOfSize(i);
 
             Assert.assertFalse(map.entrySet().retainAll(
-                    FastList.newList(map.entrySet()).with(ImmutableEntry.of(COLLISION_10, COLLISION_10))));
+                    Lists.mutable.withAll(map.entrySet()).with(ImmutableEntry.of(COLLISION_10, COLLISION_10))));
 
             Assert.assertTrue(map.entrySet().retainAll(
                     this.mapWithCollisionsOfSize(i - 1).entrySet()));

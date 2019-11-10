@@ -141,7 +141,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
 
     public static <T> ImmutableArrayStack<T> newStackFromTopToBottom(Iterable<? extends T> items)
     {
-        return new ImmutableArrayStack<>(FastList.<T>newList(items).reverseThis());
+        return new ImmutableArrayStack<>(Lists.mutable.<T>withAll(items).reverseThis());
     }
 
     public static <T> ImmutableArrayStack<T> newStackFromTopToBottom(T... items)
@@ -152,7 +152,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     @Override
     public ImmutableStack<T> push(T item)
     {
-        FastList<T> newDelegate = FastList.newList(this.delegate);
+        FastList<T> newDelegate = Lists.mutable.withAll(this.delegate);
         newDelegate.add(item);
         return new ImmutableArrayStack<>(newDelegate);
     }
@@ -161,7 +161,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     public ImmutableStack<T> pop()
     {
         this.checkEmptyStack();
-        FastList<T> newDelegate = FastList.newList(this.delegate);
+        FastList<T> newDelegate = Lists.mutable.withAll(this.delegate);
         newDelegate.remove(this.delegate.size() - 1);
         return new ImmutableArrayStack<>(newDelegate);
     }
@@ -210,7 +210,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
         }
         this.checkEmptyStack();
         this.checkSizeLessThanCount(count);
-        return FastList.newList(this.asLazy().take(count));
+        return Lists.mutable.withAll(this.asLazy().take(count));
     }
 
     private boolean checkZeroCount(int count)

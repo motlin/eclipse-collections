@@ -76,7 +76,7 @@ public abstract class AbstractImmutableListTestCase extends AbstractImmutableCol
     public void equalsAndHashCode()
     {
         ImmutableList<Integer> immutable = this.classUnderTest();
-        MutableList<Integer> mutable1 = FastList.newList(immutable);
+        MutableList<Integer> mutable1 = Lists.mutable.withAll(immutable);
         ImmutableList<Integer> immutable1 = mutable1.toImmutable();
         List<Integer> mutable2 = new LinkedList<>(mutable1);
         List<Integer> mutable3 = new ArrayList<>(mutable1);
@@ -197,7 +197,7 @@ public abstract class AbstractImmutableListTestCase extends AbstractImmutableCol
         MutableList<Integer> result = Lists.mutable.of();
         ImmutableList<Integer> list = this.classUnderTest();
         list.reverseForEach(result::add);
-        Assert.assertEquals(ListIterate.reverseThis(FastList.newList(list)), result);
+        Assert.assertEquals(ListIterate.reverseThis(Lists.mutable.withAll(list)), result);
     }
 
     @Test
@@ -233,7 +233,7 @@ public abstract class AbstractImmutableListTestCase extends AbstractImmutableCol
         list.forEach(0, list.size() - 1, result::add);
         Assert.assertEquals(list, result);
         list.forEach(list.size() - 1, 0, reverseResult::add);
-        Assert.assertEquals(ListIterate.reverseThis(FastList.newList(list)), reverseResult);
+        Assert.assertEquals(ListIterate.reverseThis(Lists.mutable.withAll(list)), reverseResult);
 
         Verify.assertThrows(IndexOutOfBoundsException.class, () -> list.forEach(-1, 0, result::add));
         Verify.assertThrows(IndexOutOfBoundsException.class, () -> list.forEach(0, -1, result::add));
@@ -248,7 +248,7 @@ public abstract class AbstractImmutableListTestCase extends AbstractImmutableCol
         list.forEachWithIndex(0, list.size() - 1, ObjectIntProcedures.fromProcedure(result::add));
         Assert.assertEquals(list, result);
         list.forEachWithIndex(list.size() - 1, 0, ObjectIntProcedures.fromProcedure(reverseResult::add));
-        Assert.assertEquals(ListIterate.reverseThis(FastList.newList(list)), reverseResult);
+        Assert.assertEquals(ListIterate.reverseThis(Lists.mutable.withAll(list)), reverseResult);
 
         Verify.assertThrows(IndexOutOfBoundsException.class, () -> list.forEachWithIndex(-1, 0, result::add));
         Verify.assertThrows(IndexOutOfBoundsException.class, () -> list.forEachWithIndex(0, -1, result::add));

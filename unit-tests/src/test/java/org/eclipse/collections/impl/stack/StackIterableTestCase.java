@@ -1103,7 +1103,7 @@ public abstract class StackIterableTestCase
     @Test
     public void toSortedListBy()
     {
-        MutableList<Integer> list = FastList.newList(Interval.oneTo(10)).shuffleThis();
+        MutableList<Integer> list = Lists.mutable.withAll(Interval.oneTo(10)).shuffleThis();
         Assert.assertEquals(
                 Interval.oneTo(10),
                 this.newStack(list).toSortedListBy(Functions.getIntegerPassThru()));

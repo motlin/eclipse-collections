@@ -131,7 +131,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void sortThisByBoolean()
     {
         PartitionMutableList<String> partition = this.getNStrings().partition(s -> Integer.parseInt(s) % 2 == 0);
-        MutableList<String> expected = FastList.newList(partition.getRejected()).withAll(partition.getSelected());
+        MutableList<String> expected = Lists.mutable.withAll(partition.getRejected()).withAll(partition.getSelected());
         Assert.assertEquals(expected, this.list.sortThisByBoolean(s -> Integer.parseInt(s) % 2 == 0));
     }
 
@@ -192,7 +192,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     @Test
     public void reverseThis()
     {
-        MutableList<String> expected = FastList.newList(this.list);
+        MutableList<String> expected = Lists.mutable.withAll(this.list);
         MutableList<String> actual = this.list.reverseThis();
         Collections.reverse(expected);
         Assert.assertEquals(actual, expected);
@@ -203,7 +203,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void toReversed()
     {
         MutableList<String> actual = this.list.toReversed();
-        MutableList<String> expected = FastList.newList(this.list).reverseThis();
+        MutableList<String> expected = Lists.mutable.withAll(this.list).reverseThis();
         Assert.assertEquals(actual, expected);
         Assert.assertNotSame(this.list, actual);
     }
@@ -257,7 +257,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
         MapIterable<String, Counter> actual =
                 this.classUnderTest().aggregateInPlaceBy(groupBy, Counter::new, sumAggregator);
         MapIterable<String, Counter> expected =
-                FastList.newList(this.classUnderTest()).aggregateInPlaceBy(groupBy, Counter::new, sumAggregator);
+                Lists.mutable.withAll(this.classUnderTest()).aggregateInPlaceBy(groupBy, Counter::new, sumAggregator);
         Assert.assertEquals(expected, actual);
     }
 
@@ -269,7 +269,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
         MapIterable<String, Integer> actual =
                 this.classUnderTest().aggregateBy(groupBy, () -> 0, sumAggregator);
         MapIterable<String, Integer> expected =
-                FastList.newList(this.classUnderTest()).aggregateBy(groupBy, () -> 0, sumAggregator);
+                Lists.mutable.withAll(this.classUnderTest()).aggregateBy(groupBy, () -> 0, sumAggregator);
         Assert.assertEquals(expected, actual);
     }
 

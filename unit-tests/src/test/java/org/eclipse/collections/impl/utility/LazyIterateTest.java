@@ -24,7 +24,6 @@ import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Procedures;
 import org.eclipse.collections.impl.block.function.AddFunction;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.math.IntegerSum;
 import org.eclipse.collections.impl.math.Sum;
 import org.eclipse.collections.impl.test.Verify;
@@ -163,10 +162,10 @@ public class LazyIterateTest
     @Test
     public void asDeferred()
     {
-        MutableList<Integer> expected = FastList.newList(Interval.oneTo(5));
+        MutableList<Integer> expected = Lists.mutable.withAll(Interval.oneTo(5));
         MutableList<Integer> actual0 = LazyIterate.adapt(Interval.oneTo(5)).toList();
         MutableList<Integer> actual1 = Interval.oneTo(5).asLazy().toList();
-        MutableList<Integer> actual2 = FastList.newList(Interval.oneTo(5)).asLazy().toList();
+        MutableList<Integer> actual2 = Lists.mutable.withAll(Interval.oneTo(5)).asLazy().toList();
         MutableList<Integer> actual3 = actual2.asUnmodifiable().asLazy().toList();
         MutableList<Integer> actual4 = actual2.asSynchronized().asLazy().toList();
         MutableList<Integer> actual5 = actual2.asLazy().select(ignored -> true).toList();

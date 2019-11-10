@@ -131,7 +131,7 @@ public final class MultiReaderFastList<T>
 
     public static <T> MultiReaderFastList<T> newList(Iterable<? extends T> iterable)
     {
-        return new MultiReaderFastList<>(FastList.newList(iterable));
+        return new MultiReaderFastList<>(Lists.mutable.withAll(iterable));
     }
 
     public static <T> MultiReaderFastList<T> newListWith(T... elements)

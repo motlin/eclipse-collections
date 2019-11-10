@@ -535,7 +535,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         // ArrayAdapter doesn't support add and cannot contain itself
 
         Assert.assertEquals(
-                FastList.newList(this.newWith(1, 2, 3, 4)).toString(),
+                Lists.mutable.withAll(this.newWith(1, 2, 3, 4)).toString(),
                 this.newWith(1, 2, 3, 4).toString());
     }
 
@@ -546,7 +546,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         // ArrayAdapter doesn't support add and cannot contain itself
 
         Assert.assertEquals(
-                FastList.newList(this.newWith(1, 2, 3, 4)).makeString(),
+                Lists.mutable.withAll(this.newWith(1, 2, 3, 4)).makeString(),
                 this.newWith(1, 2, 3, 4).makeString());
     }
 
@@ -560,7 +560,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         this.newWith(1, 2, 3, 4).appendString(stringBuilder);
 
         Assert.assertEquals(
-                FastList.newList(this.newWith(1, 2, 3, 4)).makeString(),
+                Lists.mutable.withAll(this.newWith(1, 2, 3, 4)).makeString(),
                 stringBuilder.toString());
     }
 

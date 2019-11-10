@@ -18,7 +18,6 @@ import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -39,7 +38,7 @@ public class ListAddAllTest
 {
     private static final int SIZE = 1000;
     private final List<Integer> integersJDK = new ArrayList<>(Interval.oneTo(SIZE));
-    private final MutableList<Integer> integersEC = FastList.newList(Interval.oneTo(SIZE));
+    private final MutableList<Integer> integersEC = Lists.mutable.withAll(Interval.oneTo(SIZE));
 
     @Benchmark
     public void jdk()

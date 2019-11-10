@@ -874,7 +874,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void toArray()
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest(Collections.reverseOrder());
-        MutableList<Integer> copy = FastList.newList(integers);
+        MutableList<Integer> copy = Lists.mutable.withAll(integers);
         Assert.assertArrayEquals(integers.toArray(), copy.toArray());
         Assert.assertArrayEquals(integers.toArray(new Integer[integers.size()]), copy.toArray(new Integer[integers.size()]));
     }

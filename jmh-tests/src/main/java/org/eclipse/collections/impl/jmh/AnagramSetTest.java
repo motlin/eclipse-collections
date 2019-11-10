@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
 import org.eclipse.collections.api.multimap.set.UnsortedSetMultimap;
@@ -125,7 +126,7 @@ public class AnagramSetTest
     {
         UnsortedSetMultimap<Alphagram, String> multimap = this.ecWords.asParallel(this.executorService, BATCH_SIZE)
                 .groupBy(Alphagram::new);
-        FastList<Pair<Integer, String>> pairs = (FastList<Pair<Integer, String>>) FastList.newList(multimap.multiValuesView()).asParallel(this.executorService, BATCH_SIZE)
+        FastList<Pair<Integer, String>> pairs = (FastList<Pair<Integer, String>>) Lists.mutable.withAll(multimap.multiValuesView()).asParallel(this.executorService, BATCH_SIZE)
                 .select(iterable -> iterable.size() >= SIZE_THRESHOLD)
                 .collect(iterable -> Tuples.pair(iterable.size(), iterable.size() + ": " + iterable))
                 .toSortedList((pair1, pair2) -> Integer.compare(pair2.getOne(), pair1.getOne()));

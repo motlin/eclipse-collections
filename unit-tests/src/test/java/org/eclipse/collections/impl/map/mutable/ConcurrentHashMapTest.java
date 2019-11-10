@@ -18,6 +18,7 @@ import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.Function3;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
@@ -250,7 +251,7 @@ public class ConcurrentHashMapTest extends ConcurrentHashMapTestCase
                 ConcurrentHashMap.newMap(Interval.oneTo(100).toMap(Functions.getIntegerPassThru(), Functions.getIntegerPassThru()));
         MutableMap<Integer, MutableBag<Integer>> actual = ConcurrentHashMap.newMap();
         Procedure<Integer> procedure = each -> actual.getIfAbsentPut(each % 10, () -> HashBag.<Integer>newBag().asSynchronized()).add(each);
-        source.parallelForEachValue(FastList.newList(Collections.nCopies(5, procedure)), this.executor);
+        source.parallelForEachValue(Lists.mutable.withAll(Collections.nCopies(5, procedure)), this.executor);
         Verify.assertEqualsAndHashCode(SMALL_BAG_MUTABLE_MAP, actual);
     }
 
@@ -261,7 +262,7 @@ public class ConcurrentHashMapTest extends ConcurrentHashMapTestCase
                 ConcurrentHashMap.newMap(Interval.oneTo(100).toMap(Functions.getIntegerPassThru(), Functions.getIntegerPassThru()));
         MutableMap<Integer, MutableBag<Integer>> actual = ConcurrentHashMap.newMap();
         Procedure2<Integer, Integer> procedure2 = (key, value) -> actual.getIfAbsentPut(value % 10, () -> HashBag.<Integer>newBag().asSynchronized()).add(value);
-        source.parallelForEachKeyValue(FastList.newList(Collections.nCopies(5, procedure2)), this.executor);
+        source.parallelForEachKeyValue(Lists.mutable.withAll(Collections.nCopies(5, procedure2)), this.executor);
         Verify.assertEqualsAndHashCode(SMALL_BAG_MUTABLE_MAP, actual);
     }
 

@@ -34,7 +34,6 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.MultiReaderUnifiedSet;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
@@ -673,7 +672,7 @@ public class SetsTest
     {
         Verify.assertSetsEqual(setA, setB);
         Object[] expectedItems = setB.toArray((E[]) new Object[setB.size()]);
-        Assert.assertEquals(Lists.mutable.with(expectedItems), FastList.newList(setA));
+        Assert.assertEquals(Lists.mutable.with(expectedItems), org.eclipse.collections.api.factory.Lists.mutable.withAll(setA));
     }
 
     private <E> void assertForwardAndBackward(
@@ -697,7 +696,7 @@ public class SetsTest
 
     private <E> Procedure2<Set<E>, E[]> containsExactlyInOrderProcedure()
     {
-        return (set, elements) -> Assert.assertEquals(Lists.mutable.with((Object[]) elements), FastList.newList(set));
+        return (set, elements) -> Assert.assertEquals(Lists.mutable.with((Object[]) elements), org.eclipse.collections.api.factory.Lists.mutable.withAll(set));
     }
 
     @Test

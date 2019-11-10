@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
@@ -43,7 +44,7 @@ public class AllSatisfyTest
     private static final int SIZE = 1_000_000;
     private static final int BATCH_SIZE = 10_000;
     private final List<Integer> integersJDK = new ArrayList<>(Interval.oneTo(SIZE));
-    private final FastList<Integer> integersEC = FastList.newList(Interval.oneTo(SIZE));
+    private final FastList<Integer> integersEC = Lists.mutable.withAll(Interval.oneTo(SIZE));
 
     private ExecutorService executorService;
 

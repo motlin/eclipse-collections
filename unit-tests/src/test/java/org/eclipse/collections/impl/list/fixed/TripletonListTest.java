@@ -86,7 +86,7 @@ public class TripletonListTest extends AbstractMemoryEfficientMutableListTestCas
     @Test
     public void testAddingAllToOtherList()
     {
-        MutableList<String> newList = FastList.newList(this.list);
+        MutableList<String> newList = Lists.mutable.withAll(this.list);
         newList.add("4");
         assertEquals(FastList.newListWith("1", "2", "3", "4"), newList);
     }
@@ -137,7 +137,7 @@ public class TripletonListTest extends AbstractMemoryEfficientMutableListTestCas
     public void testEqualsAndHashCode()
     {
         MutableList<String> one = Lists.fixedSize.of("1", "2", "3");
-        MutableList<String> oneA = FastList.newList(one);
+        MutableList<String> oneA = Lists.mutable.withAll(one);
         Verify.assertEqualsAndHashCode(one, oneA);
         Verify.assertPostSerializedEqualsAndHashCode(one);
     }

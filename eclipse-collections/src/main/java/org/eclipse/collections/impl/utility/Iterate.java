@@ -81,7 +81,6 @@ import org.eclipse.collections.impl.block.procedure.MaxComparatorProcedure;
 import org.eclipse.collections.impl.block.procedure.MinComparatorProcedure;
 import org.eclipse.collections.impl.block.procedure.MultimapKeyValuePutAllProcedure;
 import org.eclipse.collections.impl.block.procedure.MultimapKeyValuePutProcedure;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
@@ -3176,7 +3175,7 @@ public final class Iterate
      */
     public static <T> MutableList<T> toSortedList(Iterable<T> iterable, Comparator<? super T> comparator)
     {
-        return FastList.newList(iterable).sortThis(comparator);
+        return Lists.mutable.withAll(iterable).sortThis(comparator);
     }
 
     /**

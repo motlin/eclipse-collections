@@ -222,7 +222,7 @@ public class FJIterateAcceptanceTest
         Assert.assertEquals(35, sum4.getSum());
 
         IntegerSum sum5 = new IntegerSum(0);
-        MutableList<Integer> list5 = FastList.newList(list4);
+        MutableList<Integer> list5 = Lists.mutable.withAll(list4);
         FJIterate.forEach(list5, new SumProcedure(sum5), new SumCombiner(sum5));
         Assert.assertEquals(35, sum5.getSum());
 
@@ -232,7 +232,7 @@ public class FJIterateAcceptanceTest
         Assert.assertEquals(40, sum6.getSum());
 
         IntegerSum sum7 = new IntegerSum(0);
-        MutableList<Integer> list7 = FastList.newList(list6);
+        MutableList<Integer> list7 = Lists.mutable.withAll(list6);
         FJIterate.forEach(list7, new SumProcedure(sum7), new SumCombiner(sum7), 1, list6.size() / 2);
         Assert.assertEquals(40, sum7.getSum());
     }
@@ -261,7 +261,7 @@ public class FJIterateAcceptanceTest
         Assert.assertEquals(35, sum4.getSum());
 
         IntegerSum sum5 = new IntegerSum(0);
-        ImmutableList<Integer> list5 = FastList.newList(list4).toImmutable();
+        ImmutableList<Integer> list5 = Lists.mutable.withAll(list4).toImmutable();
         FJIterate.forEach(list5, new SumProcedure(sum5), new SumCombiner(sum5));
         Assert.assertEquals(35, sum5.getSum());
 
@@ -271,7 +271,7 @@ public class FJIterateAcceptanceTest
         Assert.assertEquals(40, sum6.getSum());
 
         IntegerSum sum7 = new IntegerSum(0);
-        ImmutableList<Integer> list7 = FastList.newList(list6).toImmutable();
+        ImmutableList<Integer> list7 = Lists.mutable.withAll(list6).toImmutable();
         FJIterate.forEach(list7, new SumProcedure(sum7), new SumCombiner(sum7), 1, list6.size() / 2);
         Assert.assertEquals(40, sum7.getSum());
     }
@@ -321,7 +321,7 @@ public class FJIterateAcceptanceTest
     public void testForEachWithIndexToArrayUsingArrayList()
     {
         Integer[] array = new Integer[200];
-        MutableList<Integer> list = FastList.newList(Interval.oneTo(200));
+        MutableList<Integer> list = Lists.mutable.withAll(Interval.oneTo(200));
         Assert.assertTrue(ArrayIterate.allSatisfy(array, Predicates.isNull()));
         FJIterate.forEachWithIndex(list, (each, index) -> array[index] = each, 10, 10);
         Assert.assertArrayEquals(array, list.toArray(new Integer[]{}));

@@ -617,7 +617,7 @@ public class IterateTest
     @Test
     public void toList()
     {
-        Assert.assertEquals(FastList.newListWith(1, 2, 3), FastList.newList(Interval.oneTo(3)));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), Lists.mutable.withAll(Interval.oneTo(3)));
     }
 
     @Test
@@ -1572,19 +1572,19 @@ public class IterateTest
         this.assertRemoveIfFromList(Collections.synchronizedList(integers2));
 
         MutableList<Integer> integers3 = Interval.oneTo(5).toList();
-        this.assertRemoveIfFromList(FastList.newList(integers3));
+        this.assertRemoveIfFromList(Lists.mutable.withAll(integers3));
         Verify.assertThrows(IllegalArgumentException.class, () -> Iterate.removeIf(null, null));
     }
 
     @Test
     public void removeIfWith()
     {
-        MutableList<Integer> objects = FastList.newList(Lists.fixedSize.of(1, 2, 3, null));
+        MutableList<Integer> objects = Lists.mutable.withAll(Lists.fixedSize.of(1, 2, 3, null));
         Assert.assertTrue(Iterate.removeIfWith(objects, (each1, ignored1) -> each1 == null, null));
         Verify.assertSize(3, objects);
         Verify.assertContainsAll(objects, 1, 2, 3);
 
-        MutableList<Integer> objects2 = FastList.newList(Lists.fixedSize.of(null, 1, 2, 3));
+        MutableList<Integer> objects2 = Lists.mutable.withAll(Lists.fixedSize.of(null, 1, 2, 3));
         Assert.assertTrue(Iterate.removeIfWith(objects2, (each, ignored) -> each == null, null));
         Verify.assertSize(3, objects2);
         Verify.assertContainsAll(objects2, 1, 2, 3);

@@ -123,7 +123,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
 
     public ArrayStack(Iterable<T> items)
     {
-        this.delegate = FastList.newList(items);
+        this.delegate = Lists.mutable.withAll(items);
     }
 
     public ArrayStack(T... items)
@@ -159,7 +159,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     public static <T> ArrayStack<T> newStackFromTopToBottom(Iterable<? extends T> items)
     {
         ArrayStack<T> stack = ArrayStack.newStack();
-        FastList<T> list = FastList.newList(items);
+        MutableList<T> list = Lists.mutable.withAll(items);
         stack.delegate = list.reverseThis();
         return stack;
     }

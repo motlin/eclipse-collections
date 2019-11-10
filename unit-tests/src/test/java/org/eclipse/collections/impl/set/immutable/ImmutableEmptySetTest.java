@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2015 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -12,19 +12,16 @@ package org.eclipse.collections.impl.set.immutable;
 
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.primitive.IntInterval;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ImmutableEmptySetTest extends AbstractImmutableEmptySetTestCase
 {
@@ -38,8 +35,8 @@ public class ImmutableEmptySetTest extends AbstractImmutableEmptySetTestCase
     @Test
     public void newWithout()
     {
-        assertSame(Sets.immutable.of(), Sets.immutable.of().newWithout(1));
-        assertSame(Sets.immutable.of(), Sets.immutable.of().newWithoutAll(Interval.oneTo(3)));
+        Assert.assertSame(Sets.immutable.of(), Sets.immutable.of().newWithout(1));
+        Assert.assertSame(Sets.immutable.of(), Sets.immutable.of().newWithoutAll(Interval.oneTo(3)));
     }
 
     @Override
@@ -50,20 +47,19 @@ public class ImmutableEmptySetTest extends AbstractImmutableEmptySetTestCase
         MutableSet<Integer> mutable = UnifiedSet.newSet(immutable);
         Verify.assertEqualsAndHashCode(mutable, immutable);
         Verify.assertPostSerializedIdentity(immutable);
-        assertNotEquals(FastList.newList(mutable), immutable);
+        Assert.assertNotEquals(Lists.mutable.withAll(mutable), immutable);
     }
 
-    @Override
     @Test
     public void countByEach()
     {
-        assertEquals(Bags.immutable.empty(), this.classUnderTest().countByEach(each -> IntInterval.oneTo(5).collect(i -> each + i)));
+        Assert.assertEquals(Bags.immutable.empty(), this.classUnderTest().countByEach(each -> IntInterval.oneTo(5).collect(i -> each + i)));
     }
 
     @Test
     public void countByEach_target()
     {
         MutableBag<Integer> target = Bags.mutable.empty();
-        assertEquals(target, this.classUnderTest().countByEach(each -> IntInterval.oneTo(5).collect(i -> each + i), target));
+        Assert.assertEquals(target, this.classUnderTest().countByEach(each -> IntInterval.oneTo(5).collect(i -> each + i), target));
     }
 }

@@ -34,7 +34,6 @@ import org.eclipse.collections.impl.block.function.PassThruFunction0;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.MapIterableTestCase;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
@@ -434,7 +433,7 @@ public abstract class ImmutableSortedMapTestCase extends MapIterableTestCase
         Assert.assertEquals(map.entrySet(), immutableSortedMap.castToSortedMap().entrySet());
 
         Set<Map.Entry<Integer, String>> entries = immutableSortedMap.castToSortedMap().entrySet();
-        MutableList<Map.Entry<Integer, String>> entriesList = FastList.newList(entries);
+        MutableList<Map.Entry<Integer, String>> entriesList = Lists.mutable.withAll(entries);
         MutableList<Map.Entry<Integer, String>> sortedEntryList = entriesList.toSortedListBy(Functions.getKeyFunction());
         Assert.assertEquals(sortedEntryList, entriesList);
     }

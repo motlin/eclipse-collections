@@ -166,7 +166,7 @@ public class MapIterateTest
     {
         MutableMap<String, Integer> integers = this.getIntegerMap();
         MutableList<Integer> list = MapIterate.toSortedList(integers, Collections.reverseOrder());
-        MutableList<Integer> expected = FastList.newList(integers.values()).sortThis(Collections.reverseOrder());
+        MutableList<Integer> expected = Lists.mutable.withAll(integers.values()).sortThis(Collections.reverseOrder());
         Assert.assertEquals(expected, list);
     }
 
