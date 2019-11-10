@@ -38,12 +38,12 @@ final class ImmutableUnifiedSetWithHashingStrategy<T>
 
     public static <T> ImmutableSet<T> newSetWith(HashingStrategy<? super T> hashingStrategy, T... elements)
     {
-        return new ImmutableUnifiedSetWithHashingStrategy<>(UnifiedSetWithHashingStrategy.newSetWith(hashingStrategy, elements));
+        return new ImmutableUnifiedSetWithHashingStrategy<>((UnifiedSetWithHashingStrategy<T>) UnifiedSetWithHashingStrategy.newSetWith(hashingStrategy, elements));
     }
 
     public static <T> ImmutableSet<T> newSet(HashingStrategy<? super T> hashingStrategy, Iterable<? extends T> iterable)
     {
-        return new ImmutableUnifiedSetWithHashingStrategy<>(UnifiedSetWithHashingStrategy.newSet(hashingStrategy, iterable));
+        return new ImmutableUnifiedSetWithHashingStrategy<>((UnifiedSetWithHashingStrategy<T>) UnifiedSetWithHashingStrategy.newSet(hashingStrategy, iterable));
     }
 
     public static <T> ImmutableSet<T> newSet(HashingStrategy<? super T> hashingStrategy, int capacity)

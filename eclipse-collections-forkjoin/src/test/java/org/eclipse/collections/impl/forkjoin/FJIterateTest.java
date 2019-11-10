@@ -145,19 +145,19 @@ public class FJIterateTest
 
         //Testing batch size 1
         IntegerSum sum2 = new IntegerSum(0);
-        UnifiedSet<Integer> set2 = UnifiedSet.newSet(Interval.oneTo(100));
+        UnifiedSet<Integer> set2 = (UnifiedSet<Integer>) UnifiedSet.newSet(Interval.oneTo(100));
         FJIterate.forEach(set2, new SumProcedure(sum2), new SumCombiner(sum2), 1, set2.getBatchCount(set2.size()));
         Assert.assertEquals(5050, sum2.getSum());
 
         //Testing an uneven batch size
         IntegerSum sum3 = new IntegerSum(0);
-        UnifiedSet<Integer> set3 = UnifiedSet.newSet(Interval.oneTo(100));
+        UnifiedSet<Integer> set3 = (UnifiedSet<Integer>) UnifiedSet.newSet(Interval.oneTo(100));
         FJIterate.forEach(set3, new SumProcedure(sum3), new SumCombiner(sum3), 1, set3.getBatchCount(13));
         Assert.assertEquals(5050, sum3.getSum());
 
         //Testing divideByZero exception by passing 1 as batchSize
         IntegerSum sum4 = new IntegerSum(0);
-        UnifiedSet<Integer> set4 = UnifiedSet.newSet(Interval.oneTo(100));
+        UnifiedSet<Integer> set4 = (UnifiedSet<Integer>) UnifiedSet.newSet(Interval.oneTo(100));
         FJIterate.forEach(set4, new SumProcedure(sum4), new SumCombiner(sum4), 1);
         Assert.assertEquals(5050, sum4.getSum());
     }

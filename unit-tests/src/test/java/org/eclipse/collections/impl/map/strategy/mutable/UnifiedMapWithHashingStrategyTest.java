@@ -135,12 +135,12 @@ public class UnifiedMapWithHashingStrategyTest extends UnifiedMapTestCase
         Pair<Integer, String> pair2 = Tuples.pair(2, "Two");
         Pair<Integer, String> pair3 = Tuples.pair(3, "Three");
         Pair<Integer, String> pair4 = Tuples.pair(4, "Four");
-        UnifiedMapWithHashingStrategy<Integer, String> expected = UnifiedMapWithHashingStrategy.newMapWith(INTEGER_HASHING_STRATEGY, pair1, pair2, pair3, pair4);
-        UnifiedMapWithHashingStrategy<Integer, String> actual1 = UnifiedMapWithHashingStrategy.newMapWith(INTEGER_HASHING_STRATEGY, FastList.newListWith(pair1, pair2, pair3, pair4));
+        UnifiedMapWithHashingStrategy<Integer, String> expected = (UnifiedMapWithHashingStrategy<Integer, String>) UnifiedMapWithHashingStrategy.newMapWith(INTEGER_HASHING_STRATEGY, pair1, pair2, pair3, pair4);
+        UnifiedMapWithHashingStrategy<Integer, String> actual1 = (UnifiedMapWithHashingStrategy<Integer, String>) UnifiedMapWithHashingStrategy.newMapWith(INTEGER_HASHING_STRATEGY, FastList.newListWith(pair1, pair2, pair3, pair4));
         Assert.assertEquals(expected, actual1);
         Assert.assertEquals(expected.hashingStrategy(), actual1.hashingStrategy());
 
-        UnifiedMapWithHashingStrategy<Integer, String> actual2 = UnifiedMapWithHashingStrategy.newMapWith(INTEGER_HASHING_STRATEGY, UnifiedSet.newSetWith(pair1, pair2, pair3, pair4));
+        UnifiedMapWithHashingStrategy<Integer, String> actual2 = (UnifiedMapWithHashingStrategy<Integer, String>) UnifiedMapWithHashingStrategy.newMapWith(INTEGER_HASHING_STRATEGY, UnifiedSet.newSetWith(pair1, pair2, pair3, pair4));
         Assert.assertEquals(expected, actual2);
         Assert.assertEquals(expected.hashingStrategy(), actual2.hashingStrategy());
     }

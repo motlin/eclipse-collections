@@ -84,12 +84,12 @@ final class ImmutableUnifiedSet<T>
 
     public static <T> ImmutableSet<T> newSetWith(T... elements)
     {
-        return new ImmutableUnifiedSet<>(UnifiedSet.newSetWith(elements));
+        return new ImmutableUnifiedSet<>((UnifiedSet<T>) UnifiedSet.newSetWith(elements));
     }
 
     public static <T> ImmutableSet<T> newSet(Iterable<? extends T> iterable)
     {
-        return new ImmutableUnifiedSet<>(UnifiedSet.newSet(iterable));
+        return new ImmutableUnifiedSet<>((UnifiedSet<T>) UnifiedSet.newSet(iterable));
     }
 
     @Override

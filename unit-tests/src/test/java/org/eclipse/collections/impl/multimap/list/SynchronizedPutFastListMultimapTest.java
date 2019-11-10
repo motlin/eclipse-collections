@@ -86,6 +86,6 @@ public class SynchronizedPutFastListMultimapTest extends AbstractMutableListMult
     @Override
     protected final <V> FastList<V> createCollection(V... args)
     {
-        return FastList.newListWith(args);
+        return (FastList<V>) FastList.newListWith(args);
     }
 }
