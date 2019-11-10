@@ -35,8 +35,10 @@ import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
 import org.eclipse.collections.api.partition.set.PartitionMutableSet;
 import org.eclipse.collections.api.set.ImmutableSet;
+import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.ParallelUnsortedSetIterable;
 import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.block.factory.Procedures2;
@@ -165,22 +167,22 @@ public class UnifiedSetWithHashingStrategy<T>
         }
     }
 
-    public static <K> UnifiedSetWithHashingStrategy<K> newSet(HashingStrategy<? super K> hashingStrategy)
+    public static <K> MutableSet<K> newSet(HashingStrategy<? super K> hashingStrategy)
     {
         return new UnifiedSetWithHashingStrategy<>(hashingStrategy);
     }
 
-    public static <K> UnifiedSetWithHashingStrategy<K> newSet(UnifiedSetWithHashingStrategy<K> set)
+    public static <K> MutableSet<K> newSet(UnifiedSetWithHashingStrategy<K> set)
     {
         return new UnifiedSetWithHashingStrategy<>(set.hashingStrategy(), set);
     }
 
-    public static <K> UnifiedSetWithHashingStrategy<K> newSet(HashingStrategy<? super K> hashingStrategy, int size)
+    public static <K> MutableSet<K> newSet(HashingStrategy<? super K> hashingStrategy, int size)
     {
         return new UnifiedSetWithHashingStrategy<>(hashingStrategy, size);
     }
 
-    public static <K> UnifiedSetWithHashingStrategy<K> newSet(HashingStrategy<? super K> hashingStrategy, Iterable<? extends K> source)
+    public static <K> MutableSet<K> newSet(HashingStrategy<? super K> hashingStrategy, Iterable<? extends K> source)
     {
         if (source instanceof UnifiedSetWithHashingStrategy<?>)
         {
@@ -521,7 +523,7 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public UnifiedSetWithHashingStrategy<T> tap(Procedure<? super T> procedure)
+    public MutableSet<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;
@@ -673,13 +675,13 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public UnifiedSetWithHashingStrategy<T> newEmpty()
+    public MutableSet<T> newEmpty()
     {
         return new UnifiedSetWithHashingStrategy<>(this.hashingStrategy);
     }
 
     @Override
-    public UnifiedSetWithHashingStrategy<T> newEmpty(int size)
+    public MutableSet<T> newEmpty(int size)
     {
         return new UnifiedSetWithHashingStrategy<>(this.hashingStrategy, size, this.loadFactor);
     }
@@ -744,13 +746,13 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public UnifiedSetWithHashingStrategy<T> select(Predicate<? super T> predicate)
+    public MutableSet<T> select(Predicate<? super T> predicate)
     {
         return this.select(predicate, this.newEmpty());
     }
 
     @Override
-    public <P> UnifiedSetWithHashingStrategy<T> selectWith(
+    public <P> MutableSet<T> selectWith(
             Predicate2<? super T, ? super P> predicate,
             P parameter)
     {
@@ -758,13 +760,13 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public UnifiedSetWithHashingStrategy<T> reject(Predicate<? super T> predicate)
+    public MutableSet<T> reject(Predicate<? super T> predicate)
     {
         return this.reject(predicate, this.newEmpty());
     }
 
     @Override
-    public <P> UnifiedSetWithHashingStrategy<T> rejectWith(
+    public <P> MutableSet<T> rejectWith(
             Predicate2<? super T, ? super P> predicate,
             P parameter)
     {
@@ -799,7 +801,7 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public <S> UnifiedSetWithHashingStrategy<S> selectInstancesOf(Class<S> clazz)
+    public <S> MutableSet<S> selectInstancesOf(Class<S> clazz)
     {
         UnifiedSetWithHashingStrategy<S> result = (UnifiedSetWithHashingStrategy<S>) this.newEmpty();
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
@@ -1099,7 +1101,7 @@ public class UnifiedSetWithHashingStrategy<T>
         return this;
     }
 
-    public UnifiedSetWithHashingStrategy<T> with(T... elements)
+    public MutableSet<T> with(T... elements)
     {
         this.addAll(Arrays.asList(elements));
         return this;
@@ -1113,14 +1115,14 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public UnifiedSetWithHashingStrategy<T> without(T element)
+    public MutableSet<T> without(T element)
     {
         this.remove(element);
         return this;
     }
 
     @Override
-    public UnifiedSetWithHashingStrategy<T> withoutAll(Iterable<? extends T> elements)
+    public MutableSet<T> withoutAll(Iterable<? extends T> elements)
     {
         this.removeAllIterable(elements);
         return this;
@@ -1690,7 +1692,7 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public UnifiedSetWithHashingStrategy<T> clone()
+    public MutableSet<T> clone()
     {
         return new UnifiedSetWithHashingStrategy<>(this.hashingStrategy, this);
     }
@@ -2089,14 +2091,14 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public <V> UnifiedSetWithHashingStrategyMultimap<V, T> groupBy(
+    public <V> MutableSetMultimap<V, T> groupBy(
             Function<? super T, ? extends V> function)
     {
         return this.groupBy(function, UnifiedSetWithHashingStrategyMultimap.newMultimap(this.hashingStrategy));
     }
 
     @Override
-    public <V> UnifiedSetWithHashingStrategyMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
+    public <V> MutableSetMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
     {
         return this.groupByEach(function, UnifiedSetWithHashingStrategyMultimap.newMultimap(this.hashingStrategy));
     }

@@ -52,24 +52,24 @@ public class HashBag<T>
         this.size = (int) map.sum();
     }
 
-    public static <E> HashBag<E> newBag()
+    public static <E> MutableBag<E> newBag()
     {
         return new HashBag<>();
     }
 
-    public static <E> HashBag<E> newBag(int size)
+    public static <E> MutableBag<E> newBag(int size)
     {
         return new HashBag<>(size);
     }
 
-    public static <E> HashBag<E> newBag(Bag<? extends E> source)
+    public static <E> MutableBag<E> newBag(Bag<? extends E> source)
     {
         HashBag<E> result = new HashBag<>(source.sizeDistinct());
         result.addAllBag(source);
         return result;
     }
 
-    public static <E> HashBag<E> newBag(Iterable<? extends E> source)
+    public static <E> MutableBag<E> newBag(Iterable<? extends E> source)
     {
         if (source instanceof Bag)
         {
@@ -78,7 +78,7 @@ public class HashBag<T>
         return HashBag.newBagWith((E[]) Iterate.toArray(source));
     }
 
-    public static <E> HashBag<E> newBagWith(E... elements)
+    public static <E> MutableBag<E> newBagWith(E... elements)
     {
         HashBag<E> result = new HashBag<>();
         ArrayIterate.addAllTo(elements, result);
@@ -115,7 +115,7 @@ public class HashBag<T>
     }
 
     @Override
-    public HashBag<T> without(T element)
+    public MutableBag<T> without(T element)
     {
         this.remove(element);
         return this;
@@ -128,40 +128,40 @@ public class HashBag<T>
     }
 
     @Override
-    public HashBag<T> with(T element)
+    public MutableBag<T> with(T element)
     {
         this.add(element);
         return this;
     }
 
     @Override
-    public HashBag<T> withAll(Iterable<? extends T> iterable)
+    public MutableBag<T> withAll(Iterable<? extends T> iterable)
     {
         this.addAllIterable(iterable);
         return this;
     }
 
     @Override
-    public HashBag<T> withoutAll(Iterable<? extends T> iterable)
+    public MutableBag<T> withoutAll(Iterable<? extends T> iterable)
     {
         this.removeAllIterable(iterable);
         return this;
     }
 
-    public HashBag<T> with(T... elements)
+    public MutableBag<T> with(T... elements)
     {
         this.addAll(Arrays.asList(elements));
         return this;
     }
 
-    public HashBag<T> with(T element1, T element2)
+    public MutableBag<T> with(T element1, T element2)
     {
         this.add(element1);
         this.add(element2);
         return this;
     }
 
-    public HashBag<T> with(T element1, T element2, T element3)
+    public MutableBag<T> with(T element1, T element2, T element3)
     {
         this.add(element1);
         this.add(element2);

@@ -181,19 +181,19 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                 Functions.secondOfPair()));
     }
 
-    public static <K, V> UnifiedMapWithHashingStrategy<K, V> newMap(HashingStrategy<? super K> hashingStrategy)
+    public static <K, V> MutableMap<K, V> newMap(HashingStrategy<? super K> hashingStrategy)
     {
         return new UnifiedMapWithHashingStrategy<>(hashingStrategy);
     }
 
-    public static <K, V> UnifiedMapWithHashingStrategy<K, V> newMap(
+    public static <K, V> MutableMap<K, V> newMap(
             HashingStrategy<? super K> hashingStrategy,
             int size)
     {
         return new UnifiedMapWithHashingStrategy<>(hashingStrategy, size);
     }
 
-    public static <K, V> UnifiedMapWithHashingStrategy<K, V> newMap(
+    public static <K, V> MutableMap<K, V> newMap(
             HashingStrategy<? super K> hashingStrategy,
             int size,
             float loadFactor)
@@ -201,14 +201,14 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         return new UnifiedMapWithHashingStrategy<>(hashingStrategy, size, loadFactor);
     }
 
-    public static <K, V> UnifiedMapWithHashingStrategy<K, V> newMap(
+    public static <K, V> MutableMap<K, V> newMap(
             HashingStrategy<? super K> hashingStrategy,
             Map<? extends K, ? extends V> map)
     {
         return new UnifiedMapWithHashingStrategy<>(hashingStrategy, map);
     }
 
-    public static <K, V> UnifiedMapWithHashingStrategy<K, V> newMapWith(HashingStrategy<? super K> hashingStrategy, Iterable<Pair<K, V>> inputIterable)
+    public static <K, V> MutableMap<K, V> newMapWith(HashingStrategy<? super K> hashingStrategy, Iterable<Pair<K, V>> inputIterable)
     {
         UnifiedMapWithHashingStrategy<K, V> outputMap = new UnifiedMapWithHashingStrategy<>(hashingStrategy);
 
@@ -301,7 +301,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
     }
 
     @Override
-    public UnifiedMapWithHashingStrategy<K, V> clone()
+    public MutableMap<K, V> clone()
     {
         return new UnifiedMapWithHashingStrategy<>(this.hashingStrategy, this);
     }

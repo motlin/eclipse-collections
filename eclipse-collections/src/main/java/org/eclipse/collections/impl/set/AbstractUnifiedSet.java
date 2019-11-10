@@ -151,7 +151,7 @@ public abstract class AbstractUnifiedSet<T>
     }
 
     @Override
-    public <V> UnifiedSet<V> collect(Function<? super T, ? extends V> function)
+    public <V> MutableSet<V> collect(Function<? super T, ? extends V> function)
     {
         return this.collect(function, UnifiedSet.newSet());
     }
@@ -205,19 +205,19 @@ public abstract class AbstractUnifiedSet<T>
     }
 
     @Override
-    public <V> UnifiedSet<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
+    public <V> MutableSet<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
         return this.flatCollect(function, UnifiedSet.newSet());
     }
 
     @Override
-    public <P, A> UnifiedSet<A> collectWith(Function2<? super T, ? super P, ? extends A> function, P parameter)
+    public <P, A> MutableSet<A> collectWith(Function2<? super T, ? super P, ? extends A> function, P parameter)
     {
         return this.collectWith(function, parameter, UnifiedSet.newSet());
     }
 
     @Override
-    public <V> UnifiedSet<V> collectIf(
+    public <V> MutableSet<V> collectIf(
             Predicate<? super T> predicate, Function<? super T, ? extends V> function)
     {
         return this.collectIf(predicate, function, UnifiedSet.newSet());

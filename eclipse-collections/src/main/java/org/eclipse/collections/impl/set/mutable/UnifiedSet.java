@@ -37,6 +37,7 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
 import org.eclipse.collections.api.partition.set.PartitionMutableSet;
 import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.MutableSet;
@@ -148,12 +149,12 @@ public class UnifiedSet<T>
         }
     }
 
-    public static <K> UnifiedSet<K> newSet()
+    public static <K> MutableSet<K> newSet()
     {
         return new UnifiedSet<>();
     }
 
-    public static <K> UnifiedSet<K> newSet(int size)
+    public static <K> MutableSet<K> newSet(int size)
     {
         return new UnifiedSet<>(size);
     }
@@ -179,7 +180,7 @@ public class UnifiedSet<T>
         return result;
     }
 
-    public static <K> UnifiedSet<K> newSet(int size, float loadFactor)
+    public static <K> MutableSet<K> newSet(int size, float loadFactor)
     {
         return new UnifiedSet<>(size, loadFactor);
     }
@@ -619,13 +620,13 @@ public class UnifiedSet<T>
     }
 
     @Override
-    public UnifiedSet<T> newEmpty()
+    public MutableSet<T> newEmpty()
     {
         return UnifiedSet.newSet();
     }
 
     @Override
-    public UnifiedSet<T> newEmpty(int size)
+    public MutableSet<T> newEmpty(int size)
     {
         return new UnifiedSet<>(size, this.loadFactor);
     }
@@ -690,13 +691,13 @@ public class UnifiedSet<T>
     }
 
     @Override
-    public UnifiedSet<T> select(Predicate<? super T> predicate)
+    public MutableSet<T> select(Predicate<? super T> predicate)
     {
         return this.select(predicate, this.newEmpty());
     }
 
     @Override
-    public <P> UnifiedSet<T> selectWith(
+    public <P> MutableSet<T> selectWith(
             Predicate2<? super T, ? super P> predicate,
             P parameter)
     {
@@ -704,13 +705,13 @@ public class UnifiedSet<T>
     }
 
     @Override
-    public UnifiedSet<T> reject(Predicate<? super T> predicate)
+    public MutableSet<T> reject(Predicate<? super T> predicate)
     {
         return this.reject(predicate, this.newEmpty());
     }
 
     @Override
-    public <P> UnifiedSet<T> rejectWith(
+    public <P> MutableSet<T> rejectWith(
             Predicate2<? super T, ? super P> predicate,
             P parameter)
     {
@@ -745,7 +746,7 @@ public class UnifiedSet<T>
     }
 
     @Override
-    public <S> UnifiedSet<S> selectInstancesOf(Class<S> clazz)
+    public <S> MutableSet<S> selectInstancesOf(Class<S> clazz)
     {
         UnifiedSet<S> result = new UnifiedSet<>();
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
@@ -2019,14 +2020,14 @@ public class UnifiedSet<T>
     }
 
     @Override
-    public <V> UnifiedSetMultimap<V, T> groupBy(
+    public <V> MutableSetMultimap<V, T> groupBy(
             Function<? super T, ? extends V> function)
     {
         return this.groupBy(function, UnifiedSetMultimap.newMultimap());
     }
 
     @Override
-    public <V> UnifiedSetMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
+    public <V> MutableSetMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
     {
         return this.groupByEach(function, new UnifiedSetMultimap<>());
     }

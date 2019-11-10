@@ -33,6 +33,7 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
+import org.eclipse.collections.api.multimap.sortedbag.MutableSortedBagMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.stack.MutableStack;
@@ -91,12 +92,12 @@ public class TreeBag<T>
         this.addAllIterable(iterable);
     }
 
-    public static <E> TreeBag<E> newBag()
+    public static <E> MutableSortedBag<E> newBag()
     {
         return new TreeBag<>();
     }
 
-    public static <E> TreeBag<E> newBag(Comparator<? super E> comparator)
+    public static <E> MutableSortedBag<E> newBag(Comparator<? super E> comparator)
     {
         return new TreeBag<>(comparator);
     }
@@ -110,7 +111,7 @@ public class TreeBag<T>
         return Iterate.addAllTo(source, TreeBag.newBag());
     }
 
-    public static <E> TreeBag<E> newBag(Comparator<? super E> comparator, Iterable<? extends E> iterable)
+    public static <E> MutableSortedBag<E> newBag(Comparator<? super E> comparator, Iterable<? extends E> iterable)
     {
         return new TreeBag<>(comparator, iterable);
     }
@@ -121,14 +122,14 @@ public class TreeBag<T>
         return TreeBag.newBag(Arrays.asList(elements));
     }
 
-    public static <E> TreeBag<E> newBagWith(Comparator<? super E> comparator, E... elements)
+    public static <E> MutableSortedBag<E> newBagWith(Comparator<? super E> comparator, E... elements)
     {
         //noinspection SSBasedInspection
         return TreeBag.newBag(comparator, Arrays.asList(elements));
     }
 
     @Override
-    public TreeBag<T> clone()
+    public MutableSortedBag<T> clone()
     {
         return new TreeBag<>(this);
     }
@@ -519,28 +520,28 @@ public class TreeBag<T>
     }
 
     @Override
-    public TreeBag<T> without(T element)
+    public MutableSortedBag<T> without(T element)
     {
         this.remove(element);
         return this;
     }
 
     @Override
-    public TreeBag<T> withAll(Iterable<? extends T> iterable)
+    public MutableSortedBag<T> withAll(Iterable<? extends T> iterable)
     {
         this.addAllIterable(iterable);
         return this;
     }
 
     @Override
-    public TreeBag<T> withoutAll(Iterable<? extends T> iterable)
+    public MutableSortedBag<T> withoutAll(Iterable<? extends T> iterable)
     {
         this.removeAllIterable(iterable);
         return this;
     }
 
     @Override
-    public TreeBag<T> with(T element)
+    public MutableSortedBag<T> with(T element)
     {
         this.add(element);
         return this;
@@ -648,13 +649,13 @@ public class TreeBag<T>
     }
 
     @Override
-    public <V> TreeBagMultimap<V, T> groupBy(Function<? super T, ? extends V> function)
+    public <V> MutableSortedBagMultimap<V, T> groupBy(Function<? super T, ? extends V> function)
     {
         return this.groupBy(function, TreeBagMultimap.newMultimap(this.comparator()));
     }
 
     @Override
-    public <V> TreeBagMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
+    public <V> MutableSortedBagMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
     {
         return this.groupByEach(function, TreeBagMultimap.newMultimap(this.comparator()));
     }
@@ -705,13 +706,13 @@ public class TreeBag<T>
         return this.items.comparator();
     }
 
-    public TreeBag<T> with(T... elements)
+    public MutableSortedBag<T> with(T... elements)
     {
         this.addAll(Arrays.asList(elements));
         return this;
     }
 
-    public TreeBag<T> with(T element1, T element2)
+    public MutableSortedBag<T> with(T element1, T element2)
     {
         this.add(element1);
         this.add(element2);
@@ -727,7 +728,7 @@ public class TreeBag<T>
         return true;
     }
 
-    public TreeBag<T> with(T element1, T element2, T element3)
+    public MutableSortedBag<T> with(T element1, T element2, T element3)
     {
         this.add(element1);
         this.add(element2);

@@ -137,22 +137,22 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
         this.delegate = FastList.wrapCopy(items);
     }
 
-    public static <T> ArrayStack<T> newStack()
+    public static <T> MutableStack<T> newStack()
     {
         return new ArrayStack<>();
     }
 
-    public static <T> ArrayStack<T> newStack(Iterable<? extends T> items)
+    public static <T> MutableStack<T> newStack(Iterable<? extends T> items)
     {
         return new ArrayStack<>((Iterable<T>) items);
     }
 
-    public static <T> ArrayStack<T> newStackWith(T... items)
+    public static <T> MutableStack<T> newStackWith(T... items)
     {
         return new ArrayStack<>(items);
     }
 
-    public static <T> ArrayStack<T> newStackFromTopToBottom(T... items)
+    public static <T> MutableStack<T> newStackFromTopToBottom(T... items)
     {
         ArrayStack<T> stack = new ArrayStack<>(items.length);
         for (int i = items.length - 1; i >= 0; i--)
@@ -162,7 +162,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
         return stack;
     }
 
-    public static <T> ArrayStack<T> newStackFromTopToBottom(Iterable<? extends T> items)
+    public static <T> MutableStack<T> newStackFromTopToBottom(Iterable<? extends T> items)
     {
         ArrayStack<T> stack = new ArrayStack<>();
         MutableList<T> list = FastList.newList(items);
@@ -353,7 +353,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public <V> ArrayStack<V> collect(Function<? super T, ? extends V> function)
+    public <V> MutableStack<V> collect(Function<? super T, ? extends V> function)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().collect(function));
     }
@@ -517,13 +517,13 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public <P, V> ArrayStack<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
+    public <P, V> MutableStack<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().collectWith(function, parameter).toList());
     }
 
     @Override
-    public <V> ArrayStack<V> collectIf(Predicate<? super T> predicate, Function<? super T, ? extends V> function)
+    public <V> MutableStack<V> collectIf(Predicate<? super T> predicate, Function<? super T, ? extends V> function)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().collectIf(predicate, function).toList());
     }
@@ -541,7 +541,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public <V> ArrayStack<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
+    public <V> MutableStack<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().flatCollect(function).toList());
     }
@@ -553,13 +553,13 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public ArrayStack<T> select(Predicate<? super T> predicate)
+    public MutableStack<T> select(Predicate<? super T> predicate)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().select(predicate).toList());
     }
 
     @Override
-    public <P> ArrayStack<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
+    public <P> MutableStack<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return this.select(Predicates.bind(predicate, parameter));
     }
@@ -571,7 +571,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public <S> ArrayStack<S> selectInstancesOf(Class<S> clazz)
+    public <S> MutableStack<S> selectInstancesOf(Class<S> clazz)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().selectInstancesOf(clazz).toList());
     }
@@ -583,7 +583,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public ArrayStack<T> reject(Predicate<? super T> predicate)
+    public MutableStack<T> reject(Predicate<? super T> predicate)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().reject(predicate).toList());
     }
@@ -595,7 +595,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public <P> ArrayStack<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
+    public <P> MutableStack<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return this.reject(Predicates.bind(predicate, parameter));
     }
@@ -659,7 +659,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public <S> ArrayStack<Pair<T, S>> zip(Iterable<S> that)
+    public <S> MutableStack<Pair<T, S>> zip(Iterable<S> that)
     {
         return ArrayStack.newStackFromTopToBottom(this.delegate.asReversed().zip(that).toList());
     }
@@ -671,7 +671,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public ArrayStack<Pair<T, Integer>> zipWithIndex()
+    public MutableStack<Pair<T, Integer>> zipWithIndex()
     {
         int maxIndex = this.delegate.size() - 1;
         Interval indices = Interval.fromTo(0, maxIndex);
@@ -926,7 +926,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public ArrayStack<T> tap(Procedure<? super T> procedure)
+    public MutableStack<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;

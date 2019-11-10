@@ -87,6 +87,7 @@ import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.api.multimap.list.MutableListMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.tuple.Twin;
@@ -169,19 +170,19 @@ public class FastList<T>
         this.size = this.items.length;
     }
 
-    public static <E> FastList<E> newList()
+    public static <E> MutableList<E> newList()
     {
         return new FastList<>();
     }
 
-    public static <E> FastList<E> wrapCopy(E... array)
+    public static <E> MutableList<E> wrapCopy(E... array)
     {
         E[] newArray = (E[]) new Object[array.length];
         System.arraycopy(array, 0, newArray, 0, array.length);
         return new FastList<>(newArray);
     }
 
-    public static <E> FastList<E> newList(int initialCapacity)
+    public static <E> MutableList<E> newList(int initialCapacity)
     {
         return new FastList<>(initialCapacity);
     }
@@ -207,7 +208,7 @@ public class FastList<T>
      *
      * @since 3.0
      */
-    public static <E> FastList<E> newWithNValues(int size, Function0<? extends E> factory)
+    public static <E> MutableList<E> newWithNValues(int size, Function0<? extends E> factory)
     {
         FastList<E> newFastList = new FastList<>(size);
         for (int i = 0; i < size; i++)
@@ -218,7 +219,7 @@ public class FastList<T>
     }
 
     @Override
-    public FastList<T> clone()
+    public MutableList<T> clone()
     {
         FastList<T> result = (FastList<T>) super.clone();
         if (this.items.length > 0)
@@ -284,19 +285,19 @@ public class FastList<T>
     }
 
     @Override
-    public FastList<T> sortThis(Comparator<? super T> comparator)
+    public MutableList<T> sortThis(Comparator<? super T> comparator)
     {
         return (FastList<T>) super.sortThis(comparator);
     }
 
     @Override
-    public FastList<T> sortThis()
+    public MutableList<T> sortThis()
     {
         return (FastList<T>) super.sortThis();
     }
 
     @Override
-    public FastList<T> reverseThis()
+    public MutableList<T> reverseThis()
     {
         ArrayIterate.reverse(this.items, this.size);
         return this;
@@ -495,14 +496,14 @@ public class FastList<T>
         return newItems;
     }
 
-    public FastList<T> with(T element1, T element2)
+    public MutableList<T> with(T element1, T element2)
     {
         this.add(element1);
         this.add(element2);
         return this;
     }
 
-    public FastList<T> with(T element1, T element2, T element3)
+    public MutableList<T> with(T element1, T element2, T element3)
     {
         this.add(element1);
         this.add(element2);
@@ -510,12 +511,12 @@ public class FastList<T>
         return this;
     }
 
-    public FastList<T> with(T... elements)
+    public MutableList<T> with(T... elements)
     {
         return this.withArrayCopy(elements, 0, elements.length);
     }
 
-    public FastList<T> withArrayCopy(T[] elements, int begin, int length)
+    public MutableList<T> withArrayCopy(T[] elements, int begin, int length)
     {
         this.ensureCapacity(this.size + length);
         System.arraycopy(elements, begin, this.items, this.size, length);
@@ -536,7 +537,7 @@ public class FastList<T>
     }
 
     @Override
-    public <V> FastListMultimap<V, T> groupBy(Function<? super T, ? extends V> function)
+    public <V> MutableListMultimap<V, T> groupBy(Function<? super T, ? extends V> function)
     {
         return this.groupBy(function, FastListMultimap.newMultimap());
     }
@@ -548,7 +549,7 @@ public class FastList<T>
     }
 
     @Override
-    public <V> FastListMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
+    public <V> MutableListMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
     {
         return this.groupByEach(function, FastListMultimap.newMultimap());
     }
@@ -592,13 +593,13 @@ public class FastList<T>
     }
 
     @Override
-    public PartitionFastList<T> partition(Predicate<? super T> predicate)
+    public PartitionMutableList<T> partition(Predicate<? super T> predicate)
     {
         return InternalArrayIterate.partition(this.items, this.size, predicate);
     }
 
     @Override
-    public <P> PartitionFastList<T> partitionWith(Predicate2<? super T, ? super P> predicate, P parameter)
+    public <P> PartitionMutableList<T> partitionWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return InternalArrayIterate.partitionWith(this.items, this.size, predicate, parameter);
     }
@@ -640,7 +641,7 @@ public class FastList<T>
     }
 
     @Override
-    public FastList<T> select(Predicate<? super T> predicate)
+    public MutableList<T> select(Predicate<? super T> predicate)
     {
         return this.select(predicate, FastList.newList());
     }
@@ -652,7 +653,7 @@ public class FastList<T>
     }
 
     @Override
-    public <P> FastList<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
+    public <P> MutableList<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return this.selectWith(predicate, parameter, FastList.newList());
     }
@@ -667,7 +668,7 @@ public class FastList<T>
     }
 
     @Override
-    public FastList<T> reject(Predicate<? super T> predicate)
+    public MutableList<T> reject(Predicate<? super T> predicate)
     {
         return this.reject(predicate, FastList.newList());
     }
@@ -679,7 +680,7 @@ public class FastList<T>
     }
 
     @Override
-    public <P> FastList<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
+    public <P> MutableList<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return this.rejectWith(predicate, parameter, FastList.newList());
     }
@@ -702,7 +703,7 @@ public class FastList<T>
     }
 
     @Override
-    public <S> FastList<S> selectInstancesOf(Class<S> clazz)
+    public <S> MutableList<S> selectInstancesOf(Class<S> clazz)
     {
         return InternalArrayIterate.selectInstancesOf(this.items, this.size, clazz);
     }
@@ -761,7 +762,7 @@ public class FastList<T>
     }
 
     @Override
-    public <V> FastList<V> collect(Function<? super T, ? extends V> function)
+    public <V> MutableList<V> collect(Function<? super T, ? extends V> function)
     {
         return this.collect(function, FastList.newList(this.size()));
     }
@@ -1007,7 +1008,7 @@ public class FastList<T>
     }
 
     @Override
-    public <V> FastList<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
+    public <V> MutableList<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
         return this.flatCollect(function, FastList.newList(this.size()));
     }
@@ -1021,7 +1022,7 @@ public class FastList<T>
     }
 
     @Override
-    public <P, V> FastList<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
+    public <P, V> MutableList<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
         return this.collectWith(function, parameter, FastList.newList(this.size()));
     }
@@ -1036,7 +1037,7 @@ public class FastList<T>
     }
 
     @Override
-    public <V> FastList<V> collectIf(
+    public <V> MutableList<V> collectIf(
             Predicate<? super T> predicate,
             Function<? super T, ? extends V> function)
     {
@@ -1552,19 +1553,19 @@ public class FastList<T>
     }
 
     @Override
-    public FastList<T> toList()
+    public MutableList<T> toList()
     {
         return FastList.newList(this);
     }
 
     @Override
-    public FastList<T> toSortedList()
+    public MutableList<T> toSortedList()
     {
         return this.toSortedList(Comparators.naturalOrder());
     }
 
     @Override
-    public FastList<T> toSortedList(Comparator<? super T> comparator)
+    public MutableList<T> toSortedList(Comparator<? super T> comparator)
     {
         return FastList.newList(this).sortThis(comparator);
     }

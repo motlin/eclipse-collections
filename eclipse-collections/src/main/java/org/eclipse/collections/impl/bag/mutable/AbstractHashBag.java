@@ -24,6 +24,7 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectIntMap;
 import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
+import org.eclipse.collections.api.multimap.bag.MutableBagMultimap;
 import org.eclipse.collections.impl.Counter;
 import org.eclipse.collections.impl.block.factory.primitive.IntToIntFunctions;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
@@ -343,13 +344,13 @@ public abstract class AbstractHashBag<T> extends AbstractMutableBag<T>
     }
 
     @Override
-    public <V> HashBagMultimap<V, T> groupBy(Function<? super T, ? extends V> function)
+    public <V> MutableBagMultimap<V, T> groupBy(Function<? super T, ? extends V> function)
     {
         return this.groupBy(function, HashBagMultimap.newMultimap());
     }
 
     @Override
-    public <V> HashBagMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
+    public <V> MutableBagMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function)
     {
         return this.groupByEach(function, HashBagMultimap.newMultimap());
     }

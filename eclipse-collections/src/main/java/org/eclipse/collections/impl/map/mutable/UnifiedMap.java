@@ -169,32 +169,32 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
                 Functions.secondOfPair()));
     }
 
-    public static <K, V> UnifiedMap<K, V> newMap()
+    public static <K, V> MutableMap<K, V> newMap()
     {
         return new UnifiedMap<>();
     }
 
-    public static <K, V> UnifiedMap<K, V> newMap(int size)
+    public static <K, V> MutableMap<K, V> newMap(int size)
     {
         return new UnifiedMap<>(size);
     }
 
-    public static <K, V> UnifiedMap<K, V> newMap(int size, float loadFactor)
+    public static <K, V> MutableMap<K, V> newMap(int size, float loadFactor)
     {
         return new UnifiedMap<>(size, loadFactor);
     }
 
-    public static <K, V> UnifiedMap<K, V> newMap(Map<? extends K, ? extends V> map)
+    public static <K, V> MutableMap<K, V> newMap(Map<? extends K, ? extends V> map)
     {
         return new UnifiedMap<>(map);
     }
 
-    public static <K, V> UnifiedMap<K, V> newMapWith(Pair<K, V>... pairs)
+    public static <K, V> MutableMap<K, V> newMapWith(Pair<K, V>... pairs)
     {
         return new UnifiedMap<>(pairs);
     }
 
-    public static <K, V> UnifiedMap<K, V> newMapWith(Iterable<Pair<K, V>> inputIterable)
+    public static <K, V> MutableMap<K, V> newMapWith(Iterable<Pair<K, V>> inputIterable)
     {
         UnifiedMap<K, V> outputMap = new UnifiedMap<>();
         for (Pair<K, V> single : inputIterable)
@@ -204,22 +204,22 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         return outputMap;
     }
 
-    public static <K, V> UnifiedMap<K, V> newWithKeysValues(K key, V value)
+    public static <K, V> MutableMap<K, V> newWithKeysValues(K key, V value)
     {
         return new UnifiedMap<K, V>(1).withKeysValues(key, value);
     }
 
-    public static <K, V> UnifiedMap<K, V> newWithKeysValues(K key1, V value1, K key2, V value2)
+    public static <K, V> MutableMap<K, V> newWithKeysValues(K key1, V value1, K key2, V value2)
     {
         return new UnifiedMap<K, V>(2).withKeysValues(key1, value1, key2, value2);
     }
 
-    public static <K, V> UnifiedMap<K, V> newWithKeysValues(K key1, V value1, K key2, V value2, K key3, V value3)
+    public static <K, V> MutableMap<K, V> newWithKeysValues(K key1, V value1, K key2, V value2, K key3, V value3)
     {
         return new UnifiedMap<K, V>(3).withKeysValues(key1, value1, key2, value2, key3, value3);
     }
 
-    public static <K, V> UnifiedMap<K, V> newWithKeysValues(
+    public static <K, V> MutableMap<K, V> newWithKeysValues(
             K key1, V value1,
             K key2, V value2,
             K key3, V value3,
@@ -228,20 +228,20 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         return new UnifiedMap<K, V>(4).withKeysValues(key1, value1, key2, value2, key3, value3, key4, value4);
     }
 
-    public UnifiedMap<K, V> withKeysValues(K key, V value)
+    public MutableMap<K, V> withKeysValues(K key, V value)
     {
         this.put(key, value);
         return this;
     }
 
-    public UnifiedMap<K, V> withKeysValues(K key1, V value1, K key2, V value2)
+    public MutableMap<K, V> withKeysValues(K key1, V value1, K key2, V value2)
     {
         this.put(key1, value1);
         this.put(key2, value2);
         return this;
     }
 
-    public UnifiedMap<K, V> withKeysValues(K key1, V value1, K key2, V value2, K key3, V value3)
+    public MutableMap<K, V> withKeysValues(K key1, V value1, K key2, V value2, K key3, V value3)
     {
         this.put(key1, value1);
         this.put(key2, value2);
@@ -249,7 +249,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         return this;
     }
 
-    public UnifiedMap<K, V> withKeysValues(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4)
+    public MutableMap<K, V> withKeysValues(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4)
     {
         this.put(key1, value1);
         this.put(key2, value2);
@@ -259,7 +259,7 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
     }
 
     @Override
-    public UnifiedMap<K, V> clone()
+    public MutableMap<K, V> clone()
     {
         return new UnifiedMap<>(this);
     }
