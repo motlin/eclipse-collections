@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -33,19 +33,10 @@ import org.eclipse.collections.impl.list.mutable.UnmodifiableMutableList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JUnit test for {@link ArrayAdapter}.
@@ -161,7 +152,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
     public void add()
     {
         MutableList<String> collection = ArrayAdapter.newArray();
-        assertThrows(UnsupportedOperationException.class, () -> collection.add(null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> collection.add(null));
     }
 
     @Override
@@ -170,8 +161,8 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.allSatisfy();
 
-        assertTrue(this.newWith(1, 2, 3).allSatisfy(Integer.class::isInstance));
-        assertFalse(this.newWith(1, 2, 3).allSatisfy(Integer.valueOf(1)::equals));
+        Assert.assertTrue(this.newWith(1, 2, 3).allSatisfy(Integer.class::isInstance));
+        Assert.assertFalse(this.newWith(1, 2, 3).allSatisfy(Integer.valueOf(1)::equals));
     }
 
     @Override
@@ -180,8 +171,8 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.anySatisfy();
 
-        assertFalse(this.newWith(1, 2, 3).anySatisfy(String.class::isInstance));
-        assertTrue(this.newWith(1, 2, 3).anySatisfy(Integer.class::isInstance));
+        Assert.assertFalse(this.newWith(1, 2, 3).anySatisfy(String.class::isInstance));
+        Assert.assertTrue(this.newWith(1, 2, 3).anySatisfy(Integer.class::isInstance));
     }
 
     @Override
@@ -190,8 +181,8 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.noneSatisfy();
 
-        assertTrue(this.newWith(1, 2, 3).noneSatisfy(String.class::isInstance));
-        assertFalse(this.newWith(1, 2, 3).noneSatisfy(Integer.valueOf(1)::equals));
+        Assert.assertTrue(this.newWith(1, 2, 3).noneSatisfy(String.class::isInstance));
+        Assert.assertFalse(this.newWith(1, 2, 3).noneSatisfy(Integer.valueOf(1)::equals));
     }
 
     @Override
@@ -200,7 +191,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.count();
 
-        assertEquals(3, this.newWith(1, 2, 3).count(Integer.class::isInstance));
+        Assert.assertEquals(3, this.newWith(1, 2, 3).count(Integer.class::isInstance));
     }
 
     @Override
@@ -224,8 +215,8 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.getFirst();
 
-        assertEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getFirst());
-        assertNotEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getFirst());
+        Assert.assertEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getFirst());
+        Assert.assertNotEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getFirst());
     }
 
     @Override
@@ -234,8 +225,8 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.getLast();
 
-        assertNotEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getLast());
-        assertEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getLast());
+        Assert.assertNotEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getLast());
+        Assert.assertEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getLast());
     }
 
     @Override
@@ -246,7 +237,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
 
         Verify.assertEmpty(this.newArray());
         Verify.assertNotEmpty(this.newWith(1, 2));
-        assertTrue(this.newWith(1, 2).notEmpty());
+        Assert.assertTrue(this.newWith(1, 2).notEmpty());
     }
 
     @Override
@@ -260,7 +251,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         for (int i = objects.size(); i-- > 0; )
         {
             Integer integer = iterator.next();
-            assertEquals(3, integer.intValue() + i);
+            Assert.assertEquals(3, integer.intValue() + i);
         }
     }
 
@@ -272,7 +263,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
 
         MutableList<Integer> objects = this.newWith(1, 2, 3);
         Integer result = objects.injectInto(1, AddFunction.INTEGER);
-        assertEquals(Integer.valueOf(7), result);
+        Assert.assertEquals(Integer.valueOf(7), result);
     }
 
     @Override
@@ -289,9 +280,9 @@ public class ArrayAdapterTest extends AbstractListTestCase
         Integer[] array3 = objects.toArray(new Integer[1]);
         Verify.assertSize(3, array3);
         Integer[] expected = {1, 2, 3};
-        assertArrayEquals(expected, array);
-        assertArrayEquals(expected, array2);
-        assertArrayEquals(expected, array3);
+        Assert.assertArrayEquals(expected, array);
+        Assert.assertArrayEquals(expected, array2);
+        Assert.assertArrayEquals(expected, array3);
     }
 
     @Override
@@ -310,21 +301,21 @@ public class ArrayAdapterTest extends AbstractListTestCase
     @Test
     public void removeIf()
     {
-        assertThrows(UnsupportedOperationException.class, () -> ArrayAdapter.newArrayWith(1, 2, 3, null).removeIf(Predicates.isNull()));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> ArrayAdapter.newArrayWith(1, 2, 3, null).removeIf(Predicates.isNull()));
     }
 
     @Override
     @Test
     public void removeIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> ArrayAdapter.newArrayWith(1, 2, 3, null).remove(0));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> ArrayAdapter.newArrayWith(1, 2, 3, null).remove(0));
     }
 
     @Override
     @Test
     public void removeIfWith()
     {
-        assertThrows(UnsupportedOperationException.class, () -> ArrayAdapter.newArrayWith(1, 2, 3, null).removeIfWith((each, ignored) -> each == null, null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> ArrayAdapter.newArrayWith(1, 2, 3, null).removeIfWith((each, ignored) -> each == null, null));
     }
 
     @Override
@@ -334,7 +325,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         super.indexOf();
 
         MutableList<Integer> objects = ArrayAdapter.newArrayWith(1, 2, 3);
-        assertEquals(1, objects.indexOf(2));
+        Assert.assertEquals(1, objects.indexOf(2));
     }
 
     @Override
@@ -344,7 +335,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         super.lastIndexOf();
 
         MutableList<Integer> objects = ArrayAdapter.newArrayWith(1, 2, 3);
-        assertEquals(1, objects.lastIndexOf(2));
+        Assert.assertEquals(1, objects.lastIndexOf(2));
     }
 
     @Override
@@ -354,8 +345,8 @@ public class ArrayAdapterTest extends AbstractListTestCase
         super.set();
 
         MutableList<Integer> objects = ArrayAdapter.newArrayWith(1, 2, 3);
-        assertEquals(Integer.valueOf(2), objects.set(1, 4));
-        assertEquals(FastList.newListWith(1, 4, 3), objects);
+        Assert.assertEquals(Integer.valueOf(2), objects.set(1, 4));
+        Assert.assertEquals(FastList.newListWith(1, 4, 3), objects);
     }
 
     @Override
@@ -368,15 +359,15 @@ public class ArrayAdapterTest extends AbstractListTestCase
         ArrayAdapter<Integer> array2 = ArrayAdapter.newArrayWith(1, 2, 3, 4);
         ArrayAdapter<Integer> array3 = ArrayAdapter.newArrayWith(2, 3, 4);
         ArrayAdapter<Integer> array4 = ArrayAdapter.newArrayWith(1, 2, 3, 5);
-        assertNotEquals(array1, null);
+        Assert.assertNotEquals(array1, null);
         Verify.assertEqualsAndHashCode(array1, array1);
         Verify.assertEqualsAndHashCode(array1, array2);
-        assertNotEquals(array2, array3);
+        Assert.assertNotEquals(array2, array3);
         Verify.assertEqualsAndHashCode(array1, new ArrayList<>(array1));
         Verify.assertEqualsAndHashCode(array1, new LinkedList<>(array1));
         Verify.assertEqualsAndHashCode(array1, ArrayListAdapter.<Integer>newList().with(1, 2, 3, 4));
-        Verify.assertEqualsAndHashCode(array1, FastList.<Integer>newList().with(1, 2, 3, 4));
-        assertNotEquals(array1, new LinkedList<>(array4));
+        Verify.assertEqualsAndHashCode(array1, Lists.mutable.<Integer>empty().with(1, 2, 3, 4));
+        Assert.assertNotEquals(array1, new LinkedList<>(array4));
     }
 
     @Override
@@ -425,18 +416,18 @@ public class ArrayAdapterTest extends AbstractListTestCase
     @Test
     public void detectWith()
     {
-        assertEquals(
+        Assert.assertEquals(
                 Integer.valueOf(3),
                 ArrayAdapter.newArrayWith(1, 2, 3, 4, 5).detectWith(Object::equals, 3));
-        assertNull(ArrayAdapter.newArrayWith(1, 2, 3, 4, 5).detectWith(Object::equals, 6));
+        Assert.assertNull(ArrayAdapter.newArrayWith(1, 2, 3, 4, 5).detectWith(Object::equals, 6));
     }
 
     @Test
     public void detectWithIfNone()
     {
         MutableList<Integer> list = ArrayAdapter.newArrayWith(1, 2, 3, 4, 5);
-        assertNull(list.detectWithIfNone(Object::equals, 6, new PassThruFunction0<>(null)));
-        assertEquals(Integer.valueOf(10000), list.detectWithIfNone(Object::equals, 6, new PassThruFunction0<>(Integer.valueOf(10000))));
+        Assert.assertNull(list.detectWithIfNone(Object::equals, 6, new PassThruFunction0<>(null)));
+        Assert.assertEquals(Integer.valueOf(10000), list.detectWithIfNone(Object::equals, 6, new PassThruFunction0<>(Integer.valueOf(10000))));
     }
 
     @Override
@@ -445,9 +436,9 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.allSatisfyWith();
 
-        assertTrue(ArrayAdapter.newArrayWith(1, 2, 3).allSatisfyWith(Predicates2.instanceOf(),
+        Assert.assertTrue(ArrayAdapter.newArrayWith(1, 2, 3).allSatisfyWith(Predicates2.instanceOf(),
                 Integer.class));
-        assertFalse(ArrayAdapter.newArrayWith(1, 2, 3).allSatisfyWith(Object::equals, 1));
+        Assert.assertFalse(ArrayAdapter.newArrayWith(1, 2, 3).allSatisfyWith(Object::equals, 1));
     }
 
     @Override
@@ -455,9 +446,9 @@ public class ArrayAdapterTest extends AbstractListTestCase
     public void anySatisfyWith()
     {
         super.anySatisfyWith();
-        assertFalse(ArrayAdapter.newArrayWith(1, 2, 3).anySatisfyWith(Predicates2.instanceOf(),
+        Assert.assertFalse(ArrayAdapter.newArrayWith(1, 2, 3).anySatisfyWith(Predicates2.instanceOf(),
                 String.class));
-        assertTrue(ArrayAdapter.newArrayWith(1, 2, 3).anySatisfyWith(Predicates2.instanceOf(),
+        Assert.assertTrue(ArrayAdapter.newArrayWith(1, 2, 3).anySatisfyWith(Predicates2.instanceOf(),
                 Integer.class));
     }
 
@@ -467,9 +458,9 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.noneSatisfyWith();
 
-        assertTrue(ArrayAdapter.newArrayWith(1, 2, 3).noneSatisfyWith(Predicates2.instanceOf(),
+        Assert.assertTrue(ArrayAdapter.newArrayWith(1, 2, 3).noneSatisfyWith(Predicates2.instanceOf(),
                 String.class));
-        assertFalse(ArrayAdapter.newArrayWith(1, 2, 3).noneSatisfyWith(Object::equals, 1));
+        Assert.assertFalse(ArrayAdapter.newArrayWith(1, 2, 3).noneSatisfyWith(Object::equals, 1));
     }
 
     @Override
@@ -478,7 +469,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         super.countWith();
 
-        assertEquals(
+        Assert.assertEquals(
                 3,
                 ArrayAdapter.newArrayWith(1, 2, 3).countWith(Predicates2.instanceOf(), Integer.class));
     }
@@ -490,12 +481,12 @@ public class ArrayAdapterTest extends AbstractListTestCase
         super.collectWith();
 
         Function2<Integer, Integer, Integer> addBlock = (each, parameter) -> each + parameter;
-        assertEquals(
+        Assert.assertEquals(
                 FastList.newListWith(2, 3, 4),
                 ArrayAdapter.newArrayWith(1, 2, 3).collectWith(addBlock, 1));
-        assertEquals(
+        Assert.assertEquals(
                 FastList.newListWith(2, 3, 4),
-                ArrayAdapter.newArrayWith(1, 2, 3).collectWith(addBlock, 1, FastList.newList()));
+                ArrayAdapter.newArrayWith(1, 2, 3).collectWith(addBlock, 1, Lists.mutable.empty()));
     }
 
     @Override
@@ -506,7 +497,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
 
         MutableList<Integer> objects = ArrayAdapter.newArrayWith(1, 2, 3);
         Integer result = objects.injectIntoWith(1, (injectedValued, item, parameter) -> injectedValued + item + parameter, 0);
-        assertEquals(Integer.valueOf(7), result);
+        Assert.assertEquals(Integer.valueOf(7), result);
     }
 
     @Override
@@ -543,7 +534,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         // ArrayAdapter doesn't support add and cannot contain itself
 
-        assertEquals(
+        Assert.assertEquals(
                 FastList.newList(this.newWith(1, 2, 3, 4)).toString(),
                 this.newWith(1, 2, 3, 4).toString());
     }
@@ -554,7 +545,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         // ArrayAdapter doesn't support add and cannot contain itself
 
-        assertEquals(
+        Assert.assertEquals(
                 FastList.newList(this.newWith(1, 2, 3, 4)).makeString(),
                 this.newWith(1, 2, 3, 4).makeString());
     }
@@ -568,7 +559,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         StringBuilder stringBuilder = new StringBuilder();
         this.newWith(1, 2, 3, 4).appendString(stringBuilder);
 
-        assertEquals(
+        Assert.assertEquals(
                 FastList.newList(this.newWith(1, 2, 3, 4)).makeString(),
                 stringBuilder.toString());
     }
@@ -583,73 +574,73 @@ public class ArrayAdapterTest extends AbstractListTestCase
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void clear()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().clear());
+        this.newArray().clear();
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void addAtIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().add(0, null));
+        this.newArray().add(0, null);
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void addAllAtIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().addAll(0, FastList.newList()));
+        this.newArray().addAll(0, Lists.mutable.empty());
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void addAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().addAll(FastList.newList()));
+        this.newArray().addAll(Lists.mutable.empty());
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void addAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().addAllIterable(FastList.newList()));
+        this.newArray().addAllIterable(Lists.mutable.empty());
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void removeObject()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().remove(null));
+        this.newArray().remove(null);
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void removeAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().removeAll(FastList.newList()));
+        this.newArray().removeAll(Lists.mutable.empty());
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void removeAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().removeAllIterable(FastList.newList()));
+        this.newArray().removeAllIterable(Lists.mutable.empty());
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void retainAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().retainAll(FastList.newList()));
+        this.newArray().retainAll(Lists.mutable.empty());
     }
 
     @Override
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void retainAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newArray().retainAllIterable(FastList.newList()));
+        this.newArray().retainAllIterable(Lists.mutable.empty());
     }
 
     @Override
@@ -664,7 +655,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         this.validateForEachOnRange(list, 9, 9, FastList.newListWith(9));
         this.validateForEachOnRange(list, 0, 9, FastList.newListWith(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
 
-        assertThrows(IndexOutOfBoundsException.class, () -> this.validateForEachOnRange(list, 10, 10, FastList.newList()));
+        Verify.assertThrows(IndexOutOfBoundsException.class, () -> this.validateForEachOnRange(list, 10, 10, Lists.mutable.empty()));
     }
 
     @Override
@@ -678,7 +669,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         this.validateForEachWithIndexOnRange(list, 4, 6, FastList.newListWith(4, 5, 6));
         this.validateForEachWithIndexOnRange(list, 9, 9, FastList.newListWith(9));
         this.validateForEachWithIndexOnRange(list, 0, 9, FastList.newListWith(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
-        assertThrows(IndexOutOfBoundsException.class, () -> this.validateForEachWithIndexOnRange(list, 10, 10, FastList.newList()));
+        Verify.assertThrows(IndexOutOfBoundsException.class, () -> this.validateForEachWithIndexOnRange(list, 10, 10, Lists.mutable.empty()));
     }
 
     @Override
@@ -697,8 +688,8 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         MutableCollection<Integer> coll = this.newWith(1, 2, 3);
         MutableCollection<Integer> collWith = coll.with(4);
-        assertNotSame(coll, collWith);
-        assertEquals(FastList.newListWith(1, 2, 3, 4), collWith);
+        Assert.assertNotSame(coll, collWith);
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4), collWith);
     }
 
     @Override
@@ -707,9 +698,9 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         MutableCollection<Integer> coll = this.newWith(1, 2, 3);
         MutableCollection<Integer> collWith = coll.withAll(FastList.newListWith(4, 5));
-        assertNotSame(coll, collWith);
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5), collWith);
-        assertSame(collWith, collWith.withAll(FastList.newList()));
+        Assert.assertNotSame(coll, collWith);
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5), collWith);
+        Assert.assertSame(collWith, collWith.withAll(Lists.mutable.empty()));
     }
 
     @Override
@@ -718,9 +709,9 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         MutableCollection<Integer> coll = this.newWith(1, 2, 3, 2);
         MutableCollection<Integer> collWithout = coll.without(2);
-        assertNotSame(coll, collWithout);
-        assertEquals(FastList.newListWith(1, 3, 2), collWithout);
-        assertSame(collWithout, collWithout.without(9));
+        Assert.assertNotSame(coll, collWithout);
+        Assert.assertEquals(FastList.newListWith(1, 3, 2), collWithout);
+        Assert.assertSame(collWithout, collWithout.without(9));
     }
 
     @Override
@@ -729,9 +720,9 @@ public class ArrayAdapterTest extends AbstractListTestCase
     {
         MutableCollection<Integer> coll = this.newWith(1, 2, 4, 2, 3, 4, 5);
         MutableCollection<Integer> collWithout = coll.withoutAll(FastList.newListWith(2, 4));
-        assertNotSame(coll, collWithout);
-        assertEquals(FastList.newListWith(1, 3, 5), collWithout);
-        assertSame(collWithout, collWithout.withoutAll(FastList.newListWith(8, 9)));
-        assertSame(collWithout, collWithout.withoutAll(FastList.newList()));
+        Assert.assertNotSame(coll, collWithout);
+        Assert.assertEquals(FastList.newListWith(1, 3, 5), collWithout);
+        Assert.assertSame(collWithout, collWithout.withoutAll(FastList.newListWith(8, 9)));
+        Assert.assertSame(collWithout, collWithout.withoutAll(Lists.mutable.empty()));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -51,14 +51,10 @@ import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
 import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
-import org.eclipse.collections.api.factory.Maps;
-import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
-import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
-import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
-import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.map.primitive.ObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.ObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
@@ -69,6 +65,9 @@ import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectDoubleHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectLongHashMap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.utility.Iterate;
 
@@ -89,7 +88,7 @@ public final class IterableIterate
      */
     public static <T> MutableList<T> select(Iterable<T> iterable, Predicate<? super T> predicate)
     {
-        return IterableIterate.select(iterable, predicate, FastList.newList());
+        return IterableIterate.select(iterable, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -162,7 +161,7 @@ public final class IterableIterate
             Predicate<? super T> predicate,
             Function<? super T, ? extends V> function)
     {
-        return IterableIterate.collectIf(iterable, predicate, function, FastList.newList());
+        return IterableIterate.collectIf(iterable, predicate, function, Lists.mutable.empty());
     }
 
     public static boolean isEmpty(Iterable<?> iterable)
@@ -260,7 +259,7 @@ public final class IterableIterate
      */
     public static <T> MutableList<T> reject(Iterable<T> iterable, Predicate<? super T> predicate)
     {
-        return IterableIterate.reject(iterable, predicate, FastList.newList());
+        return IterableIterate.reject(iterable, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -293,7 +292,7 @@ public final class IterableIterate
             Iterable<T> iterable,
             Function<? super T, ? extends V> function)
     {
-        return IterableIterate.collect(iterable, function, FastList.newList());
+        return IterableIterate.collect(iterable, function, Lists.mutable.empty());
     }
 
     /**
@@ -336,7 +335,8 @@ public final class IterableIterate
     }
 
     /**
-     * @see Iterate#collectByte(Iterable, ByteFunction, MutableByteCollection)
+     * @see Iterate#collectByte(Iterable, ByteFunction,
+     * MutableByteCollection)
      */
     public static <T, R extends MutableByteCollection> R collectByte(Iterable<T> iterable, ByteFunction<? super T> byteFunction, R target)
     {
@@ -354,7 +354,8 @@ public final class IterableIterate
     }
 
     /**
-     * @see Iterate#collectChar(Iterable, CharFunction, MutableCharCollection)
+     * @see Iterate#collectChar(Iterable, CharFunction,
+     * MutableCharCollection)
      */
     public static <T, R extends MutableCharCollection> R collectChar(Iterable<T> iterable, CharFunction<? super T> charFunction, R target)
     {
@@ -372,7 +373,8 @@ public final class IterableIterate
     }
 
     /**
-     * @see Iterate#collectDouble(Iterable, DoubleFunction, MutableDoubleCollection)
+     * @see Iterate#collectDouble(Iterable, DoubleFunction,
+     * MutableDoubleCollection)
      */
     public static <T, R extends MutableDoubleCollection> R collectDouble(Iterable<T> iterable, DoubleFunction<? super T> doubleFunction, R target)
     {
@@ -390,7 +392,8 @@ public final class IterableIterate
     }
 
     /**
-     * @see Iterate#collectFloat(Iterable, FloatFunction, MutableFloatCollection)
+     * @see Iterate#collectFloat(Iterable, FloatFunction,
+     * MutableFloatCollection)
      */
     public static <T, R extends MutableFloatCollection> R collectFloat(Iterable<T> iterable, FloatFunction<? super T> floatFunction, R target)
     {
@@ -408,7 +411,8 @@ public final class IterableIterate
     }
 
     /**
-     * @see Iterate#collectInt(Iterable, IntFunction, MutableIntCollection)
+     * @see Iterate#collectInt(Iterable, IntFunction,
+     * MutableIntCollection)
      */
     public static <T, R extends MutableIntCollection> R collectInt(Iterable<T> iterable, IntFunction<? super T> intFunction, R target)
     {
@@ -426,7 +430,8 @@ public final class IterableIterate
     }
 
     /**
-     * @see Iterate#collectLong(Iterable, LongFunction, MutableLongCollection)
+     * @see Iterate#collectLong(Iterable, LongFunction,
+     * MutableLongCollection)
      */
     public static <T, R extends MutableLongCollection> R collectLong(Iterable<T> iterable, LongFunction<? super T> longFunction, R target)
     {
@@ -444,7 +449,8 @@ public final class IterableIterate
     }
 
     /**
-     * @see Iterate#collectShort(Iterable, ShortFunction, MutableShortCollection)
+     * @see Iterate#collectShort(Iterable, ShortFunction,
+     * MutableShortCollection)
      */
     public static <T, R extends MutableShortCollection> R collectShort(Iterable<T> iterable, ShortFunction<? super T> shortFunction, R target)
     {
@@ -458,7 +464,7 @@ public final class IterableIterate
             Iterable<T> iterable,
             Function<? super T, ? extends Iterable<V>> function)
     {
-        return IterableIterate.flatCollect(iterable, function, FastList.newList());
+        return IterableIterate.flatCollect(iterable, function, Lists.mutable.empty());
     }
 
     /**
@@ -633,7 +639,7 @@ public final class IterableIterate
             Function<? super T, ? extends V> groupBy,
             IntFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
+        ObjectLongHashMap<V> result = ObjectLongHashMap.newMap();
         return IterableIterate.injectInto(result, iterable, PrimitiveFunctions.sumByIntFunction(groupBy, function));
     }
 
@@ -642,7 +648,7 @@ public final class IterableIterate
             Function<? super T, ? extends V> groupBy,
             LongFunction<? super T> function)
     {
-        MutableObjectLongMap<V> result = ObjectLongMaps.mutable.empty();
+        ObjectLongHashMap<V> result = ObjectLongHashMap.newMap();
         return IterableIterate.injectInto(result, iterable, PrimitiveFunctions.sumByLongFunction(groupBy, function));
     }
 
@@ -651,7 +657,7 @@ public final class IterableIterate
             Function<? super T, ? extends V> groupBy,
             FloatFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
+        ObjectDoubleHashMap<V> result = ObjectDoubleHashMap.newMap();
         return IterableIterate.injectInto(result, iterable, PrimitiveFunctions.sumByFloatFunction(groupBy, function));
     }
 
@@ -660,7 +666,7 @@ public final class IterableIterate
             Function<? super T, ? extends V> groupBy,
             DoubleFunction<? super T> function)
     {
-        MutableObjectDoubleMap<V> result = ObjectDoubleMaps.mutable.empty();
+        ObjectDoubleHashMap<V> result = ObjectDoubleHashMap.newMap();
         return IterableIterate.injectInto(result, iterable, PrimitiveFunctions.sumByDoubleFunction(groupBy, function));
     }
 
@@ -800,7 +806,7 @@ public final class IterableIterate
             Function2<? super T, ? super P, ? extends V> function,
             P parameter)
     {
-        return IterableIterate.collectWith(iterable, function, parameter, FastList.newList());
+        return IterableIterate.collectWith(iterable, function, parameter, Lists.mutable.empty());
     }
 
     /**
@@ -824,7 +830,7 @@ public final class IterableIterate
         {
             throw new IllegalArgumentException("Count must be greater than zero, but was: " + count);
         }
-        return IterableIterate.take(iterable, count, FastList.newList());
+        return IterableIterate.take(iterable, count, Lists.mutable.empty());
     }
 
     /**
@@ -855,7 +861,7 @@ public final class IterableIterate
         {
             throw new IllegalArgumentException("Count must be greater than zero, but was: " + count);
         }
-        return IterableIterate.drop(list, count, FastList.newList());
+        return IterableIterate.drop(list, count, Lists.mutable.empty());
     }
 
     /**
@@ -961,7 +967,7 @@ public final class IterableIterate
             Iterable<T> iterable,
             Function<? super T, ? extends K> function)
     {
-        return IterableIterate.groupByUniqueKey(iterable, function, Maps.mutable.empty());
+        return IterableIterate.groupByUniqueKey(iterable, function, UnifiedMap.newMap());
     }
 
     /**
@@ -999,7 +1005,7 @@ public final class IterableIterate
             Iterable<X> xs,
             Iterable<Y> ys)
     {
-        return IterableIterate.zip(xs, ys, FastList.newList());
+        return IterableIterate.zip(xs, ys, Lists.mutable.empty());
     }
 
     /**
@@ -1018,7 +1024,7 @@ public final class IterableIterate
      */
     public static <T> MutableList<Pair<T, Integer>> zipWithIndex(Iterable<T> iterable)
     {
-        return IterableIterate.zipWithIndex(iterable, FastList.newList());
+        return IterableIterate.zipWithIndex(iterable, Lists.mutable.empty());
     }
 
     /**

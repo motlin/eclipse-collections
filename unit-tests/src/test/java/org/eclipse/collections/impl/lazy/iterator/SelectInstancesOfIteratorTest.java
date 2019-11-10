@@ -33,7 +33,7 @@ public class SelectInstancesOfIteratorTest
 
     private void assertElements(Iterator<Integer> iterator)
     {
-        MutableList<Integer> result = FastList.newList();
+        MutableList<Integer> result = Lists.mutable.empty();
         while (iterator.hasNext())
         {
             result.add(iterator.next());

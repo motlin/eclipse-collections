@@ -82,7 +82,6 @@ import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedu
 import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.collection.mutable.AbstractMutableCollection;
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.NonParallelSortedSetIterable;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
@@ -403,7 +402,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public <V> MutableList<V> collect(Function<? super T, ? extends V> function)
     {
-        MutableList<V> result = FastList.newList();
+        MutableList<V> result = Lists.mutable.empty();
         this.forEach(new CollectProcedure<>(function, result));
         return result;
     }
@@ -475,7 +474,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public <V> MutableList<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
-        MutableList<V> result = FastList.newList();
+        MutableList<V> result = Lists.mutable.empty();
         this.forEach(new FlatCollectProcedure<>(function, result));
         return result;
     }
@@ -485,7 +484,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
             Predicate<? super T> predicate,
             Function<? super T, ? extends V> function)
     {
-        MutableList<V> result = FastList.newList();
+        MutableList<V> result = Lists.mutable.empty();
         this.forEach(new CollectIfProcedure<>(result, function, predicate));
         return result;
     }
@@ -523,7 +522,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public <P, V> MutableList<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
-        return Iterate.collectWith(this.treeSet, function, parameter, FastList.newList());
+        return Iterate.collectWith(this.treeSet, function, parameter, Lists.mutable.empty());
     }
 
     @Override
@@ -535,7 +534,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
             MutableList<Pair<T, S>> target = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
             return Iterate.zip(this, that, target);
         }
-        return Iterate.zip(this, that, FastList.newList());
+        return Iterate.zip(this, that, Lists.mutable.empty());
     }
 
     @Override

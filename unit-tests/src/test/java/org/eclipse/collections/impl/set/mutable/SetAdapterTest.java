@@ -22,7 +22,6 @@ import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.Assert;
@@ -83,7 +82,7 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
         super.select();
         Verify.assertContainsAll(this.newWith(1, 2, 3, 4, 5).select(Predicates.lessThan(3)), 1, 2);
         Verify.assertContainsAll(this.newWith(-1, 2, 3, 4, 5).select(Predicates.lessThan(3),
-                FastList.newList()), -1, 2);
+                Lists.mutable.empty()), -1, 2);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
         super.reject();
         Verify.assertContainsAll(this.newWith(1, 2, 3, 4).reject(Predicates.lessThan(3)), 3, 4);
         Verify.assertContainsAll(this.newWith(1, 2, 3, 4).reject(Predicates.lessThan(3),
-                FastList.newList()), 3, 4);
+                Lists.mutable.empty()), 3, 4);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
                 "4");
         Verify.assertContainsAll(this.newWith(1, 2, 3, 4).collect(
                 String::valueOf,
-                FastList.newList()), "1", "2", "3", "4");
+                Lists.mutable.empty()), "1", "2", "3", "4");
     }
 
     @Override

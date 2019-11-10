@@ -64,7 +64,6 @@ import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.block.factory.Functions0;
 import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
 import org.eclipse.collections.impl.block.procedure.NonMutatingAggregationProcedure;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
@@ -1125,7 +1124,7 @@ public final class IteratorIterate
      */
     public static <T> MutableList<T> distinct(Iterator<T> iterator)
     {
-        return IteratorIterate.distinct(iterator, FastList.newList());
+        return IteratorIterate.distinct(iterator, Lists.mutable.empty());
     }
 
     /**
@@ -1134,7 +1133,7 @@ public final class IteratorIterate
     public static <T> MutableList<T> distinct(Iterator<T> iterator, HashingStrategy<? super T> hashingStrategy)
     {
         Set<T> seenSoFar = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
-        FastList<T> result = FastList.newList();
+        MutableList<T> result = Lists.mutable.empty();
         while (iterator.hasNext())
         {
             T item = iterator.next();

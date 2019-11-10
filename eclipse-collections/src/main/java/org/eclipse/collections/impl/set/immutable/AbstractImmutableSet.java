@@ -31,6 +31,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.collection.MutableCollection;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.multimap.MutableMultimap;
@@ -81,7 +82,6 @@ import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedur
 import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
 import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.collection.immutable.AbstractImmutableCollection;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.eclipse.collections.impl.partition.set.PartitionUnifiedSet;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
@@ -164,7 +164,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public ImmutableSet<T> select(Predicate<? super T> predicate)
     {
-        MutableList<T> intermediateResult = FastList.newList();
+        MutableList<T> intermediateResult = Lists.mutable.empty();
         this.forEach(new SelectProcedure<>(predicate, intermediateResult));
         return Sets.immutable.withAll(intermediateResult);
     }
@@ -178,7 +178,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public ImmutableSet<T> reject(Predicate<? super T> predicate)
     {
-        MutableList<T> intermediateResult = FastList.newList();
+        MutableList<T> intermediateResult = Lists.mutable.empty();
         this.forEach(new RejectProcedure<>(predicate, intermediateResult));
         return Sets.immutable.withAll(intermediateResult);
     }

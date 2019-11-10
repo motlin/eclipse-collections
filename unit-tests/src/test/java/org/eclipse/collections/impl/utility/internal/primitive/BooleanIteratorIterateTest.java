@@ -11,8 +11,8 @@
 package org.eclipse.collections.impl.utility.internal.primitive;
 
 import org.eclipse.collections.api.BooleanIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.block.factory.primitive.BooleanPredicates;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
@@ -38,6 +38,6 @@ public class BooleanIteratorIterateTest
     @Test
     public void collect_target()
     {
-        Verify.assertIterableSize(3, BooleanIteratorIterate.collect(this.iterable.booleanIterator(), String::valueOf, FastList.newList()));
+        Verify.assertIterableSize(3, BooleanIteratorIterate.collect(this.iterable.booleanIterator(), String::valueOf, Lists.mutable.empty()));
     }
 }

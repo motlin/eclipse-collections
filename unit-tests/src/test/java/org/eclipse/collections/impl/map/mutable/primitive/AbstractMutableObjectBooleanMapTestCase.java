@@ -224,7 +224,7 @@ public abstract class AbstractMutableObjectBooleanMapTestCase extends AbstractOb
 
     protected static MutableList<String> generateCollisions()
     {
-        MutableList<String> collisions = FastList.newList();
+        MutableList<String> collisions = Lists.mutable.empty();
         ObjectBooleanHashMap<String> hashMap = new ObjectBooleanHashMap<>();
         for (int each = 3; collisions.size() <= 10; each++)
         {

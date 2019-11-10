@@ -258,7 +258,7 @@ public abstract class AbstractMutableSetTestCase extends AbstractCollectionTestC
         Verify.assertContainsAll(this.newWith(1, 2, 3, 4, 5).select(Predicates.lessThan(3)), 1, 2);
         Verify.assertContainsAll(
                 this.newWith(-1, 2, 3, 4, 5).select(Predicates.lessThan(3),
-                        FastList.newList()), -1, 2);
+                        Lists.mutable.empty()), -1, 2);
     }
 
     @Override
@@ -269,7 +269,7 @@ public abstract class AbstractMutableSetTestCase extends AbstractCollectionTestC
         Verify.assertContainsAll(this.newWith(1, 2, 3, 4).reject(Predicates.lessThan(3)), 3, 4);
         Verify.assertContainsAll(
                 this.newWith(1, 2, 3, 4).reject(Predicates.lessThan(3),
-                        FastList.newList()), 3, 4);
+                        Lists.mutable.empty()), 3, 4);
     }
 
     @Override

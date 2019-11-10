@@ -35,7 +35,6 @@ import org.eclipse.collections.impl.block.function.primitive.CharFunction;
 import org.eclipse.collections.impl.block.function.primitive.CodePointFunction;
 import org.eclipse.collections.impl.block.predicate.CodePointPredicate;
 import org.eclipse.collections.impl.block.procedure.primitive.CodePointProcedure;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.string.immutable.CharAdapter;
@@ -1139,14 +1138,14 @@ public final class StringIterate
 
     public static MutableList<Character> toLowercaseList(String string)
     {
-        MutableList<Character> characters = FastList.newList();
+        MutableList<Character> characters = Lists.mutable.empty();
         StringIterate.forEachChar(string, new AddLowercaseCharacterToCollection(characters));
         return characters;
     }
 
     public static MutableList<Character> toUppercaseList(String string)
     {
-        MutableList<Character> characters = FastList.newList();
+        MutableList<Character> characters = Lists.mutable.empty();
         StringIterate.forEachChar(string, new AddUppercaseCharacterToCollection(characters));
         return characters;
     }
@@ -1198,7 +1197,7 @@ public final class StringIterate
 
         if (length == 0)
         {
-            return FastList.newList();
+            return Lists.mutable.empty();
         }
 
         MutableList<String> result = Lists.mutable.withInitialCapacity((length + size - 1) / size);

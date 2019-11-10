@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.stack.mutable;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.api.stack.StackIterable;
 import org.eclipse.collections.impl.block.factory.Predicates;
@@ -17,11 +18,9 @@ import org.eclipse.collections.impl.block.factory.StringPredicates;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.stack.StackIterableTestCase;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class UnmodifiableStackTest extends StackIterableTestCase
 {
@@ -29,7 +28,7 @@ public class UnmodifiableStackTest extends StackIterableTestCase
     private MutableStack<Integer> unmodifiableStack;
     private MutableStack<String> unmodifiableStackString;
 
-    @BeforeEach
+    @Before
     public void setUp()
     {
         this.mutableStack = ArrayStack.newStackFromTopToBottom(1, 2, 3);
@@ -66,46 +65,46 @@ public class UnmodifiableStackTest extends StackIterableTestCase
     public void iterator()
     {
         super.iterator();
-        assertThrows(UnsupportedOperationException.class, () -> this.newStackWith(1, 2, 3).iterator().remove());
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newStackWith(1, 2, 3).iterator().remove());
     }
 
     @Test
     public void testNullStack()
     {
-        assertThrows(IllegalArgumentException.class, () -> UnmodifiableStack.of(null));
+        Verify.assertThrows(IllegalArgumentException.class, () -> UnmodifiableStack.of(null));
     }
 
     @Test
     public void testPop()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).pop());
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).pop());
 
-        assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2).pop(3));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2).pop(3));
 
-        assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).pop(3));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).pop(3));
 
-        assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).pop(3, FastList.newList()));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).pop(3, Lists.mutable.empty()));
 
-        assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).pop(3, ArrayStack.newStack()));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).pop(3, ArrayStack.newStack()));
     }
 
     @Test
     public void testPush()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).push(4));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).push(4));
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testClear()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newStackFromTopToBottom(1, 2, 3).clear());
+        this.newStackFromTopToBottom(1, 2, 3).clear();
     }
 
     @Test
     public void testSelect()
     {
-        assertEquals(ArrayStack.newStackFromTopToBottom(2, 3), this.unmodifiableStack.select(Predicates.greaterThan(1)));
-        Verify.assertSize(3, this.unmodifiableStackString.select(ignored -> true, FastList.newList()));
+        Assert.assertEquals(ArrayStack.newStackFromTopToBottom(2, 3), this.unmodifiableStack.select(Predicates.greaterThan(1)));
+        Verify.assertSize(3, this.unmodifiableStackString.select(ignored -> true, Lists.mutable.empty()));
     }
 
     @Test
@@ -116,16 +115,16 @@ public class UnmodifiableStackTest extends StackIterableTestCase
                 this.unmodifiableStackString.selectWith(
                         Object::equals,
                         "2",
-                        FastList.newList()));
+                        Lists.mutable.empty()));
     }
 
     @Test
     public void testReject()
     {
-        assertEquals(ArrayStack.newStackFromTopToBottom("2", "3"), this.unmodifiableStackString.reject(StringPredicates.contains("1")));
-        assertEquals(
+        Assert.assertEquals(ArrayStack.newStackFromTopToBottom("2", "3"), this.unmodifiableStackString.reject(StringPredicates.contains("1")));
+        Assert.assertEquals(
                 FastList.newListWith("2", "3"),
-                this.unmodifiableStackString.reject(StringPredicates.contains("1"), FastList.newList()));
+                this.unmodifiableStackString.reject(StringPredicates.contains("1"), Lists.mutable.empty()));
     }
 
     @Test
@@ -136,37 +135,37 @@ public class UnmodifiableStackTest extends StackIterableTestCase
                 this.unmodifiableStackString.rejectWith(
                         Object::equals,
                         3,
-                        FastList.newList()));
+                        Lists.mutable.empty()));
     }
 
     @Test
     public void testCollect()
     {
-        assertEquals(this.mutableStack, this.unmodifiableStackString.collect(Integer::valueOf));
+        Assert.assertEquals(this.mutableStack, this.unmodifiableStackString.collect(Integer::valueOf));
     }
 
     @Test
     public void testSize()
     {
-        assertEquals(this.mutableStack.size(), this.unmodifiableStack.size());
+        Assert.assertEquals(this.mutableStack.size(), this.unmodifiableStack.size());
     }
 
     @Test
     public void testIsEmpty()
     {
-        assertEquals(this.mutableStack.isEmpty(), this.unmodifiableStack.isEmpty());
+        Assert.assertEquals(this.mutableStack.isEmpty(), this.unmodifiableStack.isEmpty());
     }
 
     @Test
     public void testGetFirst()
     {
-        assertEquals(this.mutableStack.getFirst(), this.unmodifiableStack.getFirst());
+        Assert.assertEquals(this.mutableStack.getFirst(), this.unmodifiableStack.getFirst());
     }
 
     @Test
     public void testCount()
     {
-        assertEquals(
+        Assert.assertEquals(
                 this.mutableStack.count(ignored1 -> true),
                 this.unmodifiableStack.count(ignored -> true));
     }

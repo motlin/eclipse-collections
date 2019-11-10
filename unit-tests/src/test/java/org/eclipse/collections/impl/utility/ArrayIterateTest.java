@@ -591,7 +591,7 @@ public class ArrayIterateTest
     @Test
     public void distinct()
     {
-        List<Integer> result = FastList.newList();
+        List<Integer> result = Lists.mutable.empty();
         ArrayIterate.distinct(new Integer[]{5, 3, 1, 5, 7, 1}, result);
         Assert.assertEquals(FastList.newListWith(5, 3, 1, 7), result);
         result.clear();
@@ -615,7 +615,7 @@ public class ArrayIterateTest
     {
         Verify.assertThrows(IllegalArgumentException.class, () -> ArrayIterate.distinct(null));
         Verify.assertThrows(IllegalArgumentException.class, () -> ArrayIterate.distinct(null, HashingStrategies.defaultStrategy()));
-        Verify.assertThrows(IllegalArgumentException.class, () -> ArrayIterate.distinct(null, FastList.newList()));
+        Verify.assertThrows(IllegalArgumentException.class, () -> ArrayIterate.distinct(null, Lists.mutable.empty()));
     }
 
     @Test
@@ -697,7 +697,7 @@ public class ArrayIterateTest
     {
         Object[] integers = Lists.fixedSize.of(1, 2, 3).toArray();
         Verify.assertContainsAll(ArrayIterate.collectIf(integers, Integer.class::isInstance, String::valueOf), "1", "2", "3");
-        Verify.assertContainsAll(ArrayIterate.collectIf(integers, Integer.class::isInstance, String::valueOf, FastList.newList()), "1", "2", "3");
+        Verify.assertContainsAll(ArrayIterate.collectIf(integers, Integer.class::isInstance, String::valueOf, Lists.mutable.empty()), "1", "2", "3");
     }
 
     @Test
@@ -1043,7 +1043,7 @@ public class ArrayIterateTest
     @Test(expected = IllegalArgumentException.class)
     public void take_target_negative_throws()
     {
-        ArrayIterate.take(Interval.zeroTo(0).toArray(), -1, FastList.newList());
+        ArrayIterate.take(Interval.zeroTo(0).toArray(), -1, Lists.mutable.empty());
     }
 
     @Test
@@ -1200,7 +1200,7 @@ public class ArrayIterateTest
 
         Assert.assertEquals(
                 ArrayIterate.zip(array, nulls),
-                ArrayIterate.zip(array, nulls, FastList.newList()));
+                ArrayIterate.zip(array, nulls, Lists.mutable.empty()));
     }
 
     @Test
@@ -1214,11 +1214,11 @@ public class ArrayIterateTest
                 pairs.collect((Function<Pair<String, ?>, String>) Pair::getOne));
         Assert.assertEquals(
                 Interval.zeroTo(array.length - 1).toList(),
-                pairs.collect((Function<Pair<?, Integer>, Integer>) Pair::getTwo, FastList.newList()));
+                pairs.collect((Function<Pair<?, Integer>, Integer>) Pair::getTwo, Lists.mutable.empty()));
 
         Assert.assertEquals(
                 ArrayIterate.zipWithIndex(array),
-                ArrayIterate.zipWithIndex(array, FastList.newList()));
+                ArrayIterate.zipWithIndex(array, Lists.mutable.empty()));
     }
 
     @Test

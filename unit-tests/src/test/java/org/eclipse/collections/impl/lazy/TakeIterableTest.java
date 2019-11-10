@@ -39,7 +39,7 @@ public class TakeIterableTest extends AbstractLazyIterableTestCase
     public void setUp()
     {
         this.takeIterable = new TakeIterable<>(Interval.oneTo(5), 2);
-        this.emptyListTakeIterable = new TakeIterable<>(FastList.newList(), 2);
+        this.emptyListTakeIterable = new TakeIterable<>(Lists.mutable.empty(), 2);
         this.zeroCountTakeIterable = new TakeIterable<>(Interval.oneTo(5), 0);
         this.sameCountTakeIterable = new TakeIterable<>(Interval.oneTo(5), 5);
         this.higherCountTakeIterable = new TakeIterable<>(Interval.oneTo(5), 10);

@@ -240,7 +240,7 @@ abstract class AbstractImmutableList<T>
     @Override
     public <P> ImmutableList<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return ListIterate.selectWith(this, predicate, parameter, FastList.newList()).toImmutable();
+        return ListIterate.selectWith(this, predicate, parameter, Lists.mutable.empty()).toImmutable();
     }
 
     @Override
@@ -263,7 +263,7 @@ abstract class AbstractImmutableList<T>
     @Override
     public <P> ImmutableList<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return ListIterate.rejectWith(this, predicate, parameter, FastList.newList()).toImmutable();
+        return ListIterate.rejectWith(this, predicate, parameter, Lists.mutable.empty()).toImmutable();
     }
 
     @Override
@@ -790,7 +790,7 @@ abstract class AbstractImmutableList<T>
             MutableList<Pair<T, S>> target = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
             return this.zip(that, target).toImmutable();
         }
-        return this.zip(that, FastList.newList()).toImmutable();
+        return this.zip(that, Lists.mutable.empty()).toImmutable();
     }
 
     @Override

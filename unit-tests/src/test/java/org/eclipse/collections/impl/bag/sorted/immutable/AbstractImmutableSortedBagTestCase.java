@@ -389,9 +389,9 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
         ImmutableSortedBag<Integer> integers = this.classUnderTest();
         Verify.assertListsEqual(
                 integers.toList(),
-                integers.select(Predicates.lessThan(integers.size() + 1), FastList.newList()));
+                integers.select(Predicates.lessThan(integers.size() + 1), Lists.mutable.empty()));
         Verify.assertEmpty(
-                integers.select(Predicates.greaterThan(integers.size()), FastList.newList()));
+                integers.select(Predicates.greaterThan(integers.size()), Lists.mutable.empty()));
     }
 
     @Override
@@ -425,10 +425,10 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest();
         Verify.assertEmpty(
-                integers.reject(Predicates.lessThan(integers.size() + 1), FastList.newList()));
+                integers.reject(Predicates.lessThan(integers.size() + 1), Lists.mutable.empty()));
         Verify.assertListsEqual(
                 integers.toList(),
-                integers.reject(Predicates.greaterThan(integers.size()), FastList.newList()));
+                integers.reject(Predicates.greaterThan(integers.size()), Lists.mutable.empty()));
 
         ImmutableSortedBag<Integer> integers2 = this.classUnderTest();
         Assert.assertEquals(
@@ -582,7 +582,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
         Assert.assertEquals(HashBag.newBag(integers), integers.collect(Functions.getIntegerPassThru(), HashBag.newBag()));
         Verify.assertListsEqual(
                 integers.toList(),
-                integers.collect(Functions.getIntegerPassThru(), FastList.newList()));
+                integers.collect(Functions.getIntegerPassThru(), Lists.mutable.empty()));
     }
 
     @Override
@@ -628,7 +628,7 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
         Verify.assertListsEqual(
                 FastList.newListWith(2, 1, 1),
                 pairsMinusOne.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne).castToList());
-        Assert.assertEquals(immutableBag.zip(nulls), immutableBag.zip(nulls, FastList.newList()));
+        Assert.assertEquals(immutableBag.zip(nulls), immutableBag.zip(nulls, Lists.mutable.empty()));
         Assert.assertEquals(immutableBag.zip(nulls).toBag(), immutableBag.zip(nulls, new HashBag<>()));
 
         FastList<Holder> holders = FastList.newListWith(new Holder(1), new Holder(2), new Holder(3));

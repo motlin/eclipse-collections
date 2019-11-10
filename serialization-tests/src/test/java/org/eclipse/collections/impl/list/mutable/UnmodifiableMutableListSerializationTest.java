@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.list.mutable;
 
 import java.util.LinkedList;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,7 @@ public class UnmodifiableMutableListSerializationTest
                         + "bm1vZGlmaWFibGVDb2xsZWN0aW9uU2VyaWFsaXphdGlvblByb3h5AAAAAAAAAAEMAAB4cHNyADJv\n"
                         + "cmcuZWNsaXBzZS5jb2xsZWN0aW9ucy5pbXBsLmxpc3QubXV0YWJsZS5GYXN0TGlzdAAAAAAAAAAB\n"
                         + "DAAAeHB3BAAAAAB4eA==",
-                UnmodifiableMutableList.of(FastList.newList()));
+                UnmodifiableMutableList.of(Lists.mutable.empty()));
     }
 
     @Test

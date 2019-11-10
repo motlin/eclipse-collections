@@ -852,7 +852,7 @@ public abstract class MapIterableTestCase
     {
         MapIterable<String, Integer> map = this.newMapWithKeysValues("1", 1, "2", 2, "3", 3, "4", 4);
 
-        FastList<Integer> actual = map.collectWith(AddFunction.INTEGER, 1, FastList.newList());
+        FastList<Integer> actual = map.collectWith(AddFunction.INTEGER, 1, Lists.mutable.empty());
         Verify.assertContainsAll(actual, 2, 3, 4, 5);
     }
 
@@ -1071,7 +1071,7 @@ public abstract class MapIterableTestCase
                 Character.valueOf('w'),
                 Character.valueOf('o')));
 
-        RichIterable<Character> blobFromTarget = map.flatCollect(function, FastList.newList());
+        RichIterable<Character> blobFromTarget = map.flatCollect(function, Lists.mutable.empty());
         Assert.assertTrue(blobFromTarget.containsAllArguments(
                 Character.valueOf('O'),
                 Character.valueOf('n'),

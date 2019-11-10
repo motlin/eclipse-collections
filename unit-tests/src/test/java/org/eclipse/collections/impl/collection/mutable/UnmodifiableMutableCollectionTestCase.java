@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -33,16 +33,10 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Functions2;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Abstract JUnit test for {@link UnmodifiableMutableCollection}.
@@ -51,85 +45,85 @@ public abstract class UnmodifiableMutableCollectionTestCase<T>
 {
     protected abstract MutableCollection<T> getCollection();
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void removeIfWith()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().removeIfWith(null, null));
+        this.getCollection().removeIfWith(null, null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void removeIf()
     {
         Predicate<Object> predicate = null;
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().removeIf(predicate));
+        this.getCollection().removeIf(predicate);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void remove()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().remove(null));
+        this.getCollection().remove(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void iteratorRemove()
     {
         Iterator<?> iterator = this.getCollection().iterator();
         iterator.next();
-        assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
+        iterator.remove();
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void add()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().add(null));
+        this.getCollection().add(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void addAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().addAll(null));
+        this.getCollection().addAll(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void addAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().addAllIterable(null));
+        this.getCollection().addAllIterable(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void removeAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().removeAll(null));
+        this.getCollection().removeAll(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void removeAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().removeAllIterable(null));
+        this.getCollection().removeAllIterable(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void retainAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().retainAll(null));
+        this.getCollection().retainAll(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void retainAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().retainAllIterable(null));
+        this.getCollection().retainAllIterable(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void clear()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().clear());
+        this.getCollection().clear();
     }
 
     @Test
     public void testMakeString()
     {
-        assertEquals(this.getCollection().toString(), '[' + this.getCollection().makeString() + ']');
+        Assert.assertEquals(this.getCollection().toString(), '[' + this.getCollection().makeString() + ']');
     }
 
     @Test
@@ -137,58 +131,58 @@ public abstract class UnmodifiableMutableCollectionTestCase<T>
     {
         Appendable builder = new StringBuilder();
         this.getCollection().appendString(builder);
-        assertEquals(this.getCollection().toString(), '[' + builder.toString() + ']');
+        Assert.assertEquals(this.getCollection().toString(), '[' + builder.toString() + ']');
     }
 
     @Test
     public void select()
     {
-        assertEquals(this.getCollection(), this.getCollection().select(ignored -> true));
-        assertNotEquals(this.getCollection(), this.getCollection().select(ignored -> false));
+        Assert.assertEquals(this.getCollection(), this.getCollection().select(ignored -> true));
+        Assert.assertNotEquals(this.getCollection(), this.getCollection().select(ignored -> false));
     }
 
     @Test
     public void selectWith()
     {
-        assertEquals(this.getCollection(), this.getCollection().selectWith((ignored1, ignored2) -> true, null));
-        assertNotEquals(this.getCollection(), this.getCollection().selectWith((ignored1, ignored2) -> false, null));
+        Assert.assertEquals(this.getCollection(), this.getCollection().selectWith((ignored1, ignored2) -> true, null));
+        Assert.assertNotEquals(this.getCollection(), this.getCollection().selectWith((ignored1, ignored2) -> false, null));
     }
 
     @Test
     public void reject()
     {
-        assertEquals(this.getCollection(), this.getCollection().reject(ignored1 -> false));
-        assertNotEquals(this.getCollection(), this.getCollection().reject(ignored -> true));
+        Assert.assertEquals(this.getCollection(), this.getCollection().reject(ignored1 -> false));
+        Assert.assertNotEquals(this.getCollection(), this.getCollection().reject(ignored -> true));
     }
 
     @Test
     public void rejectWith()
     {
-        assertEquals(this.getCollection(), this.getCollection().rejectWith((ignored11, ignored21) -> false, null));
-        assertNotEquals(this.getCollection(), this.getCollection().rejectWith((ignored1, ignored2) -> true, null));
+        Assert.assertEquals(this.getCollection(), this.getCollection().rejectWith((ignored11, ignored21) -> false, null));
+        Assert.assertNotEquals(this.getCollection(), this.getCollection().rejectWith((ignored1, ignored2) -> true, null));
     }
 
     @Test
     public void partition()
     {
         PartitionMutableCollection<?> partition = this.getCollection().partition(ignored -> true);
-        assertEquals(this.getCollection(), partition.getSelected());
-        assertNotEquals(this.getCollection(), partition.getRejected());
+        Assert.assertEquals(this.getCollection(), partition.getSelected());
+        Assert.assertNotEquals(this.getCollection(), partition.getRejected());
     }
 
     @Test
     public void partitionWith()
     {
         PartitionMutableCollection<?> partition = this.getCollection().partitionWith((ignored1, ignored2) -> true, null);
-        assertEquals(this.getCollection(), partition.getSelected());
-        assertNotEquals(this.getCollection(), partition.getRejected());
+        Assert.assertEquals(this.getCollection(), partition.getSelected());
+        Assert.assertNotEquals(this.getCollection(), partition.getRejected());
     }
 
     @Test
     public void collect()
     {
-        assertEquals(this.getCollection(), this.getCollection().collect(Functions.getPassThru()));
-        assertNotEquals(this.getCollection(), this.getCollection().collect(Object::getClass));
+        Assert.assertEquals(this.getCollection(), this.getCollection().collect(Functions.getPassThru()));
+        Assert.assertNotEquals(this.getCollection(), this.getCollection().collect(Object::getClass));
     }
 
     @Test
@@ -250,15 +244,15 @@ public abstract class UnmodifiableMutableCollectionTestCase<T>
     @Test
     public void collectWith()
     {
-        assertEquals(this.getCollection(), this.getCollection().collectWith(Functions2.fromFunction(Functions.getPassThru()), null));
-        assertNotEquals(this.getCollection(), this.getCollection().collectWith(Functions2.fromFunction(Object::getClass), null));
+        Assert.assertEquals(this.getCollection(), this.getCollection().collectWith(Functions2.fromFunction(Functions.getPassThru()), null));
+        Assert.assertNotEquals(this.getCollection(), this.getCollection().collectWith(Functions2.fromFunction(Object::getClass), null));
     }
 
     @Test
     public void collectIf()
     {
-        assertEquals(this.getCollection(), this.getCollection().collectIf(ignored -> true, Functions.getPassThru()));
-        assertNotEquals(this.getCollection(), this.getCollection().collectIf(ignored -> false, Object::getClass));
+        Assert.assertEquals(this.getCollection(), this.getCollection().collectIf(ignored -> true, Functions.getPassThru()));
+        Assert.assertNotEquals(this.getCollection(), this.getCollection().collectIf(ignored -> false, Object::getClass));
     }
 
     @Test
@@ -273,7 +267,7 @@ public abstract class UnmodifiableMutableCollectionTestCase<T>
     @Test
     public void groupBy()
     {
-        assertEquals(this.getCollection().size(), this.getCollection().groupBy(Functions.getPassThru()).size());
+        Assert.assertEquals(this.getCollection().size(), this.getCollection().groupBy(Functions.getPassThru()).size());
     }
 
     @Test
@@ -285,24 +279,24 @@ public abstract class UnmodifiableMutableCollectionTestCase<T>
         List<Object> nullsMinusOne = Collections.nCopies(collection.size() - 1, null);
 
         MutableCollection<Pair<Object, Object>> pairs = collection.zip(nulls);
-        assertEquals(
+        Assert.assertEquals(
                 collection.toSet(),
                 pairs.collect((Function<Pair<Object, ?>, Object>) Pair::getOne).toSet());
-        assertEquals(
+        Assert.assertEquals(
                 nulls,
                 pairs.collect((Function<Pair<?, Object>, Object>) Pair::getTwo, Lists.mutable.of()));
 
         MutableCollection<Pair<Object, Object>> pairsPlusOne = collection.zip(nullsPlusOne);
-        assertEquals(
+        Assert.assertEquals(
                 collection.toSet(),
                 pairsPlusOne.collect((Function<Pair<Object, ?>, Object>) Pair::getOne).toSet());
-        assertEquals(nulls, pairsPlusOne.collect((Function<Pair<?, Object>, Object>) Pair::getTwo, Lists.mutable.of()));
+        Assert.assertEquals(nulls, pairsPlusOne.collect((Function<Pair<?, Object>, Object>) Pair::getTwo, Lists.mutable.of()));
 
         MutableCollection<Pair<Object, Object>> pairsMinusOne = collection.zip(nullsMinusOne);
-        assertEquals(collection.size() - 1, pairsMinusOne.size());
-        assertTrue(collection.containsAll(pairsMinusOne.collect((Function<Pair<Object, ?>, Object>) Pair::getOne)));
+        Assert.assertEquals(collection.size() - 1, pairsMinusOne.size());
+        Assert.assertTrue(collection.containsAll(pairsMinusOne.collect((Function<Pair<Object, ?>, Object>) Pair::getOne)));
 
-        assertEquals(
+        Assert.assertEquals(
                 collection.zip(nulls).toSet(),
                 collection.zip(nulls, new UnifiedSet<>()));
     }
@@ -313,14 +307,14 @@ public abstract class UnmodifiableMutableCollectionTestCase<T>
         MutableCollection<Object> collection = (MutableCollection<Object>) this.getCollection();
         MutableCollection<Pair<Object, Integer>> pairs = collection.zipWithIndex();
 
-        assertEquals(
+        Assert.assertEquals(
                 collection.toSet(),
                 pairs.collect((Function<Pair<Object, ?>, Object>) Pair::getOne).toSet());
-        assertEquals(
+        Assert.assertEquals(
                 Interval.zeroTo(collection.size() - 1).toSet(),
                 pairs.collect((Function<Pair<?, Integer>, Integer>) Pair::getTwo, UnifiedSet.newSet()));
 
-        assertEquals(
+        Assert.assertEquals(
                 collection.zipWithIndex().toSet(),
                 collection.zipWithIndex(new UnifiedSet<>()));
     }
@@ -329,33 +323,33 @@ public abstract class UnmodifiableMutableCollectionTestCase<T>
     public void flatCollect()
     {
         MutableCollection<Object> collection = (MutableCollection<Object>) this.getCollection();
-        assertEquals(
+        Assert.assertEquals(
                 this.getCollection().toBag(),
                 collection.flatCollect((Function<Object, Iterable<Object>>) Lists.fixedSize::of).toBag());
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void with()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().with(null));
+        this.getCollection().with(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void withAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().withAll(FastList.newList()));
+        this.getCollection().withAll(Lists.mutable.empty());
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void without()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().without(null));
+        this.getCollection().without(null);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void withoutAll()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.getCollection().withoutAll(FastList.newList()));
+        this.getCollection().withoutAll(Lists.mutable.empty());
     }
 
     @Test
@@ -363,7 +357,7 @@ public abstract class UnmodifiableMutableCollectionTestCase<T>
     {
         MutableList<T> tapResult = Lists.mutable.of();
         MutableCollection<T> collection = this.getCollection();
-        assertSame(collection, collection.tap(tapResult::add));
-        assertEquals(collection.toList(), tapResult);
+        Assert.assertSame(collection, collection.tap(tapResult::add));
+        Assert.assertEquals(collection.toList(), tapResult);
     }
 }

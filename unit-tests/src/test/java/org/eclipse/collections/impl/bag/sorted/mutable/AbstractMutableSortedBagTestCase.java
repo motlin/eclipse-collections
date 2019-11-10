@@ -774,7 +774,7 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
     {
         super.tap();
 
-        MutableList<Integer> tapResult = FastList.newList();
+        MutableList<Integer> tapResult = Lists.mutable.empty();
         MutableSortedBag<Integer> bag = this.newWith(Collections.reverseOrder(), 1, 1, 2);
         Assert.assertSame(bag, bag.tap(tapResult::add));
         Assert.assertEquals(bag.toList(), tapResult);
@@ -787,7 +787,7 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
         super.forEach();
 
         MutableSortedBag<Integer> bag = this.newWith(Collections.reverseOrder(), 1, 1, 2);
-        MutableList<Integer> actual = FastList.newList();
+        MutableList<Integer> actual = Lists.mutable.empty();
         bag.forEach(Procedures.cast(actual::add));
         Assert.assertEquals(FastList.newListWith(2, 1, 1), actual);
     }
@@ -843,8 +843,8 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
         super.forEachWithOccurrences();
 
         MutableSortedBag<Integer> bag = this.newWith(Collections.reverseOrder(), 3, 3, 3, 2, 2, 1);
-        MutableList<Integer> actualItems = FastList.newList();
-        MutableList<Integer> actualIndexes = FastList.newList();
+        MutableList<Integer> actualItems = Lists.mutable.empty();
+        MutableList<Integer> actualIndexes = Lists.mutable.empty();
         bag.forEachWithOccurrences((each, index) -> {
             actualItems.add(each);
             actualIndexes.add(index);

@@ -30,6 +30,7 @@ import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.IntProcedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.JunitTags;
@@ -309,7 +310,7 @@ public class SerialParallelLazyPerformanceTest
     private MutableList<Function0<FastList<Integer>>> getIntegerListGenerators(int count, boolean shuffle)
     {
         Interval interval = Interval.fromTo(-(count / 2), count / 2 - 1);
-        MutableList<Function0<FastList<Integer>>> generators = FastList.newList();
+        MutableList<Function0<FastList<Integer>>> generators = Lists.mutable.empty();
         generators.add(() -> {
             FastList<Integer> integers = FastList.newList(interval);
             if (shuffle)
@@ -332,7 +333,7 @@ public class SerialParallelLazyPerformanceTest
 
     private MutableList<Function0<UnifiedSet<String>>> getRandomWordsGenerators(int count)
     {
-        MutableList<Function0<UnifiedSet<String>>> generators = FastList.newList();
+        MutableList<Function0<UnifiedSet<String>>> generators = Lists.mutable.empty();
         generators.add(() -> this.generateWordsList(count));
         return generators;
     }
@@ -364,7 +365,7 @@ public class SerialParallelLazyPerformanceTest
 
     private void forEach(FastList<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialForEachPerformance(collection, SERIAL_RUN_COUNT));
         int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(cores);
@@ -403,7 +404,7 @@ public class SerialParallelLazyPerformanceTest
 
     private void toList(FastList<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialToListPerformance(collection, SERIAL_RUN_COUNT));
         int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(cores);
@@ -425,7 +426,7 @@ public class SerialParallelLazyPerformanceTest
 
     private void select(FastList<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialSelectPerformance(collection, PREDICATES_LAMBDA, SERIAL_RUN_COUNT));
         int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(cores);
@@ -451,7 +452,7 @@ public class SerialParallelLazyPerformanceTest
 
     private void reject(FastList<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialRejectPerformance(collection, PREDICATES_LAMBDA, SERIAL_RUN_COUNT));
         int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(cores);
@@ -477,7 +478,7 @@ public class SerialParallelLazyPerformanceTest
 
     private void anySatisfy(FastList<Integer> collection, int index, boolean expectedResult)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialAnySatisfyPerformance(collection, PREDICATES_LAMBDA.get(index), expectedResult, SERIAL_RUN_COUNT));
         int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(cores);
@@ -503,7 +504,7 @@ public class SerialParallelLazyPerformanceTest
 
     private void detect(FastList<Integer> collection, int index, boolean expectedResult)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialDetectPerformance(collection, PREDICATES_LAMBDA.get(index), expectedResult, SERIAL_RUN_COUNT));
         int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(cores);
@@ -524,7 +525,7 @@ public class SerialParallelLazyPerformanceTest
 
     private void collect(FastList<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialCollectPerformance(collection, SERIAL_RUN_COUNT));
         int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(cores);
@@ -550,7 +551,7 @@ public class SerialParallelLazyPerformanceTest
 
     private void groupBy(UnifiedSet<String> words)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialGroupByPerformance(words, SERIAL_RUN_COUNT));
         int cores = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(cores);

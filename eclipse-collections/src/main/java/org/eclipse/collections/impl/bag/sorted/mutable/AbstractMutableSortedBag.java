@@ -50,7 +50,6 @@ import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.partition.bag.sorted.PartitionMutableSortedBag;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.bag.mutable.AbstractMutableBagIterable;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
@@ -257,19 +256,19 @@ public abstract class AbstractMutableSortedBag<T>
     @Override
     public <P, V> MutableList<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
-        return this.collectWith(function, parameter, FastList.newList());
+        return this.collectWith(function, parameter, Lists.mutable.empty());
     }
 
     @Override
     public <V> MutableList<V> collectIf(Predicate<? super T> predicate, Function<? super T, ? extends V> function)
     {
-        return this.collectIf(predicate, function, FastList.newList());
+        return this.collectIf(predicate, function, Lists.mutable.empty());
     }
 
     @Override
     public <V> MutableList<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
-        return this.flatCollect(function, FastList.newList());
+        return this.flatCollect(function, Lists.mutable.empty());
     }
 
     @Override
@@ -329,7 +328,7 @@ public abstract class AbstractMutableSortedBag<T>
             MutableList<Pair<T, S>> target = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
             return this.zip(that, target);
         }
-        return this.zip(that, FastList.newList());
+        return this.zip(that, Lists.mutable.empty());
     }
 
     @Override

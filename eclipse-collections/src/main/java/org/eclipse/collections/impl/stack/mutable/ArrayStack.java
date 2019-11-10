@@ -113,7 +113,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
 
     public ArrayStack()
     {
-        this.delegate = FastList.newList();
+        this.delegate = Lists.mutable.empty();
     }
 
     public ArrayStack(int initialCapacity)
@@ -264,7 +264,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
         this.checkNegativeCount(count);
         if (this.checkZeroCount(count))
         {
-            return FastList.newList();
+            return Lists.mutable.empty();
         }
         this.checkEmptyStack();
         this.checkSizeLessThanCount(count);

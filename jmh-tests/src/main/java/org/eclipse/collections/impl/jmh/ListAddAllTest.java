@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.list.Interval;
@@ -57,7 +58,7 @@ public class ListAddAllTest
     @Benchmark
     public void ec()
     {
-        MutableList<Integer> result = FastList.newList();
+        MutableList<Integer> result = Lists.mutable.empty();
         for (int i = 0; i < 1000; i++)
         {
             result.addAll(this.integersEC);

@@ -69,6 +69,6 @@ public class MutableListFactoryImpl implements MutableListFactory
     @Override
     public <T> MutableList<T> fromStream(Stream<? extends T> stream)
     {
-        return stream.collect(Collectors.toCollection(FastList::newList));
+        return stream.collect(Collectors.toCollection(Lists.mutable::empty));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -38,8 +38,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.factory.SortedBags;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
@@ -60,12 +59,12 @@ import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure
 import org.eclipse.collections.impl.block.procedure.NonMutatingAggregationProcedure;
 import org.eclipse.collections.impl.block.procedure.checked.CheckedProcedure2;
 import org.eclipse.collections.impl.list.mutable.CompositeFastList;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMapUnsafe;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.set.mutable.SetAdapter;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 
 @Beta
@@ -99,7 +98,7 @@ public abstract class AbstractParallelIterable<T, B extends Batch<T>> implements
     {
         CompletionService<Boolean> completionService = new ExecutorCompletionService<>(parallelIterable.getExecutorService());
         MutableSet<Future<Boolean>> futures =
-                parallelIterable.split().collect(batch -> completionService.submit(() -> batch.anySatisfy(predicate)), Sets.mutable.empty());
+                parallelIterable.split().collect(batch -> completionService.submit(() -> batch.anySatisfy(predicate)), UnifiedSet.newSet());
 
         while (futures.notEmpty())
         {
@@ -133,7 +132,7 @@ public abstract class AbstractParallelIterable<T, B extends Batch<T>> implements
     {
         CompletionService<Boolean> completionService = new ExecutorCompletionService<>(parallelIterable.getExecutorService());
         MutableSet<Future<Boolean>> futures =
-                parallelIterable.split().collect(batch -> completionService.submit(() -> batch.allSatisfy(predicate)), Sets.mutable.empty());
+                parallelIterable.split().collect(batch -> completionService.submit(() -> batch.allSatisfy(predicate)), UnifiedSet.newSet());
 
         while (futures.notEmpty())
         {
@@ -476,7 +475,7 @@ public abstract class AbstractParallelIterable<T, B extends Batch<T>> implements
     public MutableList<T> toList()
     {
         Function<Batch<T>, MutableList<T>> map = batch -> {
-            MutableList<T> list = FastList.newList();
+            MutableList<T> list = Lists.mutable.empty();
             batch.forEach(CollectionAddProcedure.on(list));
             return list;
         };
@@ -539,7 +538,7 @@ public abstract class AbstractParallelIterable<T, B extends Batch<T>> implements
     @Override
     public MutableSortedBag<T> toSortedBag(Comparator<? super T> comparator)
     {
-        MutableSortedBag<T> result = SortedBags.mutable.empty(comparator);
+        MutableSortedBag<T> result = TreeBag.newBag(comparator);
         result = result.asSynchronized();
         this.forEach(CollectionAddProcedure.on(result));
         return result;

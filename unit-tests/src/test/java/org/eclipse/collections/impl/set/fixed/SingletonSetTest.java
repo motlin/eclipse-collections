@@ -267,7 +267,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         Verify.assertSetsEqual(UnifiedSet.newSetWith("1"), this.intSet.flatCollect(function));
         Verify.assertListsEqual(
                 FastList.newListWith("1"),
-                this.intSet.flatCollect(function, FastList.newList()));
+                this.intSet.flatCollect(function, Lists.mutable.empty()));
     }
 
     @Test
@@ -365,7 +365,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
         Verify.assertContainsAll(this.intSet.collectIf(
                 Integer.class::isInstance,
                 String::valueOf,
-                FastList.newList()), "1");
+                Lists.mutable.empty()), "1");
     }
 
     @Test
@@ -376,7 +376,7 @@ public class SingletonSetTest extends AbstractMemoryEfficientMutableSetTestCase
                 this.intSet.collectWith(AddFunction.INTEGER, 1));
         Assert.assertEquals(
                 FastList.newListWith(2),
-                this.intSet.collectWith(AddFunction.INTEGER, 1, FastList.newList()));
+                this.intSet.collectWith(AddFunction.INTEGER, 1, Lists.mutable.empty()));
     }
 
     @Test

@@ -76,7 +76,7 @@ public class ImmutableEmptySortedSetTest extends AbstractImmutableSortedSetTestC
     @Test
     public void testNewSortedSet()
     {
-        Assert.assertSame(SortedSets.immutable.of(), SortedSets.immutable.ofAll(FastList.newList()));
+        Assert.assertSame(SortedSets.immutable.of(), SortedSets.immutable.ofAll(Lists.mutable.empty()));
         Assert.assertSame(SortedSets.immutable.of(), SortedSets.immutable.ofSortedSet(TreeSortedSet.newSet()));
         Assert.assertNotSame(
                 SortedSets.immutable.of(),
@@ -88,10 +88,10 @@ public class ImmutableEmptySortedSetTest extends AbstractImmutableSortedSetTestC
     public void newWith()
     {
         Assert.assertEquals(UnifiedSet.newSetWith(1), this.classUnderTest().newWith(1));
-        Assert.assertSame(SortedSets.immutable.empty(), SortedSets.immutable.of(FastList.newList().toArray()));
+        Assert.assertSame(SortedSets.immutable.empty(), SortedSets.immutable.of(Lists.mutable.empty().toArray()));
         Assert.assertEquals(
                 SortedSets.immutable.empty(),
-                SortedSets.immutable.of(Comparators.naturalOrder(), FastList.newList().toArray()));
+                SortedSets.immutable.of(Comparators.naturalOrder(), Lists.mutable.empty().toArray()));
 
         Assert.assertEquals(
                 Comparators.<Integer>reverseNaturalOrder(),
@@ -240,7 +240,7 @@ public class ImmutableEmptySortedSetTest extends AbstractImmutableSortedSetTestC
     {
         ImmutableSortedSet<Integer> immutableSet = this.classUnderTest(Comparators.reverseNaturalOrder());
         ImmutableList<Pair<Integer, Integer>> pairs = immutableSet.zip(Interval.oneTo(10));
-        Assert.assertEquals(FastList.<Pair<Integer, Integer>>newList(), pairs);
+        Assert.assertEquals(Lists.mutable.<Pair<Integer, Integer>>empty(), pairs);
 
         Assert.assertEquals(
                 UnifiedSet.<Pair<Integer, Integer>>newSet(),

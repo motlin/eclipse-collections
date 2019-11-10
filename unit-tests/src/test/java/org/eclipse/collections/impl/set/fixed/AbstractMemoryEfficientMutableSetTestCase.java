@@ -355,7 +355,7 @@ public abstract class AbstractMemoryEfficientMutableSetTestCase
     {
         MutableSet<String> set = this.classUnderTest();
         RichIterable<RichIterable<String>> chunks = set.chunk(2);
-        MutableList<Integer> sizes = chunks.collect(RichIterable::size, FastList.newList());
+        MutableList<Integer> sizes = chunks.collect(RichIterable::size, Lists.mutable.empty());
         MutableBag<Integer> hashBag = Bags.mutable.of();
         hashBag.addOccurrences(2, this.classUnderTest().size() / 2);
         if (this.classUnderTest().size() % 2 != 0)
@@ -535,7 +535,7 @@ public abstract class AbstractMemoryEfficientMutableSetTestCase
         Assert.assertTrue(setWith.containsAll(set));
         Verify.assertContainsAll(setWith, "11", "12");
         assertSetType(set, setWith);
-        Assert.assertSame(setWith, setWith.withAll(FastList.newList()));
+        Assert.assertSame(setWith, setWith.withAll(Lists.mutable.empty()));
     }
 
     @Test
@@ -559,7 +559,7 @@ public abstract class AbstractMemoryEfficientMutableSetTestCase
         Assert.assertTrue(setWithout.containsAll(this.classUnderTest()));
         Verify.assertContainsNone(setWithout, "11", "12");
         assertSetType(set, setWithout);
-        Assert.assertSame(setWithout, setWithout.withoutAll(FastList.newList()));
+        Assert.assertSame(setWithout, setWithout.withoutAll(Lists.mutable.empty()));
     }
 
     protected static void assertSetType(MutableSet<?> original, MutableSet<?> modified)

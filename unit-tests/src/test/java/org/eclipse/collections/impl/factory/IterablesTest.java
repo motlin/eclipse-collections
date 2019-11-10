@@ -32,7 +32,6 @@ import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
@@ -45,7 +44,7 @@ public class IterablesTest
     @Test
     public void immutableLists()
     {
-        this.assertEqualsAndInstanceOf(FastList.newList().toImmutable(), Lists.immutable.empty(), ImmutableList.class);
+        this.assertEqualsAndInstanceOf(Lists.mutable.empty().toImmutable(), Lists.immutable.empty(), ImmutableList.class);
         this.assertEqualsAndInstanceOf(Interval.oneTo(1), Lists.immutable.with(1), ImmutableList.class);
         this.assertEqualsAndInstanceOf(Interval.oneTo(2), Lists.immutable.with(1, 2), ImmutableList.class);
         this.assertEqualsAndInstanceOf(Interval.oneTo(3), Lists.immutable.with(1, 2, 3), ImmutableList.class);
@@ -62,7 +61,7 @@ public class IterablesTest
     @Test
     public void mutableLists()
     {
-        this.assertEqualsAndInstanceOf(FastList.newList(), Lists.mutable.empty(), MutableList.class);
+        this.assertEqualsAndInstanceOf(Lists.mutable.empty(), Lists.mutable.empty(), MutableList.class);
         this.assertEqualsAndInstanceOf(Interval.oneTo(1), Lists.mutable.with(1), MutableList.class);
         this.assertEqualsAndInstanceOf(Interval.oneTo(2), Lists.mutable.with(1, 2), MutableList.class);
         this.assertEqualsAndInstanceOf(Interval.oneTo(3), Lists.mutable.with(1, 2, 3), MutableList.class);

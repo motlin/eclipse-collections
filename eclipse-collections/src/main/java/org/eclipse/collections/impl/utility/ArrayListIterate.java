@@ -1866,7 +1866,7 @@ public final class ArrayListIterate
             MutableList<Pair<X, Y>> target = Lists.mutable.withInitialCapacity(Math.min(xSize, ySize));
             return ArrayListIterate.zip(xs, ys, target);
         }
-        return ArrayListIterate.zip(xs, ys, FastList.newList());
+        return ArrayListIterate.zip(xs, ys, Lists.mutable.empty());
     }
 
     /**
@@ -1919,7 +1919,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableList<T> result = FastList.newList();
+            MutableList<T> result = Lists.mutable.empty();
             T[] elements = ArrayListIterate.getInternalArray(list);
             for (int i = 0; i < size; i++)
             {
@@ -1943,7 +1943,7 @@ public final class ArrayListIterate
         int size = list.size();
         if (ArrayListIterate.isOptimizableArrayList(list, size))
         {
-            MutableList<T> result = FastList.newList();
+            MutableList<T> result = Lists.mutable.empty();
             T[] elements = ArrayListIterate.getInternalArray(list);
             for (int i = 0; i < size; i++)
             {

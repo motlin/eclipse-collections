@@ -120,14 +120,14 @@ public class CollectIterableTest extends AbstractLazyIterableTestCase
     @Test
     public void getFirstOnEmpty()
     {
-        CollectIterable<Integer, String> collect = new CollectIterable<>(FastList.newList(), String::valueOf);
+        CollectIterable<Integer, String> collect = new CollectIterable<>(Lists.mutable.empty(), String::valueOf);
         Assert.assertNull(collect.getFirst());
     }
 
     @Test
     public void getLastOnEmpty()
     {
-        CollectIterable<Integer, String> collect = new CollectIterable<>(FastList.newList(), String::valueOf);
+        CollectIterable<Integer, String> collect = new CollectIterable<>(Lists.mutable.empty(), String::valueOf);
         Assert.assertNull(collect.getLast());
     }
 

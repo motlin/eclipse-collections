@@ -39,7 +39,7 @@ public class DropIterableTest extends AbstractLazyIterableTestCase
     public void setUp()
     {
         this.dropIterable = new DropIterable<>(Interval.oneTo(5), 2);
-        this.emptyListDropIterable = new DropIterable<>(FastList.newList(), 2);
+        this.emptyListDropIterable = new DropIterable<>(Lists.mutable.empty(), 2);
         this.zeroCountDropIterable = new DropIterable<>(Interval.oneTo(5), 0);
         this.nearCountDropIterable = new DropIterable<>(Interval.oneTo(5), 4);
         this.sameCountDropIterable = new DropIterable<>(Interval.oneTo(5), 5);

@@ -47,13 +47,13 @@ public class RandomAccessListIterateTest
     @Test(expected = IndexOutOfBoundsException.class)
     public void forEachWithNegativeFroms()
     {
-        RandomAccessListIterate.forEach(FastList.newList(), -1, 1, DoNothingProcedure.DO_NOTHING);
+        RandomAccessListIterate.forEach(Lists.mutable.empty(), -1, 1, DoNothingProcedure.DO_NOTHING);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void forEachWithNegativeTos()
     {
-        RandomAccessListIterate.forEach(FastList.newList(), 1, -1, DoNothingProcedure.DO_NOTHING);
+        RandomAccessListIterate.forEach(Lists.mutable.empty(), 1, -1, DoNothingProcedure.DO_NOTHING);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class RandomAccessListIterateTest
         Assert.assertTrue(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), Predicates.greaterThan(1)));
         Assert.assertTrue(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), Predicates.greaterThan(0)));
         Assert.assertFalse(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), Predicates.greaterThan(4)));
-        Assert.assertFalse(RandomAccessListIterate.removeIf(FastList.newList(), Predicates.greaterThan(4)));
+        Assert.assertFalse(RandomAccessListIterate.removeIf(Lists.mutable.empty(), Predicates.greaterThan(4)));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class RandomAccessListIterateTest
         Assert.assertTrue(RandomAccessListIterate.removeIfWith(FastList.newListWith(1, 2, 3), Predicates2.greaterThan(), 1));
         Assert.assertTrue(RandomAccessListIterate.removeIfWith(FastList.newListWith(1, 2, 3), Predicates2.greaterThan(), 0));
         Assert.assertFalse(RandomAccessListIterate.removeIfWith(FastList.newListWith(1, 2, 3), Predicates2.greaterThan(), 4));
-        Assert.assertFalse(RandomAccessListIterate.removeIfWith(FastList.newList(), Predicates2.greaterThan(), 1));
+        Assert.assertFalse(RandomAccessListIterate.removeIfWith(Lists.mutable.empty(), Predicates2.greaterThan(), 1));
     }
 
     @Test
@@ -327,7 +327,7 @@ public class RandomAccessListIterateTest
     public void distinct()
     {
         MutableList<Integer> list = FastList.newListWith(5, 2, 6, 2, 3, 5, 2);
-        MutableList<Integer> actualList = FastList.newList();
+        MutableList<Integer> actualList = Lists.mutable.empty();
         RandomAccessListIterate.distinct(list, actualList);
         Verify.assertListsEqual(FastList.newListWith(5, 2, 6, 3), actualList);
         Verify.assertSize(7, list);
@@ -387,7 +387,7 @@ public class RandomAccessListIterateTest
         Verify.assertListsEqual(integers.take(integers.size()), RandomAccessListIterate.take(integers, integers.size()));
         Verify.assertListsEqual(integers.take(10), RandomAccessListIterate.take(integers, 10));
         Verify.assertListsEqual(integers.take(Integer.MAX_VALUE), RandomAccessListIterate.take(integers, Integer.MAX_VALUE));
-        Verify.assertListsEqual(FastList.newList(), RandomAccessListIterate.take(Lists.fixedSize.of(), 2));
+        Verify.assertListsEqual(Lists.mutable.empty(), RandomAccessListIterate.take(Lists.fixedSize.of(), 2));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -426,7 +426,7 @@ public class RandomAccessListIterateTest
     @Test(expected = IllegalArgumentException.class)
     public void take__target_throws()
     {
-        RandomAccessListIterate.take(this.getIntegerList(), -1, FastList.newList());
+        RandomAccessListIterate.take(this.getIntegerList(), -1, Lists.mutable.empty());
     }
 
     @Test
@@ -442,8 +442,8 @@ public class RandomAccessListIterateTest
                 integers.drop(integers.size() - 1),
                 RandomAccessListIterate.drop(integers, integers.size() - 1));
         Verify.assertListsEqual(integers.drop(integers.size()), RandomAccessListIterate.drop(integers, integers.size()));
-        Verify.assertListsEqual(FastList.newList(), RandomAccessListIterate.drop(Lists.fixedSize.of(), 0));
-        Verify.assertListsEqual(FastList.newList(), RandomAccessListIterate.drop(Lists.fixedSize.of(), 2));
+        Verify.assertListsEqual(Lists.mutable.empty(), RandomAccessListIterate.drop(Lists.fixedSize.of(), 0));
+        Verify.assertListsEqual(Lists.mutable.empty(), RandomAccessListIterate.drop(Lists.fixedSize.of(), 2));
         Verify.assertListsEqual(integers.drop(Integer.MAX_VALUE), RandomAccessListIterate.drop(integers, Integer.MAX_VALUE));
     }
 
@@ -485,13 +485,13 @@ public class RandomAccessListIterateTest
     @Test(expected = IllegalArgumentException.class)
     public void drop_target_throws()
     {
-        RandomAccessListIterate.drop(this.getIntegerList(), -1, FastList.newList());
+        RandomAccessListIterate.drop(this.getIntegerList(), -1, Lists.mutable.empty());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void corresponds_throws_nonRandomAccess()
     {
-        RandomAccessListIterate.corresponds(new LinkedList<>(), FastList.newList(), Predicates2.alwaysTrue());
+        RandomAccessListIterate.corresponds(new LinkedList<>(), Lists.mutable.empty(), Predicates2.alwaysTrue());
     }
 
     @Test

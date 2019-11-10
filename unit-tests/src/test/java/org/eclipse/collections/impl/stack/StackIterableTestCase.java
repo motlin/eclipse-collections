@@ -221,7 +221,7 @@ public abstract class StackIterableTestCase
                 stack.collect(function));
         Assert.assertEquals(3, function.count);
 
-        Assert.assertEquals(Lists.mutable.with("true", "false", "null"), stack.collect(String::valueOf, FastList.newList()));
+        Assert.assertEquals(Lists.mutable.with("true", "false", "null"), stack.collect(String::valueOf, Lists.mutable.empty()));
     }
 
     /**
@@ -428,7 +428,7 @@ public abstract class StackIterableTestCase
         CountingFunction<Object, String> function2 = CountingFunction.of(String::valueOf);
         Assert.assertEquals(
                 Lists.mutable.with("1", "2"),
-                stack.collectIf(predicate2, function2, FastList.newList()));
+                stack.collectIf(predicate2, function2, Lists.mutable.empty()));
         Assert.assertEquals(5, predicate2.count);
         Assert.assertEquals(2, function2.count);
     }
@@ -449,7 +449,7 @@ public abstract class StackIterableTestCase
         StackIterable<Integer> stack = this.newStackFromTopToBottom(3, 2, 1);
         Assert.assertEquals(
                 Lists.mutable.with(4, 3, 2),
-                stack.collectWith(AddFunction.INTEGER, 1, FastList.newList()));
+                stack.collectWith(AddFunction.INTEGER, 1, Lists.mutable.empty()));
     }
 
     @Override
@@ -475,7 +475,7 @@ public abstract class StackIterableTestCase
 
         Assert.assertEquals(
                 Lists.mutable.with('1', 'O', 'n', 'e', '2', 'T', 'w', 'o'),
-                stack.flatCollect(function, FastList.newList()));
+                stack.flatCollect(function, Lists.mutable.empty()));
     }
 
     @Override
@@ -492,7 +492,7 @@ public abstract class StackIterableTestCase
                 stack.select(Predicates.greaterThan(1)));
         Assert.assertEquals(
                 Lists.mutable.with(2, 3),
-                stack.select(Predicates.greaterThan(1), FastList.newList()));
+                stack.select(Predicates.greaterThan(1), Lists.mutable.empty()));
     }
 
     @Override
@@ -533,7 +533,7 @@ public abstract class StackIterableTestCase
         Assert.assertEquals(3, predicate.count);
         Assert.assertEquals(
                 Lists.mutable.with(2, 1),
-                stack.reject(Predicates.greaterThan(2), FastList.newList()));
+                stack.reject(Predicates.greaterThan(2), Lists.mutable.empty()));
     }
 
     @Override

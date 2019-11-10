@@ -346,7 +346,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     public void zip()
     {
         Assert.assertEquals(Lists.immutable.empty(), this.classUnderTest().zip(Bags.immutable.empty()));
-        Assert.assertEquals(Lists.immutable.empty(), this.classUnderTest().zip(Bags.immutable.empty(), FastList.newList()));
+        Assert.assertEquals(Lists.immutable.empty(), this.classUnderTest().zip(Bags.immutable.empty(), Lists.mutable.empty()));
         Assert.assertEquals(Lists.immutable.empty(), this.classUnderTest(Comparators.reverseNaturalOrder()).zip(Bags.immutable.empty()));
     }
 
@@ -480,10 +480,10 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     {
         ImmutableSortedBag<Integer> integers = this.classUnderTest();
         Verify.assertEmpty(
-                integers.reject(Predicates.lessThan(integers.size() + 1), FastList.newList()));
+                integers.reject(Predicates.lessThan(integers.size() + 1), Lists.mutable.empty()));
         Verify.assertListsEqual(
                 integers.toList(),
-                integers.reject(Predicates.greaterThan(integers.size()), FastList.newList()));
+                integers.reject(Predicates.greaterThan(integers.size()), Lists.mutable.empty()));
 
         ImmutableSortedBag<Integer> integers2 = this.classUnderTest();
         Verify.assertEmpty(

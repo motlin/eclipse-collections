@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2018 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -29,20 +29,15 @@ import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public abstract class AbstractMemoryEfficientMutableListTestCase
 {
     protected MutableList<String> list;
 
-    @BeforeEach
+    @Before
     public void setUp()
     {
         this.list = this.classUnderTest();
@@ -72,7 +67,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void replaceAll()
     {
         this.list.replaceAll(s -> "");
-        assertEquals(
+        Assert.assertEquals(
                 Lists.mutable.withNValues(this.getSize(), () -> ""),
                 this.list);
     }
@@ -82,12 +77,12 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     {
         this.list.shuffleThis();
         this.list.sort(Comparator.naturalOrder());
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list);
         this.list.shuffleThis();
         this.list.sort(null);
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list);
     }
@@ -97,8 +92,8 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     {
         this.list.shuffleThis();
         MutableList<String> sortedList = this.list.sortThis();
-        assertSame(this.list, sortedList);
-        assertEquals(
+        Assert.assertSame(this.list, sortedList);
+        Assert.assertEquals(
                 this.getNStrings(),
                 sortedList);
     }
@@ -108,8 +103,8 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     {
         this.list.shuffleThis();
         MutableList<String> sortedList = this.list.sortThis(Comparators.naturalOrder());
-        assertSame(this.list, sortedList);
-        assertEquals(
+        Assert.assertSame(this.list, sortedList);
+        Assert.assertEquals(
                 this.getNStrings(),
                 sortedList);
     }
@@ -118,7 +113,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void sortThisBy()
     {
         this.list.shuffleThis();
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list.sortThisBy(Functions.getStringToInteger()));
     }
@@ -127,7 +122,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void sortThisByInt()
     {
         this.list.shuffleThis();
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list.sortThisByInt(Integer::parseInt));
     }
@@ -137,14 +132,14 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     {
         PartitionMutableList<String> partition = this.getNStrings().partition(s -> Integer.parseInt(s) % 2 == 0);
         MutableList<String> expected = FastList.newList(partition.getRejected()).withAll(partition.getSelected());
-        assertEquals(expected, this.list.sortThisByBoolean(s -> Integer.parseInt(s) % 2 == 0));
+        Assert.assertEquals(expected, this.list.sortThisByBoolean(s -> Integer.parseInt(s) % 2 == 0));
     }
 
     @Test
     public void sortThisByChar()
     {
         this.list.shuffleThis();
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list.sortThisByChar(string -> string.charAt(0)));
     }
@@ -153,7 +148,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void sortThisByByte()
     {
         this.list.shuffleThis();
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list.sortThisByByte(Byte::parseByte));
     }
@@ -162,7 +157,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void sortThisByShort()
     {
         this.list.shuffleThis();
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list.sortThisByShort(Short::parseShort));
     }
@@ -171,7 +166,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void sortThisByFloat()
     {
         this.list.shuffleThis();
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list.sortThisByFloat(Float::parseFloat));
     }
@@ -180,7 +175,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void sortThisByLong()
     {
         this.list.shuffleThis();
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list.sortThisByLong(Long::parseLong));
     }
@@ -189,7 +184,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     public void sortThisByDouble()
     {
         this.list.shuffleThis();
-        assertEquals(
+        Assert.assertEquals(
                 this.getNStrings(),
                 this.list.sortThisByDouble(Double::parseDouble));
     }
@@ -200,8 +195,8 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
         MutableList<String> expected = FastList.newList(this.list);
         MutableList<String> actual = this.list.reverseThis();
         Collections.reverse(expected);
-        assertEquals(actual, expected);
-        assertSame(this.list, actual);
+        Assert.assertEquals(actual, expected);
+        Assert.assertSame(this.list, actual);
     }
 
     @Test
@@ -209,8 +204,8 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     {
         MutableList<String> actual = this.list.toReversed();
         MutableList<String> expected = FastList.newList(this.list).reverseThis();
-        assertEquals(actual, expected);
-        assertNotSame(this.list, actual);
+        Assert.assertEquals(actual, expected);
+        Assert.assertNotSame(this.list, actual);
     }
 
     @Test
@@ -219,7 +214,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
         MutableList<String> list = this.classUnderTest();
         Verify.assertNotContains("11", list);
         MutableList<String> listWith = list.with("11");
-        assertTrue(listWith.containsAll(list));
+        Assert.assertTrue(listWith.containsAll(list));
         Verify.assertContains("11", listWith);
         Verify.assertInstanceOf(FixedSizeList.class, listWith);
     }
@@ -230,10 +225,10 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
         MutableList<String> list = this.classUnderTest();
         Verify.assertContainsNone(list, "11", "12");
         MutableList<String> listWith = list.withAll(FastList.newListWith("11", "12"));
-        assertTrue(listWith.containsAll(list));
+        Assert.assertTrue(listWith.containsAll(list));
         Verify.assertContainsAll(listWith, "11", "12");
         Verify.assertInstanceOf(FixedSizeList.class, listWith);
-        assertSame(listWith, listWith.withAll(FastList.newList()));
+        Assert.assertSame(listWith, listWith.withAll(Lists.mutable.empty()));
     }
 
     @Test
@@ -241,17 +236,17 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
     {
         MutableList<String> list = this.classUnderTest().with("11").with("12");
         MutableList<String> listWithout = list.withoutAll(FastList.newListWith("11", "12"));
-        assertTrue(listWithout.containsAll(this.classUnderTest()));
+        Assert.assertTrue(listWithout.containsAll(this.classUnderTest()));
         Verify.assertContainsNone(listWithout, "11", "12");
         Verify.assertInstanceOf(FixedSizeList.class, listWithout);
-        assertSame(listWithout, listWithout.withoutAll(FastList.newList()));
+        Assert.assertSame(listWithout, listWithout.withoutAll(Lists.mutable.empty()));
     }
 
     @Test
     public void toStack()
     {
         MutableStack<String> stack = this.classUnderTest().toStack();
-        assertEquals(ArrayStack.newStack(this.classUnderTest()), stack);
+        Assert.assertEquals(ArrayStack.newStack(this.classUnderTest()), stack);
     }
 
     @Test
@@ -263,7 +258,7 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
                 this.classUnderTest().aggregateInPlaceBy(groupBy, Counter::new, sumAggregator);
         MapIterable<String, Counter> expected =
                 FastList.newList(this.classUnderTest()).aggregateInPlaceBy(groupBy, Counter::new, sumAggregator);
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -275,112 +270,112 @@ public abstract class AbstractMemoryEfficientMutableListTestCase
                 this.classUnderTest().aggregateBy(groupBy, () -> 0, sumAggregator);
         MapIterable<String, Integer> expected =
                 FastList.newList(this.classUnderTest()).aggregateBy(groupBy, () -> 0, sumAggregator);
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void add()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().add(""));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().add(""));
     }
 
     @Test
     public void addAtIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().add(0, ""));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().add(0, ""));
     }
 
     @Test
     public void addAll()
     {
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> this.classUnderTest().addAll(Lists.mutable.empty()));
     }
 
     @Test
     public void addAllAtIndex()
     {
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> this.classUnderTest().addAll(0, Lists.mutable.empty()));
     }
 
     @Test
     public void addAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> this.classUnderTest().addAllIterable(Lists.mutable.empty()));
     }
 
     @Test
     public void removeIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().remove(0));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().remove(0));
     }
 
     @Test
     public void remove()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().remove(null));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().remove(null));
     }
 
     @Test
     public void removeAll()
     {
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> this.classUnderTest().removeAll(Lists.fixedSize.empty()));
     }
 
     @Test
     public void removeAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> this.classUnderTest().removeAllIterable(Lists.fixedSize.empty()));
     }
 
     @Test
     public void retainAll()
     {
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> this.classUnderTest().retainAll(Lists.fixedSize.empty()));
     }
 
     @Test
     public void retainAllIterable()
     {
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> this.classUnderTest().retainAllIterable(Lists.fixedSize.empty()));
     }
 
     @Test
     public void clear()
     {
-        assertThrows(UnsupportedOperationException.class, this.classUnderTest()::clear);
+        Verify.assertThrows(UnsupportedOperationException.class, this.classUnderTest()::clear);
     }
 
     @Test
     public void subList_methodsThrow()
     {
         MutableList<String> subList = this.classUnderTest().subList(0, this.getSize());
-        assertThrows(UnsupportedOperationException.class, () -> subList.add(""));
-        assertThrows(UnsupportedOperationException.class, () -> subList.add(0, ""));
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class, () -> subList.add(""));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> subList.add(0, ""));
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> subList.addAll(Lists.mutable.empty()));
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> subList.addAllIterable(Lists.mutable.empty()));
-        assertThrows(UnsupportedOperationException.class, () -> subList.remove(0));
-        assertThrows(UnsupportedOperationException.class, () -> subList.remove(null));
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class, () -> subList.remove(0));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> subList.remove(null));
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> subList.removeAll(Lists.fixedSize.empty()));
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> subList.removeAllIterable(Lists.fixedSize.empty()));
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> subList.removeIf(each -> true));
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> subList.removeIfWith((argument1, argument2) -> true, null));
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> subList.retainAll(Lists.fixedSize.empty()));
-        assertThrows(UnsupportedOperationException.class,
+        Verify.assertThrows(UnsupportedOperationException.class,
                 () -> subList.retainAllIterable(Lists.fixedSize.empty()));
-        assertThrows(UnsupportedOperationException.class, subList::clear);
+        Verify.assertThrows(UnsupportedOperationException.class, subList::clear);
     }
 }

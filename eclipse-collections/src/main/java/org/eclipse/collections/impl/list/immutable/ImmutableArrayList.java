@@ -47,7 +47,6 @@ import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.list.PartitionImmutableList;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.parallel.BatchIterable;
 import org.eclipse.collections.impl.partition.list.PartitionImmutableListImpl;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -178,13 +177,13 @@ final class ImmutableArrayList<T>
     @Override
     public ImmutableList<T> select(Predicate<? super T> predicate)
     {
-        return InternalArrayIterate.select(this.items, this.items.length, predicate, FastList.newList()).toImmutable();
+        return InternalArrayIterate.select(this.items, this.items.length, predicate, Lists.mutable.empty()).toImmutable();
     }
 
     @Override
     public <P> ImmutableList<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return InternalArrayIterate.selectWith(this.items, this.items.length, predicate, parameter, FastList.newList()).toImmutable();
+        return InternalArrayIterate.selectWith(this.items, this.items.length, predicate, parameter, Lists.mutable.empty()).toImmutable();
     }
 
     @Override
@@ -199,13 +198,13 @@ final class ImmutableArrayList<T>
     @Override
     public ImmutableList<T> reject(Predicate<? super T> predicate)
     {
-        return InternalArrayIterate.reject(this.items, this.items.length, predicate, FastList.newList()).toImmutable();
+        return InternalArrayIterate.reject(this.items, this.items.length, predicate, Lists.mutable.empty()).toImmutable();
     }
 
     @Override
     public <P> ImmutableList<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return InternalArrayIterate.rejectWith(this.items, this.items.length, predicate, parameter, FastList.newList()).toImmutable();
+        return InternalArrayIterate.rejectWith(this.items, this.items.length, predicate, parameter, Lists.mutable.empty()).toImmutable();
     }
 
     @Override

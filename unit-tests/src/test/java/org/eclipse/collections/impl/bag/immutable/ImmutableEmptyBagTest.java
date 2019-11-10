@@ -24,6 +24,7 @@ import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
@@ -39,7 +40,6 @@ import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.function.PassThruFunction0;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.primitive.IntInterval;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
@@ -496,7 +496,7 @@ public class ImmutableEmptyBagTest extends ImmutableBagTestCase
     @Test
     public void collect_target()
     {
-        MutableList<Integer> targetCollection = FastList.newList();
+        MutableList<Integer> targetCollection = Lists.mutable.empty();
         MutableList<Integer> actual = this.newBag().collect(object -> {
             throw new AssertionError();
         }, targetCollection);
@@ -508,7 +508,7 @@ public class ImmutableEmptyBagTest extends ImmutableBagTestCase
     @Test
     public void collectWith_target()
     {
-        MutableList<Integer> targetCollection = FastList.newList();
+        MutableList<Integer> targetCollection = Lists.mutable.empty();
         MutableList<Integer> actual = this.newBag().collectWith((argument1, argument2) -> {
             throw new AssertionError();
         }, 1, targetCollection);

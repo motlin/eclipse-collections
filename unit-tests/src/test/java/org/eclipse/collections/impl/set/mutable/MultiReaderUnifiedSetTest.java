@@ -23,6 +23,7 @@ import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.collection.MutableCollection;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.UnsortedSetIterable;
@@ -30,7 +31,6 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
@@ -70,7 +70,7 @@ public class MultiReaderUnifiedSetTest extends MultiReaderMutableCollectionTestC
         super.select();
         Verify.assertContainsAll(MultiReaderUnifiedSet.newSetWith(1, 2, 3, 4, 5).select(Predicates.lessThan(3)), 1, 2);
         Verify.assertContainsAll(MultiReaderUnifiedSet.newSetWith(-1, 2, 3, 4, 5).select(Predicates.lessThan(3),
-                FastList.newList()), -1, 2);
+                Lists.mutable.empty()), -1, 2);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class MultiReaderUnifiedSetTest extends MultiReaderMutableCollectionTestC
         super.reject();
         Verify.assertContainsAll(MultiReaderUnifiedSet.newSetWith(1, 2, 3, 4).reject(Predicates.lessThan(3)), 3, 4);
         Verify.assertContainsAll(MultiReaderUnifiedSet.newSetWith(1, 2, 3, 4).reject(Predicates.lessThan(3),
-                FastList.newList()), 3, 4);
+                Lists.mutable.empty()), 3, 4);
     }
 
     @Override

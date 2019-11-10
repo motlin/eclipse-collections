@@ -131,7 +131,7 @@ public class SerialParallelPerformanceTest
 
     public MutableList<String> generateWordsList(int count)
     {
-        FastList<String> words = FastList.newList();
+        FastList<String> words = Lists.mutable.empty();
         Interval.oneTo(count).forEach((int each) -> words.add(RandomStringUtils.randomAlphabetic(2)));
         return words;
     }
@@ -188,7 +188,7 @@ public class SerialParallelPerformanceTest
     private MutableList<Function0<Iterable<Integer>>> getIntegerListGenerators(int count)
     {
         Interval interval = Interval.fromTo(-(count / 2), count / 2 - 1);
-        MutableList<Function0<Iterable<Integer>>> generators = FastList.newList();
+        MutableList<Function0<Iterable<Integer>>> generators = Lists.mutable.empty();
         generators.add(() -> interval.toList().shuffleThis());
         generators.add(() ->
         {
@@ -201,7 +201,7 @@ public class SerialParallelPerformanceTest
 
     private MutableList<Function0<Iterable<String>>> getRandomWordsGenerators(int count)
     {
-        MutableList<Function0<Iterable<String>>> generators = FastList.newList();
+        MutableList<Function0<Iterable<String>>> generators = Lists.mutable.empty();
         generators.add(() -> this.generateWordsList(count));
         generators.add(() -> this.generateWordsList(count).toImmutable());
         generators.add(() -> this.generateWordsSet(count));
@@ -232,7 +232,7 @@ public class SerialParallelPerformanceTest
 
     private void aggregateBy(Iterable<String> words)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialAggregateByPerformance(words, SERIAL_RUN_COUNT));
         runnables.add(() -> this.basicParallelAggregateByPerformance(words, PARALLEL_RUN_COUNT));
         runnables.add(() -> this.basicForkJoinAggregateByPerformance(words, PARALLEL_RUN_COUNT));
@@ -241,7 +241,7 @@ public class SerialParallelPerformanceTest
 
     private void aggregateInPlaceBy(Iterable<String> words)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialAggregateInPlaceByPerformance(words, SERIAL_RUN_COUNT));
         runnables.add(() -> this.basicParallelAggregateInPlaceByPerformance(words, PARALLEL_RUN_COUNT));
         runnables.add(() -> this.basicForkJoinAggregateInPlaceByPerformance(words, PARALLEL_RUN_COUNT));
@@ -250,7 +250,7 @@ public class SerialParallelPerformanceTest
 
     private void groupBy(Iterable<String> words)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialGroupByPerformance(words, SERIAL_RUN_COUNT));
         runnables.add(() -> this.basicParallelGroupByPerformance(words, PARALLEL_RUN_COUNT));
         runnables.add(() -> this.basicForkJoinGroupByPerformance(words, PARALLEL_RUN_COUNT));
@@ -259,7 +259,7 @@ public class SerialParallelPerformanceTest
 
     private void collect(Iterable<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialCollectPerformance(collection, SERIAL_RUN_COUNT));
         runnables.add(() -> this.basicParallelCollectPerformance(collection, PARALLEL_RUN_COUNT));
         runnables.add(() -> this.basicForkJoinCollectPerformance(collection, PARALLEL_RUN_COUNT));
@@ -268,7 +268,7 @@ public class SerialParallelPerformanceTest
 
     private void collectIf(Iterable<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialCollectIfPerformance(collection, PREDICATES, SERIAL_RUN_COUNT));
         runnables.add(() -> this.basicParallelCollectIfPerformance(collection, PREDICATES, PARALLEL_RUN_COUNT));
         runnables.add(() -> this.basicForkJoinCollectIfPerformance(collection, PREDICATES, PARALLEL_RUN_COUNT));
@@ -277,7 +277,7 @@ public class SerialParallelPerformanceTest
 
     private void count(Iterable<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialCountPerformance(collection, PREDICATES, SERIAL_RUN_COUNT));
         runnables.add(() -> this.basicParallelCountPerformance(collection, PREDICATES, PARALLEL_RUN_COUNT));
         runnables.add(() -> this.basicForkJoinCountPerformance(collection, PREDICATES, PARALLEL_RUN_COUNT));
@@ -291,7 +291,7 @@ public class SerialParallelPerformanceTest
 
     private void reject(Iterable<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialRejectPerformance(collection, PREDICATES, SERIAL_RUN_COUNT));
         runnables.add(() -> this.basicParallelRejectPerformance(collection, PREDICATES, PARALLEL_RUN_COUNT));
         runnables.add(() -> this.basicForkJoinRejectPerformance(collection, PREDICATES, PARALLEL_RUN_COUNT));
@@ -300,7 +300,7 @@ public class SerialParallelPerformanceTest
 
     private void select(Iterable<Integer> collection)
     {
-        MutableList<Runnable> runnables = FastList.newList();
+        MutableList<Runnable> runnables = Lists.mutable.empty();
         runnables.add(() -> this.basicSerialSelectPerformance(collection, PREDICATES, SERIAL_RUN_COUNT));
         runnables.add(() -> this.basicParallelSelectPerformance(collection, PREDICATES, PARALLEL_RUN_COUNT));
         runnables.add(() -> this.basicForkJoinSelectPerformance(collection, PREDICATES, PARALLEL_RUN_COUNT));
@@ -314,9 +314,9 @@ public class SerialParallelPerformanceTest
     {
         Runnable runnable = () ->
         {
-            Verify.assertNotEmpty(Iterate.select(iterable, predicateList.get(0), FastList.newList()));
-            Verify.assertNotEmpty(Iterate.select(iterable, predicateList.get(1), FastList.newList()));
-            Verify.assertNotEmpty(Iterate.select(iterable, predicateList.get(2), FastList.newList()));
+            Verify.assertNotEmpty(Iterate.select(iterable, predicateList.get(0), Lists.mutable.empty()));
+            Verify.assertNotEmpty(Iterate.select(iterable, predicateList.get(1), Lists.mutable.empty()));
+            Verify.assertNotEmpty(Iterate.select(iterable, predicateList.get(2), Lists.mutable.empty()));
         };
 
         return TimeKeeper.logAverageMillisecondsToRun(
@@ -462,9 +462,9 @@ public class SerialParallelPerformanceTest
     {
         Runnable runnable = () ->
         {
-            Verify.assertNotEmpty(Iterate.reject(iterable, predicateList.get(0), FastList.newList()));
-            Verify.assertNotEmpty(Iterate.reject(iterable, predicateList.get(1), FastList.newList()));
-            Verify.assertNotEmpty(Iterate.reject(iterable, predicateList.get(2), FastList.newList()));
+            Verify.assertNotEmpty(Iterate.reject(iterable, predicateList.get(0), Lists.mutable.empty()));
+            Verify.assertNotEmpty(Iterate.reject(iterable, predicateList.get(1), Lists.mutable.empty()));
+            Verify.assertNotEmpty(Iterate.reject(iterable, predicateList.get(2), Lists.mutable.empty()));
         };
 
         return TimeKeeper.logAverageMillisecondsToRun(
@@ -615,17 +615,17 @@ public class SerialParallelPerformanceTest
                     iterable,
                     predicates.get(0),
                     PAIR_FUNCTION,
-                    FastList.newList()));
+                    Lists.mutable.empty()));
             Verify.assertNotEmpty(Iterate.collectIf(
                     iterable,
                     predicates.get(1),
                     Integer::longValue,
-                    FastList.newList()));
+                    Lists.mutable.empty()));
             Verify.assertNotEmpty(Iterate.collectIf(
                     iterable,
                     predicates.get(2),
                     Integer::shortValue,
-                    FastList.newList()));
+                    Lists.mutable.empty()));
         };
 
         return TimeKeeper.logAverageMillisecondsToRun(

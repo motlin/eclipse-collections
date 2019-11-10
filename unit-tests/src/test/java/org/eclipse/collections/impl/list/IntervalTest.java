@@ -48,7 +48,7 @@ public class IntervalTest
     {
         int sum = Interval.oneTo(5)
                 .select(Predicates.lessThan(5))
-                .into(FastList.newList())
+                .into(Lists.mutable.empty())
                 .injectInto(0, AddFunction.INTEGER_TO_INT);
         Assert.assertEquals(10, sum);
     }
@@ -726,7 +726,7 @@ public class IntervalTest
 
         MutableList<Integer> expected = FastList.newListWith(10, 0, -10);
         Assert.assertEquals(expected, interval.select(IntegerPredicates.isEven()).toList());
-        Assert.assertEquals(expected, interval.select(IntegerPredicates.isEven(), FastList.newList()));
+        Assert.assertEquals(expected, interval.select(IntegerPredicates.isEven(), Lists.mutable.empty()));
     }
 
     @Test
@@ -735,7 +735,7 @@ public class IntervalTest
         Interval interval = Interval.fromTo(10, -10).by(-5);
 
         MutableList<Integer> expected = FastList.newListWith(5, -5);
-        Assert.assertEquals(expected, interval.reject(IntegerPredicates.isEven(), FastList.newList()));
+        Assert.assertEquals(expected, interval.reject(IntegerPredicates.isEven(), Lists.mutable.empty()));
     }
 
     @Test
@@ -745,7 +745,7 @@ public class IntervalTest
 
         MutableList<String> expected = FastList.newListWith("10", "5", "0", "-5", "-10");
         Assert.assertEquals(expected, interval.collect(String::valueOf).toList());
-        Assert.assertEquals(expected, interval.collect(String::valueOf, FastList.newList()));
+        Assert.assertEquals(expected, interval.collect(String::valueOf, Lists.mutable.empty()));
     }
 
     @Test

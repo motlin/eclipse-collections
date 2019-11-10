@@ -85,7 +85,7 @@ public class MultiReaderFastListTest extends AbstractListTestCase
     @Test
     public void forEach()
     {
-        MutableList<Integer> result = FastList.newList();
+        MutableList<Integer> result = Lists.mutable.empty();
         MutableList<Integer> collection = MultiReaderFastList.newListWith(1, 2, 3, 4);
         collection.forEach(CollectionAddProcedure.on(result));
         Assert.assertEquals(FastList.newListWith(1, 2, 3, 4), result);
@@ -320,7 +320,7 @@ public class MultiReaderFastListTest extends AbstractListTestCase
     @Test
     public void forEachWith()
     {
-        MutableList<Integer> result = FastList.newList();
+        MutableList<Integer> result = Lists.mutable.empty();
         MutableList<Integer> collection = MultiReaderFastList.newListWith(1, 2, 3, 4);
         collection.forEachWith((argument1, argument2) -> result.add(argument1 + argument2), 0);
         Assert.assertEquals(FastList.newListWith(1, 2, 3, 4), result);
@@ -366,7 +366,7 @@ public class MultiReaderFastListTest extends AbstractListTestCase
                 MultiReaderFastList.newListWith(1, 2, 3).collectIf(
                         Integer.class::isInstance,
                         String::valueOf,
-                        FastList.newList()));
+                        Lists.mutable.empty()));
     }
 
     @Override
@@ -379,7 +379,7 @@ public class MultiReaderFastListTest extends AbstractListTestCase
                 MultiReaderFastList.newListWith(1, 2, 3).collectWith(
                         addZeroFunction,
                         0,
-                        FastList.newList()), 1, 2, 3);
+                        Lists.mutable.empty()), 1, 2, 3);
     }
 
     @Override
@@ -641,7 +641,7 @@ public class MultiReaderFastListTest extends AbstractListTestCase
         Verify.assertEmpty(integers);
         integers.addAll(Sets.fixedSize.of());
         Verify.assertEmpty(integers);
-        integers.addAll(FastList.newList());
+        integers.addAll(Lists.mutable.empty());
         Verify.assertEmpty(integers);
         integers.addAll(ArrayAdapter.newArray());
         Verify.assertEmpty(integers);
@@ -935,7 +935,7 @@ public class MultiReaderFastListTest extends AbstractListTestCase
     {
         Verify.assertEmpty(MultiReaderFastList.newList(Lists.fixedSize.of()));
         Verify.assertEmpty(MultiReaderFastList.newList(Sets.fixedSize.of()));
-        Verify.assertEmpty(MultiReaderFastList.newList(FastList.newList()));
+        Verify.assertEmpty(MultiReaderFastList.newList(Lists.mutable.empty()));
         Verify.assertEmpty(MultiReaderFastList.newList(Lists.mutable.withInitialCapacity(4)));
 
         MutableList<Integer> setToList = MultiReaderFastList.newList(UnifiedSet.newSetWith(1, 2, 3, 4, 5));
@@ -948,7 +948,7 @@ public class MultiReaderFastListTest extends AbstractListTestCase
         Verify.assertSize(5, arrayListToList);
         Verify.assertStartsWith(arrayListToList, 1, 2, 3, 4, 5);
 
-        MutableList<Integer> fastListToList = MultiReaderFastList.newList(FastList.<Integer>newList().with(1, 2, 3, 4, 5));
+        MutableList<Integer> fastListToList = MultiReaderFastList.newList(Lists.mutable.<Integer>empty().with(1, 2, 3, 4, 5));
         Verify.assertNotEmpty(fastListToList);
         Verify.assertSize(5, fastListToList);
         Verify.assertStartsWith(fastListToList, 1, 2, 3, 4, 5);
@@ -960,8 +960,8 @@ public class MultiReaderFastListTest extends AbstractListTestCase
         MutableList<Integer> list = this.newWith(1, 2, 3, 4, 5, null);
         Assert.assertTrue(list.containsAll(Lists.fixedSize.of(1, 3, 5, null)));
         Assert.assertFalse(list.containsAll(Lists.fixedSize.of(2, null, 6)));
-        Assert.assertTrue(list.containsAll(FastList.<Integer>newList().with(1, 3, 5, null)));
-        Assert.assertFalse(list.containsAll(FastList.<Integer>newList().with(2, null, 6)));
+        Assert.assertTrue(list.containsAll(Lists.mutable.<Integer>empty().with(1, 3, 5, null)));
+        Assert.assertFalse(list.containsAll(Lists.mutable.<Integer>empty().with(2, null, 6)));
     }
 
     @Override

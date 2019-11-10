@@ -66,7 +66,6 @@ import org.eclipse.collections.impl.block.procedure.primitive.CollectIntProcedur
 import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedure;
 import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.factory.Multimaps;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
@@ -246,7 +245,7 @@ public final class MapIterate
      */
     public static <K, V> MutableList<V> select(Map<K, V> map, Predicate<? super V> predicate)
     {
-        return MapIterate.select(map, predicate, FastList.newList());
+        return MapIterate.select(map, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -349,7 +348,7 @@ public final class MapIterate
      */
     public static <K, V> MutableList<V> reject(Map<K, V> map, Predicate<? super V> predicate)
     {
-        return MapIterate.reject(map, predicate, FastList.newList());
+        return MapIterate.reject(map, predicate, Lists.mutable.empty());
     }
 
     /**

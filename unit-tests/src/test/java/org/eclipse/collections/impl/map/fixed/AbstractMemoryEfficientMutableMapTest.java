@@ -42,7 +42,6 @@ import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.function.AddFunction;
 import org.eclipse.collections.impl.block.function.NegativeIntervalFunction;
 import org.eclipse.collections.impl.list.Interval;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.SynchronizedMutableMap;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.math.IntegerSum;
@@ -821,7 +820,7 @@ public abstract class AbstractMemoryEfficientMutableMapTest
         };
 
         RichIterable<Character> blob = map.flatCollect(function);
-        RichIterable<Character> blobFromTarget = map.flatCollect(function, FastList.newList());
+        RichIterable<Character> blobFromTarget = map.flatCollect(function, Lists.mutable.empty());
 
         switch (map.size())
         {

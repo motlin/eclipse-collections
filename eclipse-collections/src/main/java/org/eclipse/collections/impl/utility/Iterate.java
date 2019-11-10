@@ -344,7 +344,7 @@ public final class Iterate
         }
         if (iterable != null)
         {
-            return IterableIterate.selectWith(iterable, predicate, parameter, FastList.newList());
+            return IterableIterate.selectWith(iterable, predicate, parameter, Lists.mutable.empty());
         }
         throw new IllegalArgumentException("Cannot perform a selectWith on null");
     }
@@ -1018,7 +1018,7 @@ public final class Iterate
         }
         if (iterable != null)
         {
-            return IterableIterate.rejectWith(iterable, predicate, parameter, FastList.newList());
+            return IterableIterate.rejectWith(iterable, predicate, parameter, Lists.mutable.empty());
         }
         throw new IllegalArgumentException("Cannot perform a rejectWith on null");
     }

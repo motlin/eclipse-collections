@@ -38,7 +38,7 @@ public class DropWhileIterableTest extends AbstractLazyIterableTestCase
     public void setUp()
     {
         this.dropWhileIterable = new DropWhileIterable<>(Interval.oneTo(5), each -> each <= 2);
-        this.emptyListDropWhileIterable = new DropWhileIterable<>(FastList.newList(), each -> each <= 2);
+        this.emptyListDropWhileIterable = new DropWhileIterable<>(Lists.mutable.empty(), each -> each <= 2);
         this.alwaysFalseDropWhileIterable = new DropWhileIterable<>(Interval.oneTo(5), Predicates.alwaysFalse());
         this.mostlyFalseDropWhileIterable = new DropWhileIterable<>(Interval.oneTo(5), each -> each <= 4);
         this.alwaysTrueDropWhileIterable = new DropWhileIterable<>(Interval.oneTo(5), Predicates.alwaysTrue());

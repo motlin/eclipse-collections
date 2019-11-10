@@ -13,17 +13,17 @@ package org.eclipse.collections.impl.partition.stack;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.partition.stack.PartitionImmutableStack;
 import org.eclipse.collections.api.partition.stack.PartitionMutableStack;
 import org.eclipse.collections.api.stack.MutableStack;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 
 public class PartitionArrayStack<T> implements PartitionMutableStack<T>
 {
-    private final MutableList<T> selected = FastList.newList();
-    private final MutableList<T> rejected = FastList.newList();
+    private final MutableList<T> selected = Lists.mutable.empty();
+    private final MutableList<T> rejected = Lists.mutable.empty();
 
     @Override
     public MutableStack<T> getSelected()

@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.list.mutable;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,6 @@ public class RandomAccessListAdapterSerializationTest
                         + "Y2Nlc3NMaXN0QWRhcHRlcgAAAAAAAAABAgABTAAIZGVsZWdhdGV0ABBMamF2YS91dGlsL0xpc3Q7\n"
                         + "eHBzcgAyb3JnLmVjbGlwc2UuY29sbGVjdGlvbnMuaW1wbC5saXN0Lm11dGFibGUuRmFzdExpc3QA\n"
                         + "AAAAAAAAAQwAAHhwdwQAAAAAeA==",
-                new RandomAccessListAdapter<>(FastList.newList()));
+                new RandomAccessListAdapter<>(Lists.mutable.empty()));
     }
 }

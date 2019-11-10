@@ -113,7 +113,7 @@ public class IterableIterateTest
     public void collectWithTarget()
     {
         Iterable<Boolean> iterable = new IterableAdapter<>(Lists.immutable.with(Boolean.TRUE, Boolean.FALSE, null));
-        Collection<String> result = Iterate.collect(iterable, String::valueOf, FastList.newList());
+        Collection<String> result = Iterate.collect(iterable, String::valueOf, Lists.mutable.empty());
         Assert.assertEquals(Lists.immutable.with("true", "false", "null"), result);
     }
 
@@ -289,7 +289,7 @@ public class IterableIterateTest
     {
         Iterable<Integer> iterable = new IterableAdapter<>(this.getIntegerList());
         Verify.assertSize(5, Iterate.select(iterable, Integer.class::isInstance));
-        Verify.assertSize(5, Iterate.select(iterable, Integer.class::isInstance, FastList.newList()));
+        Verify.assertSize(5, Iterate.select(iterable, Integer.class::isInstance, Lists.mutable.empty()));
     }
 
     @Test
@@ -299,14 +299,14 @@ public class IterableIterateTest
         Verify.assertSize(5, Iterate.reject(iterable, String.class::isInstance));
         Verify.assertSize(
                 5,
-                Iterate.reject(iterable, String.class::isInstance, FastList.newList()));
+                Iterate.reject(iterable, String.class::isInstance, Lists.mutable.empty()));
     }
 
     @Test
     public void distinct()
     {
         Collection<Integer> list = FastList.newListWith(2, 1, 3, 2, 1, 3);
-        FastList<Integer> result = FastList.newList();
+        FastList<Integer> result = Lists.mutable.empty();
         FastList<Integer> actualList = IterableIterate.distinct(list, result);
         FastList<Integer> expectedList = FastList.newListWith(2, 1, 3);
         Verify.assertListsEqual(expectedList, result);
@@ -329,7 +329,7 @@ public class IterableIterateTest
     @Test
     public void distinctWithHashingStrategy()
     {
-        MutableList<String> list = FastList.newList();
+        MutableList<String> list = Lists.mutable.empty();
         list.addAll(FastList.newListWith("A", "a", "b", "c", "B", "D", "e", "e", "E", "D"));
         list = IterableIterate.distinct(list, HashingStrategies.fromFunction(String::toLowerCase));
         Assert.assertEquals(FastList.newListWith("A", "b", "c", "D", "e"), list);
@@ -342,7 +342,7 @@ public class IterableIterateTest
         Verify.assertSize(5, Iterate.selectWith(iterable, Predicates2.instanceOf(), Integer.class));
         Verify.assertSize(
                 5,
-                Iterate.selectWith(iterable, Predicates2.instanceOf(), Integer.class, FastList.newList()));
+                Iterate.selectWith(iterable, Predicates2.instanceOf(), Integer.class, Lists.mutable.empty()));
     }
 
     @Test
@@ -354,7 +354,7 @@ public class IterableIterateTest
                 iterable,
                 Predicates2.instanceOf(),
                 Integer.class,
-                FastList.newList()));
+                Lists.mutable.empty()));
     }
 
     @Test
@@ -463,7 +463,7 @@ public class IterableIterateTest
     {
         Iterable<Integer> iterable = new IterableAdapter<>(this.getIntegerList());
         MutableList<Integer> results =
-                Iterate.selectWith(iterable, Predicates2.instanceOf(), Integer.class, FastList.newList());
+                Iterate.selectWith(iterable, Predicates2.instanceOf(), Integer.class, Lists.mutable.empty());
         Assert.assertEquals(Lists.immutable.with(5, 4, 3, 2, 1), results);
         Verify.assertSize(5, results);
     }
@@ -481,7 +481,7 @@ public class IterableIterateTest
     {
         Iterable<Integer> iterable = new IterableAdapter<>(Interval.oneTo(31));
         Collection<Class<?>> result =
-                Iterate.collectIf(iterable, Integer.valueOf(31)::equals, Object::getClass, FastList.newList());
+                Iterate.collectIf(iterable, Integer.valueOf(31)::equals, Object::getClass, Lists.mutable.empty());
         Assert.assertEquals(Lists.immutable.with(Integer.class), result);
     }
 
@@ -609,7 +609,7 @@ public class IterableIterateTest
     public void collectWith()
     {
         Iterable<Boolean> iterable =
-                new IterableAdapter<>(FastList.<Boolean>newList().with(Boolean.TRUE, Boolean.FALSE));
+                new IterableAdapter<>(Lists.mutable.<Boolean>empty().with(Boolean.TRUE, Boolean.FALSE));
         Assert.assertEquals(
                 FastList.newListWith("true", "false"),
                 Iterate.collectWith(iterable, (argument1, argument2) -> Boolean.toString(argument1.booleanValue() && argument2.booleanValue()), Boolean.TRUE));
@@ -619,7 +619,7 @@ public class IterableIterateTest
     public void collectWithToTarget()
     {
         Iterable<Boolean> iterable =
-                new IterableAdapter<>(FastList.<Boolean>newList().with(Boolean.TRUE, Boolean.FALSE));
+                new IterableAdapter<>(Lists.mutable.<Boolean>empty().with(Boolean.TRUE, Boolean.FALSE));
         Assert.assertEquals(
                 FastList.newListWith("true", "false"),
                 Iterate.collectWith(iterable, (argument1, argument2) -> Boolean.toString(argument1.booleanValue() && argument2.booleanValue()), Boolean.TRUE, new ArrayList<>()));
@@ -642,19 +642,19 @@ public class IterableIterateTest
     @Test
     public void take_empty()
     {
-        Verify.assertEmpty(Iterate.take(new IterableAdapter<>(FastList.<Integer>newList()), 2));
+        Verify.assertEmpty(Iterate.take(new IterableAdapter<>(Lists.mutable.<Integer>empty()), 2));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void take_negative_throws()
     {
-        Iterate.take(new IterableAdapter<>(FastList.<Integer>newList()), -1);
+        Iterate.take(new IterableAdapter<>(Lists.mutable.<Integer>empty()), -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void take_target_negative_throws()
     {
-        IterableIterate.take(new IterableAdapter<>(FastList.newList()), -1, FastList.newList());
+        IterableIterate.take(new IterableAdapter<>(Lists.mutable.empty()), -1, Lists.mutable.empty());
     }
 
     @Test
@@ -674,19 +674,19 @@ public class IterableIterateTest
     @Test
     public void drop_empty()
     {
-        Verify.assertEmpty(Iterate.drop(new IterableAdapter<>(FastList.<Integer>newList()), 2));
+        Verify.assertEmpty(Iterate.drop(new IterableAdapter<>(Lists.mutable.<Integer>empty()), 2));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void drop_negative_throws()
     {
-        Iterate.drop(new IterableAdapter<>(FastList.<Integer>newList()), -1);
+        Iterate.drop(new IterableAdapter<>(Lists.mutable.<Integer>empty()), -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void drop_target_negative_throws()
     {
-        IterableIterate.drop(new IterableAdapter<>(FastList.newList()), -1, FastList.newList());
+        IterableIterate.drop(new IterableAdapter<>(Lists.mutable.empty()), -1, Lists.mutable.empty());
     }
 
     private static final class IterableAdapter<E>

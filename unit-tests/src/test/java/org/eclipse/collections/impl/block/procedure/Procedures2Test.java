@@ -65,7 +65,7 @@ public class Procedures2Test
     @Test
     public void asProcedure2()
     {
-        CollectionAddProcedure<Integer> procedure = CollectionAddProcedure.on(FastList.newList());
+        CollectionAddProcedure<Integer> procedure = CollectionAddProcedure.on(Lists.mutable.empty());
         Procedure2<Integer, Object> procedure2 = Procedures2.fromProcedure(procedure);
         procedure2.value(1, null);
         Assert.assertEquals(FastList.newListWith(1), procedure.getResult());

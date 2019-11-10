@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2019 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,7 +11,6 @@
 package org.eclipse.collections.impl.factory;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -24,20 +23,13 @@ import org.eclipse.collections.api.list.FixedSizeList;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MultiReaderList;
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.MultiReaderFastList;
 import org.eclipse.collections.impl.list.primitive.IntInterval;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ListsTest
 {
@@ -45,95 +37,84 @@ public class ListsTest
     public void immutables()
     {
         ImmutableListFactory listFactory = Lists.immutable;
-        assertEquals(FastList.newList(), listFactory.of());
-        assertEquals(FastList.newList(), listFactory.with());
-        assertEquals(FastList.newList(), listFactory.empty());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.of());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.with());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.empty());
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of());
         Verify.assertInstanceOf(ImmutableList.class, listFactory.with());
         Verify.assertInstanceOf(ImmutableList.class, listFactory.empty());
-        assertEquals(FastList.newListWith(1), listFactory.of(1));
+        Assert.assertEquals(FastList.newListWith(1), listFactory.of(1));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1));
-        assertEquals(FastList.newListWith(1, 2), listFactory.of(1, 2));
+        Assert.assertEquals(FastList.newListWith(1, 2), listFactory.of(1, 2));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.of(1, 2, 3));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.of(1, 2, 3));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2, 3));
-        assertEquals(FastList.newListWith(1, 2, 3, 4), listFactory.of(1, 2, 3, 4));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4), listFactory.of(1, 2, 3, 4));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2, 3, 4));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5), listFactory.of(1, 2, 3, 4, 5));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5), listFactory.of(1, 2, 3, 4, 5));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2, 3, 4, 5));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6), listFactory.of(1, 2, 3, 4, 5, 6));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6), listFactory.of(1, 2, 3, 4, 5, 6));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2, 3, 4, 5, 6));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7), listFactory.of(1, 2, 3, 4, 5, 6, 7));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7), listFactory.of(1, 2, 3, 4, 5, 6, 7));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.ofAll(FastList.newListWith(1, 2, 3)));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.ofAll(FastList.newListWith(1, 2, 3)));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.ofAll(FastList.newListWith(1, 2, 3)));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.fromStream(Stream.of(1, 2, 3)));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.fromStream(Stream.of(1, 2, 3)));
         Verify.assertInstanceOf(ImmutableList.class, listFactory.fromStream(Stream.of(1, 2, 3)));
-        assertEquals(Lists.mutable.of(1, 2, 3), listFactory.withAllSorted(Lists.mutable.<Integer>of(3, 1, 2)));
     }
 
     @Test
     public void mutables()
     {
         MutableListFactory listFactory = Lists.mutable;
-        assertEquals(FastList.newList(), listFactory.of());
-        assertEquals(FastList.newList(), listFactory.with());
-        assertEquals(FastList.newList(), listFactory.empty());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.of());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.with());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.empty());
         Verify.assertInstanceOf(MutableList.class, listFactory.of());
         Verify.assertInstanceOf(MutableList.class, listFactory.with());
         Verify.assertInstanceOf(MutableList.class, listFactory.empty());
-        assertEquals(FastList.newListWith(1), listFactory.of(1));
+        Assert.assertEquals(FastList.newListWith(1), listFactory.of(1));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1));
-        assertEquals(FastList.newListWith(1, 2), listFactory.of(1, 2));
+        Assert.assertEquals(FastList.newListWith(1, 2), listFactory.of(1, 2));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.of(1, 2, 3));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.of(1, 2, 3));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2, 3));
-        assertEquals(FastList.newListWith(1, 2, 3, 4), listFactory.of(1, 2, 3, 4));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4), listFactory.of(1, 2, 3, 4));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2, 3, 4));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5), listFactory.of(1, 2, 3, 4, 5));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5), listFactory.of(1, 2, 3, 4, 5));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2, 3, 4, 5));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6), listFactory.of(1, 2, 3, 4, 5, 6));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6), listFactory.of(1, 2, 3, 4, 5, 6));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2, 3, 4, 5, 6));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7), listFactory.of(1, 2, 3, 4, 5, 6, 7));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7), listFactory.of(1, 2, 3, 4, 5, 6, 7));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
         Verify.assertInstanceOf(MutableList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.ofAll(FastList.newListWith(1, 2, 3)));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.ofAll(FastList.newListWith(1, 2, 3)));
         Verify.assertInstanceOf(MutableList.class, listFactory.ofAll(FastList.newListWith(1, 2, 3)));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.fromStream(Stream.of(1, 2, 3)));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.fromStream(Stream.of(1, 2, 3)));
         Verify.assertInstanceOf(MutableList.class, listFactory.fromStream(Stream.of(1, 2, 3)));
-    }
-
-    @Test
-    public void wrapCopy()
-    {
-        Integer[] integers = {1, 2, 3, 4};
-        MutableList<Integer> actual = Lists.mutable.wrapCopy(integers);
-        MutableList<Integer> expected = Lists.mutable.with(1, 2, 3, 4);
-        integers[0] = Integer.valueOf(4);
-        assertEquals(expected, actual);
     }
 
     @Test
     public void immutableWithListTest()
     {
-        assertEquals(Lists.mutable.of(), Lists.mutable.of().toImmutable());
-        assertEquals(Lists.mutable.of(1).without(1), Lists.mutable.of(1).without(1).toImmutable());
+        Assert.assertEquals(Lists.mutable.of(), Lists.mutable.of().toImmutable());
+        Assert.assertEquals(Lists.mutable.of(1).without(1), Lists.mutable.of(1).without(1).toImmutable());
         for (int i = 0; i < 12; i++)
         {
             MutableList<Integer> integers = Interval.fromTo(0, i).toList();
-            assertEquals(integers, integers.toImmutable());
-            assertEquals(integers.toImmutable(), integers.toImmutable());
+            Assert.assertEquals(integers, integers.toImmutable());
+            Assert.assertEquals(integers.toImmutable(), integers.toImmutable());
         }
     }
 
@@ -141,58 +122,53 @@ public class ListsTest
     public void fixedSize()
     {
         FixedSizeListFactory listFactory = Lists.fixedSize;
-        assertEquals(FastList.newList(), listFactory.of());
-        assertEquals(FastList.newList(), listFactory.with());
-        assertEquals(FastList.newList(), listFactory.empty());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.of());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.with());
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), listFactory.empty());
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of());
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.with());
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.empty());
-        assertEquals(FastList.newListWith(1), listFactory.of(1));
+        Assert.assertEquals(FastList.newListWith(1), listFactory.of(1));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1));
-        assertEquals(FastList.newListWith(1, 2), listFactory.of(1, 2));
+        Assert.assertEquals(FastList.newListWith(1, 2), listFactory.of(1, 2));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.of(1, 2, 3));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.of(1, 2, 3));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2, 3));
-        assertEquals(FastList.newListWith(1, 2, 3, 4), listFactory.of(1, 2, 3, 4));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4), listFactory.of(1, 2, 3, 4));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2, 3, 4));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5), listFactory.of(1, 2, 3, 4, 5));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5), listFactory.of(1, 2, 3, 4, 5));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2, 3, 4, 5));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6), listFactory.of(1, 2, 3, 4, 5, 6));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6), listFactory.of(1, 2, 3, 4, 5, 6));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2, 3, 4, 5, 6));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7), listFactory.of(1, 2, 3, 4, 5, 6, 7));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7), listFactory.of(1, 2, 3, 4, 5, 6, 7));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
-        assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.ofAll(FastList.newListWith(1, 2, 3)));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.ofAll(FastList.newListWith(1, 2, 3)));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.ofAll(FastList.newListWith(1, 2, 3)));
-        assertEquals(FastList.newListWith(1, 2, 3), listFactory.fromStream(Stream.of(1, 2, 3)));
+        Assert.assertEquals(FastList.newListWith(1, 2, 3), listFactory.fromStream(Stream.of(1, 2, 3)));
         Verify.assertInstanceOf(FixedSizeList.class, listFactory.fromStream(Stream.of(1, 2, 3)));
     }
 
     @Test
     public void multiReader()
     {
-        this.testMultiReaderApi(Lists.multiReader);
-        this.testMultiReaderApi(org.eclipse.collections.api.factory.Lists.multiReader);
-    }
-
-    private void testMultiReaderApi(MultiReaderListFactory listFactory)
-    {
-        assertEquals(MultiReaderFastList.newList(), listFactory.of());
-        assertEquals(MultiReaderFastList.newList(), listFactory.with());
-        assertEquals(MultiReaderFastList.newList(), listFactory.empty());
+        MultiReaderListFactory listFactory = Lists.multiReader;
+        Assert.assertEquals(MultiReaderFastList.newList(), listFactory.of());
+        Assert.assertEquals(MultiReaderFastList.newList(), listFactory.with());
+        Assert.assertEquals(MultiReaderFastList.newList(), listFactory.empty());
         Verify.assertInstanceOf(MultiReaderList.class, listFactory.of());
         Verify.assertInstanceOf(MultiReaderList.class, listFactory.with());
         Verify.assertInstanceOf(MultiReaderList.class, listFactory.empty());
-        assertEquals(MultiReaderFastList.newListWith(1), listFactory.of(1));
+        Assert.assertEquals(MultiReaderFastList.newListWith(1), listFactory.of(1));
         Verify.assertInstanceOf(MultiReaderList.class, listFactory.of(1));
-        assertEquals(MultiReaderFastList.newListWith(1, 2, 3), listFactory.ofAll(FastList.newListWith(1, 2, 3)));
+        Assert.assertEquals(MultiReaderFastList.newListWith(1, 2, 3), listFactory.ofAll(FastList.newListWith(1, 2, 3)));
         Verify.assertInstanceOf(MultiReaderList.class, listFactory.ofAll(FastList.newListWith(1, 2, 3)));
-        assertEquals(MultiReaderFastList.newListWith(1, 2, 3), listFactory.fromStream(Stream.of(1, 2, 3)));
+        Assert.assertEquals(MultiReaderFastList.newListWith(1, 2, 3), listFactory.fromStream(Stream.of(1, 2, 3)));
         Verify.assertInstanceOf(MultiReaderList.class, listFactory.fromStream(Stream.of(1, 2, 3)));
     }
 
@@ -200,8 +176,8 @@ public class ListsTest
     public void castToList()
     {
         List<Object> list = Lists.immutable.of().castToList();
-        assertNotNull(list);
-        assertSame(Lists.immutable.of(), list);
+        Assert.assertNotNull(list);
+        Assert.assertSame(Lists.immutable.of(), list);
     }
 
     @Test
@@ -245,14 +221,14 @@ public class ListsTest
         MutableList<Integer> list = Lists.fixedSize.of(1);
         ImmutableList<Integer> immutableList = list.toImmutable();
         Verify.assertInstanceOf(ImmutableList.class, Lists.immutable.ofAll(list));
-        assertSame(Lists.immutable.ofAll(immutableList.castToList()), immutableList);
+        Assert.assertSame(Lists.immutable.ofAll(immutableList.castToList()), immutableList);
     }
 
     @Test
     public void emptyList()
     {
-        assertTrue(Lists.immutable.of().isEmpty());
-        assertSame(Lists.immutable.of(), Lists.immutable.of());
+        Assert.assertTrue(Lists.immutable.of().isEmpty());
+        Assert.assertSame(Lists.immutable.of(), Lists.immutable.of());
         Verify.assertPostSerializedIdentity(Lists.immutable.of());
     }
 
@@ -277,7 +253,7 @@ public class ListsTest
         MutableList<String> list6 = Lists.mutable.ofInitialCapacity(65);
         this.assertPresizedListEquals(65, (FastList<String>) list6);
 
-        assertThrows(IllegalArgumentException.class, () -> Lists.mutable.ofInitialCapacity(-12));
+        Verify.assertThrows(IllegalArgumentException.class, () -> Lists.mutable.ofInitialCapacity(-12));
     }
 
     @Test
@@ -298,7 +274,7 @@ public class ListsTest
         MutableList<String> list5 = Lists.mutable.withInitialCapacity(32);
         this.assertPresizedListEquals(32, (FastList<String>) list5);
 
-        assertThrows(IllegalArgumentException.class, () -> Lists.mutable.withInitialCapacity(-6));
+        Verify.assertThrows(IllegalArgumentException.class, () -> Lists.mutable.withInitialCapacity(-6));
     }
 
     private void assertPresizedListEquals(int initialCapacity, FastList<String> list)
@@ -308,19 +284,19 @@ public class ListsTest
             Field itemsField = FastList.class.getDeclaredField("items");
             itemsField.setAccessible(true);
             Object[] items = (Object[]) itemsField.get(list);
-            assertEquals(initialCapacity, items.length);
+            Assert.assertEquals(initialCapacity, items.length);
         }
         catch (SecurityException ignored)
         {
-            fail("Unable to modify the visibility of the field 'items' on FastList");
+            Assert.fail("Unable to modify the visibility of the field 'items' on FastList");
         }
         catch (NoSuchFieldException ignored)
         {
-            fail("No field named 'items' in FastList");
+            Assert.fail("No field named 'items' in FastList");
         }
         catch (IllegalAccessException ignored)
         {
-            fail("No access to the field 'items' in FastList");
+            Assert.fail("No access to the field 'items' in FastList");
         }
     }
 
@@ -345,7 +321,7 @@ public class ListsTest
         MutableList<String> list6 = Lists.multiReader.ofInitialCapacity(65);
         ListsTest.assertPresizedMultiReaderListEquals(65, (MultiReaderFastList<String>) list6);
 
-        assertThrows(IllegalArgumentException.class, () -> Lists.multiReader.ofInitialCapacity(-12));
+        Verify.assertThrows(IllegalArgumentException.class, () -> Lists.multiReader.ofInitialCapacity(-12));
     }
 
     @Test
@@ -366,7 +342,7 @@ public class ListsTest
         MutableList<String> list5 = Lists.multiReader.withInitialCapacity(32);
         ListsTest.assertPresizedMultiReaderListEquals(32, (MultiReaderFastList<String>) list5);
 
-        assertThrows(IllegalArgumentException.class, () -> Lists.multiReader.withInitialCapacity(-6));
+        Verify.assertThrows(IllegalArgumentException.class, () -> Lists.multiReader.withInitialCapacity(-6));
     }
 
     @Test
@@ -378,8 +354,8 @@ public class ListsTest
                 Lists.mutable.withNValues(10, () -> new Integer(1));
         MutableList<Integer> multiReader =
                 Lists.multiReader.withNValues(10, () -> new Integer(1));
-        assertEquals(expected, mutable);
-        assertEquals(expected, multiReader);
+        Assert.assertEquals(expected, mutable);
+        Assert.assertEquals(expected, multiReader);
     }
 
     private static void assertPresizedMultiReaderListEquals(int initialCapacity, MultiReaderFastList<String> list)
@@ -392,7 +368,7 @@ public class ListsTest
             Field itemsField = FastList.class.getDeclaredField("items");
             itemsField.setAccessible(true);
             Object[] items = (Object[]) itemsField.get(delegate);
-            assertEquals(initialCapacity, items.length);
+            Assert.assertEquals(initialCapacity, items.length);
         }
         catch (SecurityException | NoSuchFieldException | IllegalAccessException e)
         {
@@ -404,36 +380,36 @@ public class ListsTest
     public void newListWith()
     {
         ImmutableList<String> list = Lists.immutable.of();
-        assertEquals(list, Lists.immutable.of(list.toArray()));
-        assertEquals(list = list.newWith("1"), Lists.immutable.of("1"));
-        assertEquals(list = list.newWith("2"), Lists.immutable.of("1", "2"));
-        assertEquals(list = list.newWith("3"), Lists.immutable.of("1", "2", "3"));
-        assertEquals(list = list.newWith("4"), Lists.immutable.of("1", "2", "3", "4"));
-        assertEquals(list = list.newWith("5"), Lists.immutable.of("1", "2", "3", "4", "5"));
-        assertEquals(list = list.newWith("6"), Lists.immutable.of("1", "2", "3", "4", "5", "6"));
-        assertEquals(list = list.newWith("7"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7"));
-        assertEquals(list = list.newWith("8"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8"));
-        assertEquals(list = list.newWith("9"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9"));
-        assertEquals(list = list.newWith("10"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
-        assertEquals(list = list.newWith("11"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
-        assertEquals(list = list.newWith("12"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"));
+        Assert.assertEquals(list, Lists.immutable.of(list.toArray()));
+        Assert.assertEquals(list = list.newWith("1"), Lists.immutable.of("1"));
+        Assert.assertEquals(list = list.newWith("2"), Lists.immutable.of("1", "2"));
+        Assert.assertEquals(list = list.newWith("3"), Lists.immutable.of("1", "2", "3"));
+        Assert.assertEquals(list = list.newWith("4"), Lists.immutable.of("1", "2", "3", "4"));
+        Assert.assertEquals(list = list.newWith("5"), Lists.immutable.of("1", "2", "3", "4", "5"));
+        Assert.assertEquals(list = list.newWith("6"), Lists.immutable.of("1", "2", "3", "4", "5", "6"));
+        Assert.assertEquals(list = list.newWith("7"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7"));
+        Assert.assertEquals(list = list.newWith("8"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8"));
+        Assert.assertEquals(list = list.newWith("9"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9"));
+        Assert.assertEquals(list = list.newWith("10"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
+        Assert.assertEquals(list = list.newWith("11"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
+        Assert.assertEquals(list = list.newWith("12"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"));
     }
 
     @Test
     public void newListWithArray()
     {
         ImmutableList<String> list = Lists.immutable.of();
-        assertEquals(list = list.newWith("1"), Lists.immutable.of(new String[]{"1"}));
-        assertEquals(list = list.newWith("2"), Lists.immutable.of(new String[]{"1", "2"}));
-        assertEquals(list = list.newWith("3"), Lists.immutable.of(new String[]{"1", "2", "3"}));
-        assertEquals(list = list.newWith("4"), Lists.immutable.of(new String[]{"1", "2", "3", "4"}));
-        assertEquals(list = list.newWith("5"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5"}));
-        assertEquals(list = list.newWith("6"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6"}));
-        assertEquals(list = list.newWith("7"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6", "7"}));
-        assertEquals(list = list.newWith("8"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}));
-        assertEquals(list = list.newWith("9"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9"}));
-        assertEquals(list = list.newWith("10"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
-        assertEquals(list = list.newWith("11"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
+        Assert.assertEquals(list = list.newWith("1"), Lists.immutable.of(new String[]{"1"}));
+        Assert.assertEquals(list = list.newWith("2"), Lists.immutable.of(new String[]{"1", "2"}));
+        Assert.assertEquals(list = list.newWith("3"), Lists.immutable.of(new String[]{"1", "2", "3"}));
+        Assert.assertEquals(list = list.newWith("4"), Lists.immutable.of(new String[]{"1", "2", "3", "4"}));
+        Assert.assertEquals(list = list.newWith("5"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5"}));
+        Assert.assertEquals(list = list.newWith("6"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6"}));
+        Assert.assertEquals(list = list.newWith("7"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6", "7"}));
+        Assert.assertEquals(list = list.newWith("8"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6", "7", "8"}));
+        Assert.assertEquals(list = list.newWith("9"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9"}));
+        Assert.assertEquals(list = list.newWith("10"), Lists.immutable.of(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
+        Assert.assertEquals(list = list.newWith("11"), Lists.immutable.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
     }
 
     @Test
@@ -441,52 +417,28 @@ public class ListsTest
     {
         ImmutableList<String> list = Lists.immutable.of();
         FastList<String> fastList = FastList.newListWith("1");
-        assertEquals(list = list.newWith("1"), fastList.toImmutable());
-        assertEquals(list = list.newWith("2"), fastList.with("2").toImmutable());
-        assertEquals(list = list.newWith("3"), fastList.with("3").toImmutable());
-        assertEquals(list = list.newWith("4"), fastList.with("4").toImmutable());
-        assertEquals(list = list.newWith("5"), fastList.with("5").toImmutable());
-        assertEquals(list = list.newWith("6"), fastList.with("6").toImmutable());
-        assertEquals(list = list.newWith("7"), fastList.with("7").toImmutable());
-        assertEquals(list = list.newWith("8"), fastList.with("8").toImmutable());
-        assertEquals(list = list.newWith("9"), fastList.with("9").toImmutable());
-        assertEquals(list = list.newWith("10"), fastList.with("10").toImmutable());
-        assertEquals(list = list.newWith("11"), fastList.with("11").toImmutable());
+        Assert.assertEquals(list = list.newWith("1"), fastList.toImmutable());
+        Assert.assertEquals(list = list.newWith("2"), fastList.with("2").toImmutable());
+        Assert.assertEquals(list = list.newWith("3"), fastList.with("3").toImmutable());
+        Assert.assertEquals(list = list.newWith("4"), fastList.with("4").toImmutable());
+        Assert.assertEquals(list = list.newWith("5"), fastList.with("5").toImmutable());
+        Assert.assertEquals(list = list.newWith("6"), fastList.with("6").toImmutable());
+        Assert.assertEquals(list = list.newWith("7"), fastList.with("7").toImmutable());
+        Assert.assertEquals(list = list.newWith("8"), fastList.with("8").toImmutable());
+        Assert.assertEquals(list = list.newWith("9"), fastList.with("9").toImmutable());
+        Assert.assertEquals(list = list.newWith("10"), fastList.with("10").toImmutable());
+        Assert.assertEquals(list = list.newWith("11"), fastList.with("11").toImmutable());
     }
 
     @Test
     public void newListWithWithList()
     {
-        assertEquals(FastList.newList(), Lists.immutable.ofAll(FastList.newList()));
+        Assert.assertEquals(org.eclipse.collections.api.factory.Lists.mutable.empty(), Lists.immutable.ofAll(org.eclipse.collections.api.factory.Lists.mutable.empty()));
         for (int i = 0; i < 12; i++)
         {
             List<Integer> list = Interval.fromTo(0, i);
-            assertEquals(list, Lists.immutable.ofAll(list));
+            Assert.assertEquals(list, Lists.immutable.ofAll(list));
         }
-    }
-
-    @Test
-    public void withAllEmptyImmutableSame()
-    {
-        ImmutableList<Integer> empty = Lists.immutable.withAll(Collections.emptyList());
-        ImmutableList<Integer> integers = Lists.immutable.<Integer>empty().newWithAll(Lists.immutable.empty());
-        ImmutableList<Integer> empty2 = Lists.immutable.withAll(integers);
-        assertSame(Lists.immutable.empty(), empty);
-        assertSame(Lists.immutable.empty(), empty2);
-    }
-
-    @Test
-    public void withAllSortedImmutable()
-    {
-        assertEquals(Lists.immutable.of(1, 5, 50, 100),
-                Lists.immutable.withAllSorted(Lists.mutable.of(50, 5, 100, 1)));
-    }
-
-    @Test
-    public void withAllSortedImmutableWithComparator()
-    {
-        assertEquals(Lists.immutable.of(100, 50, 5, 1),
-                Lists.immutable.withAllSorted(Comparators.reverseNaturalOrder(), Lists.mutable.of(50, 5, 100, 1)));
     }
 
     @Test

@@ -116,7 +116,7 @@ public final class ListAdapter<T>
     @Deprecated
     public MutableList<T> newEmpty()
     {
-        return FastList.newList();
+        return Lists.mutable.empty();
     }
 
     @Override

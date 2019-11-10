@@ -21,7 +21,6 @@ import org.eclipse.collections.api.set.SetIterable;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.list.mutable.CompositeFastList;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.utility.internal.DefaultSpeciesNewStrategy;
 
@@ -50,7 +49,7 @@ public abstract class AbstractTransformerBasedCombiner<V, T, BT extends Procedur
         }
         if (sourceIterable instanceof SortedSetIterable)
         {
-            return FastList.newList();
+            return Lists.mutable.empty();
         }
         if (sourceIterable instanceof SetIterable)
         {

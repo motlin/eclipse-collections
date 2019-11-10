@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -11,17 +11,17 @@
 package org.eclipse.collections.impl.lazy;
 
 import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.block.function.AddFunction;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.math.IntegerSum;
 import org.eclipse.collections.impl.math.Sum;
 import org.eclipse.collections.impl.math.SumProcedure;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LazyIterableAdapterTest extends AbstractLazyIterableTestCase
 {
@@ -39,14 +39,14 @@ public class LazyIterableAdapterTest extends AbstractLazyIterableTestCase
         LazyIterable<Integer> select = new LazyIterableAdapter<>(Interval.oneTo(5));
         Sum sum = new IntegerSum(0);
         select.forEach(new SumProcedure<>(sum));
-        assertEquals(15, sum.getValue().intValue());
+        Assert.assertEquals(15, sum.getValue().intValue());
     }
 
     @Test
     public void into()
     {
-        int sum = new LazyIterableAdapter<>(Interval.oneTo(5)).into(FastList.newList()).injectInto(0, AddFunction.INTEGER_TO_INT);
-        assertEquals(15, sum);
+        int sum = new LazyIterableAdapter<>(Interval.oneTo(5)).into(Lists.mutable.empty()).injectInto(0, AddFunction.INTEGER_TO_INT);
+        Assert.assertEquals(15, sum);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class LazyIterableAdapterTest extends AbstractLazyIterableTestCase
 
             LOGGER.info("value={} index={}", object, index);
         });
-        assertEquals(25, sum.getValue().intValue());
+        Assert.assertEquals(25, sum.getValue().intValue());
     }
 
     @Override
@@ -73,7 +73,7 @@ public class LazyIterableAdapterTest extends AbstractLazyIterableTestCase
         {
             sum.add(each);
         }
-        assertEquals(15, sum.getValue().intValue());
+        Assert.assertEquals(15, sum.getValue().intValue());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class LazyIterableAdapterTest extends AbstractLazyIterableTestCase
         LazyIterable<Integer> select = new LazyIterableAdapter<>(Interval.oneTo(5));
         Sum sum = new IntegerSum(0);
         select.forEachWith((each, aSum) -> aSum.add(each), sum);
-        assertEquals(15, sum.getValue().intValue());
+        Assert.assertEquals(15, sum.getValue().intValue());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class LazyIterableAdapterTest extends AbstractLazyIterableTestCase
     {
         super.distinct();
         LazyIterable<Integer> iterable = new LazyIterableAdapter<>(FastList.newListWith(3, 2, 2, 4, 1, 3, 1, 5));
-        assertEquals(
+        Assert.assertEquals(
                 FastList.newListWith(3, 2, 4, 1, 5),
                 iterable.distinct().toList());
     }

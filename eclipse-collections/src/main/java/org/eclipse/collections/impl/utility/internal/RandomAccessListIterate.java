@@ -120,7 +120,7 @@ public final class RandomAccessListIterate
      */
     public static <T> MutableList<T> select(List<T> list, Predicate<? super T> predicate)
     {
-        return RandomAccessListIterate.select(list, predicate, FastList.newList());
+        return RandomAccessListIterate.select(list, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -131,7 +131,7 @@ public final class RandomAccessListIterate
             Predicate2<? super T, ? super IV> predicate,
             IV injectedValue)
     {
-        return RandomAccessListIterate.selectWith(list, predicate, injectedValue, FastList.newList());
+        return RandomAccessListIterate.selectWith(list, predicate, injectedValue, Lists.mutable.empty());
     }
 
     /**
@@ -241,7 +241,7 @@ public final class RandomAccessListIterate
             Predicate<? super T> predicate,
             Function<? super T, ? extends A> function)
     {
-        return RandomAccessListIterate.collectIf(list, predicate, function, FastList.newList());
+        return RandomAccessListIterate.collectIf(list, predicate, function, Lists.mutable.empty());
     }
 
     /**
@@ -270,7 +270,7 @@ public final class RandomAccessListIterate
      */
     public static <T> MutableList<T> reject(List<T> list, Predicate<? super T> predicate)
     {
-        return RandomAccessListIterate.reject(list, predicate, FastList.newList());
+        return RandomAccessListIterate.reject(list, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -281,7 +281,7 @@ public final class RandomAccessListIterate
             Predicate2<? super T, ? super IV> predicate,
             IV injectedValue)
     {
-        return RandomAccessListIterate.rejectWith(list, predicate, injectedValue, FastList.newList());
+        return RandomAccessListIterate.rejectWith(list, predicate, injectedValue, Lists.mutable.empty());
     }
 
     /**
@@ -1279,7 +1279,7 @@ public final class RandomAccessListIterate
      */
     public static <T> MutableList<T> distinct(List<T> list)
     {
-        return RandomAccessListIterate.distinct(list, FastList.newList());
+        return RandomAccessListIterate.distinct(list, Lists.mutable.empty());
     }
 
     /**
@@ -1288,7 +1288,7 @@ public final class RandomAccessListIterate
     public static <T> MutableList<T> distinct(List<T> list, HashingStrategy<? super T> hashingStrategy)
     {
         MutableSet<T> seenSoFar = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
-        FastList<T> result = FastList.newList();
+        MutableList<T> result = Lists.mutable.empty();
         int size = list.size();
         for (int i = 0; i < size; i++)
         {
@@ -1608,7 +1608,7 @@ public final class RandomAccessListIterate
             MutableList<Pair<X, Y>> target = Lists.mutable.withInitialCapacity(Math.min(listSize, iterableSize));
             return RandomAccessListIterate.zip(list, iterable, target);
         }
-        return RandomAccessListIterate.zip(list, iterable, FastList.newList());
+        return RandomAccessListIterate.zip(list, iterable, Lists.mutable.empty());
     }
 
     public static <X, Y, R extends Collection<Pair<X, Y>>> R zip(
@@ -1666,7 +1666,7 @@ public final class RandomAccessListIterate
 
     public static <T> MutableList<T> takeWhile(List<T> list, Predicate<? super T> predicate)
     {
-        MutableList<T> result = FastList.newList();
+        MutableList<T> result = Lists.mutable.empty();
         int size = list.size();
         for (int i = 0; i < size; i++)
         {
@@ -1685,7 +1685,7 @@ public final class RandomAccessListIterate
 
     public static <T> MutableList<T> dropWhile(List<T> list, Predicate<? super T> predicate)
     {
-        MutableList<T> result = FastList.newList();
+        MutableList<T> result = Lists.mutable.empty();
         int size = list.size();
         for (int i = 0; i < size; i++)
         {

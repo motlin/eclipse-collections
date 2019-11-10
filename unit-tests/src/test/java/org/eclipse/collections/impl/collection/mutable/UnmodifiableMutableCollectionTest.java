@@ -71,7 +71,7 @@ public class UnmodifiableMutableCollectionTest
     @Before
     public void setUp()
     {
-        this.mutableCollection = FastList.<String>newList().with(METALLICA, "Bon Jovi", "Europe", "Scorpions");
+        this.mutableCollection = Lists.mutable.<String>empty().with(METALLICA, "Bon Jovi", "Europe", "Scorpions");
         this.unmodifiableCollection = new UnmodifiableMutableCollection<>(this.mutableCollection);
     }
 
@@ -87,35 +87,35 @@ public class UnmodifiableMutableCollectionTest
                 this.mutableCollection.count(ignored6 -> true),
                 this.unmodifiableCollection.count(ignored5 -> true));
         Verify.assertSize(4, this.unmodifiableCollection.select(ignored4 -> true));
-        Verify.assertSize(4, this.unmodifiableCollection.select(ignored3 -> true, FastList.newList()));
+        Verify.assertSize(4, this.unmodifiableCollection.select(ignored3 -> true, Lists.mutable.empty()));
         Verify.assertSize(1, this.unmodifiableCollection.selectWith(Object::equals, METALLICA));
         Verify.assertSize(
                 1,
                 this.unmodifiableCollection.selectWith(
                         Object::equals,
                         METALLICA,
-                        FastList.newList()));
+                        Lists.mutable.empty()));
         Verify.assertSize(2, this.unmodifiableCollection.reject(StringPredicates.contains("p")));
         Verify.assertSize(
                 2,
-                this.unmodifiableCollection.reject(StringPredicates.contains("p"), FastList.newList()));
+                this.unmodifiableCollection.reject(StringPredicates.contains("p"), Lists.mutable.empty()));
         Verify.assertSize(3, this.unmodifiableCollection.rejectWith(Object::equals, METALLICA));
         Verify.assertSize(
                 3,
                 this.unmodifiableCollection.rejectWith(
                         Object::equals,
                         METALLICA,
-                        FastList.newList()));
+                        Lists.mutable.empty()));
         Verify.assertSize(4, this.unmodifiableCollection.collect(Functions.getStringPassThru()));
         Verify.assertSize(
                 4,
                 this.unmodifiableCollection.collect(
                         Functions.getStringPassThru(),
-                        FastList.newList()));
+                        Lists.mutable.empty()));
 
         Function<String, Collection<String>> flattenFunction = object -> FastList.newListWith(object, object);
         Verify.assertSize(8, this.unmodifiableCollection.flatCollect(flattenFunction));
-        Verify.assertSize(8, this.unmodifiableCollection.flatCollect(flattenFunction, FastList.newList()));
+        Verify.assertSize(8, this.unmodifiableCollection.flatCollect(flattenFunction, Lists.mutable.empty()));
 
         Verify.assertSize(4, this.unmodifiableCollection.collectIf(ignored2 -> true, Functions.getStringPassThru()));
         Verify.assertSize(
@@ -123,7 +123,7 @@ public class UnmodifiableMutableCollectionTest
                 this.unmodifiableCollection.collectIf(
                         ignored1 -> true,
                         Functions.getStringPassThru(),
-                        FastList.newList()));
+                        Lists.mutable.empty()));
         Assert.assertEquals(METALLICA, this.unmodifiableCollection.detect(StringPredicates.contains("allic")));
         Assert.assertEquals(
                 "Not found",
@@ -210,19 +210,19 @@ public class UnmodifiableMutableCollectionTest
     @Test
     public void addAll()
     {
-        Verify.assertThrows(UnsupportedOperationException.class, () -> this.unmodifiableCollection.addAll(FastList.<String>newList().with("Madonna")));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.unmodifiableCollection.addAll(Lists.mutable.<String>empty().with("Madonna")));
     }
 
     @Test
     public void removeAll()
     {
-        Verify.assertThrows(UnsupportedOperationException.class, () -> this.unmodifiableCollection.removeAll(FastList.<String>newList().with(METALLICA)));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.unmodifiableCollection.removeAll(Lists.mutable.<String>empty().with(METALLICA)));
     }
 
     @Test
     public void retainAll()
     {
-        Verify.assertThrows(UnsupportedOperationException.class, () -> this.unmodifiableCollection.retainAll(FastList.<String>newList().with(METALLICA)));
+        Verify.assertThrows(UnsupportedOperationException.class, () -> this.unmodifiableCollection.retainAll(Lists.mutable.<String>empty().with(METALLICA)));
     }
 
     @Test
@@ -245,7 +245,7 @@ public class UnmodifiableMutableCollectionTest
         Assert.assertEquals(
                 FastList.newListWith(">M", ">B", ">E", ">S"),
                 this.unmodifiableCollection.collectWith(function, ">"));
-        Assert.assertEquals(FastList.newListWith("*M", "*B", "*E", "*S"), this.unmodifiableCollection.collectWith(function, "*", FastList.newList()));
+        Assert.assertEquals(FastList.newListWith("*M", "*B", "*E", "*S"), this.unmodifiableCollection.collectWith(function, "*", Lists.mutable.empty()));
     }
 
     @Test

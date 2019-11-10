@@ -44,7 +44,6 @@ import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.factory.primitive.IntPredicates;
 import org.eclipse.collections.impl.factory.Multimaps;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 import org.eclipse.collections.impl.test.Verify;
@@ -660,7 +659,7 @@ public class PersonAndPetKataTest
     {
         private final String firstName;
         private final String lastName;
-        private final MutableList<Pet> pets = FastList.newList();
+        private final MutableList<Pet> pets = Lists.mutable.empty();
 
         private Person(String firstName, String lastName)
         {

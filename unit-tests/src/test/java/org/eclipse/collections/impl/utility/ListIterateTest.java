@@ -92,7 +92,7 @@ public class ListIterateTest
     @Test
     public void forEachWith()
     {
-        MutableList<Integer> result = FastList.newList();
+        MutableList<Integer> result = Lists.mutable.empty();
         MutableList<Integer> list = FastList.newListWith(1, 2, 3, 4);
         ListIterate.forEachWith(list, (argument1, argument2) -> result.add(argument1 + argument2), 1);
         Assert.assertEquals(FastList.newListWith(2, 3, 4, 5), result);
@@ -618,7 +618,7 @@ public class ListIterateTest
         Verify.assertSize(0, ListIterate.take(new LinkedList<>(), Integer.MAX_VALUE));
 
         Verify.assertThrows(IllegalArgumentException.class, () -> ListIterate.take(this.getIntegerList(), -1));
-        Verify.assertThrows(IllegalArgumentException.class, () -> ListIterate.take(this.getIntegerList(), -1, FastList.newList()));
+        Verify.assertThrows(IllegalArgumentException.class, () -> ListIterate.take(this.getIntegerList(), -1, Lists.mutable.empty()));
     }
 
     private void assertTake(List<Integer> integers)
@@ -628,7 +628,7 @@ public class ListIterateTest
         Verify.assertListsEqual(FastList.newListWith(5, 4), ListIterate.take(integers, 2));
         Verify.assertListsEqual(FastList.newListWith(5, 4, 3, 2, 1), ListIterate.take(integers, 5));
         Verify.assertListsEqual(FastList.newListWith(5, 4, 3, 2, 1), ListIterate.take(integers, 10));
-        Verify.assertListsEqual(FastList.newListWith(5, 4, 3, 2, 1), ListIterate.take(integers, 10, FastList.newList()));
+        Verify.assertListsEqual(FastList.newListWith(5, 4, 3, 2, 1), ListIterate.take(integers, 10, Lists.mutable.empty()));
         Verify.assertListsEqual(FastList.newListWith(5, 4, 3, 2), ListIterate.take(integers, integers.size() - 1));
         Verify.assertListsEqual(FastList.newListWith(5, 4, 3, 2, 1), ListIterate.take(integers, integers.size()));
         Assert.assertNotSame(integers, ListIterate.take(integers, integers.size()));
@@ -640,7 +640,7 @@ public class ListIterateTest
     public void take_throws()
     {
         ListIterate.take(this.getIntegerList(), -1);
-        ListIterate.take(this.getIntegerList(), -1, FastList.newList());
+        ListIterate.take(this.getIntegerList(), -1, Lists.mutable.empty());
     }
 
     @Test
@@ -654,8 +654,8 @@ public class ListIterateTest
         Verify.assertSize(0, ListIterate.drop(new LinkedList<>(), 2));
         Verify.assertSize(0, ListIterate.drop(new LinkedList<>(), Integer.MAX_VALUE));
 
-        Verify.assertThrows(IllegalArgumentException.class, () -> ListIterate.drop(FastList.newList(), -1));
-        Verify.assertThrows(IllegalArgumentException.class, () -> ListIterate.drop(FastList.newList(), -1, FastList.newList()));
+        Verify.assertThrows(IllegalArgumentException.class, () -> ListIterate.drop(Lists.mutable.empty(), -1));
+        Verify.assertThrows(IllegalArgumentException.class, () -> ListIterate.drop(Lists.mutable.empty(), -1, Lists.mutable.empty()));
     }
 
     private void assertDrop(List<Integer> integers)
@@ -666,7 +666,7 @@ public class ListIterateTest
         Verify.assertListsEqual(FastList.newListWith(1), ListIterate.drop(integers, integers.size() - 1));
         Verify.assertEmpty(ListIterate.drop(integers, 5));
         Verify.assertEmpty(ListIterate.drop(integers, 6));
-        Verify.assertEmpty(ListIterate.drop(integers, 6, FastList.newList()));
+        Verify.assertEmpty(ListIterate.drop(integers, 6, Lists.mutable.empty()));
         Verify.assertEmpty(ListIterate.drop(integers, integers.size()));
 
         Verify.assertSize(0, ListIterate.drop(Lists.fixedSize.of(), 2));
@@ -676,7 +676,7 @@ public class ListIterateTest
     public void drop_throws()
     {
         ListIterate.drop(this.getIntegerList(), -1);
-        ListIterate.drop(this.getIntegerList(), -1, FastList.newList());
+        ListIterate.drop(this.getIntegerList(), -1, Lists.mutable.empty());
     }
 
     @Test
@@ -691,7 +691,7 @@ public class ListIterateTest
     @Test(expected = IllegalArgumentException.class)
     public void chunkWithIllegalSize()
     {
-        ListIterate.chunk(FastList.newList(), 0);
+        ListIterate.chunk(Lists.mutable.empty(), 0);
     }
 
     @Test

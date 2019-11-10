@@ -144,7 +144,7 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
                 this.newWith(1, 2, 3, 4).collect(String::valueOf));
         Verify.assertListsEqual(FastList.newListWith("1", "2", "3", "4"), this.newWith(1, 2, 3, 4).collect(
                 String::valueOf,
-                FastList.newList()));
+                Lists.mutable.empty()));
         Verify.assertInstanceOf(FastList.class, this.newWith().collect(String::valueOf));
     }
 

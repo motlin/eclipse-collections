@@ -10,15 +10,15 @@
 
 package org.eclipse.collections.impl.partition.list;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.partition.list.PartitionImmutableList;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
-import org.eclipse.collections.impl.list.mutable.FastList;
 
 public class PartitionFastList<T> implements PartitionMutableList<T>
 {
-    private final MutableList<T> selected = FastList.newList();
-    private final MutableList<T> rejected = FastList.newList();
+    private final MutableList<T> selected = Lists.mutable.empty();
+    private final MutableList<T> rejected = Lists.mutable.empty();
 
     @Override
     public MutableList<T> getSelected()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -23,25 +23,18 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.primitive.ImmutableBooleanSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
 
 public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutableSetTestCase
 {
     @Test
     public void containsAll()
     {
-        assertTrue(this.classUnderTest().castToSet().containsAll(new HashSet<>()));
-        assertFalse(this.classUnderTest().castToSet().containsAll(UnifiedSet.newSetWith(1)));
+        Assert.assertTrue(this.classUnderTest().castToSet().containsAll(new HashSet<>()));
+        Assert.assertFalse(this.classUnderTest().castToSet().containsAll(UnifiedSet.newSetWith(1)));
     }
 
     @Override
@@ -57,7 +50,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void detect()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertNull(integers.detect(Integer.valueOf(1)::equals));
+        Assert.assertNull(integers.detect(Integer.valueOf(1)::equals));
     }
 
     @Override
@@ -65,7 +58,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void detectWith()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertNull(integers.detectWith(Object::equals, Integer.valueOf(1)));
+        Assert.assertNull(integers.detectWith(Object::equals, Integer.valueOf(1)));
     }
 
     @Override
@@ -73,14 +66,14 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void anySatisfy()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertFalse(integers.anySatisfy(ERROR_THROWING_PREDICATE));
+        Assert.assertFalse(integers.anySatisfy(ERROR_THROWING_PREDICATE));
     }
 
     @Override
     public void anySatisfyWith()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertFalse(integers.anySatisfyWith(ERROR_THROWING_PREDICATE_2, Integer.class));
+        Assert.assertFalse(integers.anySatisfyWith(ERROR_THROWING_PREDICATE_2, Integer.class));
     }
 
     @Override
@@ -88,28 +81,28 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void allSatisfy()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertTrue(integers.allSatisfy(ERROR_THROWING_PREDICATE));
+        Assert.assertTrue(integers.allSatisfy(ERROR_THROWING_PREDICATE));
     }
 
     @Override
     public void allSatisfyWith()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertTrue(integers.allSatisfyWith(ERROR_THROWING_PREDICATE_2, Integer.class));
+        Assert.assertTrue(integers.allSatisfyWith(ERROR_THROWING_PREDICATE_2, Integer.class));
     }
 
     @Override
     public void noneSatisfy()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertTrue(integers.noneSatisfy(ERROR_THROWING_PREDICATE));
+        Assert.assertTrue(integers.noneSatisfy(ERROR_THROWING_PREDICATE));
     }
 
     @Override
     public void noneSatisfyWith()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertTrue(integers.noneSatisfyWith(ERROR_THROWING_PREDICATE_2, Integer.class));
+        Assert.assertTrue(integers.noneSatisfyWith(ERROR_THROWING_PREDICATE_2, Integer.class));
     }
 
     @Override
@@ -117,7 +110,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void getFirst()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertNull(integers.getFirst());
+        Assert.assertNull(integers.getFirst());
     }
 
     @Override
@@ -125,13 +118,13 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void getLast()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
-        assertNull(integers.getLast());
+        Assert.assertNull(integers.getLast());
     }
 
     @Test
     public void getOnly()
     {
-        assertThrows(IllegalStateException.class, () -> this.classUnderTest().getOnly());
+        Verify.assertThrows(IllegalStateException.class, () -> this.classUnderTest().getOnly());
     }
 
     @Override
@@ -139,22 +132,22 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void isEmpty()
     {
         ImmutableSet<Integer> list = this.classUnderTest();
-        assertTrue(list.isEmpty());
-        assertFalse(list.notEmpty());
+        Assert.assertTrue(list.isEmpty());
+        Assert.assertFalse(list.notEmpty());
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void min()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().min(Integer::compareTo));
+        this.classUnderTest().min(Integer::compareTo);
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void max()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().max(Integer::compareTo));
+        this.classUnderTest().max(Integer::compareTo);
     }
 
     @Test
@@ -162,6 +155,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void min_null_throws()
     {
         // Not applicable for empty collections
+        super.min_null_throws();
     }
 
     @Test
@@ -169,20 +163,21 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void max_null_throws()
     {
         // Not applicable for empty collections
+        super.max_null_throws();
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void min_without_comparator()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().min());
+        this.classUnderTest().min();
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void max_without_comparator()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().max());
+        this.classUnderTest().max();
     }
 
     @Test
@@ -190,6 +185,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void min_null_throws_without_comparator()
     {
         // Not applicable for empty collections
+        super.min_null_throws_without_comparator();
     }
 
     @Test
@@ -197,20 +193,21 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     public void max_null_throws_without_comparator()
     {
         // Not applicable for empty collections
+        super.max_null_throws_without_comparator();
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void minBy()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().minBy(String::valueOf));
+        this.classUnderTest().minBy(String::valueOf);
     }
 
     @Override
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void maxBy()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().maxBy(String::valueOf));
+        this.classUnderTest().maxBy(String::valueOf);
     }
 
     @Override
@@ -222,14 +219,14 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
         List<Object> nullsPlusOne = Collections.nCopies(immutableSet.size() + 1, null);
 
         ImmutableSet<Pair<Integer, Object>> pairs = immutableSet.zip(nulls);
-        assertEquals(immutableSet, pairs.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne));
-        assertEquals(UnifiedSet.newSet(nulls), pairs.collect((Function<Pair<?, Object>, Object>) Pair::getTwo));
+        Assert.assertEquals(immutableSet, pairs.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne));
+        Assert.assertEquals(UnifiedSet.newSet(nulls), pairs.collect((Function<Pair<?, Object>, Object>) Pair::getTwo));
 
         ImmutableSet<Pair<Integer, Object>> pairsPlusOne = immutableSet.zip(nullsPlusOne);
-        assertEquals(immutableSet, pairsPlusOne.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne));
-        assertEquals(UnifiedSet.newSet(nulls), pairsPlusOne.collect((Function<Pair<?, Object>, Object>) Pair::getTwo));
+        Assert.assertEquals(immutableSet, pairsPlusOne.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne));
+        Assert.assertEquals(UnifiedSet.newSet(nulls), pairsPlusOne.collect((Function<Pair<?, Object>, Object>) Pair::getTwo));
 
-        assertEquals(immutableSet.zip(nulls), immutableSet.zip(nulls, UnifiedSet.newSet()));
+        Assert.assertEquals(immutableSet.zip(nulls), immutableSet.zip(nulls, UnifiedSet.newSet()));
     }
 
     @Override
@@ -239,12 +236,12 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
         ImmutableSet<Integer> immutableSet = this.classUnderTest();
         ImmutableSet<Pair<Integer, Integer>> pairs = immutableSet.zipWithIndex();
 
-        assertEquals(immutableSet, pairs.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne));
-        assertEquals(
+        Assert.assertEquals(immutableSet, pairs.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne));
+        Assert.assertEquals(
                 UnifiedSet.<Integer>newSet(),
                 pairs.collect((Function<Pair<?, Integer>, Integer>) Pair::getTwo));
 
-        assertEquals(
+        Assert.assertEquals(
                 immutableSet.zipWithIndex(),
                 immutableSet.zipWithIndex(UnifiedSet.newSet()));
     }
@@ -252,28 +249,28 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     @Test
     public void chunk()
     {
-        assertEquals(Lists.mutable.of(), this.classUnderTest().chunk(2));
+        Assert.assertEquals(Lists.mutable.of(), this.classUnderTest().chunk(2));
     }
 
     @Override
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void chunk_zero_throws()
     {
-        assertThrows(IllegalArgumentException.class, () -> this.classUnderTest().chunk(0));
+        this.classUnderTest().chunk(0);
     }
 
     @Override
     @Test
     public void chunk_large_size()
     {
-        assertEquals(Lists.mutable.of(), this.classUnderTest().chunk(10));
+        Assert.assertEquals(Lists.mutable.of(), this.classUnderTest().chunk(10));
     }
 
     @Override
     @Test
     public void union()
     {
-        assertEquals(
+        Assert.assertEquals(
                 UnifiedSet.newSetWith(1, 2, 3),
                 this.classUnderTest().union(UnifiedSet.newSetWith(1, 2, 3)));
     }
@@ -282,7 +279,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     @Test
     public void unionInto()
     {
-        assertEquals(
+        Assert.assertEquals(
                 UnifiedSet.newSetWith(1, 2, 3),
                 this.classUnderTest().unionInto(UnifiedSet.newSetWith(1, 2, 3), UnifiedSet.newSet()));
     }
@@ -291,7 +288,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     @Test
     public void intersect()
     {
-        assertEquals(
+        Assert.assertEquals(
                 UnifiedSet.<String>newSet(),
                 this.classUnderTest().intersect(UnifiedSet.newSetWith(1, 2, 3)));
     }
@@ -300,7 +297,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     @Test
     public void intersectInto()
     {
-        assertEquals(
+        Assert.assertEquals(
                 UnifiedSet.<String>newSet(),
                 this.classUnderTest().intersectInto(UnifiedSet.newSetWith(1, 2, 3), UnifiedSet.newSet()));
     }
@@ -311,8 +308,8 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     {
         ImmutableSet<Integer> set = this.classUnderTest();
         ImmutableSet<Integer> difference = set.difference(UnifiedSet.newSetWith(1, 2, 3, 999));
-        assertEquals(UnifiedSet.<Integer>newSet(), difference);
-        assertEquals(set, set.difference(UnifiedSet.newSetWith(999)));
+        Assert.assertEquals(UnifiedSet.<Integer>newSet(), difference);
+        Assert.assertEquals(set, set.difference(UnifiedSet.newSetWith(999)));
     }
 
     @Override
@@ -321,15 +318,15 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     {
         ImmutableSet<Integer> set = this.classUnderTest();
         MutableSet<Integer> difference = set.differenceInto(UnifiedSet.newSetWith(1, 2, 3, 999), UnifiedSet.newSet());
-        assertEquals(UnifiedSet.<Integer>newSet(), difference);
-        assertEquals(set, set.differenceInto(UnifiedSet.newSetWith(99), UnifiedSet.newSet()));
+        Assert.assertEquals(UnifiedSet.<Integer>newSet(), difference);
+        Assert.assertEquals(set, set.differenceInto(UnifiedSet.newSetWith(99), UnifiedSet.newSet()));
     }
 
     @Override
     @Test
     public void symmetricDifference()
     {
-        assertEquals(
+        Assert.assertEquals(
                 UnifiedSet.newSetWith(999),
                 this.classUnderTest().symmetricDifference(UnifiedSet.newSetWith(999)));
     }
@@ -338,7 +335,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     @Test
     public void symmetricDifferenceInto()
     {
-        assertEquals(
+        Assert.assertEquals(
                 UnifiedSet.newSetWith(999),
                 this.classUnderTest().symmetricDifferenceInto(UnifiedSet.newSetWith(999), UnifiedSet.newSet()));
     }
@@ -356,25 +353,23 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     @Test
     public void collect_target()
     {
-        MutableList<Integer> targetCollection = FastList.newList();
-        MutableList<Integer> actual = this.classUnderTest().collect(object ->
-        {
+        MutableList<Integer> targetCollection = Lists.mutable.empty();
+        MutableList<Integer> actual = this.classUnderTest().collect(object -> {
             throw new AssertionError();
         }, targetCollection);
-        assertEquals(targetCollection, actual);
-        assertSame(targetCollection, actual);
+        Assert.assertEquals(targetCollection, actual);
+        Assert.assertSame(targetCollection, actual);
     }
 
     @Override
     @Test
     public void collectWith_target()
     {
-        MutableList<Integer> targetCollection = FastList.newList();
-        MutableList<Integer> actual = this.classUnderTest().collectWith((argument1, argument2) ->
-        {
+        MutableList<Integer> targetCollection = Lists.mutable.empty();
+        MutableList<Integer> actual = this.classUnderTest().collectWith((argument1, argument2) -> {
             throw new AssertionError();
         }, 1, targetCollection);
-        assertEquals(targetCollection, actual);
-        assertSame(targetCollection, actual);
+        Assert.assertEquals(targetCollection, actual);
+        Assert.assertSame(targetCollection, actual);
     }
 }

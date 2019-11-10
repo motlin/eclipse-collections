@@ -319,13 +319,13 @@ public final class RandomAccessListAdapter<T>
     @Override
     public MutableList<T> select(Predicate<? super T> predicate)
     {
-        return RandomAccessListIterate.select(this.delegate, predicate, FastList.newList());
+        return RandomAccessListIterate.select(this.delegate, predicate, Lists.mutable.empty());
     }
 
     @Override
     public MutableList<T> reject(Predicate<? super T> predicate)
     {
-        return RandomAccessListIterate.reject(this.delegate, predicate, FastList.newList());
+        return RandomAccessListIterate.reject(this.delegate, predicate, Lists.mutable.empty());
     }
 
     @Override
@@ -427,7 +427,7 @@ public final class RandomAccessListAdapter<T>
             Predicate<? super T> predicate,
             Function<? super T, ? extends V> function)
     {
-        return RandomAccessListIterate.collectIf(this.delegate, predicate, function, FastList.newList());
+        return RandomAccessListIterate.collectIf(this.delegate, predicate, function, Lists.mutable.empty());
     }
 
     @Override
@@ -445,13 +445,13 @@ public final class RandomAccessListAdapter<T>
     @Override
     public <P> MutableList<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return RandomAccessListIterate.selectWith(this.delegate, predicate, parameter, FastList.newList());
+        return RandomAccessListIterate.selectWith(this.delegate, predicate, parameter, Lists.mutable.empty());
     }
 
     @Override
     public <P> MutableList<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        return RandomAccessListIterate.rejectWith(this.delegate, predicate, parameter, FastList.newList());
+        return RandomAccessListIterate.rejectWith(this.delegate, predicate, parameter, Lists.mutable.empty());
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.Counter;
 import org.eclipse.collections.impl.EmptyIterator;
@@ -36,7 +37,7 @@ public final class CompositeIterable<E>
 
     public CompositeIterable()
     {
-        this(FastList.newList());
+        this(Lists.mutable.empty());
     }
 
     public static <T> CompositeIterable<T> with(Iterable<T>... iterables)

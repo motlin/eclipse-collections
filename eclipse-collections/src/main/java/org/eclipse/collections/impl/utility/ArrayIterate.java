@@ -180,7 +180,7 @@ public final class ArrayIterate
             throw new IllegalArgumentException("Cannot perform a select on null");
         }
 
-        return ArrayIterate.select(objectArray, predicate, FastList.newList());
+        return ArrayIterate.select(objectArray, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -195,7 +195,7 @@ public final class ArrayIterate
         {
             throw new IllegalArgumentException("Cannot perform a selectWith on null");
         }
-        return ArrayIterate.selectWith(objectArray, predicate, parameter, FastList.newList());
+        return ArrayIterate.selectWith(objectArray, predicate, parameter, Lists.mutable.empty());
     }
 
     /**
@@ -349,7 +349,7 @@ public final class ArrayIterate
      */
     public static <T> MutableList<T> reject(T[] objectArray, Predicate<? super T> predicate)
     {
-        return ArrayIterate.reject(objectArray, predicate, FastList.newList());
+        return ArrayIterate.reject(objectArray, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -368,7 +368,7 @@ public final class ArrayIterate
                 objectArray,
                 predicate,
                 parameter,
-                FastList.newList());
+                Lists.mutable.empty());
     }
 
     /**
@@ -1042,7 +1042,7 @@ public final class ArrayIterate
      */
     public static <T> MutableList<T> distinct(T[] objectArray)
     {
-        return ArrayIterate.distinct(objectArray, FastList.newList());
+        return ArrayIterate.distinct(objectArray, Lists.mutable.empty());
     }
 
     /**
@@ -1529,7 +1529,7 @@ public final class ArrayIterate
      */
     public static <X, Y> MutableList<Pair<X, Y>> zip(X[] xs, Y[] ys)
     {
-        return ArrayIterate.zip(xs, ys, FastList.newList());
+        return ArrayIterate.zip(xs, ys, Lists.mutable.empty());
     }
 
     /**
@@ -1550,7 +1550,7 @@ public final class ArrayIterate
      */
     public static <T> MutableList<Pair<T, Integer>> zipWithIndex(T... array)
     {
-        return ArrayIterate.zipWithIndex(array, FastList.newList());
+        return ArrayIterate.zipWithIndex(array, Lists.mutable.empty());
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Goldman Sachs and others.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -22,17 +22,15 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.test.domain.Key;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class FixedSizeSetFactoryTest
 {
     private FixedSizeSetFactory setFactory;
 
-    @BeforeEach
+    @Before
     public void setUp()
     {
         this.setFactory = FixedSizeSetFactoryImpl.INSTANCE;
@@ -60,7 +58,7 @@ public class FixedSizeSetFactoryTest
 
     private void assertCreateSet(FixedSizeSet<String> undertest, String... expected)
     {
-        assertEquals(UnifiedSet.newSetWith(expected), undertest);
+        Assert.assertEquals(UnifiedSet.newSetWith(expected), undertest);
         Verify.assertInstanceOf(FixedSizeSet.class, undertest);
     }
 
@@ -73,35 +71,35 @@ public class FixedSizeSetFactoryTest
         MutableSet<Key> set1 = this.setFactory.of(key, duplicateKey1);
         Verify.assertSize(1, set1);
         Verify.assertContains(key, set1);
-        assertSame(key, set1.getFirst());
+        Assert.assertSame(key, set1.getFirst());
 
         Key duplicateKey2 = new Key("key");
         MutableSet<Key> set2 = this.setFactory.of(key, duplicateKey1, duplicateKey2);
         Verify.assertSize(1, set2);
         Verify.assertContains(key, set2);
-        assertSame(key, set1.getFirst());
+        Assert.assertSame(key, set1.getFirst());
 
         Key duplicateKey3 = new Key("key");
         MutableSet<Key> set3 = this.setFactory.of(key, new Key("not a dupe"), duplicateKey3);
         Verify.assertSize(2, set3);
         Verify.assertContainsAll(set3, key, new Key("not a dupe"));
-        assertSame(key, set3.detect(key::equals));
+        Assert.assertSame(key, set3.detect(key::equals));
 
         Key duplicateKey4 = new Key("key");
         MutableSet<Key> set4 = this.setFactory.of(key, new Key("not a dupe"), duplicateKey3, duplicateKey4);
         Verify.assertSize(2, set4);
         Verify.assertContainsAll(set4, key, new Key("not a dupe"));
-        assertSame(key, set4.detect(key::equals));
+        Assert.assertSame(key, set4.detect(key::equals));
 
         MutableSet<Key> set5 = this.setFactory.of(key, new Key("not a dupe"), new Key("me neither"), duplicateKey4);
         Verify.assertSize(3, set5);
         Verify.assertContainsAll(set5, key, new Key("not a dupe"), new Key("me neither"));
-        assertSame(key, set5.detect(key::equals));
+        Assert.assertSame(key, set5.detect(key::equals));
 
         MutableSet<Key> set6 = this.setFactory.of(key, duplicateKey2, duplicateKey3, duplicateKey4);
         Verify.assertSize(1, set6);
         Verify.assertContains(key, set6);
-        assertSame(key, set6.detect(key::equals));
+        Assert.assertSame(key, set6.detect(key::equals));
     }
 
     @Test
@@ -116,61 +114,61 @@ public class FixedSizeSetFactoryTest
     public void create2()
     {
         FixedSizeSet<String> set = Sets.fixedSize.of("1", "2");
-        assertEquals(UnifiedSet.newSetWith("1", "2"), set);
+        Assert.assertEquals(UnifiedSet.newSetWith("1", "2"), set);
     }
 
     @Test
     public void create3()
     {
         FixedSizeSet<String> set = Sets.fixedSize.of("1", "2", "3");
-        assertEquals(UnifiedSet.newSetWith("1", "2", "3"), set);
+        Assert.assertEquals(UnifiedSet.newSetWith("1", "2", "3"), set);
     }
 
     @Test
     public void create4()
     {
         FixedSizeSet<String> set = Sets.fixedSize.of("1", "2", "3", "4");
-        assertEquals(UnifiedSet.newSetWith("1", "2", "3", "4"), set);
+        Assert.assertEquals(UnifiedSet.newSetWith("1", "2", "3", "4"), set);
     }
 
     @Test
     public void createWithDuplicates()
     {
         FixedSizeSet<String> set1 = Sets.fixedSize.of("1", "1");
-        assertEquals(UnifiedSet.newSetWith("1"), set1);
+        Assert.assertEquals(UnifiedSet.newSetWith("1"), set1);
 
         FixedSizeSet<String> set2 = Sets.fixedSize.of("1", "1", "1");
-        assertEquals(UnifiedSet.newSetWith("1"), set2);
+        Assert.assertEquals(UnifiedSet.newSetWith("1"), set2);
 
         FixedSizeSet<String> set3 = Sets.fixedSize.of("2", "3", "2");
-        assertEquals(UnifiedSet.newSetWith("2", "3"), set3);
+        Assert.assertEquals(UnifiedSet.newSetWith("2", "3"), set3);
 
         FixedSizeSet<String> set4 = Sets.fixedSize.of("3", "4", "4");
-        assertEquals(UnifiedSet.newSetWith("3", "4"), set4);
+        Assert.assertEquals(UnifiedSet.newSetWith("3", "4"), set4);
 
         FixedSizeSet<String> set5 = Sets.fixedSize.of("4", "4", "4", "4");
-        assertEquals(UnifiedSet.newSetWith("4"), set5);
+        Assert.assertEquals(UnifiedSet.newSetWith("4"), set5);
 
         FixedSizeSet<String> set6 = Sets.fixedSize.of("4", "3", "4", "4");
-        assertEquals(UnifiedSet.newSetWith("4", "3"), set6);
+        Assert.assertEquals(UnifiedSet.newSetWith("4", "3"), set6);
 
         FixedSizeSet<String> set7 = Sets.fixedSize.of("4", "2", "3", "4");
-        assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set7);
+        Assert.assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set7);
 
         FixedSizeSet<String> set8 = Sets.fixedSize.of("2", "3", "4", "4");
-        assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set8);
+        Assert.assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set8);
 
         FixedSizeSet<String> set9 = Sets.fixedSize.of("2", "4", "3", "4");
-        assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set9);
+        Assert.assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set9);
 
         FixedSizeSet<String> set10 = Sets.fixedSize.of("2", "4", "3", "4");
-        assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set10);
+        Assert.assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set10);
 
         FixedSizeSet<String> set11 = Sets.fixedSize.of("4", "3", "4", "2");
-        assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set11);
+        Assert.assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set11);
 
         FixedSizeSet<String> set12 = Sets.fixedSize.of("3", "4", "4", "2");
-        assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set12);
+        Assert.assertEquals(UnifiedSet.newSetWith("4", "3", "2"), set12);
     }
 
     @Test
@@ -182,7 +180,7 @@ public class FixedSizeSetFactoryTest
         MutableSet<String> set2 = Sets.fixedSize.of();
         Verify.assertEmpty(set2);
 
-        assertSame(Sets.fixedSize.of(), Sets.fixedSize.of());
+        Assert.assertSame(Sets.fixedSize.of(), Sets.fixedSize.of());
     }
 
     @Test
@@ -191,7 +189,7 @@ public class FixedSizeSetFactoryTest
         MutableList<String> result = Lists.mutable.of();
         MutableSet<String> source = Sets.fixedSize.of("1", "2", "3", "4");
         source.forEach(CollectionAddProcedure.on(result));
-        assertEquals(FastList.newListWith("1", "2", "3", "4"), result);
+        Assert.assertEquals(FastList.newListWith("1", "2", "3", "4"), result);
     }
 
     @Test
@@ -204,8 +202,8 @@ public class FixedSizeSetFactoryTest
             result.add(each);
             indexSum[0] += index;
         });
-        assertEquals(6, indexSum[0]);
-        assertEquals(FastList.newListWith("1", "2", "3", "4"), result);
+        Assert.assertEquals(6, indexSum[0]);
+        Assert.assertEquals(FastList.newListWith("1", "2", "3", "4"), result);
     }
 
     @Test
@@ -214,14 +212,14 @@ public class FixedSizeSetFactoryTest
         MutableList<String> result = Lists.mutable.of();
         MutableSet<String> source = Sets.fixedSize.of("1", "2", "3", "4");
         source.forEachWith(Procedures2.fromProcedure(CollectionAddProcedure.on(result)), null);
-        assertEquals(FastList.newListWith("1", "2", "3", "4"), result);
+        Assert.assertEquals(FastList.newListWith("1", "2", "3", "4"), result);
     }
 
     @Test
     public void ofAllSizeZero()
     {
-        MutableSet<Integer> set = Sets.fixedSize.ofAll(FastList.newList());
-        assertEquals(UnifiedSet.<Integer>newSetWith(), set);
+        MutableSet<Integer> set = Sets.fixedSize.ofAll(Lists.mutable.empty());
+        Assert.assertEquals(UnifiedSet.<Integer>newSetWith(), set);
         Verify.assertInstanceOf(FixedSizeSet.class, set);
     }
 
@@ -229,7 +227,7 @@ public class FixedSizeSetFactoryTest
     public void ofAllSizeOne()
     {
         MutableSet<Integer> set = Sets.fixedSize.ofAll(FastList.newListWith(1));
-        assertEquals(UnifiedSet.newSetWith(1), set);
+        Assert.assertEquals(UnifiedSet.newSetWith(1), set);
         Verify.assertInstanceOf(FixedSizeSet.class, set);
     }
 
@@ -237,7 +235,7 @@ public class FixedSizeSetFactoryTest
     public void ofAllSizeTwo()
     {
         MutableSet<Integer> set = Sets.fixedSize.ofAll(FastList.newListWith(1, 2));
-        assertEquals(UnifiedSet.newSetWith(1, 2), set);
+        Assert.assertEquals(UnifiedSet.newSetWith(1, 2), set);
         Verify.assertInstanceOf(FixedSizeSet.class, set);
     }
 
@@ -245,7 +243,7 @@ public class FixedSizeSetFactoryTest
     public void ofAllSizeThree()
     {
         MutableSet<Integer> set = Sets.fixedSize.ofAll(FastList.newListWith(1, 2, 3));
-        assertEquals(UnifiedSet.newSetWith(1, 2, 3), set);
+        Assert.assertEquals(UnifiedSet.newSetWith(1, 2, 3), set);
         Verify.assertInstanceOf(FixedSizeSet.class, set);
     }
 
@@ -253,7 +251,7 @@ public class FixedSizeSetFactoryTest
     public void ofAllSizeFour()
     {
         MutableSet<Integer> set = Sets.fixedSize.ofAll(FastList.newListWith(1, 2, 3, 4));
-        assertEquals(UnifiedSet.newSetWith(1, 2, 3, 4), set);
+        Assert.assertEquals(UnifiedSet.newSetWith(1, 2, 3, 4), set);
         Verify.assertInstanceOf(FixedSizeSet.class, set);
     }
 
@@ -261,7 +259,7 @@ public class FixedSizeSetFactoryTest
     public void ofAllSizeFive()
     {
         MutableSet<Integer> set = Sets.fixedSize.ofAll(FastList.newListWith(1, 2, 3, 4, 5));
-        assertEquals(UnifiedSet.newSetWith(1, 2, 3, 4, 5), set);
+        Assert.assertEquals(UnifiedSet.newSetWith(1, 2, 3, 4, 5), set);
         Verify.assertInstanceOf(UnifiedSet.class, set);
     }
 }

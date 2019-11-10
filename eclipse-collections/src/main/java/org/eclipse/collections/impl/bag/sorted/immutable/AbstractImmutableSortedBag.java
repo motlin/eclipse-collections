@@ -62,7 +62,6 @@ import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
@@ -207,19 +206,19 @@ abstract class AbstractImmutableSortedBag<T>
     @Override
     public <V> ImmutableList<V> collect(Function<? super T, ? extends V> function)
     {
-        return this.collect(function, FastList.<V>newList()).toImmutable();
+        return this.collect(function, Lists.mutable.<V>empty()).toImmutable();
     }
 
     @Override
     public <P, V> ImmutableList<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
-        return this.collectWith(function, parameter, FastList.<V>newList()).toImmutable();
+        return this.collectWith(function, parameter, Lists.mutable.<V>empty()).toImmutable();
     }
 
     @Override
     public <V> ImmutableList<V> collectIf(Predicate<? super T> predicate, Function<? super T, ? extends V> function)
     {
-        return this.collectIf(predicate, function, FastList.<V>newList()).toImmutable();
+        return this.collectIf(predicate, function, Lists.mutable.<V>empty()).toImmutable();
     }
 
     @Override
@@ -273,13 +272,13 @@ abstract class AbstractImmutableSortedBag<T>
     @Override
     public <V> ImmutableList<V> collectWithOccurrences(ObjectIntToObjectFunction<? super T, ? extends V> function)
     {
-        return this.collectWithOccurrences(function, FastList.<V>newList()).toImmutable();
+        return this.collectWithOccurrences(function, Lists.mutable.<V>empty()).toImmutable();
     }
 
     @Override
     public <V> ImmutableList<V> flatCollect(Function<? super T, ? extends Iterable<V>> function)
     {
-        return this.flatCollect(function, FastList.newList()).toImmutable();
+        return this.flatCollect(function, Lists.mutable.empty()).toImmutable();
     }
 
     @Override
@@ -322,7 +321,7 @@ abstract class AbstractImmutableSortedBag<T>
         }
         else
         {
-            list = FastList.newList();
+            list = Lists.mutable.empty();
         }
 
         Iterator<S> iterator = that.iterator();

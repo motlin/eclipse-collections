@@ -59,7 +59,6 @@ import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.factory.Sets;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
@@ -2220,8 +2219,8 @@ public final class Verify extends Assert
 
             if (expectedIterable instanceof InternalIterable<?> && actualIterable instanceof InternalIterable<?>)
             {
-                MutableList<Object> expectedList = FastList.newList();
-                MutableList<Object> actualList = FastList.newList();
+                MutableList<Object> expectedList = Lists.mutable.empty();
+                MutableList<Object> actualList = Lists.mutable.empty();
                 ((InternalIterable<?>) expectedIterable).forEach(CollectionAddProcedure.on(expectedList));
                 ((InternalIterable<?>) actualIterable).forEach(CollectionAddProcedure.on(actualList));
                 Verify.assertListsEqual(iterableName, expectedList, actualList);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2016 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -14,19 +14,18 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.block.factory.ObjectIntProcedures;
 import org.eclipse.collections.impl.block.procedure.DoNothingProcedure;
-import org.eclipse.collections.impl.list.mutable.FastList;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.eclipse.collections.impl.test.Verify;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ObjectIntProcedureFJTaskRunnerTest
 {
     private ObjectIntProcedureFJTaskRunner<Integer, ObjectIntProcedure<Integer>> undertest;
 
-    @BeforeEach
+    @Before
     public void setUp()
     {
         this.undertest = new ObjectIntProcedureFJTaskRunner<>(
@@ -39,18 +38,18 @@ public class ObjectIntProcedureFJTaskRunnerTest
     @Test
     public void taskCompletedUsingNonCombineOne()
     {
-        assertThrows(CountDownCalledException.class, () -> this.undertest.taskCompleted(null));
+        Verify.assertThrows(CountDownCalledException.class, () -> this.undertest.taskCompleted(null));
     }
 
     @Test
     public void joinUsingNonCombineOne()
     {
-        assertThrows(
+        Verify.assertThrows(
                 AwaitDownCalledException.class,
                 () -> this.undertest.executeAndCombine(
                         new DoNothingExecutor(),
                         new PassThroughObjectIntProcedureFactory(),
-                        FastList.newList()));
+                        Lists.mutable.empty()));
     }
 
     private static class DoNothingWithFalseCombineOneCombiner implements Combiner<ObjectIntProcedure<Integer>>

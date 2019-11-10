@@ -74,7 +74,6 @@ import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.block.factory.HashingStrategies;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
@@ -174,7 +173,7 @@ public final class ListIterate
      */
     public static <T> MutableList<T> select(List<T> list, Predicate<? super T> predicate)
     {
-        return ListIterate.select(list, predicate, FastList.newList());
+        return ListIterate.select(list, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -185,7 +184,7 @@ public final class ListIterate
             Predicate2<? super T, ? super IV> predicate,
             IV injectedValue)
     {
-        return ListIterate.selectWith(list, predicate, injectedValue, FastList.newList());
+        return ListIterate.selectWith(list, predicate, injectedValue, Lists.mutable.empty());
     }
 
     /**
@@ -268,7 +267,7 @@ public final class ListIterate
             Predicate<? super T> predicate,
             Function<? super T, ? extends A> function)
     {
-        return ListIterate.collectIf(list, predicate, function, FastList.newList());
+        return ListIterate.collectIf(list, predicate, function, Lists.mutable.empty());
     }
 
     /**
@@ -292,7 +291,7 @@ public final class ListIterate
      */
     public static <T> MutableList<T> reject(List<T> list, Predicate<? super T> predicate)
     {
-        return ListIterate.reject(list, predicate, FastList.newList());
+        return ListIterate.reject(list, predicate, Lists.mutable.empty());
     }
 
     /**
@@ -303,7 +302,7 @@ public final class ListIterate
             Predicate2<? super T, ? super IV> predicate,
             IV injectedValue)
     {
-        return ListIterate.rejectWith(list, predicate, injectedValue, FastList.newList());
+        return ListIterate.rejectWith(list, predicate, injectedValue, Lists.mutable.empty());
     }
 
     /**
@@ -1387,7 +1386,7 @@ public final class ListIterate
      */
     public static <T> MutableList<T> distinct(List<T> list)
     {
-        return ListIterate.distinct(list, FastList.newList());
+        return ListIterate.distinct(list, Lists.mutable.empty());
     }
 
     /**
@@ -1438,7 +1437,7 @@ public final class ListIterate
         {
             return RandomAccessListIterate.take(list, count, Lists.mutable.withInitialCapacity(Math.min(list.size(), count)));
         }
-        return ListIterate.take(list, count, FastList.newList());
+        return ListIterate.take(list, count, Lists.mutable.empty());
     }
 
     /**
@@ -1470,7 +1469,7 @@ public final class ListIterate
         {
             return RandomAccessListIterate.drop(list, count, Lists.mutable.withInitialCapacity(list.size() - Math.min(list.size(), count)));
         }
-        return ListIterate.drop(list, count, FastList.newList());
+        return ListIterate.drop(list, count, Lists.mutable.empty());
     }
 
     /**
@@ -1692,7 +1691,7 @@ public final class ListIterate
             MutableList<Pair<X, Y>> target = Lists.mutable.withInitialCapacity(Math.min(listSize, iterableSize));
             return ListIterate.zip(list, iterable, target);
         }
-        return ListIterate.zip(list, iterable, FastList.newList());
+        return ListIterate.zip(list, iterable, Lists.mutable.empty());
     }
 
     /**
@@ -1741,7 +1740,7 @@ public final class ListIterate
         {
             return RandomAccessListIterate.takeWhile(list, predicate);
         }
-        MutableList<T> result = FastList.newList();
+        MutableList<T> result = Lists.mutable.empty();
         for (T t : list)
         {
             if (predicate.accept(t))
@@ -1765,7 +1764,7 @@ public final class ListIterate
         {
             return RandomAccessListIterate.dropWhile(list, predicate);
         }
-        MutableList<T> result = FastList.newList();
+        MutableList<T> result = Lists.mutable.empty();
         Iterator<T> iterator = list.iterator();
         while (iterator.hasNext())
         {

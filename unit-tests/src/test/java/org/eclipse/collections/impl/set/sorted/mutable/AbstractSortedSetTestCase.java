@@ -43,7 +43,6 @@ import org.eclipse.collections.impl.block.function.NegativeIntervalFunction;
 import org.eclipse.collections.impl.collection.mutable.AbstractCollectionTestCase;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.AddToList;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.test.domain.Person;
@@ -163,7 +162,7 @@ public abstract class AbstractSortedSetTestCase extends AbstractCollectionTestCa
         MutableSortedSet<Integer> integers1 = this.newWith(1, 2, 3, 4);
         Assert.assertFalse(integers1.corresponds(this.newWith(1, 2, 3, 4, 5), Predicates2.alwaysTrue()));
 
-        MutableList<Integer> integers2 = integers1.collect(integer -> integer + 1, FastList.newList());
+        MutableList<Integer> integers2 = integers1.collect(integer -> integer + 1, Lists.mutable.empty());
         Assert.assertTrue(integers1.corresponds(integers2, Predicates2.lessThan()));
         Assert.assertFalse(integers1.corresponds(integers2, Predicates2.greaterThan()));
 

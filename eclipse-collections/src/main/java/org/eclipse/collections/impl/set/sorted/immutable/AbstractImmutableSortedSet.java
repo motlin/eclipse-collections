@@ -75,7 +75,6 @@ import org.eclipse.collections.impl.block.procedure.primitive.CollectLongProcedu
 import org.eclipse.collections.impl.block.procedure.primitive.CollectShortProcedure;
 import org.eclipse.collections.impl.collection.immutable.AbstractImmutableCollection;
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.NonParallelSortedSetIterable;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList;
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList;
@@ -356,7 +355,7 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
             MutableList<Pair<T, S>> target = Lists.mutable.withInitialCapacity(Math.min(this.size(), thatSize));
             return Iterate.zip(this, that, target).toImmutable();
         }
-        return Iterate.zip(this, that, FastList.newList()).toImmutable();
+        return Iterate.zip(this, that, Lists.mutable.empty()).toImmutable();
     }
 
     @Override

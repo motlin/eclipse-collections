@@ -239,9 +239,9 @@ public abstract class AbstractImmutableSortedSetTestCase
         ImmutableSortedSet<Integer> integers = this.classUnderTest();
         Verify.assertListsEqual(
                 integers.toList(),
-                integers.select(Predicates.lessThan(integers.size() + 1), FastList.newList()));
+                integers.select(Predicates.lessThan(integers.size() + 1), Lists.mutable.empty()));
         Verify.assertEmpty(
-                integers.select(Predicates.greaterThan(integers.size()), FastList.newList()));
+                integers.select(Predicates.greaterThan(integers.size()), Lists.mutable.empty()));
     }
 
     @Test
@@ -270,10 +270,10 @@ public abstract class AbstractImmutableSortedSetTestCase
     {
         ImmutableSortedSet<Integer> integers = this.classUnderTest();
         Verify.assertEmpty(
-                integers.reject(Predicates.lessThan(integers.size() + 1), FastList.newList()));
+                integers.reject(Predicates.lessThan(integers.size() + 1), Lists.mutable.empty()));
         Verify.assertListsEqual(
                 integers.toList(),
-                integers.reject(Predicates.greaterThan(integers.size()), FastList.newList()));
+                integers.reject(Predicates.greaterThan(integers.size()), Lists.mutable.empty()));
     }
 
     @Test
@@ -402,7 +402,7 @@ public abstract class AbstractImmutableSortedSetTestCase
         Assert.assertEquals(integers, integers.collect(Functions.getIntegerPassThru(), UnifiedSet.newSet()));
         Verify.assertListsEqual(
                 integers.toList(),
-                integers.collect(Functions.getIntegerPassThru(), FastList.newList()));
+                integers.collect(Functions.getIntegerPassThru(), Lists.mutable.empty()));
     }
 
     @Test
@@ -447,7 +447,7 @@ public abstract class AbstractImmutableSortedSetTestCase
         Verify.assertListsEqual(
                 FastList.newList(Interval.fromTo(immutableSet.size(), 2)),
                 pairsMinusOne.collect((Function<Pair<Integer, ?>, Integer>) Pair::getOne).castToList());
-        Assert.assertEquals(immutableSet.zip(nulls), immutableSet.zip(nulls, FastList.newList()));
+        Assert.assertEquals(immutableSet.zip(nulls), immutableSet.zip(nulls, Lists.mutable.empty()));
 
         FastList<Holder> holders = FastList.newListWith(new Holder(1), new Holder(2), new Holder(3));
         ImmutableList<Pair<Integer, Holder>> zipped = immutableSet.zip(holders);
@@ -1040,12 +1040,12 @@ public abstract class AbstractImmutableSortedSetTestCase
     @Test
     public void forEachFromTo()
     {
-        MutableList<Integer> result = FastList.newList();
+        MutableList<Integer> result = Lists.mutable.empty();
         ImmutableSortedSet<Integer> integers = this.classUnderTest(Comparators.reverseNaturalOrder());
         integers.forEach(1, 2, result::add);
         Assert.assertEquals(Lists.immutable.with(3, 2), result);
 
-        MutableList<Integer> result2 = FastList.newList();
+        MutableList<Integer> result2 = Lists.mutable.empty();
         integers.forEach(0, 3, result2::add);
         Assert.assertEquals(Lists.immutable.with(4, 3, 2, 1), result2);
 

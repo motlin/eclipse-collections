@@ -18,13 +18,13 @@ import java.util.concurrent.TimeUnit;
 import com.koloboke.collect.map.IntIntMap;
 import com.koloboke.collect.map.hash.HashIntIntMaps;
 import org.eclipse.collections.api.block.function.primitive.IntToObjectFunction;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.map.primitive.MutableIntIntMap;
 import org.eclipse.collections.api.set.primitive.MutableIntSet;
 import org.eclipse.collections.impl.SpreadFunctions;
 import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
-import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
 import org.eclipse.collections.impl.map.mutable.primitive.IntIntHashMap;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
@@ -156,7 +156,7 @@ public class IntIntMapSmallStressTest
 
     protected MutableList<Integer> getJDKSequenceCollisions(int lower, int upper)
     {
-        MutableList<Integer> jdkCollidingNumbers = FastList.newList();
+        MutableList<Integer> jdkCollidingNumbers = Lists.mutable.empty();
         int slots = 1; // slots = KEY_COUNT / (1 << 32) / (1 << MAP_SIZE) + 1;
         MutableIntSet indices = new IntHashSet();
         for (int i = lower; i < upper && jdkCollidingNumbers.size() < KEY_COUNT; i++)

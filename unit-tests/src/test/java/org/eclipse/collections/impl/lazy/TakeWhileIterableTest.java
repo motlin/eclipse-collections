@@ -38,7 +38,7 @@ public class TakeWhileIterableTest extends AbstractLazyIterableTestCase
     public void setUp()
     {
         this.takeWhileIterable = new TakeWhileIterable<>(Interval.oneTo(5), each -> each <= 2);
-        this.emptyListTakeWhileIterable = new TakeWhileIterable<>(FastList.newList(), each -> each <= 2);
+        this.emptyListTakeWhileIterable = new TakeWhileIterable<>(Lists.mutable.empty(), each -> each <= 2);
         this.alwaysFalseTakeWhileIterable = new TakeWhileIterable<>(Interval.oneTo(5), Predicates.alwaysFalse());
         this.alwaysTrueTakeWhileIterable = new TakeWhileIterable<>(Interval.oneTo(5), Predicates.alwaysTrue());
     }

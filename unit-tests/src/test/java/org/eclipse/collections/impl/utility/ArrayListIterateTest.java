@@ -1354,7 +1354,7 @@ public class ArrayListIterateTest
         Verify.assertListsEqual(FastList.newList(list).take(5), ArrayListIterate.take(list, 5));
         Verify.assertListsEqual(FastList.newList(list).take(list.size() - 1), ArrayListIterate.take(list, list.size() - 1));
         Verify.assertListsEqual(FastList.newList(list).take(list.size()), ArrayListIterate.take(list, list.size()));
-        Verify.assertListsEqual(FastList.newList().take(2), ArrayListIterate.take(new ArrayList<>(), 2));
+        Verify.assertListsEqual(Lists.mutable.empty().take(2), ArrayListIterate.take(new ArrayList<>(), 2));
         ArrayList<Integer> list1 = new ArrayList<>();
         list1.addAll(Interval.oneTo(120));
         Verify.assertListsEqual(FastList.newList(list1).take(125), ArrayListIterate.take(list1, 125));
@@ -1402,7 +1402,7 @@ public class ArrayListIterateTest
     @Test(expected = IllegalArgumentException.class)
     public void take_target_throws()
     {
-        ArrayListIterate.take(this.getIntegerList(), -1, FastList.newList());
+        ArrayListIterate.take(this.getIntegerList(), -1, Lists.mutable.empty());
     }
 
     @Test
@@ -1435,7 +1435,7 @@ public class ArrayListIterateTest
         Verify.assertListsEqual(expected.drop(6), ArrayListIterate.drop(list, 6));
         Verify.assertListsEqual(expected.drop(list.size() - 1), ArrayListIterate.drop(list, list.size() - 1));
         Verify.assertListsEqual(expected.drop(list.size()), ArrayListIterate.drop(list, list.size()));
-        Verify.assertListsEqual(FastList.newList(), ArrayListIterate.drop(new ArrayList<>(), 2));
+        Verify.assertListsEqual(Lists.mutable.empty(), ArrayListIterate.drop(new ArrayList<>(), 2));
         Verify.assertListsEqual(expected.drop(Integer.MAX_VALUE), ArrayListIterate.drop(list, Integer.MAX_VALUE));
 
         ArrayList<Integer> list1 = new ArrayList<>();
@@ -1496,7 +1496,7 @@ public class ArrayListIterateTest
     @Test(expected = IllegalArgumentException.class)
     public void drop_target_throws()
     {
-        ArrayListIterate.drop(this.getIntegerList(), -1, FastList.newList());
+        ArrayListIterate.drop(this.getIntegerList(), -1, Lists.mutable.empty());
     }
 
     @Test
