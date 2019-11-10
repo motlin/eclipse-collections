@@ -1203,7 +1203,7 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
         MutableSortedBag<Integer> bag = this.newWith(Comparators.reverseNaturalOrder(), 1, 1, 2, 3, 4);
         Assert.assertTrue(bag.containsAllIterable(FastList.newListWith(1, 2)));
         Assert.assertFalse(bag.containsAllIterable(FastList.newListWith(1, 5)));
-        Assert.assertTrue(bag.containsAllIterable(FastList.newListWith()));
+        Assert.assertTrue(bag.containsAllIterable(Lists.mutable.empty()));
     }
 
     @Override

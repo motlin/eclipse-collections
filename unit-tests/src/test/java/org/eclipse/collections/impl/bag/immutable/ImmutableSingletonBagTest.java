@@ -304,7 +304,7 @@ public class ImmutableSingletonBagTest extends ImmutableBagTestCase
     public void containsAllIterable()
     {
         super.containsAllIterable();
-        Assert.assertTrue(this.newBag().containsAllIterable(FastList.newListWith()));
+        Assert.assertTrue(this.newBag().containsAllIterable(Lists.mutable.empty()));
         Assert.assertTrue(this.newBag().containsAllIterable(FastList.newListWith(VAL)));
         Assert.assertFalse(this.newBag().containsAllIterable(FastList.newListWith(NOT_VAL)));
         Assert.assertFalse(this.newBag().containsAllIterable(FastList.newListWith(42)));
