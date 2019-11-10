@@ -112,14 +112,14 @@ import org.eclipse.collections.impl.utility.LazyIterate;
 final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
 {
     private static final long serialVersionUID = 1L;
-    private final FastList<T> delegate;
+    private final MutableList<T> delegate;
 
     private ImmutableArrayStack(T[] newElements)
     {
-        this.delegate = FastList.newListWith(newElements);
+        this.delegate = Lists.mutable.with(newElements);
     }
 
-    private ImmutableArrayStack(FastList<T> newElements)
+    private ImmutableArrayStack(MutableList<T> newElements)
     {
         this.delegate = newElements;
     }
@@ -146,13 +146,13 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
 
     public static <T> ImmutableArrayStack<T> newStackFromTopToBottom(T... items)
     {
-        return new ImmutableArrayStack<>(FastList.newListWith(items).reverseThis());
+        return new ImmutableArrayStack<>(Lists.mutable.with(items).reverseThis());
     }
 
     @Override
     public ImmutableStack<T> push(T item)
     {
-        FastList<T> newDelegate = Lists.mutable.withAll(this.delegate);
+        MutableList<T> newDelegate = Lists.mutable.withAll(this.delegate);
         newDelegate.add(item);
         return new ImmutableArrayStack<>(newDelegate);
     }
@@ -161,7 +161,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     public ImmutableStack<T> pop()
     {
         this.checkEmptyStack();
-        FastList<T> newDelegate = Lists.mutable.withAll(this.delegate);
+        MutableList<T> newDelegate = Lists.mutable.withAll(this.delegate);
         newDelegate.remove(this.delegate.size() - 1);
         return new ImmutableArrayStack<>(newDelegate);
     }
@@ -176,7 +176,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
         }
         this.checkEmptyStack();
         this.checkSizeLessThanCount(count);
-        FastList<T> newDelegate = this.delegate.clone();
+        MutableList<T> newDelegate = this.delegate.clone();
         while (count > 0)
         {
             newDelegate.remove(this.delegate.size() - 1);
