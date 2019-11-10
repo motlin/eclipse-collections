@@ -107,13 +107,13 @@ public final class HashBagMultimapWithHashingStrategy<K, V>
     @Override
     protected MutableMap<K, MutableBag<V>> createMap()
     {
-        return UnifiedMapWithHashingStrategy.newMap(this.hashingStrategy);
+        return new UnifiedMapWithHashingStrategy<>(this.hashingStrategy);
     }
 
     @Override
     protected MutableMap<K, MutableBag<V>> createMapWithKeyCount(int keyCount)
     {
-        return UnifiedMapWithHashingStrategy.newMap(this.hashingStrategy, keyCount);
+        return new UnifiedMapWithHashingStrategy<>(this.hashingStrategy, keyCount);
     }
 
     @Override

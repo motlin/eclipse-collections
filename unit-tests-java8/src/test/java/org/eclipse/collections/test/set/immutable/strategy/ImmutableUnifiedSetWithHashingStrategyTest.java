@@ -26,7 +26,7 @@ public class ImmutableUnifiedSetWithHashingStrategyTest implements ImmutableSetT
     @Override
     public final <T> ImmutableSet<T> newWith(T... elements)
     {
-        MutableSet<T> result = UnifiedSetWithHashingStrategy.newSet(HashingStrategies.nullSafeHashingStrategy(HashingStrategies.defaultStrategy()));
+        MutableSet<T> result = new UnifiedSetWithHashingStrategy<>(HashingStrategies.nullSafeHashingStrategy(HashingStrategies.defaultStrategy()));
         IterableTestCase.addAllTo(elements, result);
         return result.toImmutable();
     }

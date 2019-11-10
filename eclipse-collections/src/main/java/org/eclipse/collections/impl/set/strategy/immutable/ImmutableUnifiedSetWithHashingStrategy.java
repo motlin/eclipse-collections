@@ -48,7 +48,7 @@ final class ImmutableUnifiedSetWithHashingStrategy<T>
 
     public static <T> ImmutableSet<T> newSet(HashingStrategy<? super T> hashingStrategy, int capacity)
     {
-        return new ImmutableUnifiedSetWithHashingStrategy<>(UnifiedSetWithHashingStrategy.newSet(hashingStrategy, capacity));
+        return new ImmutableUnifiedSetWithHashingStrategy<>(new UnifiedSetWithHashingStrategy<T>(hashingStrategy, capacity));
     }
 
     @Override

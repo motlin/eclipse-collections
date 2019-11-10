@@ -25,8 +25,8 @@ public class PartitionUnifiedSetWithHashingStrategy<T>
 
     public PartitionUnifiedSetWithHashingStrategy(HashingStrategy<? super T> hashingStrategy)
     {
-        this.selected = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
-        this.rejected = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
+        this.selected = new UnifiedSetWithHashingStrategy<>(hashingStrategy);
+        this.rejected = new UnifiedSetWithHashingStrategy<>(hashingStrategy);
     }
 
     @Override

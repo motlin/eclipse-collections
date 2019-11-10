@@ -102,7 +102,7 @@ public class UnifiedSetAddTest
     {
         for (int i = 0; i < runs; i++)
         {
-            UnifiedSet<Object> set = UnifiedSet.newSet(8);
+            UnifiedSet<Object> set = new UnifiedSet<>(8);
             set.add(null);
             for (int j = 0; j < length; j++)
             {

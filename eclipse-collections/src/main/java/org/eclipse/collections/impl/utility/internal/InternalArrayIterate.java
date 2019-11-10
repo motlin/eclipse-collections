@@ -439,7 +439,7 @@ public final class InternalArrayIterate
 
     public static <T> FastList<T> selectInstancesOf(Object[] array, int size, Class<T> clazz)
     {
-        FastList<T> results = FastList.newList(size);
+        FastList<T> results = new FastList<T>(size);
         for (int i = 0; i < size; i++)
         {
             Object each = array[i];
@@ -928,7 +928,7 @@ public final class InternalArrayIterate
      */
     public static <T> FastList<T> distinct(T[] objectArray, int size)
     {
-        return InternalArrayIterate.distinct(objectArray, size, FastList.newList());
+        return InternalArrayIterate.distinct(objectArray, size, new FastList<T>());
     }
 
     /**
@@ -936,9 +936,9 @@ public final class InternalArrayIterate
      */
     public static <T> FastList<T> distinct(T[] objectArray, int size, HashingStrategy<? super T> hashingStrategy)
     {
-        MutableSet<T> seenSoFar = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
+        MutableSet<T> seenSoFar = new UnifiedSetWithHashingStrategy<>(hashingStrategy);
 
-        FastList<T> result = FastList.newList();
+        FastList<T> result = new FastList<T>();
         for (int i = 0; i < size; i++)
         {
             T each = objectArray[i];

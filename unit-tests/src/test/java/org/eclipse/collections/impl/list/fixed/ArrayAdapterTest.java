@@ -366,7 +366,7 @@ public class ArrayAdapterTest extends AbstractListTestCase
         Verify.assertEqualsAndHashCode(array1, new ArrayList<>(array1));
         Verify.assertEqualsAndHashCode(array1, new LinkedList<>(array1));
         Verify.assertEqualsAndHashCode(array1, ArrayListAdapter.<Integer>newList().with(1, 2, 3, 4));
-        Verify.assertEqualsAndHashCode(array1, FastList.<Integer>newList().with(1, 2, 3, 4));
+        Verify.assertEqualsAndHashCode(array1, FastList.newListWith(1, 2, 3, 4));
         Assert.assertNotEquals(array1, new LinkedList<>(array4));
     }
 

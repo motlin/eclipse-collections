@@ -140,7 +140,7 @@ public class HashBagMultimapWithHashingStrategyTest extends AbstractMutableBagMu
 
         MutableBagMultimap<String, Integer> multimap =
                 this.newMultimapWithKeysValues("One", 1, "Two", 2, "Two", 2);
-        UnifiedMapWithHashingStrategy<String, RichIterable<Integer>> expected = UnifiedMapWithHashingStrategy.newMap(HashingStrategies.defaultStrategy());
+        UnifiedMapWithHashingStrategy<String, RichIterable<Integer>> expected = new UnifiedMapWithHashingStrategy<>(HashingStrategies.defaultStrategy());
         expected.put("One", this.createCollection(1));
         expected.put("Two", this.createCollection(2, 2));
         MutableMap<String, RichIterable<Integer>> actual = multimap.toMap();
@@ -156,7 +156,7 @@ public class HashBagMultimapWithHashingStrategyTest extends AbstractMutableBagMu
 
         MutableBagMultimap<String, Integer> multimap =
                 this.newMultimapWithKeysValues("One", 1, "Two", 2, "Two", 2);
-        UnifiedMapWithHashingStrategy<String, RichIterable<Integer>> expected = UnifiedMapWithHashingStrategy.newMap(HashingStrategies.defaultStrategy());
+        UnifiedMapWithHashingStrategy<String, RichIterable<Integer>> expected = new UnifiedMapWithHashingStrategy<>(HashingStrategies.defaultStrategy());
         expected.put("One", UnifiedSet.newSetWith(1));
         expected.put("Two", UnifiedSet.newSetWith(2, 2));
         MutableMap<String, MutableSet<Integer>> actual = multimap.toMap(UnifiedSet::new);

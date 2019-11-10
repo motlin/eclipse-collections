@@ -224,7 +224,7 @@ public final class IterableIterate
             Iterable<?> iterable,
             Class<T> clazz)
     {
-        FastList<T> result = FastList.newList();
+        FastList<T> result = new FastList<>();
         IterableIterate.selectInstancesOf(iterable, clazz, result);
         result.trimToSize();
         return result;

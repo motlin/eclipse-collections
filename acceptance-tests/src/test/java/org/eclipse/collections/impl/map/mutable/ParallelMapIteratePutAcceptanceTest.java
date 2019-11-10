@@ -98,7 +98,7 @@ public class ParallelMapIteratePutAcceptanceTest
         for (int i = 0; i < ops; i++)
         {
             ConcurrentHashMap<Integer, Integer> map = new ConcurrentHashMap<>(constContents.length);
-            UnifiedSet<Integer> setToRemove = UnifiedSet.newSet(constContents.length);
+            UnifiedSet<Integer> setToRemove = new UnifiedSet<>(constContents.length);
             for (Integer x : constContents)
             {
                 map.put(x, x);
@@ -110,7 +110,7 @@ public class ParallelMapIteratePutAcceptanceTest
                 futures[t] = executorService.submit(new PutRunner1(map, contents, currentPos));
             }
             int count = 0;
-            UnifiedSet<Integer> setToAdd = UnifiedSet.newSet(constContents.length);
+            UnifiedSet<Integer> setToAdd = new UnifiedSet<>(constContents.length);
             for (Integer next : map.keySet())
             {
                 setToRemove.remove(next);

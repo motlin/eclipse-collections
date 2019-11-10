@@ -173,8 +173,8 @@ public class UnifiedSet<T>
             throw new NullPointerException();
         }
         UnifiedSet<K> result = source instanceof RichIterable
-                ? UnifiedSet.newSet(((RichIterable<?>) source).size())
-                : UnifiedSet.newSet();
+                ? new UnifiedSet<>(((RichIterable<?>) source).size())
+                : new UnifiedSet<>();
         Iterate.forEachWith(source, Procedures2.addToCollection(), result);
         return result;
     }
@@ -186,7 +186,7 @@ public class UnifiedSet<T>
 
     public static <K> UnifiedSet<K> newSetWith(K... elements)
     {
-        return UnifiedSet.<K>newSet(elements.length).with(elements);
+        return new UnifiedSet<K>(elements.length).with(elements);
     }
 
     private int fastCeil(float v)
@@ -627,7 +627,7 @@ public class UnifiedSet<T>
     @Override
     public UnifiedSet<T> newEmpty(int size)
     {
-        return UnifiedSet.newSet(size, this.loadFactor);
+        return new UnifiedSet<>(size, this.loadFactor);
     }
 
     @Override
@@ -747,7 +747,7 @@ public class UnifiedSet<T>
     @Override
     public <S> UnifiedSet<S> selectInstancesOf(Class<S> clazz)
     {
-        UnifiedSet<S> result = UnifiedSet.newSet();
+        UnifiedSet<S> result = new UnifiedSet<>();
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
         return result;
     }
@@ -1588,7 +1588,7 @@ public class UnifiedSet<T>
     private boolean retainAllFromNonSet(Iterable<?> iterable)
     {
         int retainedSize = Iterate.sizeOf(iterable);
-        UnifiedSet<T> retainedCopy = this.newEmpty(retainedSize);
+        UnifiedSet<T> retainedCopy = new UnifiedSet<>(retainedSize, this.loadFactor);
         for (Object key : iterable)
         {
             this.addIfFound((T) key, retainedCopy);

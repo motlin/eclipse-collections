@@ -62,7 +62,7 @@ public abstract class AbstractPredicateBasedCombiner<T, BT extends Procedure<T>>
         if (sourceCollection instanceof SetIterable)
         {
             this.setCombineOne(true);
-            return UnifiedSet.newSet(initialCapacity);
+            return new UnifiedSet<>(initialCapacity);
         }
         if (sourceCollection instanceof Bag || sourceCollection instanceof MapIterable)
         {

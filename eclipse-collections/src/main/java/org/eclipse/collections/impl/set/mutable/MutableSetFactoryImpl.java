@@ -29,7 +29,7 @@ public class MutableSetFactoryImpl implements MutableSetFactory
     @Override
     public <T> MutableSet<T> withInitialCapacity(int capacity)
     {
-        return UnifiedSet.newSet(capacity);
+        return new UnifiedSet<>(capacity);
     }
 
     @Override

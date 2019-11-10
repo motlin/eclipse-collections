@@ -123,10 +123,10 @@ public class ParallelIterateTest
                 ListAdapter.adapt(new LinkedList<Integer>()).withAll(interval),
                 ListAdapter.adapt(new LinkedList<Integer>()).withAll(interval).asUnmodifiable(),
                 ListAdapter.adapt(new LinkedList<Integer>()).withAll(interval).asSynchronized(),
-                UnifiedSetWithHashingStrategy.<Integer>newSet(HashingStrategies.defaultStrategy()).withAll(interval),
-                UnifiedSetWithHashingStrategy.<Integer>newSet(HashingStrategies.defaultStrategy()).withAll(interval).asUnmodifiable(),
-                UnifiedSetWithHashingStrategy.<Integer>newSet(HashingStrategies.defaultStrategy()).withAll(interval).asSynchronized(),
-                UnifiedSetWithHashingStrategy.<Integer>newSet(HashingStrategies.defaultStrategy()).withAll(interval).toImmutable());
+                new UnifiedSetWithHashingStrategy<Integer>(HashingStrategies.defaultStrategy()).withAll(interval),
+                new UnifiedSetWithHashingStrategy<Integer>(HashingStrategies.defaultStrategy()).withAll(interval).asUnmodifiable(),
+                new UnifiedSetWithHashingStrategy<Integer>(HashingStrategies.defaultStrategy()).withAll(interval).asSynchronized(),
+                new UnifiedSetWithHashingStrategy<Integer>(HashingStrategies.defaultStrategy()).withAll(interval).toImmutable());
     }
 
     @After
@@ -470,7 +470,7 @@ public class ParallelIterateTest
     @Test
     public void groupBy()
     {
-        FastList<String> source = FastList.newListWith("Ted", "Sally", "Mary", "Bob", "Sara");
+        MutableList<String> source = FastList.newListWith("Ted", "Sally", "Mary", "Bob", "Sara");
         Multimap<Character, String> result1 = ParallelIterate.groupBy(source, StringFunctions.firstLetter(), 1);
         Multimap<Character, String> result2 = ParallelIterate.groupBy(Collections.synchronizedList(source), StringFunctions.firstLetter(), 1);
         Multimap<Character, String> result3 = ParallelIterate.groupBy(Collections.synchronizedCollection(source), StringFunctions.firstLetter(), 1);

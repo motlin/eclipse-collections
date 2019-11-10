@@ -70,7 +70,7 @@ class ImmutableMapWithHashingStrategySerializationProxy<K, V> implements Externa
     {
         HashingStrategy<? super K> strategy = (HashingStrategy<? super K>) in.readObject();
         int size = in.readInt();
-        MutableMap<K, V> deserializedMap = UnifiedMapWithHashingStrategy.newMap(strategy);
+        MutableMap<K, V> deserializedMap = new UnifiedMapWithHashingStrategy<>(strategy);
 
         for (int i = 0; i < size; i++)
         {

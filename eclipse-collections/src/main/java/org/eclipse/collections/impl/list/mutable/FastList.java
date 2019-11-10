@@ -209,7 +209,7 @@ public class FastList<T>
      */
     public static <E> FastList<E> newWithNValues(int size, Function0<? extends E> factory)
     {
-        FastList<E> newFastList = FastList.newList(size);
+        FastList<E> newFastList = new FastList<>(size);
         for (int i = 0; i < size; i++)
         {
             newFastList.add(factory.value());

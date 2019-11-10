@@ -149,7 +149,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
         {
             return new TreeSortedSet<>((SortedSet<T>) source);
         }
-        TreeSortedSet<T> sortedSet = TreeSortedSet.newSet();
+        TreeSortedSet<T> sortedSet = new TreeSortedSet<>();
         Iterate.forEach(source, CollectionAddProcedure.on(sortedSet));
         return sortedSet;
     }
@@ -328,7 +328,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public TreeSortedSet<T> newEmpty()
     {
-        return TreeSortedSet.newSet(this.treeSet.comparator());
+        return new TreeSortedSet<>(this.comparator());
     }
 
     @Override
@@ -347,7 +347,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public TreeSortedSet<T> select(Predicate<? super T> predicate)
     {
-        TreeSortedSet<T> result = this.newEmpty();
+        TreeSortedSet<T> result = new TreeSortedSet<>(this.comparator());
         this.forEach(new SelectProcedure<>(predicate, result));
         return result;
     }
@@ -355,7 +355,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public TreeSortedSet<T> reject(Predicate<? super T> predicate)
     {
-        TreeSortedSet<T> result = this.newEmpty();
+        TreeSortedSet<T> result = new TreeSortedSet<>(this.comparator());
         this.forEach(new RejectProcedure<>(predicate, result));
         return result;
     }
@@ -523,7 +523,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            FastList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
+            MutableList<Pair<T, S>> target = FastList.newList(Math.min(this.size(), thatSize));
             return Iterate.zip(this, that, target);
         }
         return Iterate.zip(this, that, FastList.newList());
@@ -535,7 +535,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
         Comparator<? super T> comparator = this.comparator();
         if (comparator == null)
         {
-            TreeSortedSet<Pair<T, Integer>> pairs = TreeSortedSet.newSet(Comparators.byFunction(Functions.firstOfPair(), Comparators.naturalOrder()));
+            TreeSortedSet<Pair<T, Integer>> pairs = new TreeSortedSet<>(Comparators.byFunction(Functions.firstOfPair(), Comparators.naturalOrder()));
             return Iterate.zipWithIndex(this, pairs);
         }
         return Iterate.zipWithIndex(this, TreeSortedSet.newSet(Comparators.byFirstOfPair(comparator)));

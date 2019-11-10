@@ -50,16 +50,16 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     {
         Verify.assertEqualsAndHashCode(
                 UnifiedSet.newSetWith("1"),
-                UnifiedSet.newSet().with("1"));
+                new UnifiedSet<>().with("1"));
         Verify.assertEqualsAndHashCode(
                 UnifiedSet.newSetWith("1", "2"),
-                UnifiedSet.newSet().with("1", "2"));
+                new UnifiedSet<>().with("1", "2"));
         Verify.assertEqualsAndHashCode(
                 UnifiedSet.newSetWith("1", "2", "3"),
-                UnifiedSet.newSet().with("1", "2", "3"));
+                new UnifiedSet<>().with("1", "2", "3"));
         Verify.assertEqualsAndHashCode(
                 UnifiedSet.newSetWith("1", "2", "3", "4"),
-                UnifiedSet.newSet().with("1", "2", "3", "4"));
+                new UnifiedSet<>().with("1", "2", "3", "4"));
 
         MutableSet<String> list = UnifiedSet.<String>newSet().with("A")
                 .withAll(Lists.fixedSize.of("1", "2"))
@@ -93,7 +93,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         // force rehashing at each step of adding a new colliding entry
         for (int i = 0; i < COLLISIONS.size(); i++)
         {
-            UnifiedSet<Integer> unifiedSet = UnifiedSet.<Integer>newSet(i, 0.75f).withAll(COLLISIONS.subList(0, i));
+            UnifiedSet<Integer> unifiedSet = new UnifiedSet<Integer>(i, 0.75f).withAll(COLLISIONS.subList(0, i));
             if (i == 2)
             {
                 unifiedSet.add(Integer.valueOf(1));
@@ -109,7 +109,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
 
         // Rehashing Case A: a bucket with only one entry and a low capacity forcing a rehash, where the triggering element goes in the bucket
         // set up a chained bucket
-        UnifiedSet<Integer> caseA = UnifiedSet.<Integer>newSet(2).with(COLLISION_1, COLLISION_2);
+        UnifiedSet<Integer> caseA = new UnifiedSet<Integer>(2).with(COLLISION_1, COLLISION_2);
         // clear the bucket to one element
         caseA.remove(COLLISION_2);
         // increase the occupied count to the threshold
@@ -121,7 +121,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
 
         // Rehashing Case B: a bucket with only one entry and a low capacity forcing a rehash, where the triggering element is not in the chain
         // set up a chained bucket
-        UnifiedSet<Integer> caseB = UnifiedSet.<Integer>newSet(2).with(COLLISION_1, COLLISION_2);
+        UnifiedSet<Integer> caseB = new UnifiedSet<Integer>(2).with(COLLISION_1, COLLISION_2);
         // clear the bucket to one element
         caseB.remove(COLLISION_2);
         // increase the occupied count to the threshold
@@ -143,14 +143,14 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         Assert.assertTrue(UnifiedSet.<Integer>newSet().addAllIterable(expected));
 
         // add an odd-sized collection to a set with a small max to ensure that its capacity is maintained after the operation.
-        UnifiedSet<Integer> tiny = UnifiedSet.newSet(0);
+        UnifiedSet<Integer> tiny = new UnifiedSet<>(0);
         Assert.assertTrue(tiny.addAllIterable(FastList.newListWith(COLLISION_1)));
     }
 
     @Test
     public void get()
     {
-        UnifiedSet<Integer> set = UnifiedSet.<Integer>newSet(SIZE).withAll(COLLISIONS);
+        UnifiedSet<Integer> set = new UnifiedSet<Integer>(SIZE).withAll(COLLISIONS);
         set.removeAll(COLLISIONS);
         for (Integer integer : COLLISIONS)
         {
@@ -179,7 +179,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         int size = MORE_COLLISIONS.size();
         for (int i = 1; i <= size; i++)
         {
-            Pool<Integer> unifiedSet = UnifiedSet.<Integer>newSet(1).withAll(MORE_COLLISIONS.subList(0, i - 1));
+            Pool<Integer> unifiedSet = new UnifiedSet<Integer>(1).withAll(MORE_COLLISIONS.subList(0, i - 1));
             Integer newValue = MORE_COLLISIONS.get(i - 1);
 
             Assert.assertSame(newValue, unifiedSet.put(newValue));
@@ -188,7 +188,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         }
 
         // assert that all redundant puts into a each position of chain bucket return the original element added
-        Pool<Integer> set = UnifiedSet.<Integer>newSet(4).with(COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4);
+        Pool<Integer> set = new UnifiedSet<Integer>(4).with(COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4);
         for (int i = 0; i < set.size(); i++)
         {
             Integer value = COLLISIONS.get(i);
@@ -198,7 +198,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         // force rehashing at each step of putting a new colliding entry
         for (int i = 0; i < COLLISIONS.size(); i++)
         {
-            Pool<Integer> pool = UnifiedSet.<Integer>newSet(i).withAll(COLLISIONS.subList(0, i));
+            Pool<Integer> pool = new UnifiedSet<Integer>(i).withAll(COLLISIONS.subList(0, i));
             if (i == 2)
             {
                 pool.put(Integer.valueOf(1));
@@ -214,7 +214,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
 
         // cover one case not covered in the above: a bucket with only one entry and a low capacity forcing a rehash
         // set up a chained bucket
-        Pool<Integer> pool = UnifiedSet.<Integer>newSet(2).with(COLLISION_1, COLLISION_2);
+        Pool<Integer> pool = new UnifiedSet<Integer>(2).with(COLLISION_1, COLLISION_2);
         // clear the bucket to one element
         pool.removeFromPool(COLLISION_2);
         // increase the occupied count to the threshold
@@ -225,7 +225,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         Assert.assertSame(COLLISION_2, pool.put(COLLISION_2));
 
         // put chained items into a pool without causing a rehash
-        Pool<Integer> olympicPool = UnifiedSet.newSet();
+        Pool<Integer> olympicPool = new UnifiedSet<>();
         Assert.assertSame(COLLISION_1, olympicPool.put(COLLISION_1));
         Assert.assertSame(COLLISION_2, olympicPool.put(COLLISION_2));
     }
@@ -233,7 +233,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     @Test
     public void removeFromPool()
     {
-        Pool<Integer> unifiedSet = UnifiedSet.<Integer>newSet(8).withAll(COLLISIONS);
+        Pool<Integer> unifiedSet = new UnifiedSet<Integer>(8).withAll(COLLISIONS);
         COLLISIONS.reverseForEach(each -> {
             Assert.assertNull(unifiedSet.removeFromPool(null));
             Assert.assertSame(each, unifiedSet.removeFromPool(each));
@@ -245,7 +245,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         Assert.assertEquals(UnifiedSet.<Integer>newSet(), unifiedSet);
 
         COLLISIONS.forEach(Procedures.cast(each -> {
-            Pool<Integer> unifiedSet2 = UnifiedSet.<Integer>newSet(8).withAll(COLLISIONS);
+            Pool<Integer> unifiedSet2 = new UnifiedSet<Integer>(8).withAll(COLLISIONS);
 
             Assert.assertNull(unifiedSet2.removeFromPool(null));
             Assert.assertSame(each, unifiedSet2.removeFromPool(each));
@@ -273,7 +273,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         int size = COLLISIONS.size();
         for (int i = 1; i < size; i++)
         {
-            MutableSet<Integer> set = UnifiedSet.<Integer>newSet(SIZE).withAll(COLLISIONS.subList(0, i));
+            MutableSet<Integer> set = new UnifiedSet<Integer>(SIZE).withAll(COLLISIONS.subList(0, i));
             Verify.assertPostSerializedEqualsAndHashCode(set);
 
             set.add(null);
@@ -290,7 +290,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     @Test
     public void null_behavior()
     {
-        UnifiedSet<Integer> unifiedSet = UnifiedSet.<Integer>newSet(10).withAll(MORE_COLLISIONS);
+        UnifiedSet<Integer> unifiedSet = new UnifiedSet<Integer>(10).withAll(MORE_COLLISIONS);
         MORE_COLLISIONS.clone().reverseForEach(each -> {
             Assert.assertTrue(unifiedSet.add(null));
             Assert.assertFalse(unifiedSet.add(null));
@@ -372,7 +372,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
             Field tableField = UnifiedSet.class.getDeclaredField("table");
             tableField.setAccessible(true);
 
-            Object[] table = (Object[]) tableField.get(UnifiedSet.newSet(initialCapacity, loadFactor));
+            Object[] table = (Object[]) tableField.get(new UnifiedSet<>(initialCapacity, loadFactor));
 
             int size = (int) Math.ceil(initialCapacity / loadFactor);
             int capacity = 1;
@@ -401,7 +401,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     public void batchForEach()
     {
         //Testing batch size of 1 to 16 with no chains
-        UnifiedSet<Integer> set = UnifiedSet.<Integer>newSet(10).with(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        UnifiedSet<Integer> set = new UnifiedSet<Integer>(10).with(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         for (int sectionCount = 1; sectionCount <= 16; ++sectionCount)
         {
             Sum sum = new IntegerSum(0);
@@ -414,7 +414,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
 
         //Testing 1 batch with chains
         Sum sum2 = new IntegerSum(0);
-        UnifiedSet<Integer> set2 = UnifiedSet.<Integer>newSet(3).with(COLLISION_1, COLLISION_2, COLLISION_3, 1, 2);
+        UnifiedSet<Integer> set2 = new UnifiedSet<Integer>(3).with(COLLISION_1, COLLISION_2, COLLISION_3, 1, 2);
         int numBatches = set2.getBatchCount(100);
         for (int i = 0; i < numBatches; ++i)
         {
@@ -425,7 +425,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
 
         //Testing batch size of 3 with chains and uneven last batch
         Sum sum3 = new IntegerSum(0);
-        UnifiedSet<Integer> set3 = UnifiedSet.<Integer>newSet(4, 1.0F).with(COLLISION_1, COLLISION_2, 1, 2, 3, 4, 5);
+        UnifiedSet<Integer> set3 = new UnifiedSet<Integer>(4, 1.0F).with(COLLISION_1, COLLISION_2, 1, 2, 3, 4, 5);
         int numBatches2 = set3.getBatchCount(3);
         for (int i = 0; i < numBatches2; ++i)
         {
@@ -435,7 +435,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
 
         //Test batchForEach on empty set, it should simply do nothing and not throw any exceptions
         Sum sum4 = new IntegerSum(0);
-        UnifiedSet<Integer> set4 = UnifiedSet.newSet();
+        UnifiedSet<Integer> set4 = new UnifiedSet<>();
         set4.batchForEach(new SumProcedure<>(sum4), 0, set4.getBatchCount(1));
         Assert.assertEquals(0, sum4.getValue());
     }
@@ -449,7 +449,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         int size = COLLISIONS.size();
         for (int i = 1; i < size; i++)
         {
-            MutableSet<Integer> set = UnifiedSet.<Integer>newSet(SIZE).withAll(COLLISIONS.subList(0, i));
+            MutableSet<Integer> set = new UnifiedSet<Integer>(SIZE).withAll(COLLISIONS.subList(0, i));
             Object[] objects = set.toArray();
             Assert.assertEquals(set, UnifiedSet.newSetWith(objects));
         }
@@ -474,7 +474,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         int size = MORE_COLLISIONS.size();
         for (int i = 0; i < size; i++)
         {
-            MutableSet<Integer> actual = UnifiedSet.<Integer>newSet(SIZE).withAll(MORE_COLLISIONS);
+            MutableSet<Integer> actual = new UnifiedSet<Integer>(SIZE).withAll(MORE_COLLISIONS);
             Iterator<Integer> iterator = actual.iterator();
             for (int j = 0; j <= i; j++)
             {
@@ -525,19 +525,19 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         Key key = new Key("key");
 
         Key duplicateKey1 = new Key("key");
-        MutableSet<Key> set1 = UnifiedSet.<Key>newSet().with(key, duplicateKey1);
+        MutableSet<Key> set1 = new UnifiedSet<Key>().with(key, duplicateKey1);
         Verify.assertSize(1, set1);
         Verify.assertContains(key, set1);
         Assert.assertSame(key, set1.getFirst());
 
         Key duplicateKey2 = new Key("key");
-        MutableSet<Key> set2 = UnifiedSet.<Key>newSet().with(key, duplicateKey1, duplicateKey2);
+        MutableSet<Key> set2 = new UnifiedSet<Key>().with(key, duplicateKey1, duplicateKey2);
         Verify.assertSize(1, set2);
         Verify.assertContains(key, set2);
         Assert.assertSame(key, set2.getFirst());
 
         Key duplicateKey3 = new Key("key");
-        MutableSet<Key> set3 = UnifiedSet.<Key>newSet().with(key, new Key("not a dupe"), duplicateKey3);
+        MutableSet<Key> set3 = new UnifiedSet<Key>().with(key, new Key("not a dupe"), duplicateKey3);
         Verify.assertSize(2, set3);
         Verify.assertContainsAll(set3, key, new Key("not a dupe"));
         Assert.assertSame(key, set3.detect(key::equals));
@@ -546,7 +546,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     @Test
     public void withSameIfNotModified()
     {
-        UnifiedSet<Integer> integers = UnifiedSet.newSet();
+        UnifiedSet<Integer> integers = new UnifiedSet<>();
         Assert.assertEquals(UnifiedSet.newSetWith(1, 2), integers.with(1, 2));
         Assert.assertEquals(UnifiedSet.newSetWith(1, 2, 3, 4), integers.with(2, 3, 4));
         Assert.assertSame(integers, integers.with(5, 6, 7));
@@ -584,7 +584,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         int size = MORE_COLLISIONS.size();
         for (int i = 1; i <= size - 1; i++)
         {
-            MutableSet<Integer> unifiedSet = UnifiedSet.<Integer>newSet(1).withAll(MORE_COLLISIONS.subList(0, i));
+            MutableSet<Integer> unifiedSet = new UnifiedSet<Integer>(1).withAll(MORE_COLLISIONS.subList(0, i));
             Assert.assertSame(MORE_COLLISIONS.get(0), unifiedSet.getFirst());
         }
     }
@@ -598,7 +598,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
         int size = MORE_COLLISIONS.size();
         for (int i = 1; i <= size - 1; i++)
         {
-            MutableSet<Integer> unifiedSet = UnifiedSet.<Integer>newSet(1).withAll(MORE_COLLISIONS.subList(0, i));
+            MutableSet<Integer> unifiedSet = new UnifiedSet<Integer>(1).withAll(MORE_COLLISIONS.subList(0, i));
             Assert.assertSame(MORE_COLLISIONS.get(i - 1), unifiedSet.getLast());
         }
 
@@ -610,7 +610,7 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     @Test
     public void trimToSize()
     {
-        UnifiedSet<String> set = UnifiedSet.newSet();
+        UnifiedSet<String> set = new UnifiedSet<>();
         MutableSet<String> expected = Sets.mutable.empty();
 
         Interval integers = Interval.fromTo(0, 250);

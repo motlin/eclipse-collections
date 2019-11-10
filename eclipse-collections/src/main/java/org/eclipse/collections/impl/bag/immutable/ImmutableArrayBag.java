@@ -494,7 +494,7 @@ public class ImmutableArrayBag<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            HashBag<Pair<T, S>> target = HashBag.newBag(Math.min(this.size(), thatSize));
+            MutableBag<Pair<T, S>> target = HashBag.newBag(Math.min(this.size(), thatSize));
             return this.zip(that, target).toImmutable();
         }
         return this.zip(that, HashBag.newBag()).toImmutable();
@@ -507,7 +507,7 @@ public class ImmutableArrayBag<T>
     @Deprecated
     public ImmutableSet<Pair<T, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(UnifiedSet.newSet(this.size())).toImmutable();
+        return this.zipWithIndex(new UnifiedSet<>(this.size())).toImmutable();
     }
 
     protected Object writeReplace()

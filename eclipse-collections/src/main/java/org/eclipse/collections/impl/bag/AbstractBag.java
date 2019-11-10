@@ -898,7 +898,7 @@ public abstract class AbstractBag<T>
     @Override
     public MutableSet<T> toSet()
     {
-        MutableSet<T> result = UnifiedSet.newSet(this.sizeDistinct());
+        MutableSet<T> result = new UnifiedSet<>(this.sizeDistinct());
         this.forEachWithOccurrences((each, occurrences) -> result.add(each));
         return result;
     }

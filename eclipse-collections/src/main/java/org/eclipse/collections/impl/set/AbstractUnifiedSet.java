@@ -332,7 +332,7 @@ public abstract class AbstractUnifiedSet<T>
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            UnifiedSet<Pair<T, S>> target = UnifiedSet.newSet(Math.min(this.size(), thatSize));
+            MutableSet<Pair<T, S>> target = new UnifiedSet<>(Math.min(this.size(), thatSize));
             return this.zip(that, target);
         }
         return this.zip(that, UnifiedSet.newSet());
@@ -345,7 +345,7 @@ public abstract class AbstractUnifiedSet<T>
     @Deprecated
     public MutableSet<Pair<T, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(UnifiedSet.newSet(this.size()));
+        return this.zipWithIndex(new UnifiedSet<>(this.size()));
     }
 
     @Override

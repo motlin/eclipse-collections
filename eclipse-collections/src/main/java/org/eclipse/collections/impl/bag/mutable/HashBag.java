@@ -64,7 +64,7 @@ public class HashBag<T>
 
     public static <E> HashBag<E> newBag(Bag<? extends E> source)
     {
-        HashBag<E> result = HashBag.newBag(source.sizeDistinct());
+        HashBag<E> result = new HashBag<>(source.sizeDistinct());
         result.addAllBag(source);
         return result;
     }
@@ -80,7 +80,7 @@ public class HashBag<T>
 
     public static <E> HashBag<E> newBagWith(E... elements)
     {
-        HashBag<E> result = HashBag.newBag();
+        HashBag<E> result = new HashBag<>();
         ArrayIterate.addAllTo(elements, result);
         return result;
     }

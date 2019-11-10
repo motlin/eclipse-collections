@@ -208,7 +208,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Override
     public <S> ImmutableSet<S> selectInstancesOf(Class<S> clazz)
     {
-        MutableSet<S> result = UnifiedSet.newSet(this.size());
+        MutableSet<S> result = new UnifiedSet<>(this.size());
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
         return result.toImmutable();
     }
@@ -375,7 +375,7 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            UnifiedSet<Pair<T, S>> target = UnifiedSet.newSet(Math.min(this.size(), thatSize));
+            MutableSet<Pair<T, S>> target = new UnifiedSet<>(Math.min(this.size(), thatSize));
             return this.zip(that, target).toImmutable();
         }
         return this.zip(that, UnifiedSet.newSet()).toImmutable();
@@ -388,13 +388,13 @@ public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollectio
     @Deprecated
     public ImmutableSet<Pair<T, Integer>> zipWithIndex()
     {
-        return this.zipWithIndex(UnifiedSet.newSet(this.size())).toImmutable();
+        return this.zipWithIndex(new UnifiedSet<>(this.size())).toImmutable();
     }
 
     @Override
     protected MutableCollection<T> newMutable(int size)
     {
-        return UnifiedSet.newSet(size);
+        return new UnifiedSet<>(size);
     }
 
     @Override

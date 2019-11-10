@@ -65,7 +65,7 @@ class ImmutableSetSerializationProxy<T> implements Externalizable
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
     {
         int size = in.readInt();
-        MutableSet<T> deserializedSet = UnifiedSet.newSet(size);
+        MutableSet<T> deserializedSet = new UnifiedSet<>(size);
 
         for (int i = 0; i < size; i++)
         {

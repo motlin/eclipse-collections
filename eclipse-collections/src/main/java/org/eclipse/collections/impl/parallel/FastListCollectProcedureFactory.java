@@ -28,6 +28,6 @@ public final class FastListCollectProcedureFactory<T, V> implements ProcedureFac
     @Override
     public FastListCollectProcedure<T, V> create()
     {
-        return new FastListCollectProcedure<>(this.function, FastList.newList(this.collectionSize));
+        return new FastListCollectProcedure<>(this.function, new FastList<>(this.collectionSize));
     }
 }

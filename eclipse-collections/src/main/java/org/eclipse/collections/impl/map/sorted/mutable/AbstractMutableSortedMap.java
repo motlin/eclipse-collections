@@ -312,7 +312,7 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     @Override
     public <S> MutableList<S> selectInstancesOf(Class<S> clazz)
     {
-        FastList<S> result = FastList.newList(this.size());
+        FastList<S> result = new FastList<>(this.size());
         this.forEach(new SelectInstancesOfProcedure<>(clazz, result));
         result.trimToSize();
         return result;

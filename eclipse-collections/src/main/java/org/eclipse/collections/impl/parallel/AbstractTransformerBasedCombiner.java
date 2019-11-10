@@ -54,7 +54,7 @@ public abstract class AbstractTransformerBasedCombiner<V, T, BT extends Procedur
         if (sourceIterable instanceof SetIterable)
         {
             this.setCombineOne(true);
-            return UnifiedSet.newSet(initialCapacity);
+            return new UnifiedSet<>(initialCapacity);
         }
         if (sourceIterable instanceof Bag || sourceIterable instanceof MapIterable)
         {

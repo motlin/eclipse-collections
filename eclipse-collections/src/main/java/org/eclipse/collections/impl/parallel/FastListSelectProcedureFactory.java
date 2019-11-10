@@ -28,6 +28,6 @@ public final class FastListSelectProcedureFactory<T> implements ProcedureFactory
     @Override
     public FastListSelectProcedure<T> create()
     {
-        return new FastListSelectProcedure<>(this.predicate, FastList.newList(this.collectionSize));
+        return new FastListSelectProcedure<>(this.predicate, new FastList<>(this.collectionSize));
     }
 }

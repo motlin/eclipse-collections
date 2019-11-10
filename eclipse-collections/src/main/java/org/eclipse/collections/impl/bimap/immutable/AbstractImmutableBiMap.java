@@ -379,7 +379,7 @@ public abstract class AbstractImmutableBiMap<K, V> extends AbstractBiMap<K, V> i
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            UnifiedSet<Pair<V, S>> target = UnifiedSet.newSet(Math.min(this.size(), thatSize));
+            MutableSet<Pair<V, S>> target = new UnifiedSet<>(Math.min(this.size(), thatSize));
             return this.delegate.zip(that, target).toImmutable();
         }
         return this.delegate.zip(that, UnifiedSet.newSet()).toImmutable();
@@ -392,7 +392,7 @@ public abstract class AbstractImmutableBiMap<K, V> extends AbstractBiMap<K, V> i
     @Deprecated
     public ImmutableSet<Pair<V, Integer>> zipWithIndex()
     {
-        return this.delegate.zipWithIndex(UnifiedSet.newSet(this.size())).toImmutable();
+        return this.delegate.zipWithIndex(new UnifiedSet<>(this.size())).toImmutable();
     }
 
     @Override

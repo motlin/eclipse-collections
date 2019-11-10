@@ -25,6 +25,6 @@ public class UnifiedSetWithHashingStrategySerializationTest
                         + "LlVuaWZpZWRTZXRXaXRoSGFzaGluZ1N0cmF0ZWd5AAAAAAAAAAEMAAB4cHNyAExvcmcuZWNsaXBz\n"
                         + "ZS5jb2xsZWN0aW9ucy5pbXBsLmJsb2NrLmZhY3RvcnkuSGFzaGluZ1N0cmF0ZWdpZXMkRGVmYXVs\n"
                         + "dFN0cmF0ZWd5AAAAAAAAAAECAAB4cHcIAAAAAD9AAAB4",
-                UnifiedSetWithHashingStrategy.newSet(HashingStrategies.defaultStrategy()));
+                new UnifiedSetWithHashingStrategy<>(HashingStrategies.defaultStrategy()));
     }
 }

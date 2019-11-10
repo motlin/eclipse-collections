@@ -40,9 +40,9 @@ public class HashingStrategySetsTest
         Verify.assertInstanceOf(ImmutableSet.class, factory.of(HashingStrategies.defaultStrategy(), 1, 2, 3, 4, 5, 6, 7, 8));
         Assert.assertEquals(UnifiedSet.newSetWith(), factory.of(HashingStrategies.defaultStrategy(), null));
         Verify.assertInstanceOf(ImmutableSet.class, factory.of(HashingStrategies.defaultStrategy(), null));
-        Assert.assertEquals(UnifiedSetWithHashingStrategy.newSet(HashingStrategies.defaultStrategy(), 1), factory.ofInitialCapacity(HashingStrategies.defaultStrategy(), 1));
+        Assert.assertEquals(new UnifiedSetWithHashingStrategy<>(HashingStrategies.defaultStrategy(), 1), factory.ofInitialCapacity(HashingStrategies.defaultStrategy(), 1));
         Verify.assertInstanceOf(ImmutableSet.class, factory.ofInitialCapacity(HashingStrategies.defaultStrategy(), 1));
-        Assert.assertEquals(UnifiedSetWithHashingStrategy.newSet(HashingStrategies.defaultStrategy(), 3), factory.withInitialCapacity(HashingStrategies.defaultStrategy(), 3));
+        Assert.assertEquals(new UnifiedSetWithHashingStrategy<>(HashingStrategies.defaultStrategy(), 3), factory.withInitialCapacity(HashingStrategies.defaultStrategy(), 3));
         Verify.assertInstanceOf(ImmutableSet.class, factory.ofInitialCapacity(HashingStrategies.defaultStrategy(), 3));
     }
 
@@ -62,9 +62,9 @@ public class HashingStrategySetsTest
         Verify.assertInstanceOf(MutableSet.class, factory.of(HashingStrategies.defaultStrategy(), 1, 2, 3, 4, 5, 6, 7, 8));
         Assert.assertEquals(UnifiedSet.newSetWith(1, 2, 3, 4, 5, 6, 7, 8), factory.ofAll(HashingStrategies.defaultStrategy(), FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8)));
         Verify.assertInstanceOf(MutableSet.class, factory.of(HashingStrategies.defaultStrategy(), FastList.newListWith(1, 2, 3, 4, 5, 6, 7, 8)));
-        Assert.assertEquals(UnifiedSetWithHashingStrategy.newSet(HashingStrategies.defaultStrategy(), 1), factory.ofInitialCapacity(HashingStrategies.defaultStrategy(), 1));
+        Assert.assertEquals(new UnifiedSetWithHashingStrategy<>(HashingStrategies.defaultStrategy(), 1), factory.ofInitialCapacity(HashingStrategies.defaultStrategy(), 1));
         Verify.assertInstanceOf(MutableSet.class, factory.ofInitialCapacity(HashingStrategies.defaultStrategy(), 1));
-        Assert.assertEquals(UnifiedSetWithHashingStrategy.newSet(HashingStrategies.defaultStrategy(), 3), factory.withInitialCapacity(HashingStrategies.defaultStrategy(), 3));
+        Assert.assertEquals(new UnifiedSetWithHashingStrategy<>(HashingStrategies.defaultStrategy(), 3), factory.withInitialCapacity(HashingStrategies.defaultStrategy(), 3));
         Verify.assertInstanceOf(MutableSet.class, factory.ofInitialCapacity(HashingStrategies.defaultStrategy(), 3));
     }
 

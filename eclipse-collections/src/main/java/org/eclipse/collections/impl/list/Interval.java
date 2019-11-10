@@ -926,7 +926,7 @@ public final class Interval
     @Override
     public MutableList<Integer> toList()
     {
-        FastList<Integer> list = FastList.newList(this.size());
+        MutableList<Integer> list = FastList.newList(this.size());
         this.forEach(CollectionAddProcedure.on(list));
         return list;
     }
@@ -934,7 +934,7 @@ public final class Interval
     @Override
     public MutableSet<Integer> toSet()
     {
-        MutableSet<Integer> set = UnifiedSet.newSet(this.size());
+        MutableSet<Integer> set = new UnifiedSet<>(this.size());
         this.forEach(CollectionAddProcedure.on(set));
         return set;
     }

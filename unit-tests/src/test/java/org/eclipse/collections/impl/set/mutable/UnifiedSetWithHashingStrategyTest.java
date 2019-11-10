@@ -102,7 +102,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         super.tap();
 
         MutableList<Person> tapResult = Lists.mutable.of();
-        UnifiedSetWithHashingStrategy<Person> people = UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY).withAll(PEOPLE.castToList());
+        MutableSet<Person> people = new UnifiedSetWithHashingStrategy<>(LAST_NAME_HASHING_STRATEGY).withAll(PEOPLE.castToList());
         Assert.assertSame(people, people.tap(tapResult::add));
         Assert.assertEquals(people.toList(), tapResult);
     }
@@ -113,7 +113,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     {
         super.select();
 
-        UnifiedSetWithHashingStrategy<Person> people = UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY).withAll(PEOPLE.castToList());
+        MutableSet<Person> people = new UnifiedSetWithHashingStrategy<>(LAST_NAME_HASHING_STRATEGY).withAll(PEOPLE.castToList());
         Verify.assertSetsEqual(LAST_NAME_HASHED_SET.castToSet(), people);
         Verify.assertSetsEqual(UnifiedSet.newSetWith(JOHNSMITH), people.select(each -> "Smith".equals(each.getLastName())).with(JANESMITH));
     }
@@ -124,7 +124,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     {
         super.reject();
 
-        UnifiedSetWithHashingStrategy<Person> people = UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY).withAll(PEOPLE.castToList());
+        MutableSet<Person> people = new UnifiedSetWithHashingStrategy<>(LAST_NAME_HASHING_STRATEGY).withAll(PEOPLE.castToList());
         Verify.assertSetsEqual(UnifiedSet.newSetWith(JOHNSMITH), people.reject(each -> "Doe".equals(each.getLastName())).with(JANESMITH));
     }
 
@@ -184,18 +184,18 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     {
         Verify.assertEqualsAndHashCode(
                 UnifiedSetWithHashingStrategy.newSetWith(STRING_HASHING_STRATEGY, "1"),
-                UnifiedSetWithHashingStrategy.newSet(STRING_HASHING_STRATEGY).with("1"));
+                new UnifiedSetWithHashingStrategy<>(STRING_HASHING_STRATEGY).with("1"));
         Verify.assertEqualsAndHashCode(
                 UnifiedSetWithHashingStrategy.newSetWith(STRING_HASHING_STRATEGY, "1", "2"),
-                UnifiedSetWithHashingStrategy.newSet(STRING_HASHING_STRATEGY).with("1", "2"));
+                new UnifiedSetWithHashingStrategy<>(STRING_HASHING_STRATEGY).with("1", "2"));
         Verify.assertEqualsAndHashCode(
                 UnifiedSetWithHashingStrategy.newSetWith(STRING_HASHING_STRATEGY, "1", "2", "3"),
-                UnifiedSetWithHashingStrategy.newSet(STRING_HASHING_STRATEGY).with("1", "2", "3"));
+                new UnifiedSetWithHashingStrategy<>(STRING_HASHING_STRATEGY).with("1", "2", "3"));
         Verify.assertEqualsAndHashCode(
                 UnifiedSetWithHashingStrategy.newSetWith(STRING_HASHING_STRATEGY, "1", "2", "3", "4"),
-                UnifiedSetWithHashingStrategy.newSet(STRING_HASHING_STRATEGY).with("1", "2", "3", "4"));
+                new UnifiedSetWithHashingStrategy<>(STRING_HASHING_STRATEGY).with("1", "2", "3", "4"));
 
-        MutableSet<String> list = UnifiedSetWithHashingStrategy.newSet(STRING_HASHING_STRATEGY).with("A")
+        MutableSet<String> list = new UnifiedSetWithHashingStrategy<>(STRING_HASHING_STRATEGY).with("A")
                 .withAll(Lists.fixedSize.of("1", "2"))
                 .withAll(Lists.fixedSize.of())
                 .withAll(Sets.fixedSize.of("3", "4"));
@@ -211,7 +211,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Assert.assertEquals(UnifiedSetWithHashingStrategy.newSetWith(INTEGER_HASHING_STRATEGY, 1, 2, 3), integers);
 
         //testing iterable
-        UnifiedSetWithHashingStrategy<Integer> set1 = UnifiedSetWithHashingStrategy.newSet(
+        MutableSet<Integer> set1 = UnifiedSetWithHashingStrategy.newSet(
                 INTEGER_HASHING_STRATEGY, FastList.newListWith(1, 2, 3).asLazy());
         Assert.assertEquals(UnifiedSetWithHashingStrategy.newSetWith(INTEGER_HASHING_STRATEGY, 1, 2, 3), set1);
 
@@ -228,8 +228,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         // force rehashing at each step of adding a new colliding entry
         for (int i = 0; i < COLLISIONS.size(); i++)
         {
-            UnifiedSetWithHashingStrategy<Integer> unifiedSet = UnifiedSetWithHashingStrategy.newSet(
-                    INTEGER_HASHING_STRATEGY, i, 0.75f).withAll(COLLISIONS.subList(0, i));
+            MutableSet<Integer> unifiedSet = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, i, 0.75f).withAll(COLLISIONS.subList(0, i));
             if (i == 2)
             {
                 unifiedSet.add(Integer.valueOf(1));
@@ -245,8 +244,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
 
         // Rehashing Case A: a bucket with only one entry and a low capacity forcing a rehash, where the trigging element goes in the bucket
         // set up a chained bucket
-        UnifiedSetWithHashingStrategy<Integer> caseA = UnifiedSetWithHashingStrategy.newSet(
-                INTEGER_HASHING_STRATEGY, 2).with(COLLISION_1, COLLISION_2);
+        MutableSet<Integer> caseA = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 2).with(COLLISION_1, COLLISION_2);
         // clear the bucket to one element
         caseA.remove(COLLISION_2);
         // increase the occupied count to the threshold
@@ -258,8 +256,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
 
         // Rehashing Case B: a bucket with only one entry and a low capacity forcing a rehash, where the triggering element is not in the chain
         // set up a chained bucket
-        UnifiedSetWithHashingStrategy<Integer> caseB = UnifiedSetWithHashingStrategy.newSet(
-                INTEGER_HASHING_STRATEGY, 2).with(COLLISION_1, COLLISION_2);
+        MutableSet<Integer> caseB = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 2).with(COLLISION_1, COLLISION_2);
         // clear the bucket to one element
         caseB.remove(COLLISION_2);
         // increase the occupied count to the threshold
@@ -287,7 +284,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         });
 
         //Same as case A above except with a different hashing strategy
-        UnifiedSetWithHashingStrategy<Integer> caseA = UnifiedSetWithHashingStrategy.newSet(hashingStrategy, 2);
+        MutableSet<Integer> caseA = new UnifiedSetWithHashingStrategy<>(hashingStrategy, 2);
         //Adding an element to a slot
         Assert.assertTrue(caseA.add(COLLISION_1));
         //Setting up a chained bucked by forcing a collision
@@ -299,7 +296,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Verify.assertSetsEqual(UnifiedSet.newSetWith(COLLISION_1, COLLISION_1 + 1000, COLLISION_1 + 2000, null), caseA);
 
         //Same as case B above except with a different hashing strategy
-        UnifiedSetWithHashingStrategy<Integer> caseB = UnifiedSetWithHashingStrategy.newSet(hashingStrategy, 2);
+        MutableSet<Integer> caseB = new UnifiedSetWithHashingStrategy<>(hashingStrategy, 2);
         //Adding an element to a slot
         Assert.assertTrue(caseB.add(null));
         //Setting up a chained bucked by forcing a collision
@@ -311,7 +308,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Verify.assertSetsEqual(UnifiedSet.newSetWith(null, 1, 2, 3), caseB);
 
         //Testing add throws NullPointerException if the hashingStrategy is not null safe
-        Assert.assertThrows(NullPointerException.class, () -> UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY).add(null));
+        Assert.assertThrows(NullPointerException.class, () -> new UnifiedSetWithHashingStrategy<>(LAST_NAME_HASHING_STRATEGY).add(null));
     }
 
     @Test
@@ -417,16 +414,16 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         // test adding a fully populated chained bucket
         MutableSet<Integer> expected = UnifiedSetWithHashingStrategy.newSetWith(
                 INTEGER_HASHING_STRATEGY, COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4, COLLISION_5, COLLISION_6, COLLISION_7);
-        Assert.assertTrue(UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY).addAllIterable(expected));
+        Assert.assertTrue(new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY).addAllIterable(expected));
 
         // add an odd-sized collection to a set with a small max to ensure that its capacity is maintained after the operation.
-        UnifiedSetWithHashingStrategy<Integer> tiny = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY, 0);
+        MutableSet<Integer> tiny = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 0);
         Assert.assertTrue(tiny.addAllIterable(FastList.newListWith(COLLISION_1)));
 
         //Testing copying set with 3rd slot in chained bucket == null
-        UnifiedSetWithHashingStrategy<Integer> integers = UnifiedSetWithHashingStrategy.newSetWith(
+        MutableSet<Integer> integers = UnifiedSetWithHashingStrategy.newSetWith(
                 INTEGER_HASHING_STRATEGY, COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4);
-        UnifiedSetWithHashingStrategy<Integer> set = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY);
+        MutableSet<Integer> set = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY);
         integers.remove(COLLISION_4);
         Assert.assertTrue(set.addAllIterable(integers));
         Assert.assertEquals(UnifiedSet.newSetWith(COLLISION_1, COLLISION_2, COLLISION_3), set);
@@ -445,8 +442,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     @Test
     public void addALLIterable_with_hashingStrategy()
     {
-        UnifiedSetWithHashingStrategy<Person> people = UnifiedSetWithHashingStrategy.newSet(
-                HashingStrategies.nullSafeHashingStrategy(LAST_NAME_HASHING_STRATEGY), 2);
+        MutableSet<Person> people = new UnifiedSetWithHashingStrategy<>(HashingStrategies.nullSafeHashingStrategy(LAST_NAME_HASHING_STRATEGY), 2);
         //Testing adding an iterable
         Assert.assertTrue(people.addAllIterable(PEOPLE));
         Verify.assertSetsEqual(UnifiedSet.newSet(LAST_NAME_HASHED_SET), people);
@@ -461,14 +457,13 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Verify.assertSetsEqual(UnifiedSet.newSet(LAST_NAME_HASHED_SET).with(notInSet, null), people);
 
         //Testing addAllIterable throws NullPointerException if the hashingStrategy is not null safe
-        Assert.assertThrows(NullPointerException.class, () -> UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY).addAllIterable(UnifiedSet.newSetWith((Person) null)));
+        Assert.assertThrows(NullPointerException.class, () -> new UnifiedSetWithHashingStrategy<>(LAST_NAME_HASHING_STRATEGY).addAllIterable(UnifiedSet.newSetWith((Person) null)));
     }
 
     @Test
     public void get()
     {
-        UnifiedSetWithHashingStrategy<Integer> set = UnifiedSetWithHashingStrategy.newSet(
-                INTEGER_HASHING_STRATEGY, SIZE).withAll(COLLISIONS);
+        UnifiedSetWithHashingStrategy<Integer> set = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, SIZE).withAll(COLLISIONS);
         set.removeAll(COLLISIONS);
         for (Integer integer : COLLISIONS)
         {
@@ -496,8 +491,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     @Test
     public void get_with_hashingStrategy()
     {
-        UnifiedSetWithHashingStrategy<Person> people = UnifiedSetWithHashingStrategy.newSet(
-                HashingStrategies.nullSafeHashingStrategy(LAST_NAME_HASHING_STRATEGY), 2).withAll(PEOPLE.castToList());
+        UnifiedSetWithHashingStrategy<Person> people = new UnifiedSetWithHashingStrategy<>(HashingStrategies.nullSafeHashingStrategy(LAST_NAME_HASHING_STRATEGY), 2).withAll(PEOPLE.castToList());
 
         //Putting null then testing geting a null
         Verify.assertSize(3, people.with((Person) null));
@@ -513,7 +507,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Assert.assertNull(people.get(new Person("John", "NotHere")));
 
         //Testing get throws NullPointerException if the hashingStrategy is not null safe
-        Assert.assertThrows(NullPointerException.class, () -> UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY).get(null));
+        Assert.assertThrows(NullPointerException.class, () -> new UnifiedSetWithHashingStrategy<>(LAST_NAME_HASHING_STRATEGY).get(null));
     }
 
     @Test
@@ -522,8 +516,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         int size = MORE_COLLISIONS.size();
         for (int i = 1; i <= size; i++)
         {
-            Pool<Integer> unifiedSet = UnifiedSetWithHashingStrategy.newSet(
-                    INTEGER_HASHING_STRATEGY, 1).withAll(MORE_COLLISIONS.subList(0, i - 1));
+            Pool<Integer> unifiedSet = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 1).withAll(MORE_COLLISIONS.subList(0, i - 1));
             Integer newValue = MORE_COLLISIONS.get(i - 1);
 
             Assert.assertSame(newValue, unifiedSet.put(newValue));
@@ -532,8 +525,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         }
 
         // assert that all redundant puts into a each position of chain bucket return the original element added
-        Pool<Integer> set = UnifiedSetWithHashingStrategy.newSet(
-                INTEGER_HASHING_STRATEGY, 4).with(COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4);
+        Pool<Integer> set = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 4).with(COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4);
         for (int i = 0; i < set.size(); i++)
         {
             Integer value = COLLISIONS.get(i);
@@ -543,7 +535,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         // force rehashing at each step of putting a new colliding entry
         for (int i = 0; i < COLLISIONS.size(); i++)
         {
-            Pool<Integer> pool = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY, i).withAll(COLLISIONS.subList(0, i));
+            Pool<Integer> pool = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, i).withAll(COLLISIONS.subList(0, i));
             if (i == 2)
             {
                 pool.put(Integer.valueOf(1));
@@ -559,7 +551,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
 
         // cover one case not covered in the above: a bucket with only one entry and a low capacity forcing a rehash
         // set up a chained bucket
-        Pool<Integer> pool = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY, 2).with(COLLISION_1, COLLISION_2);
+        Pool<Integer> pool = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 2).with(COLLISION_1, COLLISION_2);
         // clear the bucket to one element
         pool.removeFromPool(COLLISION_2);
         // increase the occupied count to the threshold
@@ -570,7 +562,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Assert.assertSame(COLLISION_2, pool.put(COLLISION_2));
 
         // put chained items into a pool without causing a rehash
-        Pool<Integer> olympicPool = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY);
+        Pool<Integer> olympicPool = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY);
         Assert.assertSame(COLLISION_1, olympicPool.put(COLLISION_1));
         Assert.assertSame(COLLISION_2, olympicPool.put(COLLISION_2));
     }
@@ -578,8 +570,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     @Test
     public void put_with_hashingStrategy()
     {
-        UnifiedSetWithHashingStrategy<Person> people = UnifiedSetWithHashingStrategy.newSet(
-                HashingStrategies.nullSafeHashingStrategy(LAST_NAME_HASHING_STRATEGY), 2).withAll(PEOPLE.castToList());
+        UnifiedSetWithHashingStrategy<Person> people = new UnifiedSetWithHashingStrategy<>(HashingStrategies.nullSafeHashingStrategy(LAST_NAME_HASHING_STRATEGY), 2).withAll(PEOPLE.castToList());
         //Testing if element already exists, returns the instance in the set
         Assert.assertSame(JOHNSMITH, people.put(new Person("Anything", "Smith")));
         Verify.assertSize(2, people);
@@ -594,7 +585,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Verify.assertSize(4, people);
 
         //Testing put throws NullPointerException if the hashingStrategy is not null safe
-        Assert.assertThrows(NullPointerException.class, () -> UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY).put(null));
+        Assert.assertThrows(NullPointerException.class, () -> new UnifiedSetWithHashingStrategy<>(LAST_NAME_HASHING_STRATEGY).put(null));
     }
 
     @Test
@@ -613,8 +604,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
             }
         });
 
-        UnifiedSetWithHashingStrategy<Integer> integers = UnifiedSetWithHashingStrategy.newSet(
-                hashingStrategy, 2).with(COLLISION_1, COLLISION_1 + 1000, COLLISION_1 + 2000, null);
+        UnifiedSetWithHashingStrategy<Integer> integers = new UnifiedSetWithHashingStrategy<>(hashingStrategy, 2).with(COLLISION_1, COLLISION_1 + 1000, COLLISION_1 + 2000, null);
 
         //Testing remove null from the end of the chain
         Assert.assertTrue(integers.remove(null));
@@ -646,8 +636,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     @Test
     public void removeFromPool()
     {
-        Pool<Integer> unifiedSet = UnifiedSetWithHashingStrategy.newSet(
-                INTEGER_HASHING_STRATEGY, 8).withAll(COLLISIONS);
+        Pool<Integer> unifiedSet = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 8).withAll(COLLISIONS);
         COLLISIONS.reverseForEach(each ->
         {
             Assert.assertNull(unifiedSet.removeFromPool(null));
@@ -657,7 +646,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
             Assert.assertNull(unifiedSet.removeFromPool(COLLISION_10));
         });
 
-        Assert.assertEquals(UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY), unifiedSet);
+        Assert.assertEquals(new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY), unifiedSet);
 
         COLLISIONS.forEach(Procedures.cast(each ->
         {
@@ -703,8 +692,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
             }
         });
 
-        UnifiedSetWithHashingStrategy<Integer> integers = UnifiedSetWithHashingStrategy.newSet(
-                hashingStrategy, 2).with(COLLISION_1, COLLISION_1 + 1000, COLLISION_1 + 2000, null);
+        UnifiedSetWithHashingStrategy<Integer> integers = new UnifiedSetWithHashingStrategy<>(hashingStrategy, 2).with(COLLISION_1, COLLISION_1 + 1000, COLLISION_1 + 2000, null);
 
         //Testing remove null from the end of the chain
         Assert.assertNull(integers.removeFromPool(null));
@@ -736,22 +724,21 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         int size = COLLISIONS.size();
         for (int i = 1; i < size; i++)
         {
-            MutableSet<Integer> set = UnifiedSetWithHashingStrategy.newSet(
-                    INTEGER_HASHING_STRATEGY, SIZE).withAll(COLLISIONS.subList(0, i));
+            MutableSet<Integer> set = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, SIZE).withAll(COLLISIONS.subList(0, i));
             Verify.assertPostSerializedEqualsAndHashCode(set);
             set.add(null);
             Verify.assertPostSerializedEqualsAndHashCode(set);
         }
 
-        UnifiedSetWithHashingStrategy<Integer> nullBucketZero = UnifiedSetWithHashingStrategy.newSetWith(
+        MutableSet<Integer> nullBucketZero = UnifiedSetWithHashingStrategy.newSetWith(
                 INTEGER_HASHING_STRATEGY, null, COLLISION_1, COLLISION_2);
         Verify.assertPostSerializedEqualsAndHashCode(nullBucketZero);
 
-        UnifiedSetWithHashingStrategy<Integer> simpleSetWithNull = UnifiedSetWithHashingStrategy.newSetWith(
+        MutableSet<Integer> simpleSetWithNull = UnifiedSetWithHashingStrategy.newSetWith(
                 INTEGER_HASHING_STRATEGY, null, 1, 2);
         Verify.assertPostSerializedEqualsAndHashCode(simpleSetWithNull);
 
-        UnifiedSetWithHashingStrategy<Person> people = UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY, PEOPLE);
+        MutableSet<Person> people = UnifiedSetWithHashingStrategy.newSet(LAST_NAME_HASHING_STRATEGY, PEOPLE);
         Verify.assertPostSerializedEqualsAndHashCode(people);
         //Testing the hashingStrategy is serialized correctly by making sure it is still hashing by last name
         Verify.assertSetsEqual(LAST_NAME_HASHED_SET.castToSet(), people.withAll(PEOPLE.castToList()));
@@ -793,7 +780,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     {
         super.equalsAndHashCode();
 
-        UnifiedSetWithHashingStrategy<Integer> singleCollisionBucket = UnifiedSetWithHashingStrategy.newSetWith(
+        MutableSet<Integer> singleCollisionBucket = UnifiedSetWithHashingStrategy.newSetWith(
                 INTEGER_HASHING_STRATEGY, COLLISION_1, COLLISION_2);
         singleCollisionBucket.remove(COLLISION_2);
         Assert.assertEquals(singleCollisionBucket, UnifiedSetWithHashingStrategy.newSetWith(
@@ -819,8 +806,8 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         HashingStrategy<Person> personHashingStrategy = HashingStrategies.fromFunction(Person.TO_LAST);
         HashingStrategy<Person> personHashingStrategyCopy = HashingStrategies.fromFunction(Person.TO_LAST);
 
-        UnifiedSetWithHashingStrategy<Person> setA = UnifiedSetWithHashingStrategy.newSet(personHashingStrategy, PEOPLE);
-        UnifiedSetWithHashingStrategy<Person> setB = UnifiedSetWithHashingStrategy.newSet(personHashingStrategyCopy, PEOPLE);
+        MutableSet<Person> setA = UnifiedSetWithHashingStrategy.newSet(personHashingStrategy, PEOPLE);
+        MutableSet<Person> setB = UnifiedSetWithHashingStrategy.newSet(personHashingStrategyCopy, PEOPLE);
 
         //Test sets with different instances of the same hashing strategy are equal symmetrically
         Verify.assertEqualsAndHashCode(setA, setB);
@@ -830,7 +817,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Assert.assertTrue(hashSet.equals(setA) && setA.equals(hashSet));
 
         //Checking that a hash set is symmetrically equal to an identical Eclipse Collections set
-        UnifiedSet<Person> unifiedSet = UnifiedSet.newSet(setA);
+        MutableSet<Person> unifiedSet = UnifiedSet.newSet(setA);
         Assert.assertTrue(unifiedSet.equals(setA) && setA.equals(unifiedSet));
 
         //Testing the asymmetry of equals
@@ -847,10 +834,10 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
             }
         };
 
-        UnifiedSetWithHashingStrategy<String> hashedString = UnifiedSetWithHashingStrategy.newSetWith(firstLetterHashingStrategy, "apple", "banana", "cheese");
-        UnifiedSetWithHashingStrategy<String> anotherHashedString =
+        MutableSet<String> hashedString = UnifiedSetWithHashingStrategy.newSetWith(firstLetterHashingStrategy, "apple", "banana", "cheese");
+        MutableSet<String> anotherHashedString =
                 UnifiedSetWithHashingStrategy.newSetWith(firstLetterHashingStrategy, "a", "b", "c");
-        UnifiedSet<String> normalString = UnifiedSet.newSetWith("alpha", "bravo", "charlie");
+        MutableSet<String> normalString = UnifiedSet.newSetWith("alpha", "bravo", "charlie");
 
         //Testing hashedString equals normalString
         Assert.assertTrue(hashedString.equals(normalString) && hashedString.equals(hashedString));
@@ -876,7 +863,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     public void copyConstructor()
     {
         // test copying a chained bucket
-        UnifiedSetWithHashingStrategy<Integer> set = UnifiedSetWithHashingStrategy.newSetWith(
+        MutableSet<Integer> set = UnifiedSetWithHashingStrategy.newSetWith(
                 INTEGER_HASHING_STRATEGY, COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4, COLLISION_5, COLLISION_6, COLLISION_7);
         Verify.assertEqualsAndHashCode(set, UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY, set));
     }
@@ -890,14 +877,14 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     @Test(expected = IllegalArgumentException.class)
     public void newSet_null_hashingStrategy()
     {
-        UnifiedSetWithHashingStrategy.newSet((HashingStrategy<Object>) null);
+        new UnifiedSetWithHashingStrategy<>(null);
     }
 
     @Test
     public void batchForEach()
     {
         //Testing batch size of 1 to 16 with no chains
-        UnifiedSet<Integer> set = UnifiedSet.<Integer>newSet(10).with(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        UnifiedSet<Integer> set = new UnifiedSet<Integer>(10).with(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         for (int sectionCount = 1; sectionCount <= 16; ++sectionCount)
         {
             Sum sum = new IntegerSum(0);
@@ -910,8 +897,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
 
         //Testing 1 batch with chains
         Sum sum2 = new IntegerSum(0);
-        UnifiedSetWithHashingStrategy<Integer> set2 = UnifiedSetWithHashingStrategy.newSet(
-                INTEGER_HASHING_STRATEGY, 3).with(COLLISION_1, COLLISION_2, COLLISION_3, 1, 2);
+        UnifiedSetWithHashingStrategy<Integer> set2 = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 3).with(COLLISION_1, COLLISION_2, COLLISION_3, 1, 2);
         int numBatches = set2.getBatchCount(100);
         for (int i = 0; i < numBatches; ++i)
         {
@@ -922,8 +908,8 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
 
         //Testing batch size of 3 with chains and uneven last batch
         Sum sum3 = new IntegerSum(0);
-        UnifiedSetWithHashingStrategy<Integer> set3 = UnifiedSetWithHashingStrategy.newSet(
-                INTEGER_HASHING_STRATEGY, 4, 1.0F).with(COLLISION_1, COLLISION_2, 1, 2, 3, 4, 5);
+        UnifiedSetWithHashingStrategy<Integer> set3 = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 4, 1.0F)
+                .with(COLLISION_1, COLLISION_2, 1, 2, 3, 4, 5);
         int numBatches2 = set3.getBatchCount(3);
         for (int i = 0; i < numBatches2; ++i)
         {
@@ -933,7 +919,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
 
         //Test batchForEach on empty set, it should simply do nothing and not throw any exceptions
         Sum sum4 = new IntegerSum(0);
-        UnifiedSetWithHashingStrategy<Integer> set4 = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY);
+        UnifiedSetWithHashingStrategy<Integer> set4 = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY);
         set4.batchForEach(new SumProcedure<>(sum4), 0, set4.getBatchCount(1));
         Assert.assertEquals(0, sum4.getValue());
     }
@@ -947,8 +933,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         int size = COLLISIONS.size();
         for (int i = 1; i < size; i++)
         {
-            MutableSet<Integer> set = UnifiedSetWithHashingStrategy.newSet(
-                    INTEGER_HASHING_STRATEGY, SIZE).withAll(COLLISIONS.subList(0, i));
+            MutableSet<Integer> set = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, SIZE).withAll(COLLISIONS.subList(0, i));
             Object[] objects = set.toArray();
             Assert.assertEquals(set, UnifiedSet.newSetWith(objects));
         }
@@ -976,7 +961,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         int size = MORE_COLLISIONS.size();
         for (int i = 0; i < size; i++)
         {
-            MutableSet<Integer> actual = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY, SIZE).withAll(MORE_COLLISIONS);
+            MutableSet<Integer> actual = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, SIZE).withAll(MORE_COLLISIONS);
             Iterator<Integer> iterator = actual.iterator();
             for (int j = 0; j <= i; j++)
             {
@@ -1013,7 +998,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
                 INTEGER_HASHING_STRATEGY, COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4, COLLISION_5), set);
 
         //Testing removing the last element in a fully populated chained bucket
-        UnifiedSetWithHashingStrategy<Integer> set2 = UnifiedSetWithHashingStrategy.newSetWith(
+        MutableSet<Integer> set2 = UnifiedSetWithHashingStrategy.newSetWith(
                 INTEGER_HASHING_STRATEGY, COLLISION_1, COLLISION_2, COLLISION_3, COLLISION_4);
         Iterator<Integer> iterator3 = set2.iterator();
         for (int i = 0; i < 3; ++i)
@@ -1031,22 +1016,19 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         Key key = new Key("key");
 
         Key duplicateKey1 = new Key("key");
-        MutableSet<Key> set1 = UnifiedSetWithHashingStrategy.newSet(
-                HashingStrategies.<Key>defaultStrategy()).with(key, duplicateKey1);
+        MutableSet<Key> set1 = new UnifiedSetWithHashingStrategy<>(HashingStrategies.<Key>defaultStrategy()).with(key, duplicateKey1);
         Verify.assertSize(1, set1);
         Verify.assertContains(key, set1);
         Assert.assertSame(key, set1.getFirst());
 
         Key duplicateKey2 = new Key("key");
-        MutableSet<Key> set2 = UnifiedSetWithHashingStrategy.newSet(
-                HashingStrategies.<Key>defaultStrategy()).with(key, duplicateKey1, duplicateKey2);
+        MutableSet<Key> set2 = new UnifiedSetWithHashingStrategy<>(HashingStrategies.<Key>defaultStrategy()).with(key, duplicateKey1, duplicateKey2);
         Verify.assertSize(1, set2);
         Verify.assertContains(key, set2);
         Assert.assertSame(key, set2.getFirst());
 
         Key duplicateKey3 = new Key("key");
-        MutableSet<Key> set3 = UnifiedSetWithHashingStrategy.newSet(
-                HashingStrategies.<Key>defaultStrategy()).with(key, new Key("not a dupe"), duplicateKey3);
+        MutableSet<Key> set3 = new UnifiedSetWithHashingStrategy<>(HashingStrategies.<Key>defaultStrategy()).with(key, new Key("not a dupe"), duplicateKey3);
         Verify.assertSize(2, set3);
         Verify.assertContainsAll(set3, key, new Key("not a dupe"));
         Assert.assertSame(key, set3.detect(key::equals));
@@ -1055,7 +1037,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     @Test
     public void withSameIfNotModified()
     {
-        UnifiedSetWithHashingStrategy<Integer> integers = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY);
+        UnifiedSetWithHashingStrategy<Integer> integers = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY);
         Assert.assertEquals(UnifiedSet.newSetWith(1, 2), integers.with(1, 2));
         Assert.assertEquals(UnifiedSet.newSetWith(1, 2, 3, 4), integers.with(2, 3, 4));
         Assert.assertSame(integers, integers.with(5, 6, 7));
@@ -1080,7 +1062,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         int size = MORE_COLLISIONS.size();
         for (int i = 1; i <= size - 1; i++)
         {
-            MutableSet<Integer> unifiedSet = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY, 1).withAll(MORE_COLLISIONS.subList(0, i));
+            MutableSet<Integer> unifiedSet = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 1).withAll(MORE_COLLISIONS.subList(0, i));
             Assert.assertSame(MORE_COLLISIONS.get(0), unifiedSet.getFirst());
         }
     }
@@ -1093,7 +1075,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         int size = MORE_COLLISIONS.size();
         for (int i = 1; i <= size - 1; i++)
         {
-            MutableSet<Integer> unifiedSet = UnifiedSetWithHashingStrategy.newSet(INTEGER_HASHING_STRATEGY, 1).withAll(MORE_COLLISIONS.subList(0, i));
+            MutableSet<Integer> unifiedSet = new UnifiedSetWithHashingStrategy<>(INTEGER_HASHING_STRATEGY, 1).withAll(MORE_COLLISIONS.subList(0, i));
             Assert.assertSame(MORE_COLLISIONS.get(i - 1), unifiedSet.getLast());
         }
 
@@ -1105,7 +1087,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     @Test
     public void trimToSize()
     {
-        UnifiedSetWithHashingStrategy<String> set = UnifiedSetWithHashingStrategy.newSet(HashingStrategies.defaultStrategy());
+        UnifiedSetWithHashingStrategy<String> set = new UnifiedSetWithHashingStrategy<>(HashingStrategies.defaultStrategy());
 
         MutableSet<String> expected = Sets.mutable.empty();
 

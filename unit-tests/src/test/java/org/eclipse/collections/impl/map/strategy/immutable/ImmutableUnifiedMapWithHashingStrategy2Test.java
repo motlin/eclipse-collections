@@ -22,7 +22,7 @@ public class ImmutableUnifiedMapWithHashingStrategy2Test extends MapIterableTest
     protected <K, V> ImmutableMap<K, V> newMap()
     {
         return new ImmutableUnifiedMapWithHashingStrategy<>(
-                UnifiedMapWithHashingStrategy.newMap(HashingStrategies.nullSafeHashingStrategy(HashingStrategies.defaultStrategy())));
+                new UnifiedMapWithHashingStrategy<>(HashingStrategies.nullSafeHashingStrategy(HashingStrategies.defaultStrategy())));
     }
 
     @Override

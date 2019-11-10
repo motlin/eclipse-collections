@@ -44,14 +44,14 @@ public class ImmutableUnifiedMapWithHashingStrategy<K, V>
 
     public ImmutableUnifiedMapWithHashingStrategy(UnifiedMapWithHashingStrategy<K, V> delegate)
     {
-        this.delegate = UnifiedMapWithHashingStrategy.newMap(delegate);
+        this.delegate = new UnifiedMapWithHashingStrategy<>(delegate.hashingStrategy(), delegate);
     }
 
     public ImmutableUnifiedMapWithHashingStrategy(
             HashingStrategy<? super K> hashingStrategy,
             Pair<K, V>... pairs)
     {
-        this.delegate = UnifiedMapWithHashingStrategy.newMapWith(hashingStrategy, pairs);
+        this.delegate = new UnifiedMapWithHashingStrategy<>(hashingStrategy, pairs);
     }
 
     @Override
@@ -129,8 +129,7 @@ public class ImmutableUnifiedMapWithHashingStrategy<K, V>
     @Override
     public Set<Entry<K, V>> entrySet()
     {
-        UnifiedSetWithHashingStrategy<Entry<K, V>> result = UnifiedSetWithHashingStrategy.newSet(
-                HashingStrategies.defaultStrategy(), this.delegate.size());
+        UnifiedSetWithHashingStrategy<Entry<K, V>> result = new UnifiedSetWithHashingStrategy<>(HashingStrategies.defaultStrategy(), this.delegate.size());
         HashingStrategy<? super K> hashingStrategy = this.delegate.hashingStrategy();
         this.forEachKeyValue((argument1, argument2) -> result.put(ImmutableEntryWithHashingStrategy.of(argument1, argument2, hashingStrategy)));
         return result.toImmutable().castToSet();
@@ -181,7 +180,7 @@ public class ImmutableUnifiedMapWithHashingStrategy<K, V>
     @Override
     public ImmutableMap<K, V> newWithKeyValue(K key, V value)
     {
-        UnifiedMapWithHashingStrategy<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
+        MutableMap<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
         result.put(key, value);
         return result.toImmutable();
     }
@@ -189,7 +188,7 @@ public class ImmutableUnifiedMapWithHashingStrategy<K, V>
     @Override
     public ImmutableMap<K, V> newWithAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
     {
-        UnifiedMapWithHashingStrategy<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
+        MutableMap<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
         for (Pair<? extends K, ? extends V> pair : keyValues)
         {
             result.put(pair.getOne(), pair.getTwo());
@@ -200,7 +199,7 @@ public class ImmutableUnifiedMapWithHashingStrategy<K, V>
     @Override
     public ImmutableMap<K, V> newWithAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
     {
-        UnifiedMapWithHashingStrategy<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
+        MutableMap<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
         for (Pair<? extends K, ? extends V> keyValuePair : keyValuePairs)
         {
             result.put(keyValuePair.getOne(), keyValuePair.getTwo());
@@ -211,7 +210,7 @@ public class ImmutableUnifiedMapWithHashingStrategy<K, V>
     @Override
     public ImmutableMap<K, V> newWithoutKey(K key)
     {
-        UnifiedMapWithHashingStrategy<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
+        MutableMap<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
         result.remove(key);
         return result.toImmutable();
     }
@@ -219,7 +218,7 @@ public class ImmutableUnifiedMapWithHashingStrategy<K, V>
     @Override
     public ImmutableMap<K, V> newWithoutAllKeys(Iterable<? extends K> keys)
     {
-        UnifiedMapWithHashingStrategy<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
+        MutableMap<K, V> result = UnifiedMapWithHashingStrategy.newMap(this.delegate);
         for (K key : keys)
         {
             result.remove(key);
@@ -233,7 +232,7 @@ public class ImmutableUnifiedMapWithHashingStrategy<K, V>
         MutableMap<K, R> result = MapIterate.collectValues(
                 this,
                 function,
-                UnifiedMapWithHashingStrategy.newMap(this.delegate.hashingStrategy(), this.delegate.size()));
+                new UnifiedMapWithHashingStrategy<>(this.delegate.hashingStrategy(), this.delegate.size()));
         return result.toImmutable();
     }
 

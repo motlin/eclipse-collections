@@ -118,7 +118,7 @@ public final class UnifiedSetWithHashingStrategyMultimap<K, V>
     @Override
     protected UnifiedSetWithHashingStrategy<V> createCollection()
     {
-        return UnifiedSetWithHashingStrategy.newSet(this.hashingStrategy);
+        return new UnifiedSetWithHashingStrategy<>(this.hashingStrategy);
     }
 
     @Override

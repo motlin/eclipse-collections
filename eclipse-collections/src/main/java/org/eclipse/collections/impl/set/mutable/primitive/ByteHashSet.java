@@ -683,7 +683,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
     @Override
     public <V> MutableSet<V> collect(ByteToObjectFunction<? extends V> function)
     {
-        MutableSet<V> target = UnifiedSet.newSet(this.size());
+        MutableSet<V> target = new UnifiedSet<>(this.size());
 
         this.forEach(each -> target.add(function.valueOf(each)));
 
@@ -1344,7 +1344,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         @Override
         public <V> ImmutableSet<V> collect(ByteToObjectFunction<? extends V> function)
         {
-            MutableSet<V> target = UnifiedSet.newSet(this.size());
+            MutableSet<V> target = new UnifiedSet<>(this.size());
 
             this.forEach(each -> target.add(function.valueOf(each)));
 

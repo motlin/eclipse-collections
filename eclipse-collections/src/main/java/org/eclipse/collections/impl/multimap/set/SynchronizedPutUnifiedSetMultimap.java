@@ -93,7 +93,7 @@ public final class SynchronizedPutUnifiedSetMultimap<K, V>
     @Override
     protected MutableSet<V> createCollection()
     {
-        return UnifiedSet.newSet(1);
+        return new UnifiedSet<>(1);
     }
 
     @Override

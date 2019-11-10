@@ -68,7 +68,7 @@ class ImmutableSetWithHashingStrategySerializationProxy<T> implements Externaliz
     {
         HashingStrategy<? super T> strategy = (HashingStrategy<? super T>) in.readObject();
         int size = in.readInt();
-        UnifiedSetWithHashingStrategy<T> deserializedSet = UnifiedSetWithHashingStrategy.newSet(strategy);
+        UnifiedSetWithHashingStrategy<T> deserializedSet = new UnifiedSetWithHashingStrategy<T>(strategy);
 
         for (int i = 0; i < size; i++)
         {

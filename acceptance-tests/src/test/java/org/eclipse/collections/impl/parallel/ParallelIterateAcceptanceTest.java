@@ -119,10 +119,10 @@ public class ParallelIterateAcceptanceTest
                 ListAdapter.adapt(new LinkedList<Integer>()).withAll(interval),
                 ListAdapter.adapt(new LinkedList<Integer>()).withAll(interval).asUnmodifiable(),
                 ListAdapter.adapt(new LinkedList<Integer>()).withAll(interval).asSynchronized(),
-                UnifiedSetWithHashingStrategy.<Integer>newSet(HashingStrategies.defaultStrategy()).withAll(interval),
-                UnifiedSetWithHashingStrategy.<Integer>newSet(HashingStrategies.defaultStrategy()).withAll(interval).asUnmodifiable(),
-                UnifiedSetWithHashingStrategy.<Integer>newSet(HashingStrategies.defaultStrategy()).withAll(interval).asSynchronized(),
-                UnifiedSetWithHashingStrategy.<Integer>newSet(HashingStrategies.defaultStrategy()).withAll(interval).toImmutable());
+                new UnifiedSetWithHashingStrategy<Integer>(HashingStrategies.defaultStrategy()).withAll(interval),
+                new UnifiedSetWithHashingStrategy<Integer>(HashingStrategies.defaultStrategy()).withAll(interval).asUnmodifiable(),
+                new UnifiedSetWithHashingStrategy<Integer>(HashingStrategies.defaultStrategy()).withAll(interval).asSynchronized(),
+                new UnifiedSetWithHashingStrategy<Integer>(HashingStrategies.defaultStrategy()).withAll(interval).toImmutable());
     }
 
     @After

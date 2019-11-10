@@ -39,7 +39,7 @@ public class ImmutableUnifiedMap<K, V>
 
     public ImmutableUnifiedMap(Map<K, V> delegate)
     {
-        this.delegate = UnifiedMap.newMap(delegate);
+        this.delegate = new UnifiedMap<>(delegate);
     }
 
     public ImmutableUnifiedMap(Pair<K, V>... pairs)

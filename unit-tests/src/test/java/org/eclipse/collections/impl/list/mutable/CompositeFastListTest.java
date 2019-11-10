@@ -313,7 +313,7 @@ public class CompositeFastListTest extends AbstractListTestCase
         MutableList<String> list = new CompositeFastList<>();
         list.addAll(FastList.newListWith("1", "2", "3", "4"));
         list.addAll(FastList.newListWith("3", "B", "3", "B"));
-        Assert.assertTrue(list.containsAll(FastList.newList().with("2", "B")));
+        Assert.assertTrue(list.containsAll(FastList.newListWith("2", "B")));
     }
 
     @Override
@@ -324,7 +324,7 @@ public class CompositeFastListTest extends AbstractListTestCase
         MutableList<String> list = new CompositeFastList<>();
         list.addAll(FastList.newListWith("1", "2", "3", "4"));
         list.addAll(FastList.newListWith("3", "B", "3", "B"));
-        list.removeAll(FastList.newList().with("2", "B"));
+        list.removeAll(FastList.newListWith("2", "B"));
         Verify.assertSize(5, list);
     }
 
@@ -336,7 +336,7 @@ public class CompositeFastListTest extends AbstractListTestCase
         MutableList<String> list = new CompositeFastList<>();
         list.addAll(FastList.newListWith("1", "2", "3", "4"));
         list.addAll(FastList.newListWith("3", "B", "3", "B"));
-        list.retainAll(FastList.newList().with("2", "B"));
+        list.retainAll(FastList.newListWith("2", "B"));
         Verify.assertSize(3, list);
     }
 
@@ -451,8 +451,8 @@ public class CompositeFastListTest extends AbstractListTestCase
     {
         super.listIterator();
         CompositeFastList<String> composite = new CompositeFastList<>();
-        FastList<String> firstBit = FastList.newListWith("one", "two");
-        FastList<String> secondBit = FastList.newListWith("three");
+        MutableList<String> firstBit = FastList.newListWith("one", "two");
+        MutableList<String> secondBit = FastList.newListWith("three");
         composite.addAll(firstBit);
         composite.addAll(secondBit);
 

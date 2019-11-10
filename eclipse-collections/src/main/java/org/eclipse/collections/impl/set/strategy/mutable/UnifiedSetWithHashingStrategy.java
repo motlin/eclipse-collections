@@ -172,7 +172,7 @@ public class UnifiedSetWithHashingStrategy<T>
 
     public static <K> UnifiedSetWithHashingStrategy<K> newSet(UnifiedSetWithHashingStrategy<K> set)
     {
-        return new UnifiedSetWithHashingStrategy<>(set.hashingStrategy, set);
+        return new UnifiedSetWithHashingStrategy<>(set.hashingStrategy(), set);
     }
 
     public static <K> UnifiedSetWithHashingStrategy<K> newSet(HashingStrategy<? super K> hashingStrategy, int size)
@@ -195,8 +195,8 @@ public class UnifiedSetWithHashingStrategy<T>
             throw new NullPointerException();
         }
         UnifiedSetWithHashingStrategy<K> result = source instanceof RichIterable<?>
-                ? UnifiedSetWithHashingStrategy.newSet(hashingStrategy, ((RichIterable<?>) source).size())
-                : UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
+                ? new UnifiedSetWithHashingStrategy<>(hashingStrategy, ((RichIterable<?>) source).size())
+                : new UnifiedSetWithHashingStrategy<>(hashingStrategy);
         Iterate.forEachWith(source, Procedures2.addToCollection(), result);
         return result;
     }
@@ -208,7 +208,7 @@ public class UnifiedSetWithHashingStrategy<T>
 
     public static <K> UnifiedSetWithHashingStrategy<K> newSetWith(HashingStrategy<? super K> hashingStrategy, K... elements)
     {
-        UnifiedSetWithHashingStrategy<K> set = UnifiedSetWithHashingStrategy.newSet(hashingStrategy, elements.length);
+        UnifiedSetWithHashingStrategy<K> set = new UnifiedSetWithHashingStrategy<>(hashingStrategy, elements.length);
         return set.with(elements);
     }
 
@@ -675,13 +675,13 @@ public class UnifiedSetWithHashingStrategy<T>
     @Override
     public UnifiedSetWithHashingStrategy<T> newEmpty()
     {
-        return UnifiedSetWithHashingStrategy.newSet(this.hashingStrategy);
+        return new UnifiedSetWithHashingStrategy<>(this.hashingStrategy);
     }
 
     @Override
     public UnifiedSetWithHashingStrategy<T> newEmpty(int size)
     {
-        return UnifiedSetWithHashingStrategy.newSet(this.hashingStrategy, size, this.loadFactor);
+        return new UnifiedSetWithHashingStrategy<>(this.hashingStrategy, size, this.loadFactor);
     }
 
     @Override
@@ -1658,7 +1658,7 @@ public class UnifiedSetWithHashingStrategy<T>
     private boolean retainAllFromNonSet(Iterable<?> iterable)
     {
         int retainedSize = Iterate.sizeOf(iterable);
-        UnifiedSetWithHashingStrategy<T> retainedCopy = this.newEmpty(retainedSize);
+        UnifiedSetWithHashingStrategy<T> retainedCopy = new UnifiedSetWithHashingStrategy<>(this.hashingStrategy, retainedSize, this.loadFactor);
         for (Object key : iterable)
         {
             this.addIfFound((T) key, retainedCopy);
