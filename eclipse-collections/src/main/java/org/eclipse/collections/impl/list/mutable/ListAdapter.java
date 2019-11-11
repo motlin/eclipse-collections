@@ -252,17 +252,12 @@ public final class ListAdapter<T>
 
     public ListAdapter<T> with(T element1, T element2)
     {
-        this.add(element1);
-        this.add(element2);
-        return this;
+        return this.with(element1).with(element2);
     }
 
     public ListAdapter<T> with(T element1, T element2, T element3)
     {
-        this.add(element1);
-        this.add(element2);
-        this.add(element3);
-        return this;
+        return this.with(element1).with(element2).with(element3);
     }
 
     public ListAdapter<T> with(T... elements)

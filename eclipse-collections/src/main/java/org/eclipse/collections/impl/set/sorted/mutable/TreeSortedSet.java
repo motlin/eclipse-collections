@@ -286,17 +286,12 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
 
     public MutableSortedSet<T> with(T element1, T element2)
     {
-        this.treeSet.add(element1);
-        this.treeSet.add(element2);
-        return this;
+        return this.with(element1).with(element2);
     }
 
     public MutableSortedSet<T> with(T element1, T element2, T element3)
     {
-        this.treeSet.add(element1);
-        this.treeSet.add(element2);
-        this.treeSet.add(element3);
-        return this;
+        return this.with(element1).with(element2).with(element3);
     }
 
     public MutableSortedSet<T> with(T... elements)
