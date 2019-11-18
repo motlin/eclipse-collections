@@ -19,6 +19,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.factory.BiMaps;
+import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.ImmutableMapIterable;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.multimap.set.ImmutableSetMultimap;
@@ -34,6 +35,51 @@ import org.eclipse.collections.api.tuple.Pair;
  */
 public interface ImmutableBiMap<K, V> extends BiMap<K, V>, ImmutableMapIterable<K, V>
 {
+    static <K, V> ImmutableBiMap<K, V> empty()
+    {
+        return BiMaps.immutable.empty();
+    }
+
+    static <K, V> ImmutableBiMap<K, V> of()
+    {
+        return BiMaps.immutable.of();
+    }
+
+    static <K, V> ImmutableBiMap<K, V> of(K key, V value)
+    {
+        return BiMaps.immutable.of(key, value);
+    }
+
+    static <K, V> ImmutableBiMap<K, V> of(K key1, V value1, K key2, V value2)
+    {
+        return BiMaps.immutable.of(key1, value1, key2, value2);
+    }
+
+    static <K, V> ImmutableBiMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3)
+    {
+        return BiMaps.immutable.of(key1, value1, key2, value2, key3, value3);
+    }
+
+    static <K, V> ImmutableBiMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4)
+    {
+        return BiMaps.immutable.of(key1, value1, key2, value2, key3, value3, key4, value4);
+    }
+
+    static <K, V> ImmutableBiMap<K, V> ofAll(Map<K, V> map)
+    {
+        return BiMaps.immutable.ofAll(map);
+    }
+
+    static <K, V> ImmutableBiMap<K, V> ofAll(MutableBiMap<K, V> biMap)
+    {
+        return BiMaps.immutable.ofAll(biMap);
+    }
+
+    static <K, V> ImmutableBiMap<K, V> ofAll(ImmutableMap<K, V> immutableMap)
+    {
+        return BiMaps.immutable.ofAll(immutableMap);
+    }
+
     @Override
     ImmutableBiMap<K, V> newWithKeyValue(K key, V value);
 

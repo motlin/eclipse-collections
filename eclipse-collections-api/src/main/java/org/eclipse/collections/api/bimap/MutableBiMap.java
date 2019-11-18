@@ -33,6 +33,36 @@ import org.eclipse.collections.api.tuple.Pair;
  */
 public interface MutableBiMap<K, V> extends BiMap<K, V>, MutableMapIterable<K, V>, Cloneable
 {
+    static <K, V> MutableBiMap<K, V> empty()
+    {
+        return BiMaps.mutable.empty();
+    }
+
+    static <K, V> MutableBiMap<K, V> of()
+    {
+        return BiMaps.mutable.of();
+    }
+
+    static <K, V> MutableBiMap<K, V> of(K key, V value)
+    {
+        return BiMaps.mutable.of(key, value);
+    }
+
+    static <K, V> MutableBiMap<K, V> of(K key1, V value1, K key2, V value2)
+    {
+        return BiMaps.mutable.of(key1, value1, key2, value2);
+    }
+
+    static <K, V> MutableBiMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3)
+    {
+        return BiMaps.mutable.of(key1, value1, key2, value2, key3, value3);
+    }
+
+    static <K, V> MutableBiMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4)
+    {
+        return BiMaps.mutable.of(key1, value1, key2, value2, key3, value3, key4, value4);
+    }
+
     @Override
     MutableBiMap<K, V> newEmpty();
 

@@ -51,6 +51,46 @@ import org.eclipse.collections.api.tuple.Pair;
 public interface ImmutableMap<K, V>
         extends UnsortedMapIterable<K, V>, ImmutableMapIterable<K, V>
 {
+    static <K, V> ImmutableMap<K, V> empty()
+    {
+        return Maps.immutable.empty();
+    }
+
+    static <K, V> ImmutableMap<K, V> of()
+    {
+        return Maps.immutable.of();
+    }
+
+    static <K, V> ImmutableMap<K, V> of(K key, V value)
+    {
+        return Maps.immutable.of(key, value);
+    }
+
+    static <K, V> ImmutableMap<K, V> of(K key1, V value1, K key2, V value2)
+    {
+        return Maps.immutable.of(key1, value1, key2, value2);
+    }
+
+    static <K, V> ImmutableMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3)
+    {
+        return Maps.immutable.of(key1, value1, key2, value2, key3, value3);
+    }
+
+    static <K, V> ImmutableMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4)
+    {
+        return Maps.immutable.of(key1, value1, key2, value2, key3, value3, key4, value4);
+    }
+
+    static <K, V> ImmutableMap<K, V> ofMap(Map<K, V> map)
+    {
+        return Maps.immutable.ofMap(map);
+    }
+
+    static <K, V> ImmutableMap<K, V> ofAll(Map<K, V> map)
+    {
+        return Maps.immutable.ofAll(map);
+    }
+
     @Override
     ImmutableMap<K, V> newWithKeyValue(K key, V value);
 
