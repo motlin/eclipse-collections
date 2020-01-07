@@ -236,12 +236,8 @@
             <property name="severity" value="warning" />
         </module>
         <module name="IllegalCatch">
-            <property
-                name="illegalClassNames"
-                value="
-                        java.lang.Error,
-                        java.lang.NullPointerException,
-                        java.lang.Throwable" />
+            <property name="illegalClassNames" value="java.lang.Error" />
+            <property name="illegalClassNames" value="java.lang.NullPointerException" />
         </module>
         <!-- Effective Java Item 4 - Avoid creating duplicate objects -->
         <module name="IllegalInstantiation">
@@ -319,7 +315,6 @@
         <module name="SimplifyBooleanExpression" />
         <module name="SimplifyBooleanReturn" />
         <module name="StringLiteralEquality" />
-        <module name="SuperClone" />
         <module name="SuperFinalize" />
         <module name="UnnecessaryParentheses" />
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration" />
@@ -351,18 +346,14 @@
             <property name="allowStaticMemberImports" value="true" />
         </module>
         <module name="AvoidStaticImport">
-            <property
-                name="excludes"
-                value="
-                        org.junit.Assert.*,
-                        org.junit.Assume.*,
-                        org.hamcrest.CoreMatchers.*,
-                        org.hamcrest.Matchers.*,
-                        org.hamcrest.MatcherAssert.*,
-                        org.eclipse.collections.impl.test.Verify.*,
-                        org.fusesource.jansi.Ansi.Color.*,
-                        org.fusesource.jansi.Ansi.*
-                    " />
+            <property name="excludes" value="org.eclipse.collections.impl.factory.Iterables.*" />
+            <property name="excludes" value="org.eclipse.collections.impl.test.Verify.*" />
+            <property name="excludes" value="org.eclipse.collections.test.IterableTestCase.*" />
+            <property name="excludes" value="org.hamcrest.CoreMatchers.*" />
+            <property name="excludes" value="org.hamcrest.MatcherAssert.*" />
+            <property name="excludes" value="org.hamcrest.Matchers.*" />
+            <property name="excludes" value="org.junit.Assert.*" />
+            <property name="excludes" value="org.junit.Assume.*" />
         </module>
         <module name="CustomImportOrder">
             <property
