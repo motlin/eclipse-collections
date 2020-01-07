@@ -21,11 +21,16 @@ public enum Primitive
     CHAR("char"),
     BOOLEAN("boolean");
 
-    public final String type;
+    private final String type;
 
     Primitive(String type)
     {
         this.type = type;
+    }
+
+    public String getType()
+    {
+        return this.type;
     }
 
     public String getName()
