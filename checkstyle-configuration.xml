@@ -4,7 +4,7 @@
     "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
-  ~ Copyright (c) 2016 Goldman Sachs.
+  ~ Copyright (c) 2020 Goldman Sachs and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v1.0
   ~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -165,6 +165,8 @@
         </module>
         <module name="LeftCurly">
             <property name="option" value="nl" />
+            <!--TODO: Remove this, to include the LAMBDA token-->
+            <property name="tokens" value="INTERFACE_DEF, CLASS_DEF, ANNOTATION_DEF, ENUM_DEF, CTOR_DEF, METHOD_DEF, ENUM_CONSTANT_DEF, LITERAL_WHILE, LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_SYNCHRONIZED, LITERAL_SWITCH, LITERAL_DO, LITERAL_IF, LITERAL_ELSE, LITERAL_FOR, STATIC_INIT, OBJBLOCK"/>
         </module>
         <module name="NeedBraces">
             <property name="tokens" value="LITERAL_DO" />
@@ -223,8 +225,16 @@
         <module name="EqualsAvoidNull" />
         <!-- Effective Java Item 8 - Always override hashCode when you override equals -->
         <module name="EqualsHashCode" />
+        <module name="ExplicitInitialization">
+            <property name="severity" value="warning" />
+        </module>
         <module name="FallThrough" />
-
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true" />
+            <property name="ignoreSetter" value="true" />
+            <property name="setterCanReturnItsClass" value="true" />
+            <property name="severity" value="warning" />
+        </module>
         <module name="IllegalCatch">
             <property
                 name="illegalClassNames"
@@ -285,6 +295,10 @@
         <module name="InnerAssignment" />
         <module name="MissingSwitchDefault" />
         <module name="ModifiedControlVariable" />
+        <module name="MultipleStringLiterals">
+            <property name="ignoreStringsRegexp" value="^.{0,4}$" />
+            <property name="severity" value="warning" />
+        </module>
         <module name="MultipleVariableDeclarations" />
         <module name="NestedForDepth">
             <property name="max" value="2" />
@@ -293,7 +307,6 @@
             <property name="max" value="3" />
         </module>
         <module name="NestedTryDepth" />
-        <module name="NoClone" />
         <!-- Effective Java: Avoid finalizers and cleaners -->
         <module name="NoFinalizer" />
         <module name="OneStatementPerLine" />
@@ -312,7 +325,26 @@
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration" />
         <module name="UnnecessarySemicolonInEnumeration" />
         <module name="UnnecessarySemicolonInTryWithResources" />
-        <module name="VariableDeclarationUsageDistance" />
+        <module name="VariableDeclarationUsageDistance">
+            <property name="severity" value="warning" />
+        </module>
+
+        <!-- Filters-->
+        <!-- Tone down the checking for test code -->
+        <module name="SuppressionXpathSingleFilter">
+            <property name="files" value=".*[\\/]src[\\/](test|it)[\\/]" />
+            <property name="checks" value="MagicNumber" />
+        </module>
+        <module name="SuppressionXpathSingleFilter">
+            <property name="files" value=".*[\\/]src[\\/](test|it)[\\/]" />
+            <property name="checks" value="MultipleStringLiterals" />
+        </module>
+        <module name="SuppressWithNearbyCommentFilter">
+            <property name="commentFormat"
+                    value="-@cs\[(\w{8,}(\|\w{8,})*)\] \w[\(\)\-\.\'\`\,\:\;\w ]{10,}" />
+            <property name="checkFormat" value="$1" />
+            <property name="influenceFormat" value="3" />
+        </module>
 
         <!-- Imports -->
         <module name="AvoidStarImport">
@@ -338,7 +370,6 @@
                 value="STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STATIC" />
             <property name="standardPackageRegExp" value="^java\." />
             <property name="specialImportsRegExp" value="^javax\." />
-            <!--<property name="thirdPartyPackageRegExp" value="^org\." />-->
             <property name="sortImportsInGroupAlphabetically" value="true" />
             <property name="separateLineBetweenGroups" value="true" />
         </module>
@@ -367,18 +398,12 @@
             <property name="tags" value="noinspection" />
         </module>
         <module name="JavadocContentLocation" />
-        <module name="JavadocMethod">
-            <property name="validateThrows" value="true" />
-        </module>
-        <module name="JavadocParagraph" />
-        <module name="JavadocStyle">
-            <property name="scope" value="public" />
-        </module>
-        <module name="JavadocTagContinuationIndentation" />
         <module name="MissingJavadocPackage" />
         <module name="NonEmptyAtclauseDescription" />
         <module name="SingleLineJavadoc" />
-        <module name="SummaryJavadoc" />
+        <module name="SummaryJavadoc">
+            <property name="severity" value="warning" />
+        </module>
 
         <!-- Misc -->
         <module name="ArrayTypeStyle" />
@@ -404,7 +429,9 @@
         <module name="RedundantModifier" />
 
         <!-- Naming Conventions -->
-        <module name="AbstractClassName" />
+        <module name="AbstractClassName">
+            <property name="severity" value="warning" />
+        </module>
         <module name="ClassTypeParameterName">
             <!--Instead of single letter names like T, allow words like Type-->
             <property name="format" value="^[A-Z][a-zA-Z0-9]*$" />
