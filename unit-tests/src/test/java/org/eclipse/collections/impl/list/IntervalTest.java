@@ -1108,9 +1108,12 @@ public class IntervalTest
         MutableList<Integer> tapResult = Lists.mutable.of();
         Interval interval = Interval.fromTo(10, -10).by(-5);
         LazyIterable<Integer> lazyTapIterable = interval.tap(tapResult::add);
+
+        //force evaluation
         lazyTapIterable.each(x ->
         {
-        }); //force evaluation
+        });
+
         Assert.assertEquals(interval, tapResult);
     }
 
