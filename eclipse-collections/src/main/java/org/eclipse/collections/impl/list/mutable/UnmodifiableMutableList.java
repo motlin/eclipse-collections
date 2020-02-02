@@ -579,6 +579,11 @@ public class UnmodifiableMutableList<T>
         throw new UnsupportedOperationException("Cannot call withoutAll() on " + this.getClass().getSimpleName());
     }
 
+    protected Object writeReplace()
+    {
+        return new UnmodifiableCollectionSerializationProxy<>(this.getMutableList());
+    }
+
     private static final class RandomAccessUnmodifiableMutableList<T> extends UnmodifiableMutableList<T> implements RandomAccess
     {
         private static final long serialVersionUID = 1L;
@@ -593,10 +598,5 @@ public class UnmodifiableMutableList<T>
         {
             return this;
         }
-    }
-
-    protected Object writeReplace()
-    {
-        return new UnmodifiableCollectionSerializationProxy<>(this.getMutableList());
     }
 }
