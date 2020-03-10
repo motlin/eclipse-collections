@@ -15,51 +15,64 @@ import java.util.Map;
 import org.eclipse.collections.api.map.ImmutableMap;
 
 public interface ImmutableMapFactory
+        extends MapFactory
 {
     /**
      * @since 6.0
      */
+    @Override
     <K, V> ImmutableMap<K, V> empty();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     <K, V> ImmutableMap<K, V> of();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     <K, V> ImmutableMap<K, V> with();
 
     /**
      * Same as {@link #with(Object, Object)}.
      */
+    @Override
     <K, V> ImmutableMap<K, V> of(K key, V value);
 
+    @Override
     <K, V> ImmutableMap<K, V> with(K key, V value);
 
     /**
      * Same as {@link #with(Object, Object, Object, Object)}.
      */
+    @Override
     <K, V> ImmutableMap<K, V> of(K key1, V value1, K key2, V value2);
 
+    @Override
     <K, V> ImmutableMap<K, V> with(K key1, V value1, K key2, V value2);
 
     /**
      * Same as {@link #with(Object, Object, Object, Object, Object, Object)}.
      */
+    @Override
     <K, V> ImmutableMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3);
 
+    @Override
     <K, V> ImmutableMap<K, V> with(K key1, V value1, K key2, V value2, K key3, V value3);
 
     /**
      * Same as {@link #with(Object, Object, Object, Object, Object, Object, Object, Object)}.
      */
+    @Override
     <K, V> ImmutableMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4);
 
+    @Override
     <K, V> ImmutableMap<K, V> with(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4);
 
-    <K, V> ImmutableMap<K, V> ofMap(Map<K, V> map);
+    @Override
+    <K, V> ImmutableMap<K, V> ofMap(Map<? extends K, ? extends V> map);
 
     /**
      * Same as {@link #withAll(Map)}.

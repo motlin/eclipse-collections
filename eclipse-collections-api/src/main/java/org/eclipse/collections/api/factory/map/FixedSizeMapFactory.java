@@ -13,40 +13,50 @@ package org.eclipse.collections.api.factory.map;
 import org.eclipse.collections.api.map.FixedSizeMap;
 
 public interface FixedSizeMapFactory
+        extends MapFactory
 {
     /**
      * @since 6.0
      */
+    @Override
     <K, V> FixedSizeMap<K, V> empty();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     <K, V> FixedSizeMap<K, V> of();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     <K, V> FixedSizeMap<K, V> with();
 
     /**
      * Same as {@link #with(Object, Object)}.
      */
+    @Override
     <K, V> FixedSizeMap<K, V> of(K key, V value);
 
+    @Override
     <K, V> FixedSizeMap<K, V> with(K key, V value);
 
     /**
      * Same as {@link #with(Object, Object, Object, Object)}.
      */
+    @Override
     <K, V> FixedSizeMap<K, V> of(K key1, V value1, K key2, V value2);
 
+    @Override
     <K, V> FixedSizeMap<K, V> with(K key1, V value1, K key2, V value2);
 
     /**
      * Same as {@link #with(Object, Object, Object, Object, Object, Object)}.
      */
+    @Override
     <K, V> FixedSizeMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3);
 
+    @Override
     <K, V> FixedSizeMap<K, V> with(K key1, V value1, K key2, V value2, K key3, V value3);
 }

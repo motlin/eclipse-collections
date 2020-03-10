@@ -133,12 +133,13 @@ public class ImmutableMapFactoryImpl implements ImmutableMapFactory
 
     /**
      * @deprecated use {@link #ofAll(Map)} instead (inlineable)
+     * @param map
      */
     @Override
     @Deprecated
-    public <K, V> ImmutableMap<K, V> ofMap(Map<K, V> map)
+    public <K, V> ImmutableMap<K, V> ofMap(Map<? extends K, ? extends V> map)
     {
-        return this.ofAll(map);
+        return (ImmutableMap<K, V>) this.withAll(map);
     }
 
     @Override

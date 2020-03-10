@@ -16,65 +16,83 @@ import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 
 public interface MutableMapFactory
+        extends MapFactory
 {
     /**
      * @since 6.0
      */
+    @Override
     <K, V> MutableMap<K, V> empty();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     <K, V> MutableMap<K, V> of();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     <K, V> MutableMap<K, V> with();
 
     /**
      * Same as {@link #empty()}. but takes in an initial capacity
      */
+    @Override
     <K, V> MutableMap<K, V> ofInitialCapacity(int capacity);
 
     /**
      * Same as {@link #empty()}. but takes in an initial capacity
      */
+    @Override
     <K, V> MutableMap<K, V> withInitialCapacity(int capacity);
 
     /**
      * Same as {@link #with(Object, Object)}.
      */
+    @Override
     <K, V> MutableMap<K, V> of(K key, V value);
 
+    @Override
     <K, V> MutableMap<K, V> with(K key, V value);
 
     /**
      * Same as {@link #with(Object, Object, Object, Object)}.
      */
+    @Override
     <K, V> MutableMap<K, V> of(K key1, V value1, K key2, V value2);
 
+    @Override
     <K, V> MutableMap<K, V> with(K key1, V value1, K key2, V value2);
 
     /**
      * Same as {@link #with(Object, Object, Object, Object, Object, Object)}.
      */
+    @Override
     <K, V> MutableMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3);
 
+    @Override
     <K, V> MutableMap<K, V> with(K key1, V value1, K key2, V value2, K key3, V value3);
 
     /**
      * Same as {@link #with(Object, Object, Object, Object, Object, Object, Object, Object)}.
      */
+    @Override
     <K, V> MutableMap<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4);
 
+    @Override
     <K, V> MutableMap<K, V> with(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4);
 
+    @Override
     <K, V> MutableMap<K, V> ofMap(Map<? extends K, ? extends V> map);
 
+    @Override
     <K, V> MutableMap<K, V> withMap(Map<? extends K, ? extends V> map);
 
+    @Override
     <K, V> MutableMap<K, V> ofMapIterable(MapIterable<? extends K, ? extends V> mapIterable);
 
+    @Override
     <K, V> MutableMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable);
 }
