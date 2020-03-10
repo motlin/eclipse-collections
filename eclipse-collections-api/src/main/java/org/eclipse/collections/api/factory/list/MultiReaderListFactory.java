@@ -21,12 +21,15 @@ import org.eclipse.collections.api.list.MultiReaderList;
  * @since 10.0.
  */
 public interface MultiReaderListFactory
+    extends ListFactory
 {
+    @Override
     <T> MultiReaderList<T> empty();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     default <T> MultiReaderList<T> of()
     {
         return this.empty();
@@ -35,6 +38,7 @@ public interface MultiReaderListFactory
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     default <T> MultiReaderList<T> with()
     {
         return this.empty();
@@ -43,16 +47,19 @@ public interface MultiReaderListFactory
     /**
      * Same as {@link #with(Object[])}.
      */
+    @Override
     default <T> MultiReaderList<T> of(T... items)
     {
         return this.with(items);
     }
 
+    @Override
     <T> MultiReaderList<T> with(T... items);
 
     /**
      * Same as {@link #empty()}. but takes in initial capacity.
      */
+    @Override
     default <T> MultiReaderList<T> ofInitialCapacity(int capacity)
     {
         return this.withInitialCapacity(capacity);
@@ -61,19 +68,24 @@ public interface MultiReaderListFactory
     /**
      * Same as {@link #empty()}. but takes in initial capacity.
      */
+    @Override
     <T> MultiReaderList<T> withInitialCapacity(int capacity);
 
     /**
      * Same as {@link #withAll(Iterable)}.
      */
+    @Override
     default <T> MultiReaderList<T> ofAll(Iterable<? extends T> iterable)
     {
         return this.withAll(iterable);
     }
 
+    @Override
     <T> MultiReaderList<T> withAll(Iterable<? extends T> iterable);
 
+    @Override
     <T> MultiReaderList<T> fromStream(Stream<? extends T> stream);
 
+    @Override
     <T> MultiReaderList<T> withNValues(int size, Function0<? extends T> factory);
 }

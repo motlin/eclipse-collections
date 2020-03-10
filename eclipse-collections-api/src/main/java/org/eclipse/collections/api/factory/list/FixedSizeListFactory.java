@@ -15,20 +15,24 @@ import java.util.stream.Stream;
 import org.eclipse.collections.api.list.FixedSizeList;
 
 public interface FixedSizeListFactory
+        extends ListFactory
 {
     /**
      * @since 6.0
      */
+    @Override
     <T> FixedSizeList<T> empty();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     <T> FixedSizeList<T> of();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     <T> FixedSizeList<T> with();
 
     /**
@@ -76,19 +80,24 @@ public interface FixedSizeListFactory
     /**
      * Same as {@link #with(Object[])}
      */
+    @Override
     <T> FixedSizeList<T> of(T... items);
 
+    @Override
     <T> FixedSizeList<T> with(T... items);
 
     /**
      * Same as {@link #withAll(Iterable)}.
      */
+    @Override
     <T> FixedSizeList<T> ofAll(Iterable<? extends T> items);
 
+    @Override
     <T> FixedSizeList<T> withAll(Iterable<? extends T> items);
 
     /**
      * @since 10.0.
      */
+    @Override
     <T> FixedSizeList<T> fromStream(Stream<? extends T> stream);
 }

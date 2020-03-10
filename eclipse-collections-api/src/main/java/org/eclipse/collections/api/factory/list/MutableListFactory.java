@@ -16,15 +16,18 @@ import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.list.MutableList;
 
 public interface MutableListFactory
+        extends ListFactory
 {
     /**
      * @since 6.0
      */
+    @Override
     <T> MutableList<T> empty();
 
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     default <T> MutableList<T> of()
     {
         return this.empty();
@@ -33,6 +36,7 @@ public interface MutableListFactory
     /**
      * Same as {@link #empty()}.
      */
+    @Override
     default <T> MutableList<T> with()
     {
         return this.empty();
@@ -41,6 +45,7 @@ public interface MutableListFactory
     /**
      * Same as {@link #with(Object[])}.
      */
+    @Override
     default <T> MutableList<T> of(T... items)
     {
         return this.with(items);
@@ -52,6 +57,7 @@ public interface MutableListFactory
      * !!! WARNING: This method uses the passed in array, so can be very unsafe if the original
      * array is held onto anywhere else. !!!
      */
+    @Override
     <T> MutableList<T> with(T... items);
 
     /**
@@ -67,6 +73,7 @@ public interface MutableListFactory
     /**
      * Same as {@link #empty()}. but takes in initial capacity.
      */
+    @Override
     default <T> MutableList<T> ofInitialCapacity(int capacity)
     {
         return this.withInitialCapacity(capacity);
@@ -75,22 +82,27 @@ public interface MutableListFactory
     /**
      * Same as {@link #empty()}. but takes in initial capacity.
      */
+    @Override
     <T> MutableList<T> withInitialCapacity(int capacity);
 
     /**
      * Same as {@link #withAll(Iterable)}.
      */
+    @Override
     default <T> MutableList<T> ofAll(Iterable<? extends T> iterable)
     {
         return this.withAll(iterable);
     }
 
+    @Override
     <T> MutableList<T> withAll(Iterable<? extends T> iterable);
 
     /**
      * @since 10.0.
      */
+    @Override
     <T> MutableList<T> fromStream(Stream<? extends T> stream);
 
+    @Override
     <T> MutableList<T> withNValues(int size, Function0<? extends T> factory);
 }
