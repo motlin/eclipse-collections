@@ -396,7 +396,7 @@ public class CompositeFastListTest extends AbstractListTestCase
 
         MutableList<String> list1 = FastList.newListWith("one", null, "three");
 
-        CompositeFastList<String> composite1 = new CompositeFastList<>();
+        MutableList<String> composite1 = new CompositeFastList<>();
         MutableList<String> firstBit1 = FastList.newListWith("one", null);
         MutableList<String> secondBit1 = FastList.newListWith("three");
         composite1.addAll(firstBit1);
@@ -424,7 +424,7 @@ public class CompositeFastListTest extends AbstractListTestCase
 
         MutableList<String> list1 = FastList.newListWith("one", null, "three");
 
-        CompositeFastList<String> composite1 = new CompositeFastList<>();
+        MutableList<String> composite1 = new CompositeFastList<>();
         MutableList<String> firstBit1 = FastList.newListWith("one", null);
         MutableList<String> secondBit1 = FastList.newListWith("three");
         composite1.addAll(firstBit1);

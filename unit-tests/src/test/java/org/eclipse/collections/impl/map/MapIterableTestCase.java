@@ -1273,7 +1273,7 @@ public abstract class MapIterableTestCase
             expected.putAll(-i, Interval.fromTo(i, 4));
         }
 
-        NegativeIntervalFunction function = new NegativeIntervalFunction();
+        Function<Integer, Iterable<Integer>> function = new NegativeIntervalFunction();
         Multimap<Integer, Integer> actual = map.groupByEach(function);
         expected.forEachKey(each ->
         {

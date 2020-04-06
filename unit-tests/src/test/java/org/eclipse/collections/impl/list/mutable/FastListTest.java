@@ -803,7 +803,7 @@ public class FastListTest extends AbstractListTestCase
     @Test
     public void testSubListSort()
     {
-        MutableList<Integer> list = new FastList<>(Interval.from(0).to(20));
+        MutableList<Integer> list = Interval.from(0).to(20).toList();
         MutableList<Integer> sorted = list.subList(2, 18).sortThis();
         Verify.assertListsEqual(sorted, Interval.from(2).to(17));
     }
@@ -1137,7 +1137,7 @@ public class FastListTest extends AbstractListTestCase
     @Test
     public void testLazyFlattenForEach()
     {
-        MutableList<Integer> list = new FastList<>(Interval.oneTo(5));
+        MutableList<Integer> list = Interval.oneTo(5).toList();
         LazyIterable<String> select = LazyIterate.flatCollect(
                 list,
                 object -> this.newWith(String.valueOf(object)));

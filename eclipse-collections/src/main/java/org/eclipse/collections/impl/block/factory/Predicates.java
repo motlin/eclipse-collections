@@ -611,7 +611,7 @@ public abstract class Predicates<T>
     private static final class AttributeFalse<T> extends AttributePredicate<T, Boolean>
     {
         private static final long serialVersionUID = 1L;
-        private static final FalseEquals FALSE_EQUALS = new FalseEquals();
+        private static final Predicate<Boolean> FALSE_EQUALS = new FalseEquals();
 
         private AttributeFalse(Function<? super T, Boolean> newFunction)
         {
@@ -628,7 +628,7 @@ public abstract class Predicates<T>
     private static final class AttributeTrue<T> extends AttributePredicate<T, Boolean>
     {
         private static final long serialVersionUID = 1L;
-        private static final TrueEquals TRUE_EQUALS = new TrueEquals();
+        private static final Predicate<Boolean> TRUE_EQUALS = new TrueEquals();
 
         private AttributeTrue(Function<? super T, Boolean> newFunction)
         {
