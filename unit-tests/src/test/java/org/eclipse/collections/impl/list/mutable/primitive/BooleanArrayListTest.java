@@ -41,7 +41,7 @@ public class BooleanArrayListTest extends AbstractBooleanListTestCase
     @Test
     public void testBooleanArrayListWithInitialCapacity() throws Exception
     {
-        BooleanArrayList arrayList = new BooleanArrayList(7);
+        MutableBooleanList arrayList = new BooleanArrayList(7);
         Verify.assertEmpty(arrayList);
         Field items = BooleanArrayList.class.getDeclaredField("items");
         items.setAccessible(true);
