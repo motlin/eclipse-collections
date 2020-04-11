@@ -11,7 +11,6 @@
 package org.eclipse.collections.impl.lazy.iterator;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.eclipse.collections.impl.block.factory.Functions;
