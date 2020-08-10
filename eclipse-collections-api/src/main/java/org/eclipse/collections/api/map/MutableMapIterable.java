@@ -13,6 +13,8 @@ package org.eclipse.collections.api.map;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
@@ -39,6 +41,42 @@ import org.eclipse.collections.api.tuple.Pair;
  */
 public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
 {
+    @Override
+    default void forEach(BiConsumer<? super K, ? super V> action)
+    {
+        this.forEachKeyValue(action::accept);
+    }
+
+    @Override
+    default V putIfAbsent(K key, V value)
+    {
+        return this.getIfAbsentPut(key, value);
+    }
+
+    @Override
+    void replaceAll(BiFunction<? super K, ? super V, ? extends V> function);
+
+    @Override
+    boolean remove(Object key, Object value);
+
+    @Override
+    boolean replace(K key, V oldValue, V newValue);
+
+    @Override
+    V replace(K key, V value);
+
+    @Override
+    V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction);
+
+    @Override
+    V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction);
+
+    @Override
+    V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction);
+
+    @Override
+    V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction);
+
     /**
      * This method allows mutable map the ability to add an element in the form of {@code Pair<? extends K, ? extends V>}.
      *
@@ -50,12 +88,6 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
         return this.put(keyValuePair.getOne(), keyValuePair.getTwo());
     }
 
-    /**
-     * This method allows mutable map the ability to add an element in the form of {@code Pair<? extends K, ? extends V>}.
-     *
-     * @return previous value in the map for the key, or null if no value exists for the key.
-     * @see #put(Object, Object)
-     */
     default V add(Pair<? extends K, ? extends V> keyValuePair)
     {
         return this.putPair(keyValuePair);

@@ -130,7 +130,6 @@ public interface MapIterable<K, V> extends RichIterable<V>
      * result of evaluating the specified function and parameter.
      */
     <P> V getIfAbsentWith(K key, Function<? super P, ? extends V> function, P parameter);
-
     /**
      * If there is a value in the Map that corresponds to the specified key return the result of applying the specified
      * Function on the value, otherwise return null.
