@@ -320,7 +320,7 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     }
 
     @Override
-    public <KK, VV> MutableMap<KK, VV> aggregateInPlaceBy(Function<? super V, ? extends KK> groupBy, Function0<? extends VV> zeroValueFactory, Procedure2<? super VV, ? super V> mutatingAggregator)
+    public <KK, VV> MutableMapIterable<KK, VV> aggregateInPlaceBy(Function<? super V, ? extends KK> groupBy, Function0<? extends VV> zeroValueFactory, Procedure2<? super VV, ? super V> mutatingAggregator)
     {
         synchronized (this.lock)
         {

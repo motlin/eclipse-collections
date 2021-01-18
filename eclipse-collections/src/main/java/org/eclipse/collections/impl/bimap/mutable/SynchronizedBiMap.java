@@ -24,6 +24,7 @@ import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
@@ -225,6 +226,18 @@ public class SynchronizedBiMap<K, V> extends AbstractSynchronizedMapIterable<K, 
         synchronized (this.lock)
         {
             return this.getDelegate().aggregateBy(keyFunction, valueFunction, zeroValueFactory, nonMutatingAggregator);
+        }
+    }
+
+    @Override
+    public <KK, VV> MutableMap<KK, VV> aggregateInPlaceBy(
+            Function<? super V, ? extends KK> groupBy,
+            Function0<? extends VV> zeroValueFactory,
+            Procedure2<? super VV, ? super V> mutatingAggregator)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().aggregateInPlaceBy(groupBy, zeroValueFactory, mutatingAggregator);
         }
     }
 

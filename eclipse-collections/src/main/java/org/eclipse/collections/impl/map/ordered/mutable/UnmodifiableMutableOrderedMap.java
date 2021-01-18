@@ -1477,7 +1477,7 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public <KK, VV> MutableMap<KK, VV> aggregateInPlaceBy(
+    public <KK, VV> MutableMapIterable<KK, VV> aggregateInPlaceBy(
             Function<? super V, ? extends KK> groupBy,
             Function0<? extends VV> zeroValueFactory,
             Procedure2<? super VV, ? super V> mutatingAggregator)
