@@ -111,6 +111,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <module>unit-tests-java8</module>
         <module>test-coverage</module>
         <module>p2-site</module>
+        <module>junit-inheritance-annotation-processor</module>
     </modules>
 
     <properties>

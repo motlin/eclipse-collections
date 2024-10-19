@@ -93,6 +93,9 @@
                                     <ignoredUnusedDeclaredDependency>
                                         org.eclipse.collections:unit-tests-java8:jar
                                     </ignoredUnusedDeclaredDependency>
+                                    <ignoredUnusedDeclaredDependency>
+                                        org.eclipse.collections:junit-inheritance-annotation-processor:jar
+                                    </ignoredUnusedDeclaredDependency>
                                 </ignoredUnusedDeclaredDependencies>
                             </configuration>
                             <executions>
