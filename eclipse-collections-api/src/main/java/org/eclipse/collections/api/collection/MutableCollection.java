@@ -12,7 +12,7 @@ package org.eclipse.collections.api.collection;
 
 import java.util.Collection;
 
-import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.MutableIterable;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -68,18 +68,18 @@ import org.eclipse.collections.api.tuple.Twin;
  * There are several extensions to MutableCollection, including MutableList, MutableSet, and MutableBag.
  */
 public interface MutableCollection<T>
-        extends Collection<T>, RichIterable<T>
+        extends Collection<T>, MutableIterable<T>
 {
     @Override
     default Object[] toArray()
     {
-        return RichIterable.super.toArray();
+        return MutableIterable.super.toArray();
     }
 
     @Override
     default <T1> T1[] toArray(T1[] a)
     {
-        return RichIterable.super.toArray(a);
+        return MutableIterable.super.toArray(a);
     }
 
     /**

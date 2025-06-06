@@ -16,7 +16,7 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.ImmutableIterable;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -58,7 +58,7 @@ import org.eclipse.collections.api.tuple.Pair;
  * methods available on the public interface.
  */
 public interface ImmutableCollection<T>
-        extends RichIterable<T>
+        extends ImmutableIterable<T>
 {
     /**
      * This method is similar to the {@code with} method in {@code MutableCollection}
