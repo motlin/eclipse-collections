@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import org.eclipse.collections.api.MutableIterable;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -38,7 +39,7 @@ import org.eclipse.collections.api.tuple.Pair;
 /**
  * @since 6.0
  */
-public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
+public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>, MutableIterable<V>
 {
     /**
      * This method allows mutable map the ability to add an element in the form of {@code Pair<? extends K, ? extends V>}.
