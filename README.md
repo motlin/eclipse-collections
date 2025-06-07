@@ -1,16 +1,16 @@
 <!--
-  ~ Copyright (c) 2025 Goldman Sachs and others.
-  ~ All rights reserved. This program and the accompanying materials
-  ~ are made available under the terms of the Eclipse Public License v1.0
-  ~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
-  ~ The Eclipse Public License is available at https://www.eclipse.org/legal/epl-v10.html
-  ~ and the Eclipse Distribution License is available at
-  ~ https://www.eclipse.org/org/documents/edl-v10.php.
-  -->
+~ Copyright (c) 2025 Goldman Sachs and others.
+~ All rights reserved. This program and the accompanying materials
+~ are made available under the terms of the Eclipse Public License v1.0
+~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
+~ The Eclipse Public License is available at https://www.eclipse.org/legal/epl-v10.html
+~ and the Eclipse Distribution License is available at
+~ https://www.eclipse.org/org/documents/edl-v10.php.
+-->
 [![][maven img]][maven]
 [![][release img]][release]
 [![][javadoc api img]][javadoc api]
-[![][javadoc impl img]][javadoc impl]
+[![][javadoc impl img]][javadoc im-->
 
 [![][license-epl img]][license-epl]
 [![][license-edl img]][license-edl]
@@ -25,6 +25,7 @@
 <a href="https://eclipse.dev/collections/"><img src="https://github.com/eclipse/eclipse-collections/blob/master/artwork/eclipse-collections-logo.png" height="50%" width="50%"></a>
 
 #### [English](https://eclipse.dev/collections/) | [Deutsch](https://eclipse.dev/collections/de/index.html) | [Ελληνικά](https://eclipse.dev/collections/el/index.html) | [Español](https://eclipse.dev/collections/es/index.html) | [中文](https://eclipse.dev/collections/cn/index.html) | [Français](https://eclipse.dev/collections/fr/index.html) | [日本語](https://eclipse.dev/collections/ja/index.html) | [Norsk (bokmål)](https://eclipse.dev/collections/no-nb/index.html) | [Português-Brasil](https://eclipse.dev/collections/pt-br/index.html) | [Русский](https://eclipse.dev/collections/ru/index.html) | [हिंदी](https://eclipse.dev/collections/hi/index.html) | [Srpski (latinica)](https://eclipse.dev/collections/sr-rs-latn/index.html)
+
 Eclipse Collections is a comprehensive collections library for Java. The library enables productivity and performance by delivering an expressive and efficient set of APIs and types. The iteration protocol was inspired by the Smalltalk collection framework, and the collections are compatible with the Java Collection Framework types.
 
 The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8+. Eclipse Collections 12.x will be compatible with Java 11+. Eclipse Collections is a part of the OpenJDK [Quality Outreach](https://wiki.openjdk.java.net/display/quality/Quality+Outreach) program, and it is validated for different versions of the OpenJDK.
@@ -42,17 +43,17 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
   * [Adapters][Adapters] and [Utility][Utilities] classes for JCF Types
     * [Blog: Iterate over any Iterable in Java][BlogIterateOverAnyIterableInJava]
 * Performance
-    * Memory Efficient Containers
-      * [Blog: UnifiedMap: How it works?][BlogUnifiedMapHowItWorks]
-      * [Blog: UnifiedSet - The Memory Saver][BlogUnifiedSetTheMemorySaver]
-    * Optimized Eager, [`Lazy`][LazyIterable] and [`Parallel`][ParallelIterable] APIs
-      * [Blog: The unparalleled design of Eclipse Collections][BlogUnparalleledDesignOfEclipseCollections]
-    * [Primitive][PrimitiveIterable] Collections for all primitive types
-      * Provides `List`, `Set`, `Bag`, `Stack`, `Map`, `Interval` primitive container types
+  * Memory Efficient Containers
+    * [Blog: UnifiedMap: How it works?][BlogUnifiedMapHowItWorks]
+    * [Blog: UnifiedSet - The Memory Saver][BlogUnifiedSetTheMemorySaver]
+  * Optimized Eager, [`Lazy`][LazyIterable] and [`Parallel`][ParallelIterable] APIs
+    * [Blog: The unparalleled design of Eclipse Collections][BlogUnparalleledDesignOfEclipseCollections]
+  * [Primitive][PrimitiveIterable] Collections for all primitive types
+    * Provides `List`, `Set`, `Bag`, `Stack`, `Map`, `Interval` primitive container types
 * Maturity
-    * Eclipse Collections has been actively developed and used in financial services applications since 2004
-    * Eclipse Collections existed for a decade before concise lambda expressions were added in Java 8
-      * [Blog: My ten-year quest for concise lambda expressions in Java][BlogLambdaExpressionsInJava]
+  * Eclipse Collections has been actively developed and used in financial services applications since 2004
+  * Eclipse Collections existed for a decade before concise lambda expressions were added in Java 8
+    * [Blog: My ten-year quest for concise lambda expressions in Java][BlogLambdaExpressionsInJava]
 
 ## Learn Eclipse Collections
 
@@ -62,8 +63,8 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
 * Blog: [Java has Streams. Do we need third-party collections?][BlogJavaHasStreamsDoWeNeedCollections]
 * [Some Quick Code Examples](./README_EXAMPLES.md)
 * [Eclipse Collections Katas](https://github.com/eclipse/eclipse-collections-kata), a fun way to help you learn idiomatic Eclipse Collections usage.
-    * Start Here - [Pet Kata](https://eclipse.github.io/eclipse-collections-kata/pet-kata/#/)
-    * Continue Here - [Company Kata](https://eclipse.github.io/eclipse-collections-kata/company-kata/#/)
+  * Start Here - [Pet Kata](https://eclipse.github.io/eclipse-collections-kata/pet-kata/#/)
+  * Continue Here - [Company Kata](https://eclipse.github.io/eclipse-collections-kata/company-kata/#/)
 * [Eclipse Collections Reference Guide](https://github.com/eclipse/eclipse-collections/blob/master/docs/0-RefGuide.adoc) and [Javadoc](https://eclipse.dev/collections/javadoc/11.1.0/index.html)
 * [Serializing Eclipse Collections with Jackson](./docs/jackson.md)
 * [Articles](https://github.com/eclipse/eclipse-collections/wiki/Articles) and [Blogs](https://medium.com/tag/eclipse-collections/latest)
@@ -73,25 +74,25 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
 
 ## Eclipse Collections and JDK Compatibility Matrix
 
-| EC     | JDK 5 - 7 | JDK 8   | JDK 9 - 10 | JDK 11 - 14 | JDK 15 - 17 | JDK 17 - 21 
-|--------|-----------|---------|------------|-------------|-------------|-------------
+|   EC   | JDK 5 - 7 |  JDK 8  | JDK 9 - 10 | JDK 11 - 14 | JDK 15 - 17 | JDK 17 - 21 |
+|--------|-----------|---------|------------|-------------|-------------|-------------|
 | 7.x.x  | &check;   | &check; |            |             |             |
 | 8.x.x  |           | &check; |            |             |             |
 | 9.x.x  |           | &check; | &check;    | &check;     |             |
 | 10.x.x |           | &check; | &check;    | &check;     |             |
-| 10.4.0 |           | &check; | &check;    | &check;     | &check;     | &check;
-| 11.x.x |           | &check; | &check;    | &check;     | &check;     | &check;
-| 12.x.x |           |         |            | &check;     | &check;     | &check;
-| 13.x.x |           |         |            |             |             | &check;
+| 10.4.0 |           | &check; | &check;    | &check;     | &check;     | &check;     |
+| 11.x.x |           | &check; | &check;    | &check;     | &check;     | &check;     |
+| 12.x.x |           |         |            | &check;     | &check;     | &check;     |
+| 13.x.x |           |         |            |             |             | &check;     |
 
-**Please Note:** 
+**Please Note:**
 1. Eclipse Collections 13.x requires minimum Java 17 and is compatible with Java 17+.
-2. Eclipse Collections 12.x requires minimum Java 11 and is compatible with Java 11+. 
-
+2. Eclipse Collections 12.x requires minimum Java 11 and is compatible with Java 11+.
 
 ## Acquiring Eclipse Collections
 
 ### Maven
+
 ```xml
 <dependency>
     <groupId>org.eclipse.collections</groupId>
@@ -114,13 +115,13 @@ implementation 'org.eclipse.collections:eclipse-collections:13.0.0'
 ```
 
 ### OSGi Bundle
+
 - p2 update site: https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/nightly/latest/
 - Maven: https://central.sonatype.com/artifact/org.eclipse.collections/p2-site
 
 ## How to Contribute
 
 We welcome contributions! We accept contributions via pull requests here in GitHub. Please see [How To Contribute](CONTRIBUTING.md) to get started.
-
 
 ## Additional information
 
@@ -133,40 +134,28 @@ We welcome contributions! We accept contributions via pull requests here in GitH
 
 [actions acceptance-tests]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22Acceptance+Tests%22
 [actions acceptance-tests img]:https://github.com/eclipse/eclipse-collections/workflows/Acceptance%20Tests/badge.svg?branch=master
-
 [actions unit-tests]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22Unit+tests%22
 [actions unit-tests img]:https://github.com/eclipse/eclipse-collections/workflows/Unit%20tests/badge.svg?branch=master
-
 [actions performance-tests]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22Performance+Tests%22
 [actions performance-tests img]:https://github.com/eclipse/eclipse-collections/workflows/Performance%20Tests/badge.svg?branch=master
-
 [actions checkstyle]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22Checkstyle%22
 [actions checkstyle img]:https://github.com/eclipse/eclipse-collections/workflows/Checkstyle/badge.svg?branch=master
-
 [actions javadoc]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22JavaDoc%22
 [actions javadoc img]:https://github.com/eclipse/eclipse-collections/workflows/JavaDoc/badge.svg?branch=master
-
 [maven]:https://search.maven.org/#search|gav|1|g:"org.eclipse.collections"%20AND%20a:"eclipse-collections"
 [maven img]:https://maven-badges.herokuapp.com/maven-central/org.eclipse.collections/eclipse-collections/badge.svg
-
 [release]:https://github.com/eclipse/eclipse-collections/releases
 [release img]:https://img.shields.io/github/release/eclipse/eclipse-collections.svg
-
 [javadoc api]:https://javadoc.io/doc/org.eclipse.collections/eclipse-collections-api
 [javadoc api img]:https://javadoc.io/badge2/org.eclipse.collections/eclipse-collections-api/javadoc_eclipse_collections_api.svg
-
 [javadoc impl]:https://javadoc.io/doc/org.eclipse.collections/eclipse-collections
 [javadoc impl img]:https://javadoc.io/badge2/org.eclipse.collections/eclipse-collections/javadoc_eclipse_collections.svg
-
 [license-epl]:LICENSE-EPL-1.0.txt
 [license-epl img]:https://img.shields.io/badge/License-EPL-blue.svg
-
 [license-edl]:LICENSE-EDL-1.0.txt
 [license-edl img]:https://img.shields.io/badge/License-EDL-blue.svg
-
 [snyk-badge]:https://snyk.io/vuln/maven:org.eclipse.collections:eclipse-collections@11.1.0?utm_medium=referral&utm_source=badge&utm_campaign=snyk-widget
 [snyk-badge img]:https://snyk-widget.herokuapp.com/badge/mvn/org.eclipse.collections/eclipse-collections/11.1.0/badge.svg
-
 [RichIterable]: https://eclipse.dev/collections/javadoc/11.1.0/org/eclipse/collections/api/RichIterable.html
 [ListIterable]: https://eclipse.dev/collections/javadoc/11.1.0/org/eclipse/collections/api/list/ListIterable.html
 [SetIterable]: https://eclipse.dev/collections/javadoc/11.1.0/org/eclipse/collections/api/set/SetIterable.html
@@ -193,7 +182,6 @@ We welcome contributions! We accept contributions via pull requests here in GitH
 [BlogIterateOverAnyIterableInJava]: https://medium.com/javarevisited/iterate-over-any-iterable-in-java-bec78eeeb452?source=friends_link&sk=7d460d1494cb76ce6bc9a5543785224a
 [BlogAsAMatterOfFactory]: https://medium.com/oracledevs/as-a-matter-of-factory-factories-matter-482d8adff094?source=friends_link&sk=96a4cd8fbc42e309c39a917449e6bff2
 [BlogJavaHasStreamsDoWeNeedCollections]: https://motlin.medium.com/java-has-streams-do-we-need-third-party-collections-dd12f473d105
-
 [Factories]: https://eclipse.dev/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/package-summary.html
 [10-0-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/10.0.0
 [10-1-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/10.1.0

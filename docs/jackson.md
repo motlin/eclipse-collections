@@ -1,12 +1,13 @@
 <!--
-  ~ Copyright (c) 2021 Goldman Sachs and others.
-  ~ All rights reserved. This program and the accompanying materials
-  ~ are made available under the terms of the Eclipse Public License v1.0
-  ~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
-  ~ The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
-  ~ and the Eclipse Distribution License is available at
-  ~ http://www.eclipse.org/org/documents/edl-v10.php.
-  -->
+~ Copyright (c) 2021 Goldman Sachs and others.
+~ All rights reserved. This program and the accompanying materials
+~ are made available under the terms of the Eclipse Public License v1.0
+~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
+~ The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+~ and the Eclipse Distribution License is available at
+~ http://www.eclipse.org/org/documents/edl-v10.php.
+-->
+
 # Serializing Eclipse Collections with Jackson
 
 Unfortunately, with new collection types comes incompatibility with normal serialization frameworks. [Jackson](https://github.com/FasterXML/jackson), arguably the most popular JSON serialization framework for Java, is unable to deserialize Eclipse Collections types out-of-the-box. For this purpose, there is now a [Jackson module](https://github.com/FasterXML/jackson-datatypes-collections/) supporting most Eclipse Collections types directly (including primitive collections).

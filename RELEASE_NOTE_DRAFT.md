@@ -1,5 +1,5 @@
 13.0.0
-====================
+======
 
 This is the 13.0.0 major release.
 
@@ -8,7 +8,9 @@ This release focused on migrating the development baseline from Java 11 to Java 
 The Eclipse Collections team gives a huge thank you to everyone who participated in this release.
 
 # New Functionality
+
 -----------------
+
 * Added default toArray/toImmutableList/Set/Bag implementations to LazyIterable.
 * Implemented MapIterable.collectKeysUnique(). Fixes #409.
 * Implemented MutableOrderedMap.toImmutable() and add ImmutableOrderedMapAdapter.
@@ -28,9 +30,10 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 * Changed OrderedIterable.indexOf() to have a default implementation.
 * Added missing empty with comparator methods. Fixes #1328.
 
-
 # Optimizations
+
 ----------------------
+
 * Optimized forEach method on Map views to not delegate to an iterator.
 * Optimized Map.replaceAll() to not delegate to iterator.
 * Optimized forEach method on Map views to not delegate to an iterator.
@@ -46,9 +49,10 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 * Optimized any/all/noneSatisfy on UnifiedMapWithHashingStrategy. Fixes #1342.
 * Optimized withAll for primitive bag factories. Fixes #1372.
 
-
 # Tech Debt Reduction
+
 ---------------------
+
 * Added more files to .idea/.gitignore.
 * Used interfaces instead of implementations where possible without breaking backward compatibility.
 * Formatted yaml files using Spotless.
@@ -90,9 +94,10 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 * Refactored distinct to use select.
 * Refactored FastList to use new InternalArrayIterate primitive collect methods. Fixes #1350.
 
-
 # Documentation Changes
+
 ----------------------
+
 * Added "Eclipse Collections Categorically" book to "Learn Eclipse Collections" section of README.
 * Improved structural search templates, mostly for collection factories and assertions.
 * Clarified Java version compatibility in README.
@@ -116,16 +121,19 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 * Updated 2-Collection_Containers.adoc file for Primitive sets documentation.
 * Fixed dead links in CONTRIBUTING.MD
 
-
 # Build Changes
+
 -----------------
+
 * Upgraded the minimum Java version to Java 17.
 * Build a maven p2 site from the reactor content. Fixes #1411, #288
 * Upgrade bnd plugin to 7.1.0.
 * Publish p2 artifacts to maven central. Fixes #294 . Example [here](https://central.sonatype.com/artifact/org.eclipse.collections/p2-site)
 
 # Note
+
 -------
+
 _We have taken all the measures to ensure all features are captured in the release notes.
 However, release notes compilation is manual, so it is possible that a commit might be missed.
 For a comprehensive list of commits please go through the commit log._
@@ -187,36 +195,38 @@ implementation 'org.eclipse.collections:eclipse-collections-forkjoin:13.0.0'
 <dependency org="org.eclipse.collections" name="p2-site" rev="13.0.0" />
 <dependency org="org.eclipse.collections" name="eclipse-collections-forkjoin" rev="13.0.0"/>
 ```
+
 <dependency>
-    <groupId>org.eclipse.collections</groupId>
-    <artifactId>eclipse-collections-api</artifactId>
-    <version>13.0.0</version>
+<groupId>org.eclipse.collections</groupId>
+<artifactId>eclipse-collections-api</artifactId>
+<version>13.0.0</version>
 </dependency>
 
 <dependency>
-    <groupId>org.eclipse.collections</groupId>
-    <artifactId>eclipse-collections</artifactId>
-    <version>13.0.0</version>
+<groupId>org.eclipse.collections</groupId>
+<artifactId>eclipse-collections</artifactId>
+<version>13.0.0</version>
 </dependency>
 
 <dependency>
-    <groupId>org.eclipse.collections</groupId>
-    <artifactId>eclipse-collections-testutils</artifactId>
-    <version>13.0.0</version>
-    <scope>test</scope>
+<groupId>org.eclipse.collections</groupId>
+<artifactId>eclipse-collections-testutils</artifactId>
+<version>13.0.0</version>
+<scope>test</scope>
 </dependency>
 
 <dependency>
-    <groupId>org.eclipse.collections</groupId>
-    <artifactId>p2-site</artifactId>
-    <version>13.0.0</version>
+<groupId>org.eclipse.collections</groupId>
+<artifactId>p2-site</artifactId>
+<version>13.0.0</version>
 </dependency>
 
 <dependency>
-    <groupId>org.eclipse.collections</groupId>
-    <artifactId>eclipse-collections-forkjoin</artifactId>
-    <version>13.0.0</version>
+<groupId>org.eclipse.collections</groupId>
+<artifactId>eclipse-collections-forkjoin</artifactId>
+<version>13.0.0</version>
 </dependency>
+
 ```
 
 ### Gradle

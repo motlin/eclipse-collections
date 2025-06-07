@@ -686,4 +686,5 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
             return this.getDelegate().partitionWith(predicate, parameter);
         }
     }
+
 }
