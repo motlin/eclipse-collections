@@ -12,6 +12,7 @@ package org.eclipse.collections.api.map;
 
 import java.util.Map;
 
+import org.eclipse.collections.api.ImmutableIterable;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -26,7 +27,7 @@ import org.eclipse.collections.api.multimap.ImmutableMultimap;
 import org.eclipse.collections.api.partition.PartitionImmutableCollection;
 import org.eclipse.collections.api.tuple.Pair;
 
-public interface ImmutableMapIterable<K, V> extends MapIterable<K, V>
+public interface ImmutableMapIterable<K, V> extends MapIterable<K, V>, ImmutableIterable<V>
 {
     Map<K, V> castToMap();
 
