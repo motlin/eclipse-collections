@@ -548,4 +548,76 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     {
         return (MutableMapIterable<K, V>) super.tap(procedure);
     }
+
+    /**
+     * @since 12.0
+     */
+    @Override
+    public <V1> MutableCollection<V1> flatCollect(Function<? super V, ? extends Iterable<V1>> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().flatCollect(function);
+        }
+    }
+
+    /**
+     * @since 12.0
+     */
+    @Override
+    public <P, V1> MutableCollection<V1> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<V1>> function, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().flatCollectWith(function, parameter);
+        }
+    }
+
+    /**
+     * @since 12.0
+     */
+    @Override
+    public <V1> MutableCollection<V1> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends V1> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectIf(predicate, function);
+        }
+    }
+
+    /**
+     * @since 12.0
+     */
+    @Override
+    public <P, V1> MutableCollection<V1> collectWith(Function2<? super V, ? super P, ? extends V1> function, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectWith(function, parameter);
+        }
+    }
+
+    /**
+     * @since 12.0
+     */
+    @Override
+    public <V1> MutableCollection<V1> collect(Function<? super V, ? extends V1> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collect(function);
+        }
+    }
+
+    /**
+     * @since 12.0
+     */
+    @Override
+    public <P> PartitionMutableCollection<V> partitionWith(Predicate2<? super V, ? super P> predicate, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().partitionWith(predicate, parameter);
+        }
+    }
 }
