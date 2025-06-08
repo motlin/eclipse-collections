@@ -12,6 +12,7 @@ package org.eclipse.collections.api.bimap;
 
 import java.util.Map;
 
+import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
@@ -87,6 +88,23 @@ public interface MutableBiMap<K, V> extends BiMap<K, V>, MutableMapIterable<K, V
 
     @Override
     <R> MutableBiMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function);
+
+    @Override
+    <VV> MutableBag<VV> flatCollect(Function<? super V, ? extends Iterable<VV>> function);
+
+    @Override
+    <VV> MutableBag<VV> collect(Function<? super V, ? extends VV> function);
+
+    @Override
+    <P, VV> MutableBag<VV> collectWith(Function2<? super V, ? super P, ? extends VV> function, P parameter);
+
+    @Override
+    <P, VV> MutableBag<VV> flatCollectWith(
+            Function2<? super V, ? super P, ? extends Iterable<VV>> function,
+            P parameter);
+
+    @Override
+    <VV> MutableBag<VV> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends VV> function);
 
     @Override
     MutableSet<V> select(Predicate<? super V> predicate);

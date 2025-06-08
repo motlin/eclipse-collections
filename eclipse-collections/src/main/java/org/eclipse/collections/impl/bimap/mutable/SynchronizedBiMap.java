@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.collections.api.bimap.ImmutableBiMap;
 import org.eclipse.collections.api.bimap.MutableBiMap;
+import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
@@ -304,6 +305,51 @@ public class SynchronizedBiMap<K, V> extends AbstractSynchronizedMapIterable<K, 
     public MutableSet<Pair<V, Integer>> zipWithIndex()
     {
         return (MutableSet<Pair<V, Integer>>) super.zipWithIndex();
+    }
+
+    @Override
+    public <VV> MutableBag<VV> collect(Function<? super V, ? extends VV> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collect(function);
+        }
+    }
+
+    @Override
+    public <P, VV> MutableBag<VV> collectWith(Function2<? super V, ? super P, ? extends VV> function, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectWith(function, parameter);
+        }
+    }
+
+    @Override
+    public <VV> MutableBag<VV> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends VV> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectIf(predicate, function);
+        }
+    }
+
+    @Override
+    public <VV> MutableBag<VV> flatCollect(Function<? super V, ? extends Iterable<VV>> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().flatCollect(function);
+        }
+    }
+
+    @Override
+    public <P, VV> MutableBag<VV> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<VV>> function, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().flatCollectWith(function, parameter);
+        }
     }
 
     @Override

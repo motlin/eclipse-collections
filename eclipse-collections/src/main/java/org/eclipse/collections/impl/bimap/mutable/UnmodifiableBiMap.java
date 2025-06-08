@@ -541,7 +541,7 @@ public class UnmodifiableBiMap<K, V> implements MutableBiMap<K, V>, Serializable
     }
 
     @Override
-    public <V1> MutableCollection<V1> collect(Function<? super V, ? extends V1> function)
+    public <VV> MutableBag<VV> collect(Function<? super V, ? extends VV> function)
     {
         return this.delegate.collect(function);
     }
@@ -553,7 +553,7 @@ public class UnmodifiableBiMap<K, V> implements MutableBiMap<K, V>, Serializable
     }
 
     @Override
-    public <P, V1> MutableCollection<V1> collectWith(Function2<? super V, ? super P, ? extends V1> function, P parameter)
+    public <P, VV> MutableBag<VV> collectWith(Function2<? super V, ? super P, ? extends VV> function, P parameter)
     {
         return this.delegate.collectWith(function, parameter);
     }
@@ -730,7 +730,7 @@ public class UnmodifiableBiMap<K, V> implements MutableBiMap<K, V>, Serializable
     }
 
     @Override
-    public <V1> MutableCollection<V1> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends V1> function)
+    public <VV> MutableBag<VV> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends VV> function)
     {
         return this.delegate.collectIf(predicate, function);
     }
@@ -742,13 +742,13 @@ public class UnmodifiableBiMap<K, V> implements MutableBiMap<K, V>, Serializable
     }
 
     @Override
-    public <V1> MutableCollection<V1> flatCollect(Function<? super V, ? extends Iterable<V1>> function)
+    public <VV> MutableBag<VV> flatCollect(Function<? super V, ? extends Iterable<VV>> function)
     {
         return this.delegate.flatCollect(function);
     }
 
     @Override
-    public <P, V1> MutableCollection<V1> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<V1>> function, P parameter)
+    public <P, VV> MutableBag<VV> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<VV>> function, P parameter)
     {
         return this.delegate.flatCollectWith(function, parameter);
     }
