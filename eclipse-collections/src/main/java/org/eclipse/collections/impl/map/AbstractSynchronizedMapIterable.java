@@ -429,7 +429,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <V1> MutableMultimap<V1, V> groupBy(Function<? super V, ? extends V1> function)
     {
-        return (MutableMultimap<V1, V>) super.<V1>groupBy(function);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().groupBy(function);
+        }
     }
 
     /**
@@ -438,7 +441,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <V1> MutableMultimap<V1, V> groupByEach(Function<? super V, ? extends Iterable<V1>> function)
     {
-        return (MutableMultimap<V1, V>) super.groupByEach(function);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().groupByEach(function);
+        }
     }
 
     /**
@@ -447,7 +453,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <S> MutableCollection<Pair<V, S>> zip(Iterable<S> that)
     {
-        return (MutableCollection<Pair<V, S>>) super.zip(that);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().zip(that);
+        }
     }
 
     /**
@@ -456,7 +465,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public MutableCollection<Pair<V, Integer>> zipWithIndex()
     {
-        return (MutableCollection<Pair<V, Integer>>) super.zipWithIndex();
+        synchronized (this.lock)
+        {
+            return this.getDelegate().zipWithIndex();
+        }
     }
 
     /**
@@ -465,7 +477,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public MutableCollection<V> select(Predicate<? super V> predicate)
     {
-        return (MutableCollection<V>) super.select(predicate);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().select(predicate);
+        }
     }
 
     /**
@@ -474,7 +489,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <S> MutableCollection<S> selectInstancesOf(Class<S> clazz)
     {
-        return (MutableCollection<S>) super.selectInstancesOf(clazz);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().selectInstancesOf(clazz);
+        }
     }
 
     /**
@@ -483,7 +501,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <P> MutableCollection<V> selectWith(Predicate2<? super V, ? super P> predicate, P parameter)
     {
-        return (MutableCollection<V>) super.selectWith(predicate, parameter);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().selectWith(predicate, parameter);
+        }
     }
 
     /**
@@ -492,7 +513,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <P> MutableCollection<V> rejectWith(Predicate2<? super V, ? super P> predicate, P parameter)
     {
-        return (MutableCollection<V>) super.rejectWith(predicate, parameter);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().rejectWith(predicate, parameter);
+        }
     }
 
     /**
@@ -501,7 +525,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public PartitionMutableCollection<V> partition(Predicate<? super V> predicate)
     {
-        return (PartitionMutableCollection<V>) super.partition(predicate);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().partition(predicate);
+        }
     }
 
     /**
@@ -510,7 +537,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <V1> MutableBag<V1> countBy(Function<? super V, ? extends V1> function)
     {
-        return (MutableBag<V1>) super.<V1>countBy(function);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().countBy(function);
+        }
     }
 
     /**
@@ -519,7 +549,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <V1, P> MutableBag<V1> countByWith(Function2<? super V, ? super P, ? extends V1> function, P parameter)
     {
-        return (MutableBag<V1>) super.<V1, P>countByWith(function, parameter);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().countByWith(function, parameter);
+        }
     }
 
     /**
@@ -528,7 +561,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public <V1> MutableBag<V1> countByEach(Function<? super V, ? extends Iterable<V1>> function)
     {
-        return (MutableBag<V1>) super.countByEach(function);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().countByEach(function);
+        }
     }
 
     /**
@@ -549,7 +585,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public MutableCollection<V> reject(Predicate<? super V> predicate)
     {
-        return (MutableCollection<V>) super.reject(predicate);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().reject(predicate);
+        }
     }
 
     /**
@@ -570,7 +609,10 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     @Override
     public MutableMapIterable<K, V> tap(Procedure<? super V> procedure)
     {
-        return (MutableMapIterable<K, V>) super.tap(procedure);
+        synchronized (this.lock)
+        {
+            return this.getDelegate().tap(procedure);
+        }
     }
 
     /**
