@@ -532,12 +532,36 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     }
 
     /**
+     * @since 12.0
+     */
+    @Override
+    public MutableMapIterable<K, V> select(Predicate2<? super K, ? super V> predicate)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().select(predicate);
+        }
+    }
+
+    /**
      * @since 9.0
      */
     @Override
     public MutableCollection<V> reject(Predicate<? super V> predicate)
     {
         return (MutableCollection<V>) super.reject(predicate);
+    }
+
+    /**
+     * @since 12.0
+     */
+    @Override
+    public MutableMapIterable<K, V> reject(Predicate2<? super K, ? super V> predicate)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().reject(predicate);
+        }
     }
 
     /**
