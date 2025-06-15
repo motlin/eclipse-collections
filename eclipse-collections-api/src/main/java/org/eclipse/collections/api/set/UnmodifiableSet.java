@@ -101,4 +101,10 @@ public interface UnmodifiableSet<T> extends UnmodifiableCollection<T>, MutableSe
         this.forEach(procedure);
         return this;
     }
+    
+    @Override
+    default UnmodifiableSet<T> newEmpty()
+    {
+        throw new UnsupportedOperationException("Cannot create a new empty UnmodifiableSet");
+    }
 }
