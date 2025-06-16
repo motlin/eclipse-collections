@@ -39,6 +39,7 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.ParallelListIterable;
+import org.eclipse.collections.api.list.UnmodifiableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
 import org.eclipse.collections.api.list.primitive.MutableCharList;
@@ -62,7 +63,7 @@ import org.eclipse.collections.impl.lazy.ReverseIterable;
  */
 public class UnmodifiableMutableList<T>
         extends AbstractUnmodifiableMutableCollection<T>
-        implements MutableList<T>, Serializable
+        implements MutableList<T>, UnmodifiableList<T>, Serializable
 {
     UnmodifiableMutableList(MutableList<? extends T> mutableList)
     {
@@ -105,12 +106,6 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
-    public MutableList<T> asUnmodifiable()
-    {
-        return this;
-    }
-
-    @Override
     public ImmutableList<T> toImmutable()
     {
         return this.getMutableList().toImmutable();
@@ -129,16 +124,15 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
-    public MutableList<T> newEmpty()
+    public UnmodifiableMutableList<T> asUnmodifiable()
     {
-        return this.getMutableList().newEmpty();
+        return this;
     }
 
     @Override
-    public MutableList<T> tap(Procedure<? super T> procedure)
+    public MutableList<T> newEmpty()
     {
-        this.forEach(procedure);
-        return this;
+        return this.getMutableList().newEmpty();
     }
 
     @Override
@@ -172,141 +166,15 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
-    public UnmodifiableMutableList<T> sortThis(Comparator<? super T> comparator)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThis() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public UnmodifiableMutableList<T> sortThis()
-    {
-        throw new UnsupportedOperationException("Cannot call sortThis() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
     public MutableList<T> toReversed()
     {
         return this.getMutableList().toReversed();
     }
 
     @Override
-    public MutableList<T> reverseThis()
-    {
-        throw new UnsupportedOperationException("Cannot call reverseThis() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> shuffleThis()
-    {
-        throw new UnsupportedOperationException("Cannot call shuffleThis() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> shuffleThis(Random rnd)
-    {
-        throw new UnsupportedOperationException("Cannot call shuffleThis() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public <V extends Comparable<? super V>> MutableList<T> sortThisBy(Function<? super T, ? extends V> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisBy() on " + this.getClass().getSimpleName());
-    }
-
-    /**
-     * @since 10.0 - Overridden for correctness
-     */
-    @Override
-    public void replaceAll(UnaryOperator<T> operator)
-    {
-        throw new UnsupportedOperationException("Cannot call replaceAll() on " + this.getClass().getSimpleName());
-    }
-
-    /**
-     * @since 10.0 - Overridden for correctness
-     */
-    @Override
-    public void sort(Comparator<? super T> comparator)
-    {
-        throw new UnsupportedOperationException("Cannot call sort() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> sortThisByInt(IntFunction<? super T> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisByInt() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> sortThisByBoolean(BooleanFunction<? super T> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisByBoolean() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> sortThisByChar(CharFunction<? super T> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisByChar() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> sortThisByByte(ByteFunction<? super T> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisByByte() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> sortThisByShort(ShortFunction<? super T> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisByShort() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> sortThisByFloat(FloatFunction<? super T> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisByFloat() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> sortThisByLong(LongFunction<? super T> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisByLong() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> sortThisByDouble(DoubleFunction<? super T> function)
-    {
-        throw new UnsupportedOperationException("Cannot call sortThisByDouble() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public boolean addAll(int index, Collection<? extends T> collection)
-    {
-        throw new UnsupportedOperationException("Cannot call addAll() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
     public T get(int index)
     {
         return this.getMutableList().get(index);
-    }
-
-    @Override
-    public T set(int index, T element)
-    {
-        throw new UnsupportedOperationException("Cannot call set() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public void add(int index, T element)
-    {
-        throw new UnsupportedOperationException("Cannot call add() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public T remove(int index)
-    {
-        throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
     }
 
     @Override
@@ -550,33 +418,40 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
+    public UnmodifiableList<T> tap(Procedure<? super T> procedure)
+    {
+        this.forEach(procedure);
+        return this;
+    }
+
+    @Override
+    public UnmodifiableList<T> withoutAll(Iterable<? extends T> elements)
+    {
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableList");
+    }
+
+    @Override
+    public UnmodifiableList<T> withAll(Iterable<? extends T> elements)
+    {
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableList");
+    }
+
+    @Override
+    public UnmodifiableList<T> without(T element)
+    {
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableList");
+    }
+
+    @Override
+    public UnmodifiableList<T> with(T element)
+    {
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableList");
+    }
+
+    @Override
     public ParallelListIterable<T> asParallel(ExecutorService executorService, int batchSize)
     {
         return this.getMutableList().asParallel(executorService, batchSize);
-    }
-
-    @Override
-    public MutableList<T> with(T element)
-    {
-        throw new UnsupportedOperationException("Cannot call with() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> without(T element)
-    {
-        throw new UnsupportedOperationException("Cannot call without() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> withAll(Iterable<? extends T> elements)
-    {
-        throw new UnsupportedOperationException("Cannot call withAll() on " + this.getClass().getSimpleName());
-    }
-
-    @Override
-    public MutableList<T> withoutAll(Iterable<? extends T> elements)
-    {
-        throw new UnsupportedOperationException("Cannot call withoutAll() on " + this.getClass().getSimpleName());
     }
 
     private static final class RandomAccessUnmodifiableMutableList<T> extends UnmodifiableMutableList<T> implements RandomAccess
