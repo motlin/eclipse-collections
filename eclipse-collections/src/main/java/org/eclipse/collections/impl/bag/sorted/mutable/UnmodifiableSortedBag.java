@@ -67,7 +67,7 @@ import org.eclipse.collections.impl.collection.mutable.UnmodifiableCollectionSer
  */
 public class UnmodifiableSortedBag<T>
         extends AbstractUnmodifiableMutableCollection<T>
-        implements MutableSortedBag<T>, Serializable
+        implements org.eclipse.collections.api.bag.sorted.UnmodifiableSortedBag<T>, Serializable
 {
     UnmodifiableSortedBag(MutableSortedBag<? extends T> sortedBag)
     {
@@ -92,7 +92,7 @@ public class UnmodifiableSortedBag<T>
     }
 
     @Override
-    public MutableSortedBag<T> asUnmodifiable()
+    public UnmodifiableSortedBag<T> asUnmodifiable()
     {
         return this;
     }
@@ -152,7 +152,7 @@ public class UnmodifiableSortedBag<T>
     }
 
     @Override
-    public MutableSortedBag<T> tap(Procedure<? super T> procedure)
+    public UnmodifiableSortedBag<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;
@@ -524,25 +524,25 @@ public class UnmodifiableSortedBag<T>
     }
 
     @Override
-    public MutableSortedBag<T> with(T element)
+    public UnmodifiableSortedBag<T> with(T element)
     {
         throw new UnsupportedOperationException("Cannot call with() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSortedBag<T> without(T element)
+    public UnmodifiableSortedBag<T> without(T element)
     {
         throw new UnsupportedOperationException("Cannot call without() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSortedBag<T> withAll(Iterable<? extends T> elements)
+    public UnmodifiableSortedBag<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withAll() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSortedBag<T> withoutAll(Iterable<? extends T> elements)
+    public UnmodifiableSortedBag<T> withoutAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withoutAll() on " + this.getClass().getSimpleName());
     }
