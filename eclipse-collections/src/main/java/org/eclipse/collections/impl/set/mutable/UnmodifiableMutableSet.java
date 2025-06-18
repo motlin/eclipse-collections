@@ -36,6 +36,7 @@ import org.eclipse.collections.api.partition.set.PartitionMutableSet;
 import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.ParallelUnsortedSetIterable;
+import org.eclipse.collections.api.set.UnmodifiableSet;
 import org.eclipse.collections.api.set.SetIterable;
 import org.eclipse.collections.api.set.UnsortedSetIterable;
 import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
@@ -57,7 +58,7 @@ import org.eclipse.collections.impl.collection.mutable.UnmodifiableCollectionSer
  */
 public class UnmodifiableMutableSet<T>
         extends AbstractUnmodifiableMutableCollection<T>
-        implements MutableSet<T>, Serializable
+        implements UnmodifiableSet<T>, Serializable
 {
     UnmodifiableMutableSet(MutableSet<? extends T> mutableSet)
     {
@@ -124,10 +125,11 @@ public class UnmodifiableMutableSet<T>
         return this;
     }
 
+
     @Override
     public MutableSet<T> newEmpty()
     {
-        return this.getMutableSet().newEmpty();
+        throw new UnsupportedOperationException("Cannot create a new empty UnmodifiableSet");
     }
 
     @Override
@@ -370,25 +372,25 @@ public class UnmodifiableMutableSet<T>
     }
 
     @Override
-    public MutableSet<T> with(T element)
+    public UnmodifiableSet<T> with(T element)
     {
         throw new UnsupportedOperationException("Cannot call with() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSet<T> without(T element)
+    public UnmodifiableSet<T> without(T element)
     {
         throw new UnsupportedOperationException("Cannot call without() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSet<T> withAll(Iterable<? extends T> elements)
+    public UnmodifiableSet<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withAll() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSet<T> withoutAll(Iterable<? extends T> elements)
+    public UnmodifiableSet<T> withoutAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withoutAll() on " + this.getClass().getSimpleName());
     }

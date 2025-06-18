@@ -103,7 +103,7 @@ public interface UnmodifiableSet<T> extends UnmodifiableCollection<T>, MutableSe
     }
     
     @Override
-    default UnmodifiableSet<T> newEmpty()
+    default MutableSet<T> newEmpty()
     {
         throw new UnsupportedOperationException("Cannot create a new empty UnmodifiableSet");
     }
