@@ -184,7 +184,7 @@ public final class MultiReaderHashBag<T>
     {
         try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
         {
-            return UnmodifiableBag.of(this);
+            return (MutableBag<T>) UnmodifiableBag.of(this);
         }
     }
 

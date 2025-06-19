@@ -66,7 +66,7 @@ import org.eclipse.collections.impl.collection.mutable.AbstractUnmodifiableMutab
  */
 public class UnmodifiableBag<T>
         extends AbstractUnmodifiableMutableCollection<T>
-        implements MutableBag<T>, Serializable
+        implements org.eclipse.collections.api.bag.UnmodifiableBag<T>, Serializable
 {
     UnmodifiableBag(MutableBag<? extends T> mutableBag)
     {
@@ -99,7 +99,7 @@ public class UnmodifiableBag<T>
     @Override
     public MutableBag<T> asSynchronized()
     {
-        return SynchronizedBag.of(this);
+        return SynchronizedBag.of(this.getMutableBag());
     }
 
     @Override
@@ -129,7 +129,7 @@ public class UnmodifiableBag<T>
     @Override
     public MutableBag<T> newEmpty()
     {
-        return this.getMutableBag().newEmpty();
+        throw new UnsupportedOperationException("Cannot create a new empty UnmodifiableBag");
     }
 
     @Override
@@ -387,37 +387,37 @@ public class UnmodifiableBag<T>
     }
 
     @Override
-    public MutableBag<T> with(T element)
+    public org.eclipse.collections.api.bag.UnmodifiableBag<T> with(T element)
     {
         throw new UnsupportedOperationException("Cannot call with() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableBag<T> without(T element)
+    public org.eclipse.collections.api.bag.UnmodifiableBag<T> without(T element)
     {
         throw new UnsupportedOperationException("Cannot call without() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableBag<T> withOccurrences(T element, int occurrences)
+    public org.eclipse.collections.api.bag.UnmodifiableBag<T> withOccurrences(T element, int occurrences)
     {
         throw new UnsupportedOperationException("Cannot call withOccurrences() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableBag<T> withoutOccurrences(T element, int occurrences)
+    public org.eclipse.collections.api.bag.UnmodifiableBag<T> withoutOccurrences(T element, int occurrences)
     {
         throw new UnsupportedOperationException("Cannot call withoutOccurrences() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableBag<T> withAll(Iterable<? extends T> elements)
+    public org.eclipse.collections.api.bag.UnmodifiableBag<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withAll() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableBag<T> withoutAll(Iterable<? extends T> elements)
+    public org.eclipse.collections.api.bag.UnmodifiableBag<T> withoutAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withoutAll() on " + this.getClass().getSimpleName());
     }

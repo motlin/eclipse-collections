@@ -430,7 +430,7 @@ public class SynchronizedBag<T>
     {
         synchronized (this.getLock())
         {
-            return UnmodifiableBag.of(this);
+            return (MutableBag<T>) UnmodifiableBag.of(this);
         }
     }
 

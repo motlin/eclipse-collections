@@ -11,90 +11,59 @@
 package org.eclipse.collections.api.bag;
 
 import org.eclipse.collections.api.block.procedure.Procedure;
-import org.eclipse.collections.api.collection.UnmodifiableCollection;
 
 /**
- * UnmodifiableBag is an interface that extends both UnmodifiableCollection and MutableBagIterable,
- * providing an unmodifiable view of a bag. All mutating operations throw UnsupportedOperationException.
+ * UnmodifiableBag is an interface for an unmodifiable hash-based bag.
+ * It extends UnmodifiableBagIterable and MutableBag, representing a specific
+ * implementation of an unmodifiable bag that uses hashing.
  * 
  * @since 12.0
  */
-public interface UnmodifiableBag<T> extends UnmodifiableCollection<T>, MutableBagIterable<T>
+public interface UnmodifiableBag<T> extends UnmodifiableBagIterable<T>, MutableBag<T>
 {
-    // Bag-specific mutating methods that should throw UnsupportedOperationException
-    
     @Override
-    default int addOccurrences(T item, int occurrences)
-    {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
-    }
-
-    @Override
-    default boolean removeOccurrences(Object item, int occurrences)
-    {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
-    }
-
-    @Override
-    default boolean setOccurrences(T item, int occurrences)
-    {
-        throw new UnsupportedOperationException("Cannot set occurrences in an UnmodifiableBag");
-    }
-
-    // Fluent API methods for bag-specific operations
-    
-    @Override
-    default UnmodifiableBag<T> withOccurrences(T element, int occurrences)
-    {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
-    }
-
-    @Override
-    default UnmodifiableBag<T> withoutOccurrences(T element, int occurrences)
-    {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
-    }
-
-    // Covariant return types for builder methods
-    
-    @Override
-    default UnmodifiableBag<T> with(T element)
-    {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
-    }
-
-    @Override
-    default UnmodifiableBag<T> without(T element)
-    {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
-    }
-
-    @Override
-    default UnmodifiableBag<T> withAll(Iterable<? extends T> elements)
-    {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
-    }
-
-    @Override
-    default UnmodifiableBag<T> withoutAll(Iterable<? extends T> elements)
-    {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
-    }
-
-    // View methods - return self since already unmodifiable
-    
-    @Override
-    default UnmodifiableBag<T> asUnmodifiable()
-    {
-        return this;
-    }
-
-    // Resolve return type conflict for tap() method
+    UnmodifiableBag<T> asUnmodifiable();
     
     @Override
     default UnmodifiableBag<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;
+    }
+    
+    @Override
+    default UnmodifiableBag<T> with(T element)
+    {
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
+    }
+    
+    @Override
+    default UnmodifiableBag<T> without(T element)
+    {
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
+    }
+    
+    @Override
+    default UnmodifiableBag<T> withAll(Iterable<? extends T> elements)
+    {
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
+    }
+    
+    @Override
+    default UnmodifiableBag<T> withoutAll(Iterable<? extends T> elements)
+    {
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
+    }
+    
+    @Override
+    default UnmodifiableBag<T> withOccurrences(T element, int occurrences)
+    {
+        throw new UnsupportedOperationException("Cannot add occurrences to an UnmodifiableBag");
+    }
+    
+    @Override
+    default UnmodifiableBag<T> withoutOccurrences(T element, int occurrences)
+    {
+        throw new UnsupportedOperationException("Cannot remove occurrences from an UnmodifiableBag");
     }
 }

@@ -45,9 +45,9 @@ public abstract class AbstractMutableBag<T>
     }
 
     @Override
-    public UnmodifiableBag<T> asUnmodifiable()
+    public MutableBag<T> asUnmodifiable()
     {
-        return UnmodifiableBag.of(this);
+        return (MutableBag<T>) UnmodifiableBag.of(this);
     }
 
     @Override

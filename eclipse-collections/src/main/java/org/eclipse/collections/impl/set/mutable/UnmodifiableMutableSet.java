@@ -125,12 +125,13 @@ public class UnmodifiableMutableSet<T>
         return this;
     }
 
-
     @Override
-    public MutableSet<T> newEmpty()
+    public UnmodifiableSet<T> newEmpty()
     {
-        throw new UnsupportedOperationException("Cannot create a new empty UnmodifiableSet");
+        return UnmodifiableMutableSet.of(this.getMutableSet().newEmpty());
     }
+
+
 
     @Override
     public UnmodifiableMutableSet<T> tap(Procedure<? super T> procedure)
