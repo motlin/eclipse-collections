@@ -73,6 +73,7 @@ import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
+import org.eclipse.collections.api.map.UnmodifiableMutableMapIterable;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
@@ -155,7 +156,6 @@ public class UnmodifiableMutableMap<K, V>
         return this.getMutableMap().flipUniqueValues();
     }
 
-    @Override
     public <E> MutableMap<K, V> collectKeysAndValues(
             Iterable<E> iterable,
             Function<? super E, ? extends K> keyFunction,
@@ -344,11 +344,6 @@ public class UnmodifiableMutableMap<K, V>
         return this.getMutableMap().flip();
     }
 
-    @Override
-    public MutableMap<K, V> clone()
-    {
-        return this;
-    }
 
     @Override
     public MutableMap<K, V> asUnmodifiable()
@@ -360,6 +355,12 @@ public class UnmodifiableMutableMap<K, V>
     public MutableMap<K, V> asSynchronized()
     {
         return SynchronizedMutableMap.of(this);
+    }
+
+    @Override
+    public MutableMap<K, V> clone()
+    {
+        return this;
     }
 
     @Override
@@ -1124,6 +1125,12 @@ public class UnmodifiableMutableMap<K, V>
     public <R> MutableBag<R> flatCollect(Function<? super V, ? extends Iterable<R>> function)
     {
         return this.getMutableMap().flatCollect(function);
+    }
+
+    @Override
+    public <P, R> MutableBag<R> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<R>> function, P parameter)
+    {
+        return this.getMutableMap().flatCollectWith(function, parameter);
     }
 
     @Override

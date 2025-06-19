@@ -80,7 +80,7 @@ public abstract class AbstractMutableMap<K, V> extends AbstractMutableMapIterabl
     @Override
     public MutableMap<K, V> asUnmodifiable()
     {
-        return UnmodifiableMutableMap.of(this);
+        return (MutableMap<K, V>) UnmodifiableMutableMap.of(this);
     }
 
     @Override

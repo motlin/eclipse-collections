@@ -33,34 +33,34 @@ public class UnmodifiableMutableMapTest extends MutableMapTestCase
     @Override
     public <K, V> MutableMap<K, V> newMap()
     {
-        return new UnmodifiableMutableMap<>(new UnifiedMap<>());
+        return new UnifiedMap<K, V>().asUnmodifiable();
     }
 
     @Override
     protected <K, V> MutableMap<K, V> newMapWithKeyValue(K key, V value)
     {
-        return new UnmodifiableMutableMap<>(UnifiedMap.newWithKeysValues(key, value));
+        return UnifiedMap.<K, V>newWithKeysValues(key, value).asUnmodifiable();
     }
 
     @Override
     public <K, V> MutableMap<K, V> newMapWithKeysValues(K key1, V value1, K key2, V value2)
     {
-        return new UnmodifiableMutableMap<>(UnifiedMap.newWithKeysValues(key1, value1, key2, value2));
+        return UnifiedMap.<K, V>newWithKeysValues(key1, value1, key2, value2).asUnmodifiable();
     }
 
     @Override
     public <K, V> MutableMap<K, V> newMapWithKeysValues(K key1, V value1, K key2, V value2, K key3, V value3)
     {
-        return new UnmodifiableMutableMap<>(UnifiedMap.newWithKeysValues(
-                key1, value1, key2, value2, key3, value3));
+        return UnifiedMap.<K, V>newWithKeysValues(
+                key1, value1, key2, value2, key3, value3).asUnmodifiable();
     }
 
     @Override
     public <K, V> MutableMap<K, V> newMapWithKeysValues(
             K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4)
     {
-        return new UnmodifiableMutableMap<>(UnifiedMap.newWithKeysValues(
-                key1, value1, key2, value2, key3, value3, key4, value4));
+        return UnifiedMap.<K, V>newWithKeysValues(
+                key1, value1, key2, value2, key3, value3, key4, value4).asUnmodifiable();
     }
 
     @Override

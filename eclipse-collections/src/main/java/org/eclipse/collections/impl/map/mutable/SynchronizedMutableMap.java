@@ -528,7 +528,7 @@ public class SynchronizedMutableMap<K, V>
     {
         synchronized (this.lock)
         {
-            return UnmodifiableMutableMap.of(this);
+            return (MutableMap<K, V>) UnmodifiableMutableMap.of(this);
         }
     }
 

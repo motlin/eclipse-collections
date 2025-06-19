@@ -33,7 +33,7 @@ public class UnmodifiableMutableMapTest
         {
             assertNull(result.put(random.nextDouble(), each));
         }
-        return UnmodifiableMutableMap.of(result);
+        return result.asUnmodifiable();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class UnmodifiableMutableMapTest
         {
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
-        return UnmodifiableMutableMap.of(result);
+        return result.asUnmodifiable();
     }
 
     @Override
