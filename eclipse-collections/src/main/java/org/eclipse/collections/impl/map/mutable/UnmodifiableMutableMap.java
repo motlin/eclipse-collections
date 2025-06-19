@@ -97,7 +97,7 @@ import org.eclipse.collections.impl.utility.LazyIterate;
  */
 public class UnmodifiableMutableMap<K, V>
         extends UnmodifiableMap<K, V>
-        implements MutableMap<K, V>
+        implements org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V>
 {
     private static final long serialVersionUID = 1L;
 
@@ -291,19 +291,19 @@ public class UnmodifiableMutableMap<K, V>
     }
 
     @Override
-    public MutableMap<K, V> withKeyValue(K key, V value)
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> withKeyValue(K key, V value)
     {
         throw new UnsupportedOperationException("Cannot call withKeyValue() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableMap<K, V> withMap(Map<? extends K, ? extends V> map)
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> withMap(Map<? extends K, ? extends V> map)
     {
         throw new UnsupportedOperationException("Cannot call withMap() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
     {
         throw new UnsupportedOperationException("Cannot call withMapIterable() on " + this.getClass().getSimpleName());
     }
@@ -315,25 +315,25 @@ public class UnmodifiableMutableMap<K, V>
     }
 
     @Override
-    public MutableMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
     {
         throw new UnsupportedOperationException("Cannot call withAllKeyValues() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
     {
         throw new UnsupportedOperationException("Cannot call withAllKeyValueArguments() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableMap<K, V> withoutKey(K key)
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> withoutKey(K key)
     {
         throw new UnsupportedOperationException("Cannot call withoutKey() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
     {
         throw new UnsupportedOperationException("Cannot call withoutAllKeys() on " + this.getClass().getSimpleName());
     }
@@ -346,7 +346,7 @@ public class UnmodifiableMutableMap<K, V>
 
 
     @Override
-    public MutableMap<K, V> asUnmodifiable()
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> asUnmodifiable()
     {
         return this;
     }
@@ -358,13 +358,13 @@ public class UnmodifiableMutableMap<K, V>
     }
 
     @Override
-    public MutableMap<K, V> clone()
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> clone()
     {
         return this;
     }
 
     @Override
-    public MutableMap<K, V> tap(Procedure<? super V> procedure)
+    public org.eclipse.collections.api.map.UnmodifiableMutableMap<K, V> tap(Procedure<? super V> procedure)
     {
         this.forEach(procedure);
         return this;
