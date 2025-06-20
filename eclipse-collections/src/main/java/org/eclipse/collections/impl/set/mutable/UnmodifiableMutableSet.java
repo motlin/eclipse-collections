@@ -84,7 +84,7 @@ public class UnmodifiableMutableSet<T>
     }
 
     @Override
-    public MutableSet<T> asUnmodifiable()
+    public UnmodifiableMutableSet<T> asUnmodifiable()
     {
         return this;
     }
@@ -131,7 +131,7 @@ public class UnmodifiableMutableSet<T>
     }
 
     @Override
-    public MutableSet<T> tap(Procedure<? super T> procedure)
+    public UnmodifiableMutableSet<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;

@@ -89,7 +89,7 @@ public class UnmodifiableSortedSet<T>
     }
 
     @Override
-    public MutableSortedSet<T> asUnmodifiable()
+    public UnmodifiableSortedSet<T> asUnmodifiable()
     {
         return this;
     }
@@ -136,7 +136,7 @@ public class UnmodifiableSortedSet<T>
     }
 
     @Override
-    public MutableSortedSet<T> tap(Procedure<? super T> procedure)
+    public UnmodifiableSortedSet<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;

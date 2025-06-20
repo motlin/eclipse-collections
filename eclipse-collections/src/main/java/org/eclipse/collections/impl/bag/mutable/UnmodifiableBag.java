@@ -91,7 +91,7 @@ public class UnmodifiableBag<T>
     }
 
     @Override
-    public MutableBag<T> asUnmodifiable()
+    public UnmodifiableBag<T> asUnmodifiable()
     {
         return this;
     }
@@ -139,7 +139,7 @@ public class UnmodifiableBag<T>
     }
 
     @Override
-    public MutableBag<T> tap(Procedure<? super T> procedure)
+    public UnmodifiableBag<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;

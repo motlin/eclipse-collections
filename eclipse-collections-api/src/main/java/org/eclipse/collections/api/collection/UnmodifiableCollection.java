@@ -91,42 +91,13 @@ public interface UnmodifiableCollection<T> extends UnmodifiableIterable<T>, Muta
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
     }
 
+    // Note: with, without, withAll, withoutAll, and asUnmodifiable methods are not defined here
+    // to avoid return type conflicts with specific unmodifiable collection interfaces.
+    // Each specific unmodifiable collection type (UnmodifiableBag, UnmodifiableMutableSet, etc.)
+    // must provide its own implementation of these methods with the appropriate return type.
+    
     @Override
-    default UnmodifiableCollection<T> with(T element)
-    {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableCollection");
-    }
-
-    @Override
-    default UnmodifiableCollection<T> without(T element)
-    {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
-    }
-
-    @Override
-    default UnmodifiableCollection<T> withAll(Iterable<? extends T> elements)
-    {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableCollection");
-    }
-
-    @Override
-    default UnmodifiableCollection<T> withoutAll(Iterable<? extends T> elements)
-    {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
-    }
-
-    @Override
-    default UnmodifiableCollection<T> asUnmodifiable()
-    {
-        return this;
-    }
-
-    @Override
-    default UnmodifiableCollection<T> tap(Procedure<? super T> procedure)
-    {
-        this.forEach(procedure);
-        return this;
-    }
+    UnmodifiableCollection<T> tap(Procedure<? super T> procedure);
 
     @Override
     default boolean removeIf(java.util.function.Predicate<? super T> filter)
