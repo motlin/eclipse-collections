@@ -15,16 +15,16 @@ import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.bag.sorted.mutable.UnmodifiableSortedBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.IterableTestCase;
-import org.eclipse.collections.test.bag.mutable.UnmodifiableBagIterableTestCase;
+import org.eclipse.collections.test.bag.mutable.UnmodifiableMutableBagIterableTestCase;
 import org.junit.jupiter.api.Test;
 
-public class UnmodifiableSortedBagTest implements MutableSortedBagTestCase, UnmodifiableBagIterableTestCase
+public class UnmodifiableSortedBagTest implements MutableSortedBagTestCase, UnmodifiableMutableBagIterableTestCase
 {
     @Override
     @Test
     public void Iterable_remove()
     {
-        UnmodifiableBagIterableTestCase.super.Iterable_remove();
+        UnmodifiableMutableBagIterableTestCase.super.Iterable_remove();
     }
 
     @SafeVarargs
@@ -40,13 +40,13 @@ public class UnmodifiableSortedBagTest implements MutableSortedBagTestCase, Unmo
     @Test
     public void MutableBagIterable_addOccurrences()
     {
-        UnmodifiableBagIterableTestCase.super.MutableBagIterable_addOccurrences();
+        UnmodifiableMutableBagIterableTestCase.super.MutableBagIterable_addOccurrences();
     }
 
     @Override
     @Test
     public void MutableBagIterable_removeOccurrences()
     {
-        UnmodifiableBagIterableTestCase.super.MutableBagIterable_removeOccurrences();
+        UnmodifiableMutableBagIterableTestCase.super.MutableBagIterable_removeOccurrences();
     }
 }

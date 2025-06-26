@@ -12,12 +12,12 @@ package org.eclipse.collections.test.bag.mutable;
 
 import org.junit.jupiter.api.Test;
 
-public interface UnmodifiableBagTestCase extends MutableBagTestCase, UnmodifiableBagIterableTestCase
+public interface UnmodifiableBagTestCase extends MutableBagTestCase, UnmodifiableMutableBagIterableTestCase
 {
     @Override
     @Test
     default void Iterable_remove()
     {
-        UnmodifiableBagIterableTestCase.super.Iterable_remove();
+        UnmodifiableMutableBagIterableTestCase.super.Iterable_remove();
     }
 }

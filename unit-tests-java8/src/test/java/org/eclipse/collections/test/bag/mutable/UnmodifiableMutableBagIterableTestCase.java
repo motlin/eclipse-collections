@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public interface UnmodifiableBagIterableTestCase extends UnmodifiableMutableCollectionTestCase, MutableBagIterableTestCase
+public interface UnmodifiableMutableBagIterableTestCase extends UnmodifiableMutableCollectionTestCase, MutableBagIterableTestCase
 {
     @Override
     @Test

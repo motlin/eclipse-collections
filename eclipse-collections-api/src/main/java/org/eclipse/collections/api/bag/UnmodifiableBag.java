@@ -14,12 +14,12 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 
 /**
  * UnmodifiableBag is an interface for an unmodifiable hash-based bag.
- * It extends UnmodifiableBagIterable and MutableBag, representing a specific
+ * It extends UnmodifiableMutableBagIterable and MutableBag, representing a specific
  * implementation of an unmodifiable bag that uses hashing.
  * 
  * @since 12.0
  */
-public interface UnmodifiableBag<T> extends UnmodifiableBagIterable<T>, MutableBag<T>
+public interface UnmodifiableBag<T> extends UnmodifiableMutableBagIterable<T>, MutableBag<T>
 {
     @Override
     UnmodifiableBag<T> asUnmodifiable();

@@ -10,16 +10,16 @@
 
 package org.eclipse.collections.api.bag.sorted;
 
-import org.eclipse.collections.api.bag.UnmodifiableBagIterable;
+import org.eclipse.collections.api.bag.UnmodifiableMutableBagIterable;
 import org.eclipse.collections.api.block.procedure.Procedure;
 
 /**
- * UnmodifiableSortedBag is an interface that extends both UnmodifiableBagIterable and MutableSortedBag,
+ * UnmodifiableSortedBag is an interface that extends both UnmodifiableMutableBagIterable and MutableSortedBag,
  * providing an unmodifiable view of a sorted bag. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableSortedBag<T> extends UnmodifiableBagIterable<T>, MutableSortedBag<T>
+public interface UnmodifiableSortedBag<T> extends UnmodifiableMutableBagIterable<T>, MutableSortedBag<T>
 {
     // Covariant return types for builder methods that return 'this'
     

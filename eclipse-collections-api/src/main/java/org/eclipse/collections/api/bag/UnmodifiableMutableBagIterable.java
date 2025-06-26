@@ -14,12 +14,12 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.collection.UnmodifiableMutableCollection;
 
 /**
- * UnmodifiableBagIterable is an interface that extends both UnmodifiableMutableCollection and MutableBagIterable,
+ * UnmodifiableMutableBagIterable is an interface that extends both UnmodifiableMutableCollection and MutableBagIterable,
  * providing an unmodifiable view of a bag. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableBagIterable<T> extends UnmodifiableMutableCollection<T>, MutableBagIterable<T>
+public interface UnmodifiableMutableBagIterable<T> extends UnmodifiableMutableCollection<T>, MutableBagIterable<T>
 {
     // Bag-specific mutating methods that should throw UnsupportedOperationException
     
@@ -44,13 +44,13 @@ public interface UnmodifiableBagIterable<T> extends UnmodifiableMutableCollectio
     // Fluent API methods for bag-specific operations
     
     @Override
-    default UnmodifiableBagIterable<T> withOccurrences(T element, int occurrences)
+    default UnmodifiableMutableBagIterable<T> withOccurrences(T element, int occurrences)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
     }
 
     @Override
-    default UnmodifiableBagIterable<T> withoutOccurrences(T element, int occurrences)
+    default UnmodifiableMutableBagIterable<T> withoutOccurrences(T element, int occurrences)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
     }
@@ -58,25 +58,25 @@ public interface UnmodifiableBagIterable<T> extends UnmodifiableMutableCollectio
     // Covariant return types for builder methods
     
     @Override
-    default UnmodifiableBagIterable<T> with(T element)
+    default UnmodifiableMutableBagIterable<T> with(T element)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
     }
 
     @Override
-    default UnmodifiableBagIterable<T> without(T element)
+    default UnmodifiableMutableBagIterable<T> without(T element)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
     }
 
     @Override
-    default UnmodifiableBagIterable<T> withAll(Iterable<? extends T> elements)
+    default UnmodifiableMutableBagIterable<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
     }
 
     @Override
-    default UnmodifiableBagIterable<T> withoutAll(Iterable<? extends T> elements)
+    default UnmodifiableMutableBagIterable<T> withoutAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
     }
@@ -84,7 +84,7 @@ public interface UnmodifiableBagIterable<T> extends UnmodifiableMutableCollectio
     // View methods - return self since already unmodifiable
     
     @Override
-    default UnmodifiableBagIterable<T> asUnmodifiable()
+    default UnmodifiableMutableBagIterable<T> asUnmodifiable()
     {
         return this;
     }
@@ -92,7 +92,7 @@ public interface UnmodifiableBagIterable<T> extends UnmodifiableMutableCollectio
     // Resolve return type conflict for tap() method
     
     @Override
-    default UnmodifiableBagIterable<T> tap(Procedure<? super T> procedure)
+    default UnmodifiableMutableBagIterable<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;
