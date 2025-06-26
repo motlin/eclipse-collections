@@ -28,12 +28,12 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.collection.UnmodifiableMutableCollection;
 
 /**
- * UnmodifiableList is an interface that extends both UnmodifiableMutableCollection and MutableList,
+ * UnmodifiableMutableList is an interface that extends both UnmodifiableMutableCollection and MutableList,
  * providing an unmodifiable view of a list. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableList<T> extends UnmodifiableMutableCollection<T>, MutableList<T>
+public interface UnmodifiableMutableList<T> extends UnmodifiableMutableCollection<T>, MutableList<T>
 {
     @Override
     default void add(int index, T element)
@@ -74,85 +74,85 @@ public interface UnmodifiableList<T> extends UnmodifiableMutableCollection<T>, M
     // MutableList-specific mutating methods
     
     @Override
-    default UnmodifiableList<T> sortThis(Comparator<? super T> comparator)
+    default UnmodifiableMutableList<T> sortThis(Comparator<? super T> comparator)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThis()
+    default UnmodifiableMutableList<T> sortThis()
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default <V extends Comparable<? super V>> UnmodifiableList<T> sortThisBy(Function<? super T, ? extends V> function)
+    default <V extends Comparable<? super V>> UnmodifiableMutableList<T> sortThisBy(Function<? super T, ? extends V> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThisByInt(IntFunction<? super T> function)
+    default UnmodifiableMutableList<T> sortThisByInt(IntFunction<? super T> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThisByBoolean(BooleanFunction<? super T> function)
+    default UnmodifiableMutableList<T> sortThisByBoolean(BooleanFunction<? super T> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThisByChar(CharFunction<? super T> function)
+    default UnmodifiableMutableList<T> sortThisByChar(CharFunction<? super T> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThisByByte(ByteFunction<? super T> function)
+    default UnmodifiableMutableList<T> sortThisByByte(ByteFunction<? super T> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThisByShort(ShortFunction<? super T> function)
+    default UnmodifiableMutableList<T> sortThisByShort(ShortFunction<? super T> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThisByFloat(FloatFunction<? super T> function)
+    default UnmodifiableMutableList<T> sortThisByFloat(FloatFunction<? super T> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThisByLong(LongFunction<? super T> function)
+    default UnmodifiableMutableList<T> sortThisByLong(LongFunction<? super T> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> sortThisByDouble(DoubleFunction<? super T> function)
+    default UnmodifiableMutableList<T> sortThisByDouble(DoubleFunction<? super T> function)
     {
         throw new UnsupportedOperationException("Cannot sort an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> reverseThis()
+    default UnmodifiableMutableList<T> reverseThis()
     {
         throw new UnsupportedOperationException("Cannot reverse an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> shuffleThis()
+    default UnmodifiableMutableList<T> shuffleThis()
     {
         throw new UnsupportedOperationException("Cannot shuffle an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> shuffleThis(Random random)
+    default UnmodifiableMutableList<T> shuffleThis(Random random)
     {
         throw new UnsupportedOperationException("Cannot shuffle an UnmodifiableList");
     }
@@ -160,25 +160,25 @@ public interface UnmodifiableList<T> extends UnmodifiableMutableCollection<T>, M
     // Covariant return types for builder methods
 
     @Override
-    default UnmodifiableList<T> with(T element)
+    default UnmodifiableMutableList<T> with(T element)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> without(T element)
+    default UnmodifiableMutableList<T> without(T element)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> withAll(Iterable<? extends T> elements)
+    default UnmodifiableMutableList<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableList");
     }
 
     @Override
-    default UnmodifiableList<T> withoutAll(Iterable<? extends T> elements)
+    default UnmodifiableMutableList<T> withoutAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableList");
     }
@@ -186,7 +186,7 @@ public interface UnmodifiableList<T> extends UnmodifiableMutableCollection<T>, M
     // View methods - return self since already unmodifiable
 
     @Override
-    default UnmodifiableList<T> asUnmodifiable()
+    default UnmodifiableMutableList<T> asUnmodifiable()
     {
         return this;
     }
@@ -230,7 +230,7 @@ public interface UnmodifiableList<T> extends UnmodifiableMutableCollection<T>, M
     }
 
     @Override
-    default UnmodifiableList<T> tap(Procedure<? super T> procedure)
+    default UnmodifiableMutableList<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;

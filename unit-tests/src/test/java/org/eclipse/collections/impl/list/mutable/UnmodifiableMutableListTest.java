@@ -320,7 +320,7 @@ public class UnmodifiableMutableListTest
     @Test
     public void take()
     {
-        UnmodifiableMutableList<Integer> unmodifiableList = UnmodifiableMutableList.of(FastList.newListWith(1, 2, 3, 4, 5));
+        org.eclipse.collections.api.list.UnmodifiableMutableList<Integer> unmodifiableList = UnmodifiableMutableList.of(FastList.newListWith(1, 2, 3, 4, 5));
         assertEquals(iList(), unmodifiableList.take(0));
         assertEquals(iList(1, 2, 3), unmodifiableList.take(3));
         assertEquals(iList(1, 2, 3, 4), unmodifiableList.take(unmodifiableList.size() - 1));
@@ -347,7 +347,7 @@ public class UnmodifiableMutableListTest
     @Test
     public void drop()
     {
-        UnmodifiableMutableList<Integer> unmodifiableList = UnmodifiableMutableList.of(FastList.newListWith(1, 2, 3, 4, 5));
+        org.eclipse.collections.api.list.UnmodifiableMutableList<Integer> unmodifiableList = UnmodifiableMutableList.of(FastList.newListWith(1, 2, 3, 4, 5));
         assertEquals(iList(1, 2, 3, 4, 5), unmodifiableList.drop(0));
         assertNotSame(unmodifiableList, unmodifiableList.drop(0));
         assertEquals(iList(4, 5), unmodifiableList.drop(3));
@@ -385,7 +385,7 @@ public class UnmodifiableMutableListTest
     @Test
     public void binarySearch()
     {
-        UnmodifiableMutableList<Integer> sortedList = UnmodifiableMutableList.of(FastList.newListWith(1, 2, 3, 4, 5, 7));
+        org.eclipse.collections.api.list.UnmodifiableMutableList<Integer> sortedList = UnmodifiableMutableList.of(FastList.newListWith(1, 2, 3, 4, 5, 7));
         assertEquals(1, sortedList.binarySearch(2));
         assertEquals(-6, sortedList.binarySearch(6));
 
@@ -400,7 +400,7 @@ public class UnmodifiableMutableListTest
     @Test
     public void binarySearchWithComparator()
     {
-        UnmodifiableMutableList<Integer> sortedList = UnmodifiableMutableList.of(FastList.newListWith(1, 2, 3, 4, 5, 7)
+        org.eclipse.collections.api.list.UnmodifiableMutableList<Integer> sortedList = UnmodifiableMutableList.of(FastList.newListWith(1, 2, 3, 4, 5, 7)
                 .toSortedList(Comparators.reverseNaturalOrder()));
         assertEquals(sortedList.size() - 1, sortedList.binarySearch(1, Comparators.reverseNaturalOrder()));
         assertEquals(-1 - sortedList.size(), sortedList.binarySearch(-1, Comparators.reverseNaturalOrder()));

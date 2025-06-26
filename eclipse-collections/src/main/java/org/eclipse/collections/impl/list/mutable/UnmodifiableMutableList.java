@@ -39,7 +39,6 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.ParallelListIterable;
-import org.eclipse.collections.api.list.UnmodifiableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
 import org.eclipse.collections.api.list.primitive.MutableCharList;
@@ -55,6 +54,8 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.collection.mutable.AbstractUnmodifiableMutableCollection;
 import org.eclipse.collections.impl.collection.mutable.UnmodifiableCollectionSerializationProxy;
 import org.eclipse.collections.impl.lazy.ReverseIterable;
+import org.eclipse.collections.impl.list.mutable.ListAdapter;
+import org.eclipse.collections.impl.list.mutable.RandomAccessListAdapter;
 
 /**
  * An unmodifiable view of a list.
@@ -63,7 +64,7 @@ import org.eclipse.collections.impl.lazy.ReverseIterable;
  */
 public class UnmodifiableMutableList<T>
         extends AbstractUnmodifiableMutableCollection<T>
-        implements MutableList<T>, UnmodifiableList<T>, Serializable
+        implements MutableList<T>, org.eclipse.collections.api.list.UnmodifiableMutableList<T>, Serializable
 {
     UnmodifiableMutableList(MutableList<? extends T> mutableList)
     {
@@ -75,7 +76,7 @@ public class UnmodifiableMutableList<T>
      * take any other non-Eclipse-Collections list and first adapt it will a ListAdapter, and then return a
      * UnmodifiableMutableList that wraps the adapter.
      */
-    public static <E, L extends List<E>> UnmodifiableMutableList<E> of(L list)
+    public static <E, L extends List<E>> org.eclipse.collections.api.list.UnmodifiableMutableList<E> of(L list)
     {
         if (list == null)
         {
@@ -118,13 +119,13 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
-    public UnmodifiableMutableList<T> clone()
+    public org.eclipse.collections.api.list.UnmodifiableMutableList<T> clone()
     {
         return this;
     }
 
     @Override
-    public UnmodifiableMutableList<T> asUnmodifiable()
+    public org.eclipse.collections.api.list.UnmodifiableMutableList<T> asUnmodifiable()
     {
         return this;
     }
@@ -202,10 +203,10 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
-    public UnmodifiableMutableList<T> subList(int fromIndex, int toIndex)
+    public org.eclipse.collections.api.list.UnmodifiableMutableList<T> subList(int fromIndex, int toIndex)
     {
         MutableList<T> subList = this.getMutableList().subList(fromIndex, toIndex);
-        return UnmodifiableMutableList.of(subList);
+        return new UnmodifiableMutableList<>(subList);
     }
 
     @Override
@@ -418,32 +419,32 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
-    public UnmodifiableList<T> tap(Procedure<? super T> procedure)
+    public org.eclipse.collections.api.list.UnmodifiableMutableList<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;
     }
 
     @Override
-    public UnmodifiableList<T> withoutAll(Iterable<? extends T> elements)
+    public org.eclipse.collections.api.list.UnmodifiableMutableList<T> withoutAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableList");
     }
 
     @Override
-    public UnmodifiableList<T> withAll(Iterable<? extends T> elements)
+    public org.eclipse.collections.api.list.UnmodifiableMutableList<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableList");
     }
 
     @Override
-    public UnmodifiableList<T> without(T element)
+    public org.eclipse.collections.api.list.UnmodifiableMutableList<T> without(T element)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableList");
     }
 
     @Override
-    public UnmodifiableList<T> with(T element)
+    public org.eclipse.collections.api.list.UnmodifiableMutableList<T> with(T element)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableList");
     }
