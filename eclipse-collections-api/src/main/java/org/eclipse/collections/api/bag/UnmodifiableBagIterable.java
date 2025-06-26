@@ -11,15 +11,15 @@
 package org.eclipse.collections.api.bag;
 
 import org.eclipse.collections.api.block.procedure.Procedure;
-import org.eclipse.collections.api.collection.UnmodifiableCollection;
+import org.eclipse.collections.api.collection.UnmodifiableMutableCollection;
 
 /**
- * UnmodifiableBagIterable is an interface that extends both UnmodifiableCollection and MutableBagIterable,
+ * UnmodifiableBagIterable is an interface that extends both UnmodifiableMutableCollection and MutableBagIterable,
  * providing an unmodifiable view of a bag. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableBagIterable<T> extends UnmodifiableCollection<T>, MutableBagIterable<T>
+public interface UnmodifiableBagIterable<T> extends UnmodifiableMutableCollection<T>, MutableBagIterable<T>
 {
     // Bag-specific mutating methods that should throw UnsupportedOperationException
     

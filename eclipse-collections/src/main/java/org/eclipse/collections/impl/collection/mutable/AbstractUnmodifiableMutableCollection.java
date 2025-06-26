@@ -52,7 +52,7 @@ import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.api.collection.MutableCollection;
-import org.eclipse.collections.api.collection.UnmodifiableCollection;
+import org.eclipse.collections.api.collection.UnmodifiableMutableCollection;
 import org.eclipse.collections.api.collection.primitive.MutableBooleanCollection;
 import org.eclipse.collections.api.collection.primitive.MutableByteCollection;
 import org.eclipse.collections.api.collection.primitive.MutableCharCollection;
@@ -79,7 +79,7 @@ import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
-public class AbstractUnmodifiableMutableCollection<T> implements UnmodifiableCollection<T>
+public class AbstractUnmodifiableMutableCollection<T> implements UnmodifiableMutableCollection<T>
 {
     private final MutableCollection<? extends T> collection;
 
@@ -194,7 +194,7 @@ public class AbstractUnmodifiableMutableCollection<T> implements UnmodifiableCol
     }
 
     @Override
-    public UnmodifiableCollection<T> asUnmodifiable()
+    public UnmodifiableMutableCollection<T> asUnmodifiable()
     {
         return this;
     }
@@ -218,7 +218,7 @@ public class AbstractUnmodifiableMutableCollection<T> implements UnmodifiableCol
     }
 
     @Override
-    public UnmodifiableCollection<T> tap(Procedure<? super T> procedure)
+    public UnmodifiableMutableCollection<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;

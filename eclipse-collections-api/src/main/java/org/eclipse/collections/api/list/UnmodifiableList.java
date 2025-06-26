@@ -25,15 +25,15 @@ import org.eclipse.collections.api.block.function.primitive.IntFunction;
 import org.eclipse.collections.api.block.function.primitive.LongFunction;
 import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.procedure.Procedure;
-import org.eclipse.collections.api.collection.UnmodifiableCollection;
+import org.eclipse.collections.api.collection.UnmodifiableMutableCollection;
 
 /**
- * UnmodifiableList is an interface that extends both UnmodifiableCollection and MutableList,
+ * UnmodifiableList is an interface that extends both UnmodifiableMutableCollection and MutableList,
  * providing an unmodifiable view of a list. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableList<T> extends UnmodifiableCollection<T>, MutableList<T>
+public interface UnmodifiableList<T> extends UnmodifiableMutableCollection<T>, MutableList<T>
 {
     @Override
     default void add(int index, T element)

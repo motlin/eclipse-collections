@@ -13,15 +13,15 @@ package org.eclipse.collections.api.set;
 import java.util.Collection;
 
 import org.eclipse.collections.api.block.procedure.Procedure;
-import org.eclipse.collections.api.collection.UnmodifiableCollection;
+import org.eclipse.collections.api.collection.UnmodifiableMutableCollection;
 
 /**
- * UnmodifiableSet is an interface that extends both UnmodifiableCollection and MutableSet,
+ * UnmodifiableSet is an interface that extends both UnmodifiableMutableCollection and MutableSet,
  * providing an unmodifiable view of a set. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableSet<T> extends UnmodifiableCollection<T>, MutableSet<T>
+public interface UnmodifiableSet<T> extends UnmodifiableMutableCollection<T>, MutableSet<T>
 {
     // Covariant return types for builder methods
     

@@ -18,77 +18,77 @@ import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 
 /**
- * UnmodifiableCollection is an interface that extends both UnmodifiableIterable and MutableCollection,
+ * UnmodifiableMutableCollection is an interface that extends both UnmodifiableIterable and MutableCollection,
  * providing an unmodifiable view of a collection. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableCollection<T> extends UnmodifiableIterable<T>, MutableCollection<T>
+public interface UnmodifiableMutableCollection<T> extends UnmodifiableIterable<T>, MutableCollection<T>
 {
     @Override
     default boolean add(T item)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableCollection");
     }
 
     @Override
     default boolean remove(Object item)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableCollection");
     }
 
     @Override
     default boolean addAll(Collection<? extends T> collection)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableCollection");
     }
 
     @Override
     default boolean addAllIterable(Iterable<? extends T> iterable)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableCollection");
     }
 
     @Override
     default boolean removeAll(Collection<?> collection)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableCollection");
     }
 
     @Override
     default boolean removeAllIterable(Iterable<?> iterable)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableCollection");
     }
 
     @Override
     default boolean retainAll(Collection<?> collection)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableCollection");
     }
 
     @Override
     default boolean retainAllIterable(Iterable<?> iterable)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableCollection");
     }
 
     @Override
     default void clear()
     {
-        throw new UnsupportedOperationException("Cannot clear an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot clear an UnmodifiableMutableCollection");
     }
 
     @Override
     default boolean removeIf(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableCollection");
     }
 
     @Override
     default <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableCollection");
     }
 
     // Note: with, without, withAll, withoutAll, and asUnmodifiable methods are not defined here
@@ -97,11 +97,11 @@ public interface UnmodifiableCollection<T> extends UnmodifiableIterable<T>, Muta
     // must provide its own implementation of these methods with the appropriate return type.
     
     @Override
-    UnmodifiableCollection<T> tap(Procedure<? super T> procedure);
+    UnmodifiableMutableCollection<T> tap(Procedure<? super T> procedure);
 
     @Override
     default boolean removeIf(java.util.function.Predicate<? super T> filter)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableCollection");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableCollection");
     }
 }
