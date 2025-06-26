@@ -36,7 +36,6 @@ import org.eclipse.collections.api.partition.set.PartitionMutableSet;
 import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.ParallelUnsortedSetIterable;
-import org.eclipse.collections.api.set.UnmodifiableSet;
 import org.eclipse.collections.api.set.SetIterable;
 import org.eclipse.collections.api.set.UnsortedSetIterable;
 import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
@@ -58,7 +57,7 @@ import org.eclipse.collections.impl.collection.mutable.UnmodifiableCollectionSer
  */
 public class UnmodifiableMutableSet<T>
         extends AbstractUnmodifiableMutableCollection<T>
-        implements UnmodifiableSet<T>, Serializable
+        implements MutableSet<T>, org.eclipse.collections.api.set.UnmodifiableMutableSet<T>, Serializable
 {
     UnmodifiableMutableSet(MutableSet<? extends T> mutableSet)
     {
@@ -70,7 +69,7 @@ public class UnmodifiableMutableSet<T>
      * take any other non-Eclipse-Collections set and first adapt it will a SetAdapter, and then return a
      * UnmodifiableMutableSet that wraps the adapter.
      */
-    public static <E, S extends Set<E>> UnmodifiableMutableSet<E> of(S set)
+    public static <E, S extends Set<E>> org.eclipse.collections.api.set.UnmodifiableMutableSet<E> of(S set)
     {
         if (set == null)
         {
@@ -126,7 +125,7 @@ public class UnmodifiableMutableSet<T>
     }
 
     @Override
-    public UnmodifiableSet<T> newEmpty()
+    public org.eclipse.collections.api.set.UnmodifiableMutableSet<T> newEmpty()
     {
         return UnmodifiableMutableSet.of(this.getMutableSet().newEmpty());
     }
@@ -373,25 +372,25 @@ public class UnmodifiableMutableSet<T>
     }
 
     @Override
-    public UnmodifiableSet<T> with(T element)
+    public org.eclipse.collections.api.set.UnmodifiableMutableSet<T> with(T element)
     {
         throw new UnsupportedOperationException("Cannot call with() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public UnmodifiableSet<T> without(T element)
+    public org.eclipse.collections.api.set.UnmodifiableMutableSet<T> without(T element)
     {
         throw new UnsupportedOperationException("Cannot call without() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public UnmodifiableSet<T> withAll(Iterable<? extends T> elements)
+    public org.eclipse.collections.api.set.UnmodifiableMutableSet<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withAll() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public UnmodifiableSet<T> withoutAll(Iterable<? extends T> elements)
+    public org.eclipse.collections.api.set.UnmodifiableMutableSet<T> withoutAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot call withoutAll() on " + this.getClass().getSimpleName());
     }

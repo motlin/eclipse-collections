@@ -16,35 +16,35 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.collection.UnmodifiableMutableCollection;
 
 /**
- * UnmodifiableSet is an interface that extends both UnmodifiableMutableCollection and MutableSet,
+ * UnmodifiableMutableSet is an interface that extends both UnmodifiableMutableCollection and MutableSet,
  * providing an unmodifiable view of a set. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableSet<T> extends UnmodifiableMutableCollection<T>, MutableSet<T>
+public interface UnmodifiableMutableSet<T> extends UnmodifiableMutableCollection<T>, MutableSet<T>
 {
     // Covariant return types for builder methods
     
     @Override
-    default UnmodifiableSet<T> with(T element)
+    default UnmodifiableMutableSet<T> with(T element)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableSet");
     }
 
     @Override
-    default UnmodifiableSet<T> without(T element)
+    default UnmodifiableMutableSet<T> without(T element)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableSet");
     }
 
     @Override
-    default UnmodifiableSet<T> withAll(Iterable<? extends T> elements)
+    default UnmodifiableMutableSet<T> withAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot add to an UnmodifiableSet");
     }
 
     @Override
-    default UnmodifiableSet<T> withoutAll(Iterable<? extends T> elements)
+    default UnmodifiableMutableSet<T> withoutAll(Iterable<? extends T> elements)
     {
         throw new UnsupportedOperationException("Cannot remove from an UnmodifiableSet");
     }
@@ -52,7 +52,7 @@ public interface UnmodifiableSet<T> extends UnmodifiableMutableCollection<T>, Mu
     // View methods - return self since already unmodifiable
     
     @Override
-    default UnmodifiableSet<T> asUnmodifiable()
+    default UnmodifiableMutableSet<T> asUnmodifiable()
     {
         return this;
     }
@@ -96,12 +96,12 @@ public interface UnmodifiableSet<T> extends UnmodifiableMutableCollection<T>, Mu
     }
     
     @Override
-    default UnmodifiableSet<T> tap(Procedure<? super T> procedure)
+    default UnmodifiableMutableSet<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;
     }
 
     @Override
-    UnmodifiableSet<T> newEmpty();
+    UnmodifiableMutableSet<T> newEmpty();
 }
