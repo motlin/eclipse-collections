@@ -12,7 +12,7 @@ package org.eclipse.collections.test.bag.mutable;
 
 import org.junit.jupiter.api.Test;
 
-public interface UnmodifiableBagTestCase extends MutableBagTestCase, UnmodifiableMutableBagIterableTestCase
+public interface UnmodifiableMutableBagTestCase extends MutableBagTestCase, UnmodifiableMutableBagIterableTestCase
 {
     @Override
     @Test

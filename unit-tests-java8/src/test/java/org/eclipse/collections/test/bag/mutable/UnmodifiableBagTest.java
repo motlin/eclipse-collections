@@ -14,7 +14,7 @@ import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.test.IterableTestCase;
 
-public class UnmodifiableBagTest implements UnmodifiableBagTestCase
+public class UnmodifiableBagTest implements UnmodifiableMutableBagTestCase
 {
     @SafeVarargs
     @Override

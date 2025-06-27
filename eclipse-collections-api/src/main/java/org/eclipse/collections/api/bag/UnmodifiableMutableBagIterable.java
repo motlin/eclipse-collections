@@ -26,19 +26,19 @@ public interface UnmodifiableMutableBagIterable<T> extends UnmodifiableMutableCo
     @Override
     default int addOccurrences(T item, int occurrences)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBag");
     }
 
     @Override
     default boolean removeOccurrences(Object item, int occurrences)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBag");
     }
 
     @Override
     default boolean setOccurrences(T item, int occurrences)
     {
-        throw new UnsupportedOperationException("Cannot set occurrences in an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot set occurrences in an UnmodifiableMutableBag");
     }
 
     // Fluent API methods for bag-specific operations
@@ -46,13 +46,13 @@ public interface UnmodifiableMutableBagIterable<T> extends UnmodifiableMutableCo
     @Override
     default UnmodifiableMutableBagIterable<T> withOccurrences(T element, int occurrences)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBag");
     }
 
     @Override
     default UnmodifiableMutableBagIterable<T> withoutOccurrences(T element, int occurrences)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBag");
     }
 
     // Covariant return types for builder methods
@@ -60,25 +60,25 @@ public interface UnmodifiableMutableBagIterable<T> extends UnmodifiableMutableCo
     @Override
     default UnmodifiableMutableBagIterable<T> with(T element)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBag");
     }
 
     @Override
     default UnmodifiableMutableBagIterable<T> without(T element)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBag");
     }
 
     @Override
     default UnmodifiableMutableBagIterable<T> withAll(Iterable<? extends T> elements)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBag");
     }
 
     @Override
     default UnmodifiableMutableBagIterable<T> withoutAll(Iterable<? extends T> elements)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBag");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBag");
     }
 
     // View methods - return self since already unmodifiable
