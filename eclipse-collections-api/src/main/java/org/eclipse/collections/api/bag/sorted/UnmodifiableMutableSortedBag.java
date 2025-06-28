@@ -14,61 +14,61 @@ import org.eclipse.collections.api.bag.UnmodifiableMutableBagIterable;
 import org.eclipse.collections.api.block.procedure.Procedure;
 
 /**
- * UnmodifiableSortedBag is an interface that extends both UnmodifiableMutableBagIterable and MutableSortedBag,
+ * UnmodifiableMutableSortedBag is an interface that extends both UnmodifiableMutableBagIterable and MutableSortedBag,
  * providing an unmodifiable view of a sorted bag. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableSortedBag<T> extends UnmodifiableMutableBagIterable<T>, MutableSortedBag<T>
+public interface UnmodifiableMutableSortedBag<T> extends UnmodifiableMutableBagIterable<T>, MutableSortedBag<T>
 {
     // Covariant return types for builder methods that return 'this'
     
     @Override
-    default UnmodifiableSortedBag<T> with(T element)
+    default UnmodifiableMutableSortedBag<T> with(T element)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableSortedBag");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableSortedBag");
     }
 
     @Override
-    default UnmodifiableSortedBag<T> without(T element)
+    default UnmodifiableMutableSortedBag<T> without(T element)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableSortedBag");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableSortedBag");
     }
 
     @Override
-    default UnmodifiableSortedBag<T> withAll(Iterable<? extends T> elements)
+    default UnmodifiableMutableSortedBag<T> withAll(Iterable<? extends T> elements)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableSortedBag");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableSortedBag");
     }
 
     @Override
-    default UnmodifiableSortedBag<T> withoutAll(Iterable<? extends T> elements)
+    default UnmodifiableMutableSortedBag<T> withoutAll(Iterable<? extends T> elements)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableSortedBag");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableSortedBag");
     }
 
     @Override
-    default UnmodifiableSortedBag<T> withOccurrences(T element, int occurrences)
+    default UnmodifiableMutableSortedBag<T> withOccurrences(T element, int occurrences)
     {
-        throw new UnsupportedOperationException("Cannot add occurrences to an UnmodifiableSortedBag");
+        throw new UnsupportedOperationException("Cannot add occurrences to an UnmodifiableMutableSortedBag");
     }
 
     @Override
-    default UnmodifiableSortedBag<T> withoutOccurrences(T element, int occurrences)
+    default UnmodifiableMutableSortedBag<T> withoutOccurrences(T element, int occurrences)
     {
-        throw new UnsupportedOperationException("Cannot remove occurrences from an UnmodifiableSortedBag");
+        throw new UnsupportedOperationException("Cannot remove occurrences from an UnmodifiableMutableSortedBag");
     }
 
     // View methods - return self since already unmodifiable
     
     @Override
-    default UnmodifiableSortedBag<T> asUnmodifiable()
+    default UnmodifiableMutableSortedBag<T> asUnmodifiable()
     {
         return this;
     }
 
     @Override
-    default UnmodifiableSortedBag<T> tap(Procedure<? super T> procedure)
+    default UnmodifiableMutableSortedBag<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;

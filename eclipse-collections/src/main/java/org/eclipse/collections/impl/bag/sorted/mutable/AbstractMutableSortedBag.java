@@ -20,6 +20,7 @@ import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.sorted.ImmutableSortedBag;
 import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
 import org.eclipse.collections.api.bag.sorted.ParallelSortedBag;
+import org.eclipse.collections.api.bag.sorted.UnmodifiableMutableSortedBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
@@ -79,7 +80,7 @@ public abstract class AbstractMutableSortedBag<T>
     }
 
     @Override
-    public UnmodifiableSortedBag<T> asUnmodifiable()
+    public UnmodifiableMutableSortedBag<T> asUnmodifiable()
     {
         return UnmodifiableSortedBag.of(this);
     }

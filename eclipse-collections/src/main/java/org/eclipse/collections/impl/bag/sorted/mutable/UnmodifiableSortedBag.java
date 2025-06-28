@@ -67,7 +67,7 @@ import org.eclipse.collections.impl.collection.mutable.UnmodifiableCollectionSer
  */
 public class UnmodifiableSortedBag<T>
         extends AbstractUnmodifiableMutableCollection<T>
-        implements org.eclipse.collections.api.bag.sorted.UnmodifiableSortedBag<T>, Serializable
+        implements org.eclipse.collections.api.bag.sorted.UnmodifiableMutableSortedBag<T>, Serializable
 {
     UnmodifiableSortedBag(MutableSortedBag<? extends T> sortedBag)
     {
