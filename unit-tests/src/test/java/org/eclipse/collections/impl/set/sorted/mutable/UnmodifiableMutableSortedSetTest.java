@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * JUnit test for {@link UnmodifiableSortedSet}.
  */
-public class UnmodifiableSortedSetTest extends AbstractSortedSetTestCase
+public class UnmodifiableMutableSortedSetTest extends AbstractSortedSetTestCase
 {
     private static final String LED_ZEPPELIN = "Led Zeppelin";
     private static final String METALLICA = "Metallica";

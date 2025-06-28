@@ -14,7 +14,7 @@ import org.eclipse.collections.api.set.sorted.ParallelSortedSetIterable;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 
-public class UnmodifiableSortedSetParallelSetIterableTest extends NonParallelSortedSetIterableTestCase
+public class UnmodifiableMutableSortedSetParallelSetIterableTest extends NonParallelSortedSetIterableTestCase
 {
     @Override
     protected ParallelSortedSetIterable<Integer> classUnderTest()

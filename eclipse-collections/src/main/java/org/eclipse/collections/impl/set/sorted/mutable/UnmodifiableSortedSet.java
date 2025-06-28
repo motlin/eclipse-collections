@@ -13,6 +13,7 @@ package org.eclipse.collections.impl.set.sorted.mutable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ExecutorService;
@@ -132,7 +133,7 @@ public class UnmodifiableSortedSet<T>
     @Override
     public MutableSortedSet<T> newEmpty()
     {
-        return this.getSortedSet().newEmpty();
+        throw new UnsupportedOperationException("Cannot create a new empty UnmodifiableMutableSortedSet");
     }
 
     @Override
@@ -285,19 +286,19 @@ public class UnmodifiableSortedSet<T>
     @Override
     public MutableSortedSet<T> distinct()
     {
-        return this.getSortedSet().distinct();
+        return this; // A set is already distinct
     }
 
     @Override
     public MutableSortedSet<T> takeWhile(Predicate<? super T> predicate)
     {
-        return this.getSortedSet().takeWhile(predicate);
+        throw new UnsupportedOperationException("Cannot create takeWhile view of UnmodifiableMutableSortedSet");
     }
 
     @Override
     public MutableSortedSet<T> dropWhile(Predicate<? super T> predicate)
     {
-        return this.getSortedSet().dropWhile(predicate);
+        throw new UnsupportedOperationException("Cannot create dropWhile view of UnmodifiableMutableSortedSet");
     }
 
     @Override
@@ -423,19 +424,19 @@ public class UnmodifiableSortedSet<T>
     @Override
     public MutableSortedSet<T> subSet(T fromElement, T toElement)
     {
-        return this.getSortedSet().subSet(fromElement, toElement).asUnmodifiable();
+        throw new UnsupportedOperationException("Cannot create subSet view of UnmodifiableMutableSortedSet");
     }
 
     @Override
     public MutableSortedSet<T> headSet(T toElement)
     {
-        return this.getSortedSet().headSet(toElement).asUnmodifiable();
+        throw new UnsupportedOperationException("Cannot create headSet view of UnmodifiableMutableSortedSet");
     }
 
     @Override
     public MutableSortedSet<T> tailSet(T fromElement)
     {
-        return this.getSortedSet().tailSet(fromElement).asUnmodifiable();
+        throw new UnsupportedOperationException("Cannot create tailSet view of UnmodifiableMutableSortedSet");
     }
 
     @Override
@@ -483,19 +484,19 @@ public class UnmodifiableSortedSet<T>
     @Override
     public MutableSortedSet<T> toReversed()
     {
-        return this.getSortedSet().toReversed();
+        throw new UnsupportedOperationException("Cannot create reversed view of UnmodifiableMutableSortedSet");
     }
 
     @Override
     public MutableSortedSet<T> take(int count)
     {
-        return this.getSortedSet().take(count);
+        throw new UnsupportedOperationException("Cannot create take view of UnmodifiableMutableSortedSet");
     }
 
     @Override
     public MutableSortedSet<T> drop(int count)
     {
-        return this.getSortedSet().drop(count);
+        throw new UnsupportedOperationException("Cannot create drop view of UnmodifiableMutableSortedSet");
     }
 
     @Override

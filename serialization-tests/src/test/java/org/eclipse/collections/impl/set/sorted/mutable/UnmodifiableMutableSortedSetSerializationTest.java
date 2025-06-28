@@ -14,7 +14,7 @@ import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
-public class UnmodifiableSortedSetSerializationTest
+public class UnmodifiableMutableSortedSetSerializationTest
 {
     @Test
     public void serializedForm()
