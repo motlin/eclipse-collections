@@ -23,19 +23,19 @@ import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
- * UnmodifiableBiMap is an interface that extends both UnmodifiableIterable and MutableBiMap,
+ * UnmodifiableMutableBiMap is an interface that extends both UnmodifiableIterable and MutableBiMap,
  * providing an unmodifiable view of a bidirectional map. All mutating operations throw UnsupportedOperationException.
  * 
  * @since 12.0
  */
-public interface UnmodifiableBiMap<K, V> extends UnmodifiableIterable<V>, MutableBiMap<K, V>
+public interface UnmodifiableMutableBiMap<K, V> extends UnmodifiableIterable<V>, MutableBiMap<K, V>
 {
     // BiMap-specific mutating methods that should throw UnsupportedOperationException
     
     @Override
     default V forcePut(K key, V value)
     {
-        throw new UnsupportedOperationException("Cannot forcePut into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot forcePut into an UnmodifiableMutableBiMap");
     }
 
     // Map entry manipulation methods that should throw UnsupportedOperationException
@@ -43,61 +43,61 @@ public interface UnmodifiableBiMap<K, V> extends UnmodifiableIterable<V>, Mutabl
     @Override
     default V put(K key, V value)
     {
-        throw new UnsupportedOperationException("Cannot put into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot put into an UnmodifiableMutableBiMap");
     }
 
     @Override
     default V putPair(Pair<? extends K, ? extends V> keyValuePair)
     {
-        throw new UnsupportedOperationException("Cannot put into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot put into an UnmodifiableMutableBiMap");
     }
 
     @Override
     default V add(Pair<? extends K, ? extends V> keyValuePair)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBiMap");
     }
 
     @Override
     default V remove(Object key)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBiMap");
     }
 
     @Override
     default V removeKey(K key)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBiMap");
     }
 
     @Override
     default boolean removeAllKeys(Set<? extends K> keys)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBiMap");
     }
 
     @Override
     default boolean removeIf(Predicate2<? super K, ? super V> predicate)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBiMap");
     }
 
     @Override
     default void putAll(Map<? extends K, ? extends V> map)
     {
-        throw new UnsupportedOperationException("Cannot put into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot put into an UnmodifiableMutableBiMap");
     }
 
     @Override
     default void putAllMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
     {
-        throw new UnsupportedOperationException("Cannot put into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot put into an UnmodifiableMutableBiMap");
     }
 
     @Override
     default void clear()
     {
-        throw new UnsupportedOperationException("Cannot clear an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot clear an UnmodifiableMutableBiMap");
     }
 
     // Conditional put operations
@@ -105,25 +105,25 @@ public interface UnmodifiableBiMap<K, V> extends UnmodifiableIterable<V>, Mutabl
     @Override
     default V getIfAbsentPut(K key, Function0<? extends V> function)
     {
-        throw new UnsupportedOperationException("Cannot put into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot put into an UnmodifiableMutableBiMap");
     }
 
     @Override
     default V getIfAbsentPut(K key, V value)
     {
-        throw new UnsupportedOperationException("Cannot put into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot put into an UnmodifiableMutableBiMap");
     }
 
     @Override
     default V getIfAbsentPutWithKey(K key, Function<? super K, ? extends V> function)
     {
-        throw new UnsupportedOperationException("Cannot put into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot put into an UnmodifiableMutableBiMap");
     }
 
     @Override
     default <P> V getIfAbsentPutWith(K key, Function<? super P, ? extends V> function, P parameter)
     {
-        throw new UnsupportedOperationException("Cannot put into an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot put into an UnmodifiableMutableBiMap");
     }
 
     // Update operations
@@ -131,63 +131,63 @@ public interface UnmodifiableBiMap<K, V> extends UnmodifiableIterable<V>, Mutabl
     @Override
     default V updateValue(K key, Function0<? extends V> factory, Function<? super V, ? extends V> function)
     {
-        throw new UnsupportedOperationException("Cannot update an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot update an UnmodifiableMutableBiMap");
     }
 
     @Override
     default <P> V updateValueWith(K key, Function0<? extends V> factory, Function2<? super V, ? super P, ? extends V> function, P parameter)
     {
-        throw new UnsupportedOperationException("Cannot update an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot update an UnmodifiableMutableBiMap");
     }
 
     // Fluent builder methods
     
     @Override
-    default UnmodifiableBiMap<K, V> withKeyValue(K key, V value)
+    default UnmodifiableMutableBiMap<K, V> withKeyValue(K key, V value)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBiMap");
     }
 
     @Override
-    default UnmodifiableBiMap<K, V> withMap(Map<? extends K, ? extends V> map)
+    default UnmodifiableMutableBiMap<K, V> withMap(Map<? extends K, ? extends V> map)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBiMap");
     }
 
     @Override
-    default UnmodifiableBiMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    default UnmodifiableMutableBiMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBiMap");
     }
 
     @Override
-    default UnmodifiableBiMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
+    default UnmodifiableMutableBiMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBiMap");
     }
 
     @Override
-    default UnmodifiableBiMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
+    default UnmodifiableMutableBiMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
     {
-        throw new UnsupportedOperationException("Cannot add to an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot add to an UnmodifiableMutableBiMap");
     }
 
     @Override
-    default UnmodifiableBiMap<K, V> withoutKey(K key)
+    default UnmodifiableMutableBiMap<K, V> withoutKey(K key)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBiMap");
     }
 
     @Override
-    default UnmodifiableBiMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
+    default UnmodifiableMutableBiMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
     {
-        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableBiMap");
+        throw new UnsupportedOperationException("Cannot remove from an UnmodifiableMutableBiMap");
     }
 
     // View methods - return self since already unmodifiable
     
     @Override
-    default UnmodifiableBiMap<K, V> asUnmodifiable()
+    default UnmodifiableMutableBiMap<K, V> asUnmodifiable()
     {
         return this;
     }
@@ -195,7 +195,7 @@ public interface UnmodifiableBiMap<K, V> extends UnmodifiableIterable<V>, Mutabl
     // Resolve return type conflict for tap() method
     
     @Override
-    default UnmodifiableBiMap<K, V> tap(Procedure<? super V> procedure)
+    default UnmodifiableMutableBiMap<K, V> tap(Procedure<? super V> procedure)
     {
         this.forEach(procedure);
         return this;

@@ -18,7 +18,7 @@ import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class UnmodifiableBiMapTest implements UnmodifiableBiMapTestCase
+public class UnmodifiableBiMapTest implements UnmodifiableMutableBiMapTestCase
 {
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
 

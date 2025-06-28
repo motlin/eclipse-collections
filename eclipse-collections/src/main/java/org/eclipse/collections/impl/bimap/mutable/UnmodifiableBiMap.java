@@ -78,7 +78,7 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
 
-public class UnmodifiableBiMap<K, V> implements org.eclipse.collections.api.bimap.UnmodifiableBiMap<K, V>, Serializable
+public class UnmodifiableBiMap<K, V> implements org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V>, Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -312,13 +312,13 @@ public class UnmodifiableBiMap<K, V> implements org.eclipse.collections.api.bima
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> asUnmodifiable()
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> asUnmodifiable()
     {
         return this;
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> tap(Procedure<? super V> procedure)
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> tap(Procedure<? super V> procedure)
     {
         this.forEach(procedure);
         return this;
@@ -1186,19 +1186,19 @@ public class UnmodifiableBiMap<K, V> implements org.eclipse.collections.api.bima
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> withKeyValue(K key, V value)
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> withKeyValue(K key, V value)
     {
         throw new UnsupportedOperationException("Cannot call withKeyValue() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> withMap(Map<? extends K, ? extends V> map)
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> withMap(Map<? extends K, ? extends V> map)
     {
         throw new UnsupportedOperationException("Cannot call withMap() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
     {
         throw new UnsupportedOperationException("Cannot call withMapIterable() on " + this.getClass().getSimpleName());
     }
@@ -1210,25 +1210,25 @@ public class UnmodifiableBiMap<K, V> implements org.eclipse.collections.api.bima
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
     {
         throw new UnsupportedOperationException("Cannot call withAllKeyValues() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
     {
         throw new UnsupportedOperationException("Cannot call keyValuePairs() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> withoutKey(K key)
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> withoutKey(K key)
     {
         throw new UnsupportedOperationException("Cannot call withoutKey() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public UnmodifiableBiMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
+    public org.eclipse.collections.api.bimap.UnmodifiableMutableBiMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
     {
         throw new UnsupportedOperationException("Cannot call withoutAllKeys() on " + this.getClass().getSimpleName());
     }
