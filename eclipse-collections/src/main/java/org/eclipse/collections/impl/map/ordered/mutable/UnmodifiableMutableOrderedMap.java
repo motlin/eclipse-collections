@@ -106,7 +106,7 @@ import org.eclipse.collections.impl.utility.LazyIterate;
  * @see MutableMap#asUnmodifiable()
  */
 public class UnmodifiableMutableOrderedMap<K, V>
-        implements MutableOrderedMap<K, V>, Serializable
+        implements org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V>, Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -169,19 +169,19 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public MutableOrderedMap<K, V> withKeyValue(K key, V value)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> withKeyValue(K key, V value)
     {
         throw new UnsupportedOperationException("Cannot call withKeyValue() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableOrderedMap<K, V> withMap(Map<? extends K, ? extends V> map)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> withMap(Map<? extends K, ? extends V> map)
     {
         throw new UnsupportedOperationException("Cannot call withMap() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableOrderedMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
     {
         throw new UnsupportedOperationException("Cannot call withMapIterable() on " + this.getClass().getSimpleName());
     }
@@ -193,25 +193,25 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public MutableOrderedMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
     {
         throw new UnsupportedOperationException("Cannot call withAllKeyValues() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableOrderedMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
     {
         throw new UnsupportedOperationException("Cannot call withAllKeyValueArguments() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableOrderedMap<K, V> withoutKey(K key)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> withoutKey(K key)
     {
         throw new UnsupportedOperationException("Cannot call withoutKey() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableOrderedMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
     {
         throw new UnsupportedOperationException("Cannot call withoutAllKeys() on " + this.getClass().getSimpleName());
     }
@@ -310,7 +310,7 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public MutableOrderedMap<K, V> asUnmodifiable()
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> asUnmodifiable()
     {
         return this;
     }
@@ -340,9 +340,10 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public MutableOrderedMap<K, V> tap(Procedure<? super V> procedure)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> tap(Procedure<? super V> procedure)
     {
-        return this.delegate.tap(procedure);
+        this.delegate.forEach(procedure);
+        return this;
     }
 
     @Override

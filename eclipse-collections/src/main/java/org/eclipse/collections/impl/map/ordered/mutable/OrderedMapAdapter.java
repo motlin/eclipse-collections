@@ -374,7 +374,7 @@ public class OrderedMapAdapter<K, V>
     }
 
     @Override
-    public MutableOrderedMap<K, V> asUnmodifiable()
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> asUnmodifiable()
     {
         return UnmodifiableMutableOrderedMap.of(this);
     }
