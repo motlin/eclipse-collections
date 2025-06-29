@@ -521,7 +521,7 @@ public class SynchronizedSortedMap<K, V>
     }
 
     @Override
-    public MutableSortedMap<K, V> asUnmodifiable()
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> asUnmodifiable()
     {
         synchronized (this.lock)
         {

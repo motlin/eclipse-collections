@@ -104,7 +104,7 @@ import org.eclipse.collections.impl.utility.LazyIterate;
  */
 public class UnmodifiableTreeMap<K, V>
         extends UnmodifiableSortedMap<K, V>
-        implements MutableSortedMap<K, V>
+        implements org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V>
 {
     private static final long serialVersionUID = 1L;
 
@@ -164,19 +164,19 @@ public class UnmodifiableTreeMap<K, V>
     }
 
     @Override
-    public MutableSortedMap<K, V> withKeyValue(K key, V value)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> withKeyValue(K key, V value)
     {
         throw new UnsupportedOperationException("Cannot call withKeyValue() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSortedMap<K, V> withMap(Map<? extends K, ? extends V> map)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> withMap(Map<? extends K, ? extends V> map)
     {
         throw new UnsupportedOperationException("Cannot call withMap() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSortedMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
     {
         throw new UnsupportedOperationException("Cannot call withMapIterable() on " + this.getClass().getSimpleName());
     }
@@ -188,25 +188,25 @@ public class UnmodifiableTreeMap<K, V>
     }
 
     @Override
-    public MutableSortedMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
     {
         throw new UnsupportedOperationException("Cannot call withAllKeyValues() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSortedMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs)
     {
         throw new UnsupportedOperationException("Cannot call withAllKeyValueArguments() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSortedMap<K, V> withoutKey(K key)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> withoutKey(K key)
     {
         throw new UnsupportedOperationException("Cannot call withoutKey() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public MutableSortedMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
     {
         throw new UnsupportedOperationException("Cannot call withoutAllKeys() on " + this.getClass().getSimpleName());
     }
@@ -332,7 +332,7 @@ public class UnmodifiableTreeMap<K, V>
     }
 
     @Override
-    public MutableSortedMap<K, V> asUnmodifiable()
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> asUnmodifiable()
     {
         return this;
     }
@@ -433,7 +433,7 @@ public class UnmodifiableTreeMap<K, V>
     }
 
     @Override
-    public MutableSortedMap<K, V> tap(Procedure<? super V> procedure)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> tap(Procedure<? super V> procedure)
     {
         this.forEach(procedure);
         return this;
@@ -1262,19 +1262,19 @@ public class UnmodifiableTreeMap<K, V>
     }
 
     @Override
-    public MutableSortedMap<K, V> headMap(K toKey)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> headMap(K toKey)
     {
         return UnmodifiableTreeMap.of(this.getMutableSortedMap().headMap(toKey));
     }
 
     @Override
-    public MutableSortedMap<K, V> tailMap(K fromKey)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> tailMap(K fromKey)
     {
         return UnmodifiableTreeMap.of(this.getMutableSortedMap().tailMap(fromKey));
     }
 
     @Override
-    public MutableSortedMap<K, V> subMap(K fromKey, K toKey)
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> subMap(K fromKey, K toKey)
     {
         return UnmodifiableTreeMap.of(this.getMutableSortedMap().subMap(fromKey, toKey));
     }

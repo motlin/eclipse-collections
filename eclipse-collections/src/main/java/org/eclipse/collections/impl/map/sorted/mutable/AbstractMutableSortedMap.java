@@ -119,7 +119,7 @@ public abstract class AbstractMutableSortedMap<K, V> extends AbstractMutableMapI
     }
 
     @Override
-    public MutableSortedMap<K, V> asUnmodifiable()
+    public org.eclipse.collections.api.map.sorted.UnmodifiableMutableSortedMap<K, V> asUnmodifiable()
     {
         return UnmodifiableTreeMap.of(this);
     }
