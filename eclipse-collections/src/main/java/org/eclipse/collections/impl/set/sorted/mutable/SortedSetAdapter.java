@@ -110,7 +110,7 @@ public final class SortedSetAdapter<T>
     }
 
     @Override
-    public MutableSortedSet<T> asUnmodifiable()
+    public org.eclipse.collections.api.set.sorted.UnmodifiableMutableSortedSet<T> asUnmodifiable()
     {
         return UnmodifiableSortedSet.of(this);
     }

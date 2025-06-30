@@ -204,7 +204,7 @@ public interface MutableSortedSet<T>
      * @return an unmodifiable view of this set
      */
     @Override
-    MutableSortedSet<T> asUnmodifiable();
+    UnmodifiableMutableSortedSet<T> asUnmodifiable();
 
     @Override
     MutableSortedSet<T> asSynchronized();
