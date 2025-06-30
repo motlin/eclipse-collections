@@ -89,7 +89,7 @@ public interface MutableStack<T> extends StackIterable<T>
     @Override
     MutableStack<T> distinct();
 
-    MutableStack<T> asUnmodifiable();
+    UnmodifiableMutableStack<T> asUnmodifiable();
 
     MutableStack<T> asSynchronized();
 

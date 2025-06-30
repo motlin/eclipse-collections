@@ -16,60 +16,60 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.list.ListIterable;
 
 /**
- * UnmodifiableStack is an interface that extends MutableStack,
+ * UnmodifiableMutableStack is an interface that extends MutableStack,
  * providing an unmodifiable view of a stack. All mutating operations throw UnsupportedOperationException.
  * 
- * Note: Unlike other Unmodifiable interfaces in Eclipse Collections, UnmodifiableStack does not extend
+ * Note: Unlike other Unmodifiable interfaces in Eclipse Collections, UnmodifiableMutableStack does not extend
  * UnmodifiableIterable because MutableStack does not extend MutableIterable.
  * 
  * @since 12.0
  */
-public interface UnmodifiableStack<T> extends MutableStack<T>
+public interface UnmodifiableMutableStack<T> extends MutableStack<T>
 {
     @Override
     default void push(T item)
     {
-        throw new UnsupportedOperationException("Cannot push onto an UnmodifiableStack");
+        throw new UnsupportedOperationException("Cannot push onto an UnmodifiableMutableStack");
     }
 
     @Override
     default T pop()
     {
-        throw new UnsupportedOperationException("Cannot pop from an UnmodifiableStack");
+        throw new UnsupportedOperationException("Cannot pop from an UnmodifiableMutableStack");
     }
 
     @Override
     default ListIterable<T> pop(int count)
     {
-        throw new UnsupportedOperationException("Cannot pop from an UnmodifiableStack");
+        throw new UnsupportedOperationException("Cannot pop from an UnmodifiableMutableStack");
     }
 
     @Override
     default <R extends Collection<T>> R pop(int count, R targetCollection)
     {
-        throw new UnsupportedOperationException("Cannot pop from an UnmodifiableStack");
+        throw new UnsupportedOperationException("Cannot pop from an UnmodifiableMutableStack");
     }
 
     @Override
     default <R extends MutableStack<T>> R pop(int count, R targetStack)
     {
-        throw new UnsupportedOperationException("Cannot pop from an UnmodifiableStack");
+        throw new UnsupportedOperationException("Cannot pop from an UnmodifiableMutableStack");
     }
 
     @Override
     default void clear()
     {
-        throw new UnsupportedOperationException("Cannot clear an UnmodifiableStack");
+        throw new UnsupportedOperationException("Cannot clear an UnmodifiableMutableStack");
     }
 
     @Override
-    default UnmodifiableStack<T> asUnmodifiable()
+    default UnmodifiableMutableStack<T> asUnmodifiable()
     {
         return this;
     }
 
     @Override
-    default UnmodifiableStack<T> tap(Procedure<? super T> procedure)
+    default UnmodifiableMutableStack<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;

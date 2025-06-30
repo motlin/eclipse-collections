@@ -1060,7 +1060,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public MutableStack<T> asUnmodifiable()
+    public org.eclipse.collections.api.stack.UnmodifiableMutableStack<T> asUnmodifiable()
     {
         return UnmodifiableStack.of(this);
     }

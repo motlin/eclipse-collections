@@ -88,7 +88,7 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 
-public final class UnmodifiableStack<T> implements MutableStack<T>, Serializable
+public final class UnmodifiableStack<T> implements org.eclipse.collections.api.stack.UnmodifiableMutableStack<T>, Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -901,7 +901,7 @@ public final class UnmodifiableStack<T> implements MutableStack<T>, Serializable
     }
 
     @Override
-    public MutableStack<T> tap(Procedure<? super T> procedure)
+    public org.eclipse.collections.api.stack.UnmodifiableMutableStack<T> tap(Procedure<? super T> procedure)
     {
         this.forEach(procedure);
         return this;
@@ -962,7 +962,7 @@ public final class UnmodifiableStack<T> implements MutableStack<T>, Serializable
     }
 
     @Override
-    public MutableStack<T> asUnmodifiable()
+    public org.eclipse.collections.api.stack.UnmodifiableMutableStack<T> asUnmodifiable()
     {
         return this;
     }

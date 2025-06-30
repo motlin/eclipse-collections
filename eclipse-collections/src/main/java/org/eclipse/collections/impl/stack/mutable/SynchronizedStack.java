@@ -1416,7 +1416,7 @@ public final class SynchronizedStack<T> implements MutableStack<T>, Serializable
     }
 
     @Override
-    public MutableStack<T> asUnmodifiable()
+    public org.eclipse.collections.api.stack.UnmodifiableMutableStack<T> asUnmodifiable()
     {
         synchronized (this.lock)
         {
