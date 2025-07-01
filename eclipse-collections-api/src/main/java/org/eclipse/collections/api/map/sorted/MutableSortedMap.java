@@ -80,7 +80,7 @@ public interface MutableSortedMap<K, V>
     <P> V getIfAbsentPutWith(K key, Function<? super P, ? extends V> function, P parameter);
 
     @Override
-    MutableSortedMap<K, V> asUnmodifiable();
+    UnmodifiableMutableSortedMap<K, V> asUnmodifiable();
 
     @Override
     MutableSortedMap<K, V> asSynchronized();
