@@ -347,9 +347,9 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public MutableOrderedMap<V, K> flipUniqueValues()
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<V, K> flipUniqueValues()
     {
-        return this.delegate.flipUniqueValues();
+        return UnmodifiableMutableOrderedMap.of(this.delegate.flipUniqueValues());
     }
 
     @Override
@@ -377,63 +377,63 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public MutableOrderedMap<K, V> select(Predicate2<? super K, ? super V> predicate)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> select(Predicate2<? super K, ? super V> predicate)
     {
-        return this.delegate.select(predicate);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.select(predicate));
     }
 
     @Override
-    public MutableOrderedMap<K, V> reject(Predicate2<? super K, ? super V> predicate)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> reject(Predicate2<? super K, ? super V> predicate)
     {
-        return this.delegate.reject(predicate);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.reject(predicate));
     }
 
     @Override
-    public <K2, V2> MutableOrderedMap<K2, V2> collect(Function2<? super K, ? super V, Pair<K2, V2>> function)
+    public <K2, V2> org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K2, V2> collect(Function2<? super K, ? super V, Pair<K2, V2>> function)
     {
-        return this.delegate.collect(function);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.collect(function));
     }
 
     @Override
-    public <R> MutableOrderedMap<K, R> collectValues(Function2<? super K, ? super V, ? extends R> function)
+    public <R> org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, R> collectValues(Function2<? super K, ? super V, ? extends R> function)
     {
-        return this.delegate.collectValues(function);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.collectValues(function));
     }
 
     @Override
-    public <R> MutableOrderedMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function)
+    public <R> org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function)
     {
-        return this.delegate.collectKeysUnique(function);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.collectKeysUnique(function));
     }
 
     @Override
-    public MutableOrderedMap<K, V> toReversed()
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> toReversed()
     {
-        return this.delegate.toReversed();
+        return UnmodifiableMutableOrderedMap.of(this.delegate.toReversed());
     }
 
     @Override
-    public MutableOrderedMap<K, V> take(int count)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> take(int count)
     {
-        return this.delegate.take(count);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.take(count));
     }
 
     @Override
-    public MutableOrderedMap<K, V> takeWhile(Predicate<? super V> predicate)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> takeWhile(Predicate<? super V> predicate)
     {
-        return this.delegate.takeWhile(predicate);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.takeWhile(predicate));
     }
 
     @Override
-    public MutableOrderedMap<K, V> drop(int count)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> drop(int count)
     {
-        return this.delegate.drop(count);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.drop(count));
     }
 
     @Override
-    public MutableOrderedMap<K, V> dropWhile(Predicate<? super V> predicate)
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> dropWhile(Predicate<? super V> predicate)
     {
-        return this.delegate.dropWhile(predicate);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.dropWhile(predicate));
     }
 
     @Override
@@ -599,9 +599,9 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public <VV> MutableOrderedMap<VV, V> groupByUniqueKey(Function<? super V, ? extends VV> function)
+    public <VV> org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<VV, V> groupByUniqueKey(Function<? super V, ? extends VV> function)
     {
-        return this.delegate.groupByUniqueKey(function);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.groupByUniqueKey(function));
     }
 
     @Override
@@ -1464,45 +1464,45 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public <KK, VV> MutableOrderedMap<KK, VV> aggregateInPlaceBy(
+    public <KK, VV> org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<KK, VV> aggregateInPlaceBy(
             Function<? super V, ? extends KK> groupBy,
             Function0<? extends VV> zeroValueFactory,
             Procedure2<? super VV, ? super V> mutatingAggregator)
     {
-        return this.delegate.aggregateInPlaceBy(groupBy, zeroValueFactory, mutatingAggregator);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.aggregateInPlaceBy(groupBy, zeroValueFactory, mutatingAggregator));
     }
 
     @Override
-    public <KK, VV> MutableOrderedMap<KK, VV> aggregateBy(
+    public <KK, VV> org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<KK, VV> aggregateBy(
             Function<? super V, ? extends KK> groupBy,
             Function0<? extends VV> zeroValueFactory,
             Function2<? super VV, ? super V, ? extends VV> nonMutatingAggregator)
     {
-        return this.delegate.aggregateBy(groupBy, zeroValueFactory, nonMutatingAggregator);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.aggregateBy(groupBy, zeroValueFactory, nonMutatingAggregator));
     }
 
     @Override
-    public <K1, V1, V2> MutableOrderedMap<K1, V2> aggregateBy(
+    public <K1, V1, V2> org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K1, V2> aggregateBy(
             Function<? super K, ? extends K1> keyFunction,
             Function<? super V, ? extends V1> valueFunction,
             Function0<? extends V2> zeroValueFactory,
             Function2<? super V2, ? super V1, ? extends V2> nonMutatingAggregator)
     {
-        return this.delegate.aggregateBy(keyFunction, valueFunction, zeroValueFactory, nonMutatingAggregator);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.aggregateBy(keyFunction, valueFunction, zeroValueFactory, nonMutatingAggregator));
     }
 
     @Override
-    public <KK> MutableOrderedMap<KK, V> reduceBy(
+    public <KK> org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<KK, V> reduceBy(
             Function<? super V, ? extends KK> groupBy,
             Function2<? super V, ? super V, ? extends V> reduceFunction)
     {
-        return this.delegate.reduceBy(groupBy, reduceFunction);
+        return UnmodifiableMutableOrderedMap.of(this.delegate.reduceBy(groupBy, reduceFunction));
     }
 
     @Override
-    public MutableOrderedMap<K, V> newEmpty()
+    public org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> newEmpty()
     {
-        return this.delegate.newEmpty();
+        throw new UnsupportedOperationException("Cannot create a new empty UnmodifiableMutableOrderedMap");
     }
 
     @Override

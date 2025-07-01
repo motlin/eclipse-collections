@@ -240,5 +240,5 @@ public interface MutableOrderedMap<K, V> extends OrderedMap<K, V>, MutableMapIte
     MutableOrderedMap<K, V> withoutAllKeys(Iterable<? extends K> keys);
 
     @Override
-    MutableOrderedMap<K, V> asUnmodifiable();
+    org.eclipse.collections.api.map.ordered.UnmodifiableMutableOrderedMap<K, V> asUnmodifiable();
 }
