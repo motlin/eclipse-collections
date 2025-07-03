@@ -663,4 +663,5 @@ final class ImmutableArrayList<T>
     {
         return Spliterators.spliterator(this.items, 0, this.items.length, Spliterator.ORDERED);
     }
+
 }
