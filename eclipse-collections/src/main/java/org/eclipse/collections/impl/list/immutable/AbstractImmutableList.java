@@ -101,7 +101,7 @@ import org.eclipse.collections.impl.utility.OrderedIterate;
  */
 abstract class AbstractImmutableList<T>
         extends AbstractImmutableCollection<T>
-        implements ImmutableList<T>, List<T>
+        implements ImmutableUnmodifiableList<T>, List<T>
 {
     @Override
     public List<T> castToList()
