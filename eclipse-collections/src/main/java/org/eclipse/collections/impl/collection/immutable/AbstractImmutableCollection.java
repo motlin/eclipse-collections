@@ -49,7 +49,7 @@ import org.eclipse.collections.impl.utility.Iterate;
 
 public abstract class AbstractImmutableCollection<T>
         extends AbstractRichIterable<T>
-        implements ImmutableCollection<T>, Collection<T>
+        implements ImmutableUnmodifiableCollection<T>, Collection<T>
 {
     protected abstract MutableCollection<T> newMutable(int size);
 
