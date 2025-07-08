@@ -101,7 +101,7 @@ import org.eclipse.collections.impl.utility.internal.SortedSetIterables;
  * interface so an TreeSet.equals(anImmutableSortedSet) can return true when the contents are the same.
  */
 abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection<T>
-        implements ImmutableSortedSet<T>, SortedSet<T>
+        implements ImmutableUnmodifiableSortedSet<T>, SortedSet<T>
 {
     @Override
     public SortedSet<T> castToSortedSet()
