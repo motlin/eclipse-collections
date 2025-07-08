@@ -95,7 +95,7 @@ import org.eclipse.collections.impl.utility.internal.SetIterables;
  * interface so anArraySet.equals(anImmutableSet) can return true when the contents and order are the same.
  */
 public abstract class AbstractImmutableSet<T> extends AbstractImmutableCollection<T>
-        implements ImmutableSet<T>, Set<T>
+        implements ImmutableUnmodifiableSet<T>, Set<T>
 {
     @Override
     public Set<T> castToSet()
