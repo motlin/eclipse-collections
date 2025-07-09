@@ -91,7 +91,7 @@ import org.eclipse.collections.impl.utility.MapIterate;
 
 public abstract class AbstractImmutableMap<K, V>
         extends AbstractMapIterable<K, V>
-        implements ImmutableMap<K, V>, Map<K, V>
+        implements ImmutableUnmodifiableMap<K, V>, Map<K, V>
 {
     @Override
     public Map<K, V> castToMap()
