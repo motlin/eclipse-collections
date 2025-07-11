@@ -100,7 +100,7 @@ import org.eclipse.collections.impl.utility.MapIterate;
 
 public abstract class AbstractImmutableSortedMap<K, V>
         extends AbstractMapIterable<K, V>
-        implements ImmutableSortedMap<K, V>, SortedMap<K, V>
+        implements ImmutableUnmodifiableSortedMap<K, V>, SortedMap<K, V>
 {
     @Override
     public SortedMap<K, V> castToMap()
