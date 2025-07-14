@@ -64,7 +64,7 @@ import org.eclipse.collections.impl.partition.bag.PartitionHashBag;
  */
 public abstract class AbstractImmutableBag<T>
         extends AbstractImmutableBagIterable<T>
-        implements ImmutableBag<T>
+        implements ImmutableUnmodifiableBag<T>
 {
     @Override
     public ImmutableBag<T> newWithoutAll(Iterable<? extends T> elements)
