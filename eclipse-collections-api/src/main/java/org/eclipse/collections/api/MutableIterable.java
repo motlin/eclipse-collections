@@ -103,19 +103,6 @@ public interface MutableIterable<T> extends RichIterable<T>
         return this.flatCollect(each -> function.apply(each, parameter));
     }
 
-    /**
-     * @deprecated in 6.0. Use {@link OrderedIterable#zip(Iterable)} instead.
-     */
-    @Override
-    @Deprecated
-    <S> MutableIterable<Pair<T, S>> zip(Iterable<S> that);
-
-    /**
-     * @deprecated in 6.0. Use {@link OrderedIterable#zipWithIndex()} instead.
-     */
-    @Override
-    @Deprecated
-    MutableIterable<Pair<T, Integer>> zipWithIndex();
 
     //endregion [Category: Transforming] 🦋
 
