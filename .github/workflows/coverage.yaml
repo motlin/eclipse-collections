@@ -5,7 +5,7 @@ name: Coverage Report
 
 on:
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
 
 jobs:
   applications:
@@ -26,7 +26,7 @@ jobs:
       - name: Set JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: "zulu"
           java-version: ${{ matrix.java-version }}
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
       - name: Generate Coverage Report

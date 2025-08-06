@@ -5,7 +5,7 @@ name: Mutation tests
 
 on:
   schedule:
-    - cron: '0 13 * * 5'
+    - cron: "0 13 * * 5"
 
 jobs:
   applications:
@@ -26,7 +26,7 @@ jobs:
       - name: Set JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: "zulu"
           java-version: ${{ matrix.java-version }}
       - name: Enable Maven Cache
         uses: actions/cache@v4.0.0
@@ -38,11 +38,11 @@ jobs:
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
       - run: ./mvnw --color=always install -DskipTests=true
         env:
-          MAVEN_OPTS: '-Xmx1g'
+          MAVEN_OPTS: "-Xmx1g"
       - name: Mutation Test
         run: mvn eu.stamp-project:pitmp-maven-plugin:run -DwithHistory -DtimeoutConstant=8000
         env:
-          MAVEN_OPTS: '-Xmx1g'
+          MAVEN_OPTS: "-Xmx1g"
       - name: Archive pitest reports
         uses: actions/upload-artifact@v4
         with:

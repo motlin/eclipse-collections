@@ -73,7 +73,7 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
 
 ## Eclipse Collections and JDK Compatibility Matrix
 
-| EC     | JDK 5 - 7 | JDK 8   | JDK 9 - 10 | JDK 11 - 14 | JDK 15 - 17 | JDK 17 - 21 
+| EC     | JDK 5 - 7 | JDK 8   | JDK 9 - 10 | JDK 11 - 14 | JDK 15 - 17 | JDK 17 - 21
 |--------|-----------|---------|------------|-------------|-------------|-------------
 | 7.x.x  | &check;   | &check; |            |             |             |
 | 8.x.x  |           | &check; |            |             |             |
@@ -84,9 +84,9 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
 | 12.x.x |           |         |            | &check;     | &check;     | &check;
 | 13.x.x |           |         |            |             |             | &check;
 
-**Please Note:** 
+**Please Note:**
 1. Eclipse Collections 13.x requires minimum Java 17 and is compatible with Java 17+.
-2. Eclipse Collections 12.x requires minimum Java 11 and is compatible with Java 11+. 
+2. Eclipse Collections 12.x requires minimum Java 11 and is compatible with Java 11+.
 
 
 ## Acquiring Eclipse Collections
