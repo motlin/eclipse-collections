@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -154,5 +155,35 @@ public class UnmodifiableMap<K, V> implements Map<K, V>, Serializable
     public String toString()
     {
         return this.delegate.toString();
+    }
+
+    @Override
+    public V replace(K key, V value)
+    {
+        throw new UnsupportedOperationException("Cannot call replace() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public boolean replace(K key, V oldValue, V newValue)
+    {
+        throw new UnsupportedOperationException("Cannot call replace() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V putIfAbsent(K key, V value)
+    {
+        throw new UnsupportedOperationException("Cannot call putIfAbsent() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public boolean remove(Object key, Object value)
+    {
+        throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public void forEach(BiConsumer<? super K, ? super V> action)
+    {
+        this.delegate.forEach(action);
     }
 }
