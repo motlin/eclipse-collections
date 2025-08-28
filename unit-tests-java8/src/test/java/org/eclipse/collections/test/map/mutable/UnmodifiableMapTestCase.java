@@ -31,6 +31,17 @@ public interface UnmodifiableMapTestCase
         assertThrows(UnsupportedOperationException.class, () -> map.remove(2));
     }
 
+    @Test
+    default void Map_remove_key_value()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "One", 2, "Two", 3, "Three");
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(1, "One"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(2, "Wrong"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(4, "Four"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(null, null));
+        assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two", 3, "Three"), map);
+    }
+
     @Override
     @Test
     default void Map_entrySet_remove()

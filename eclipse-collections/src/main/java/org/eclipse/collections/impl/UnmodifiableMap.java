@@ -79,6 +79,12 @@ public class UnmodifiableMap<K, V> implements Map<K, V>, Serializable
     }
 
     @Override
+    public boolean remove(Object key, Object value)
+    {
+        throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public void putAll(Map<? extends K, ? extends V> t)
     {
         throw new UnsupportedOperationException("Cannot call putAll() on " + this.getClass().getSimpleName());

@@ -139,6 +139,12 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
+    public boolean remove(Object key, Object value)
+    {
+        throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public void putAll(Map<? extends K, ? extends V> t)
     {
         throw new UnsupportedOperationException("Cannot call putAll() on " + this.getClass().getSimpleName());
