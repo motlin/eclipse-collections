@@ -397,32 +397,204 @@ public interface SortedMapTestCase extends MapTestCase
         assertThrows(NoSuchElementException.class, () -> this.newWith().firstKey());
         assertThrows(NoSuchElementException.class, () -> this.newWith().lastKey());
 
-        SortedMap<Integer, String> map1 = this.newWithKeysValues(42, "FortyTwo");
-        assertEquals(Integer.valueOf(42), map1.firstKey());
-        assertEquals(Integer.valueOf(42), map1.lastKey());
+        SortedMap<Integer, String> singleElementMap = this.newWithKeysValues(42, "FortyTwo");
+        assertEquals(Integer.valueOf(42), singleElementMap.firstKey());
+        assertEquals(Integer.valueOf(42), singleElementMap.lastKey());
 
-        SortedMap<Integer, String> map2 = this.newWithKeysValues(1, "One", 2, "Two");
-        if (map2.comparator() == null)
+        SortedMap<Integer, String> twoElementMap = this.newWithKeysValues(1, "One", 2, "Two");
+        Comparator<? super Integer> twoElementComparator = twoElementMap.comparator();
+        boolean isNaturalOrder = twoElementComparator == null;
+
+        if (isNaturalOrder)
         {
-            assertEquals(Integer.valueOf(1), map2.firstKey());
-            assertEquals(Integer.valueOf(2), map2.lastKey());
+            assertEquals(Integer.valueOf(1), twoElementMap.firstKey());
+            assertEquals(Integer.valueOf(2), twoElementMap.lastKey());
         }
         else
         {
-            assertEquals(Integer.valueOf(2), map2.firstKey());
-            assertEquals(Integer.valueOf(1), map2.lastKey());
+            assertEquals(Integer.valueOf(2), twoElementMap.firstKey());
+            assertEquals(Integer.valueOf(1), twoElementMap.lastKey());
         }
 
-        SortedMap<Integer, String> map3 = this.newWithKeysValues(1, "One", 2, "Two", 3, "Three");
-        if (map3.comparator() == null)
+        SortedMap<Integer, String> threeElementMap = this.newWithKeysValues(1, "One", 2, "Two", 3, "Three");
+        if (isNaturalOrder)
         {
-            assertEquals(Integer.valueOf(1), map3.firstKey());
-            assertEquals(Integer.valueOf(3), map3.lastKey());
+            assertEquals(Integer.valueOf(1), threeElementMap.firstKey());
+            assertEquals(Integer.valueOf(3), threeElementMap.lastKey());
         }
         else
         {
-            assertEquals(Integer.valueOf(3), map3.firstKey());
-            assertEquals(Integer.valueOf(1), map3.lastKey());
+            assertEquals(Integer.valueOf(3), threeElementMap.firstKey());
+            assertEquals(Integer.valueOf(1), threeElementMap.lastKey());
+        }
+
+        SortedMap<Integer, String> unorderedInsertionMap = this.newWithKeysValues(5, "Five", 1, "One", 3, "Three", 2, "Two", 4, "Four");
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(1), unorderedInsertionMap.firstKey());
+            assertEquals(Integer.valueOf(5), unorderedInsertionMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(5), unorderedInsertionMap.firstKey());
+            assertEquals(Integer.valueOf(1), unorderedInsertionMap.lastKey());
+        }
+
+        SortedMap<Integer, String> largeMap = this.newWithKeysValues(
+                10, "Ten", 20, "Twenty", 30, "Thirty", 40, "Forty", 50, "Fifty",
+                60, "Sixty", 70, "Seventy", 80, "Eighty", 90, "Ninety", 100, "Hundred");
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(10), largeMap.firstKey());
+            assertEquals(Integer.valueOf(100), largeMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(100), largeMap.firstKey());
+            assertEquals(Integer.valueOf(10), largeMap.lastKey());
+        }
+
+        SortedMap<Integer, String> boundaryMap = this.newWithKeysValues(
+                Integer.MIN_VALUE, "Min", 0, "Zero", Integer.MAX_VALUE, "Max");
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(Integer.MIN_VALUE), boundaryMap.firstKey());
+            assertEquals(Integer.valueOf(Integer.MAX_VALUE), boundaryMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(Integer.MAX_VALUE), boundaryMap.firstKey());
+            assertEquals(Integer.valueOf(Integer.MIN_VALUE), boundaryMap.lastKey());
+        }
+
+        SortedMap<Integer, String> consecutiveMap = this.newWithKeysValues(1, "A", 2, "B", 3, "C", 4, "D", 5, "E");
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(1), consecutiveMap.firstKey());
+            assertEquals(Integer.valueOf(5), consecutiveMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(5), consecutiveMap.firstKey());
+            assertEquals(Integer.valueOf(1), consecutiveMap.lastKey());
+        }
+
+        SortedMap<Integer, String> gapMap = this.newWithKeysValues(10, "Ten", 100, "Hundred", 1000, "Thousand");
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(10), gapMap.firstKey());
+            assertEquals(Integer.valueOf(1000), gapMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(1000), gapMap.firstKey());
+            assertEquals(Integer.valueOf(10), gapMap.lastKey());
+        }
+
+        SortedMap<Integer, String> negativePositiveMap = this.newWithKeysValues(-5, "NegativeFive", -1, "NegativeOne", 1, "One", 5, "Five");
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(-5), negativePositiveMap.firstKey());
+            assertEquals(Integer.valueOf(5), negativePositiveMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(5), negativePositiveMap.firstKey());
+            assertEquals(Integer.valueOf(-5), negativePositiveMap.lastKey());
+        }
+
+        SortedMap<Integer, String> duplicateValuesMap = this.newWithKeysValues(10, "Same", 20, "Same", 30, "Same");
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(10), duplicateValuesMap.firstKey());
+            assertEquals(Integer.valueOf(30), duplicateValuesMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(30), duplicateValuesMap.firstKey());
+            assertEquals(Integer.valueOf(10), duplicateValuesMap.lastKey());
+        }
+
+        SortedMap<Integer, String> fullRangeMap = this.newWithKeysValues(
+                1, "One", 2, "Two", 3, "Three", 4, "Four", 5, "Five",
+                6, "Six", 7, "Seven", 8, "Eight", 9, "Nine", 10, "Ten");
+
+        SortedMap<Integer, String> subMapMiddle = fullRangeMap.subMap(isNaturalOrder ? 3 : 8, isNaturalOrder ? 8 : 3);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(3), subMapMiddle.firstKey());
+            assertEquals(Integer.valueOf(7), subMapMiddle.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(8), subMapMiddle.firstKey());
+            assertEquals(Integer.valueOf(4), subMapMiddle.lastKey());
+        }
+
+        SortedMap<Integer, String> headMapFive = fullRangeMap.headMap(isNaturalOrder ? 6 : 5);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(1), headMapFive.firstKey());
+            assertEquals(Integer.valueOf(5), headMapFive.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(10), headMapFive.firstKey());
+            assertEquals(Integer.valueOf(6), headMapFive.lastKey());
+        }
+
+        SortedMap<Integer, String> tailMapSix = fullRangeMap.tailMap(isNaturalOrder ? 6 : 5);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(6), tailMapSix.firstKey());
+            assertEquals(Integer.valueOf(10), tailMapSix.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(5), tailMapSix.firstKey());
+            assertEquals(Integer.valueOf(1), tailMapSix.lastKey());
+        }
+
+        SortedMap<Integer, String> singleElementSubMap = fullRangeMap.subMap(isNaturalOrder ? 5 : 5, isNaturalOrder ? 6 : 4);
+        assertEquals(Integer.valueOf(5), singleElementSubMap.firstKey());
+        assertEquals(Integer.valueOf(5), singleElementSubMap.lastKey());
+
+        SortedMap<Integer, String> emptySubMap = fullRangeMap.subMap(isNaturalOrder ? 5 : 6, isNaturalOrder ? 5 : 6);
+        assertThrows(NoSuchElementException.class, () -> emptySubMap.firstKey());
+        assertThrows(NoSuchElementException.class, () -> emptySubMap.lastKey());
+
+        SortedMap<Integer, String> emptyHeadMap = fullRangeMap.headMap(isNaturalOrder ? 1 : 11);
+        assertThrows(NoSuchElementException.class, () -> emptyHeadMap.firstKey());
+        assertThrows(NoSuchElementException.class, () -> emptyHeadMap.lastKey());
+
+        SortedMap<Integer, String> emptyTailMap = fullRangeMap.tailMap(isNaturalOrder ? 11 : 0);
+        assertThrows(NoSuchElementException.class, () -> emptyTailMap.firstKey());
+        assertThrows(NoSuchElementException.class, () -> emptyTailMap.lastKey());
+
+        SortedMap<Integer, String> nestedSubMap = subMapMiddle.subMap(isNaturalOrder ? 4 : 7, isNaturalOrder ? 7 : 4);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(4), nestedSubMap.firstKey());
+            assertEquals(Integer.valueOf(6), nestedSubMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(7), nestedSubMap.firstKey());
+            assertEquals(Integer.valueOf(5), nestedSubMap.lastKey());
+        }
+
+        SortedMap<Integer, String> extremeMap = this.newWithKeysValues(
+                Integer.MIN_VALUE, "Min", Integer.MIN_VALUE + 1, "MinPlusOne",
+                Integer.MAX_VALUE - 1, "MaxMinusOne", Integer.MAX_VALUE, "Max");
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(Integer.MIN_VALUE), extremeMap.firstKey());
+            assertEquals(Integer.valueOf(Integer.MAX_VALUE), extremeMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(Integer.MAX_VALUE), extremeMap.firstKey());
+            assertEquals(Integer.valueOf(Integer.MIN_VALUE), extremeMap.lastKey());
         }
     }
 
