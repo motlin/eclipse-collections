@@ -42,13 +42,170 @@ public interface SortedMapTestCase extends MapTestCase
     @Test
     default void SortedMap_comparator()
     {
+        SortedMap<Integer, String> emptyMap = this.newWithKeysValues();
+        Comparator<? super Integer> emptyMapComparator = emptyMap.comparator();
+
+        SortedMap<Integer, String> singleElementMap = this.newWithKeysValues(42, "FortyTwo");
+        Comparator<? super Integer> singleElementComparator = singleElementMap.comparator();
+
         SortedMap<Integer, String> map = this.newWithKeysValues(3, "Three", 1, "One", 2, "Two");
         Comparator<? super Integer> comparator = map.comparator();
 
-        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"), map);
+        SortedMap<Integer, String> largeMap = this.newWithKeysValues(
+                10, "Ten", 20, "Twenty", 30, "Thirty", 40, "Forty", 50, "Fifty",
+                60, "Sixty", 70, "Seventy", 80, "Eighty", 90, "Ninety", 100, "Hundred");
+        Comparator<? super Integer> largeMapComparator = largeMap.comparator();
 
-        org.assertj.core.api.Assertions.assertThat(comparator)
-                .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+        boolean isNaturalOrder = comparator == null;
+        boolean isReverseOrder = comparator != null &&
+                (comparator.equals(Collections.reverseOrder()) || comparator.equals(Comparators.reverseNaturalOrder()));
+
+        org.junit.jupiter.api.Assertions.assertTrue(isNaturalOrder || isReverseOrder,
+                "Comparator must be either null (natural order) or reverse order");
+
+        if (isNaturalOrder)
+        {
+            org.junit.jupiter.api.Assertions.assertNull(comparator, "Natural order comparator should be null");
+            org.junit.jupiter.api.Assertions.assertNull(emptyMapComparator, "Empty map should have same comparator");
+            org.junit.jupiter.api.Assertions.assertNull(singleElementComparator, "Single element map should have same comparator");
+            org.junit.jupiter.api.Assertions.assertNull(largeMapComparator, "Large map should have same comparator");
+
+            assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two", 3, "Three"), map);
+            assertIterablesEqual(this.newWithKeysValues(42, "FortyTwo"), singleElementMap);
+            assertIterablesEqual(this.newWithKeysValues(
+                    10, "Ten", 20, "Twenty", 30, "Thirty", 40, "Forty", 50, "Fifty",
+                    60, "Sixty", 70, "Seventy", 80, "Eighty", 90, "Ninety", 100, "Hundred"), largeMap);
+        }
+        else
+        {
+            org.junit.jupiter.api.Assertions.assertNotNull(comparator, "Reverse order comparator should not be null");
+            org.assertj.core.api.Assertions.assertThat(comparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+
+            org.junit.jupiter.api.Assertions.assertNotNull(emptyMapComparator, "Empty map should have same comparator");
+            org.assertj.core.api.Assertions.assertThat(emptyMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+
+            org.junit.jupiter.api.Assertions.assertNotNull(singleElementComparator, "Single element map should have same comparator");
+            org.assertj.core.api.Assertions.assertThat(singleElementComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+
+            org.junit.jupiter.api.Assertions.assertNotNull(largeMapComparator, "Large map should have same comparator");
+            org.assertj.core.api.Assertions.assertThat(largeMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+
+            assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"), map);
+            assertIterablesEqual(this.newWithKeysValues(42, "FortyTwo"), singleElementMap);
+            assertIterablesEqual(this.newWithKeysValues(
+                    100, "Hundred", 90, "Ninety", 80, "Eighty", 70, "Seventy", 60, "Sixty",
+                    50, "Fifty", 40, "Forty", 30, "Thirty", 20, "Twenty", 10, "Ten"), largeMap);
+        }
+
+        SortedMap<Integer, String> subMap = map.subMap(isNaturalOrder ? 1 : 3, isNaturalOrder ? 3 : 1);
+        Comparator<? super Integer> subMapComparator = subMap.comparator();
+        if (isNaturalOrder)
+        {
+            org.junit.jupiter.api.Assertions.assertNull(subMapComparator, "SubMap should inherit null comparator");
+            assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two"), subMap);
+        }
+        else
+        {
+            org.junit.jupiter.api.Assertions.assertNotNull(subMapComparator, "SubMap should inherit non-null comparator");
+            org.assertj.core.api.Assertions.assertThat(subMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+            assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), subMap);
+        }
+
+        SortedMap<Integer, String> headMap = map.headMap(isNaturalOrder ? 3 : 1);
+        Comparator<? super Integer> headMapComparator = headMap.comparator();
+        if (isNaturalOrder)
+        {
+            org.junit.jupiter.api.Assertions.assertNull(headMapComparator, "HeadMap should inherit null comparator");
+            assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two"), headMap);
+        }
+        else
+        {
+            org.junit.jupiter.api.Assertions.assertNotNull(headMapComparator, "HeadMap should inherit non-null comparator");
+            org.assertj.core.api.Assertions.assertThat(headMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+            assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), headMap);
+        }
+
+        SortedMap<Integer, String> tailMap = map.tailMap(isNaturalOrder ? 2 : 2);
+        Comparator<? super Integer> tailMapComparator = tailMap.comparator();
+        if (isNaturalOrder)
+        {
+            org.junit.jupiter.api.Assertions.assertNull(tailMapComparator, "TailMap should inherit null comparator");
+            assertIterablesEqual(this.newWithKeysValues(2, "Two", 3, "Three"), tailMap);
+        }
+        else
+        {
+            org.junit.jupiter.api.Assertions.assertNotNull(tailMapComparator, "TailMap should inherit non-null comparator");
+            org.assertj.core.api.Assertions.assertThat(tailMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+            assertIterablesEqual(this.newWithKeysValues(2, "Two", 1, "One"), tailMap);
+        }
+
+        SortedMap<Integer, String> nestedSubMap = subMap.subMap(isNaturalOrder ? 1 : 3, isNaturalOrder ? 2 : 2);
+        Comparator<? super Integer> nestedSubMapComparator = nestedSubMap.comparator();
+        if (isNaturalOrder)
+        {
+            org.junit.jupiter.api.Assertions.assertNull(nestedSubMapComparator, "Nested subMap should inherit null comparator");
+            assertIterablesEqual(this.newWithKeysValues(1, "One"), nestedSubMap);
+        }
+        else
+        {
+            org.junit.jupiter.api.Assertions.assertNotNull(nestedSubMapComparator, "Nested subMap should inherit non-null comparator");
+            org.assertj.core.api.Assertions.assertThat(nestedSubMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+            assertIterablesEqual(this.newWithKeysValues(3, "Three"), nestedSubMap);
+        }
+
+        SortedMap<Integer, String> boundaryMap = this.newWithKeysValues(
+                Integer.MIN_VALUE, "Min", 0, "Zero", Integer.MAX_VALUE, "Max");
+        Comparator<? super Integer> boundaryMapComparator = boundaryMap.comparator();
+        if (isNaturalOrder)
+        {
+            org.junit.jupiter.api.Assertions.assertNull(boundaryMapComparator, "Map with boundary values should have same comparator");
+            assertIterablesEqual(this.newWithKeysValues(Integer.MIN_VALUE, "Min", 0, "Zero", Integer.MAX_VALUE, "Max"), boundaryMap);
+        }
+        else
+        {
+            org.junit.jupiter.api.Assertions.assertNotNull(boundaryMapComparator, "Map with boundary values should have same comparator");
+            org.assertj.core.api.Assertions.assertThat(boundaryMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+            assertIterablesEqual(this.newWithKeysValues(Integer.MAX_VALUE, "Max", 0, "Zero", Integer.MIN_VALUE, "Min"), boundaryMap);
+        }
+
+        SortedMap<Integer, String> consecutiveMap = this.newWithKeysValues(1, "A", 2, "B", 3, "C", 4, "D", 5, "E");
+        Comparator<? super Integer> consecutiveMapComparator = consecutiveMap.comparator();
+        if (isNaturalOrder)
+        {
+            org.junit.jupiter.api.Assertions.assertNull(consecutiveMapComparator, "Map with consecutive keys should have same comparator");
+            assertIterablesEqual(this.newWithKeysValues(1, "A", 2, "B", 3, "C", 4, "D", 5, "E"), consecutiveMap);
+        }
+        else
+        {
+            org.junit.jupiter.api.Assertions.assertNotNull(consecutiveMapComparator, "Map with consecutive keys should have same comparator");
+            org.assertj.core.api.Assertions.assertThat(consecutiveMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+            assertIterablesEqual(this.newWithKeysValues(5, "E", 4, "D", 3, "C", 2, "B", 1, "A"), consecutiveMap);
+        }
+
+        SortedMap<Integer, String> gapMap = this.newWithKeysValues(10, "Ten", 100, "Hundred", 1000, "Thousand");
+        Comparator<? super Integer> gapMapComparator = gapMap.comparator();
+        if (isNaturalOrder)
+        {
+            org.junit.jupiter.api.Assertions.assertNull(gapMapComparator, "Map with gaps should have same comparator");
+            assertIterablesEqual(this.newWithKeysValues(10, "Ten", 100, "Hundred", 1000, "Thousand"), gapMap);
+        }
+        else
+        {
+            org.junit.jupiter.api.Assertions.assertNotNull(gapMapComparator, "Map with gaps should have same comparator");
+            org.assertj.core.api.Assertions.assertThat(gapMapComparator)
+                    .isIn(Collections.reverseOrder(), Comparators.reverseNaturalOrder());
+            assertIterablesEqual(this.newWithKeysValues(1000, "Thousand", 100, "Hundred", 10, "Ten"), gapMap);
+        }
     }
 
     @Test
