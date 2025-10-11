@@ -96,233 +96,93 @@ public interface SortedSetTestCase extends CollectionTestCase
         SortedSet<Integer> set = this.newWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         Comparator<? super Integer> comparator = set.comparator();
 
-        // TODO 2025-10-11: Refactor this to check whether we're using null, reverse order, or something else. Fail if something else.
-        if (comparator == null)
+        boolean isNaturalOrder = comparator == null;
+        boolean isReverseOrder = comparator != null &&
+                (comparator.equals(Collections.reverseOrder()) || comparator.equals(Comparators.reverseNaturalOrder()));
+
+        assertTrue(isNaturalOrder || isReverseOrder,
+                "Comparator must be either null (natural order) or reverse order");
+
+        if (isNaturalOrder)
         {
-            // TODO 2025-10-11: refactor these to have specific assertions where the first index is before the beginning, at the beginning, middle, end, past end, and then the same thing for the end index. Also add tests where the first/end index are the same, and the end index is before the first index.
+            assertIterablesEqual(this.newWith(5, 6), set.subSet(5, 7));
+            assertIterablesEqual(this.newWith(), set.subSet(5, 5));
+            assertIterablesEqual(this.newWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), set.subSet(1, 11));
+            assertIterablesEqual(this.newWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), set.subSet(0, 15));
 
-            SortedSet<Integer> subSet = set.subSet(3, 8);
-            // TODO 2025-10-11: It's unnecessary to check the size if we're checking the contents
-            assertEquals(5, subSet.size());
-            assertIterablesEqual(this.newWith(3, 4, 5, 6, 7), subSet);
+            assertIterablesEqual(this.newWith(1), set.subSet(1, 2));
+            assertIterablesEqual(this.newWith(10), set.subSet(10, 11));
+            assertIterablesEqual(this.newWith(), set.subSet(0, 1));
+            assertIterablesEqual(this.newWith(), set.subSet(11, 12));
 
-            SortedSet<Integer> headSet = set.headSet(5);
-            assertEquals(4, headSet.size());
-            assertIterablesEqual(this.newWith(1, 2, 3, 4), headSet);
+            assertIterablesEqual(this.newWith(3, 4, 5), set.subSet(3, 6));
+            assertIterablesEqual(this.newWith(6, 7, 8), set.subSet(6, 9));
 
-            SortedSet<Integer> tailSet = set.tailSet(7);
-            assertEquals(4, tailSet.size());
-            assertIterablesEqual(this.newWith(7, 8, 9, 10), tailSet);
+            assertIterablesEqual(this.newWith(2, 3, 4, 5, 6, 7, 8), set.subSet(2, 9));
 
-            SortedSet<Integer> emptySubSet = set.subSet(5, 5);
-            assertEquals(0, emptySubSet.size());
-            assertFalse(emptySubSet.iterator().hasNext());
+            assertIterablesEqual(this.newWith(1, 2, 3, 4), set.headSet(5));
+            assertIterablesEqual(this.newWith(), set.headSet(1));
+            assertIterablesEqual(this.newWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), set.headSet(11));
+            assertIterablesEqual(this.newWith(), set.headSet(0));
 
-            SortedSet<Integer> singleElementSubSet = set.subSet(5, 6);
-            assertEquals(1, singleElementSubSet.size());
-            assertIterablesEqual(this.newWith(5), singleElementSubSet);
-
-            SortedSet<Integer> fullSubSet = set.subSet(1, 11);
-            assertEquals(10, fullSubSet.size());
-            assertIterablesEqual(set, fullSubSet);
-
-            SortedSet<Integer> emptyHeadSet = set.headSet(1);
-            assertEquals(0, emptyHeadSet.size());
-            assertFalse(emptyHeadSet.iterator().hasNext());
-
-            SortedSet<Integer> fullHeadSet = set.headSet(11);
-            assertEquals(10, fullHeadSet.size());
-            assertIterablesEqual(set, fullHeadSet);
-
-            SortedSet<Integer> emptyTailSet = set.tailSet(11);
-            assertEquals(0, emptyTailSet.size());
-            assertFalse(emptyTailSet.iterator().hasNext());
-
-            SortedSet<Integer> fullTailSet = set.tailSet(1);
-            assertEquals(10, fullTailSet.size());
-            assertIterablesEqual(set, fullTailSet);
-
-            SortedSet<Integer> subSetWithNonExistentBounds = set.subSet(0, 15);
-            assertEquals(10, subSetWithNonExistentBounds.size());
-            assertIterablesEqual(set, subSetWithNonExistentBounds);
-
-            SortedSet<Integer> headSetWithNonExistentBound = set.headSet(0);
-            assertEquals(0, headSetWithNonExistentBound.size());
-
-            SortedSet<Integer> tailSetWithNonExistentBound = set.tailSet(0);
-            assertEquals(10, tailSetWithNonExistentBound.size());
-            assertIterablesEqual(set, tailSetWithNonExistentBound);
+            assertIterablesEqual(this.newWith(7, 8, 9, 10), set.tailSet(7));
+            assertIterablesEqual(this.newWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), set.tailSet(1));
+            assertIterablesEqual(this.newWith(), set.tailSet(11));
+            assertIterablesEqual(this.newWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), set.tailSet(0));
 
             SortedSet<Integer> subSetBetweenElements = set.subSet(2, 9);
-            assertEquals(7, subSetBetweenElements.size());
-            assertIterablesEqual(this.newWith(2, 3, 4, 5, 6, 7, 8), subSetBetweenElements);
-
-            SortedSet<Integer> nestedSubSet = subSetBetweenElements.subSet(4, 7);
-            assertEquals(3, nestedSubSet.size());
-            assertIterablesEqual(this.newWith(4, 5, 6), nestedSubSet);
-
-            SortedSet<Integer> nestedHeadSet = subSetBetweenElements.headSet(6);
-            assertEquals(4, nestedHeadSet.size());
-            assertIterablesEqual(this.newWith(2, 3, 4, 5), nestedHeadSet);
-
-            SortedSet<Integer> nestedTailSet = subSetBetweenElements.tailSet(5);
-            assertEquals(4, nestedTailSet.size());
-            assertIterablesEqual(this.newWith(5, 6, 7, 8), nestedTailSet);
+            assertIterablesEqual(this.newWith(4, 5, 6), subSetBetweenElements.subSet(4, 7));
+            assertIterablesEqual(this.newWith(2, 3, 4, 5), subSetBetweenElements.headSet(6));
+            assertIterablesEqual(this.newWith(5, 6, 7, 8), subSetBetweenElements.tailSet(5));
         }
         else
         {
-            // TODO 2025-10-11: refactor these to have specific assertions where the first index is before the beginning, at the beginning, middle, end, past end, and then the same thing for the end index. Also add tests where the first/end index are the same, and the end index is before the first index.
+            assertIterablesEqual(this.newWith(7, 6), set.subSet(7, 5));
+            assertIterablesEqual(this.newWith(), set.subSet(5, 5));
+            assertIterablesEqual(this.newWith(10, 9, 8, 7, 6, 5, 4, 3, 2), set.subSet(11, 1));
+            assertIterablesEqual(this.newWith(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), set.subSet(15, 0));
 
-            SortedSet<Integer> subSet = set.subSet(8, 3);
-            assertEquals(5, subSet.size());
-            Iterator<Integer> subSetIterator = subSet.iterator();
-            Integer previous = subSetIterator.next();
-            while (subSetIterator.hasNext())
-            {
-                Integer current = subSetIterator.next();
-                assertEquals(-1, Integer.signum(comparator.compare(previous, current)));
-                previous = current;
-            }
+            assertIterablesEqual(this.newWith(10), set.subSet(10, 9));
+            assertIterablesEqual(this.newWith(2), set.subSet(2, 1));
+            assertIterablesEqual(this.newWith(), set.subSet(12, 11));
+            assertIterablesEqual(this.newWith(1), set.subSet(1, 0));
 
-            SortedSet<Integer> headSet = set.headSet(5);
-            assertEquals(5, headSet.size());
-            Iterator<Integer> headSetIterator = headSet.iterator();
-            previous = headSetIterator.next();
-            while (headSetIterator.hasNext())
-            {
-                Integer current = headSetIterator.next();
-                assertEquals(-1, Integer.signum(comparator.compare(previous, current)));
-                previous = current;
-            }
+            assertIterablesEqual(this.newWith(6, 5, 4), set.subSet(6, 3));
+            assertIterablesEqual(this.newWith(9, 8, 7), set.subSet(9, 6));
 
-            SortedSet<Integer> tailSet = set.tailSet(7);
-            assertEquals(7, tailSet.size());
-            Iterator<Integer> tailSetIterator = tailSet.iterator();
-            previous = tailSetIterator.next();
-            while (tailSetIterator.hasNext())
-            {
-                Integer current = tailSetIterator.next();
-                assertEquals(-1, Integer.signum(comparator.compare(previous, current)));
-                previous = current;
-            }
+            assertIterablesEqual(this.newWith(9, 8, 7, 6, 5, 4, 3), set.subSet(9, 2));
 
-            SortedSet<Integer> emptySubSet = set.subSet(5, 5);
-            assertEquals(0, emptySubSet.size());
-            assertFalse(emptySubSet.iterator().hasNext());
+            assertIterablesEqual(this.newWith(10, 9, 8, 7, 6), set.headSet(5));
+            assertIterablesEqual(this.newWith(), set.headSet(11));
+            assertIterablesEqual(this.newWith(10, 9, 8, 7, 6, 5, 4, 3, 2), set.headSet(1));
+            assertIterablesEqual(this.newWith(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), set.headSet(0));
 
-            SortedSet<Integer> singleElementSubSet = set.subSet(6, 5);
-            assertEquals(1, singleElementSubSet.size());
-
-            SortedSet<Integer> fullSubSet = set.subSet(11, 0);
-            assertEquals(10, fullSubSet.size());
-
-            SortedSet<Integer> emptyHeadSet = set.headSet(11);
-            assertEquals(0, emptyHeadSet.size());
-            assertFalse(emptyHeadSet.iterator().hasNext());
-
-            SortedSet<Integer> fullHeadSet = set.headSet(0);
-            assertEquals(10, fullHeadSet.size());
-
-            SortedSet<Integer> emptyTailSet = set.tailSet(-1);
-            assertEquals(0, emptyTailSet.size());
-            assertFalse(emptyTailSet.iterator().hasNext());
-
-            SortedSet<Integer> fullTailSet = set.tailSet(11);
-            assertEquals(10, fullTailSet.size());
-
-            SortedSet<Integer> subSetWithNonExistentBounds = set.subSet(15, 0);
-            assertEquals(10, subSetWithNonExistentBounds.size());
-
-            SortedSet<Integer> headSetWithNonExistentBound = set.headSet(0);
-            assertEquals(10, headSetWithNonExistentBound.size());
-
-            SortedSet<Integer> tailSetWithNonExistentBound = set.tailSet(15);
-            assertEquals(10, tailSetWithNonExistentBound.size());
+            assertIterablesEqual(this.newWith(7, 6, 5, 4, 3, 2, 1), set.tailSet(7));
+            assertIterablesEqual(this.newWith(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), set.tailSet(10));
+            assertIterablesEqual(this.newWith(), set.tailSet(0));
+            assertIterablesEqual(this.newWith(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), set.tailSet(15));
 
             SortedSet<Integer> subSetBetweenElements = set.subSet(9, 2);
-            assertEquals(7, subSetBetweenElements.size());
-
-            SortedSet<Integer> nestedSubSet = subSetBetweenElements.subSet(7, 4);
-            assertEquals(3, nestedSubSet.size());
-
-            SortedSet<Integer> nestedHeadSet = subSetBetweenElements.headSet(6);
-            assertEquals(3, nestedHeadSet.size());
-
-            SortedSet<Integer> nestedTailSet = subSetBetweenElements.tailSet(5);
-            assertEquals(3, nestedTailSet.size());
-        }
-
-        // TODO 2025-10-11: no need to check for strings and integers separately. Pick one and do it well. Just integers
-        SortedSet<String> stringSet = this.newWith("alice", "bob", "charlie", "diana", "eve");
-        Comparator<? super String> stringComparator = stringSet.comparator();
-
-        if (stringComparator == null)
-        {
-            SortedSet<String> stringSubSet = stringSet.subSet("bob", "eve");
-            assertEquals(3, stringSubSet.size());
-            assertIterablesEqual(this.newWith("bob", "charlie", "diana"), stringSubSet);
-
-            SortedSet<String> stringHeadSet = stringSet.headSet("charlie");
-            assertEquals(2, stringHeadSet.size());
-            assertIterablesEqual(this.newWith("alice", "bob"), stringHeadSet);
-
-            SortedSet<String> stringTailSet = stringSet.tailSet("charlie");
-            assertEquals(3, stringTailSet.size());
-            assertIterablesEqual(this.newWith("charlie", "diana", "eve"), stringTailSet);
-        }
-        else
-        {
-            SortedSet<String> stringSubSet = stringSet.subSet("eve", "bob");
-            assertEquals(3, stringSubSet.size());
-            Iterator<String> stringSubSetIterator = stringSubSet.iterator();
-            String previous = stringSubSetIterator.next();
-            while (stringSubSetIterator.hasNext())
-            {
-                String current = stringSubSetIterator.next();
-                assertEquals(-1, Integer.signum(stringComparator.compare(previous, current)));
-                previous = current;
-            }
-
-            SortedSet<String> stringHeadSet = stringSet.headSet("charlie");
-            assertEquals(2, stringHeadSet.size());
-
-            SortedSet<String> stringTailSet = stringSet.tailSet("charlie");
-            assertEquals(3, stringTailSet.size());
+            assertIterablesEqual(this.newWith(7, 6, 5), subSetBetweenElements.subSet(7, 4));
+            assertIterablesEqual(this.newWith(9, 8, 7), subSetBetweenElements.headSet(6));
+            assertIterablesEqual(this.newWith(5, 4, 3), subSetBetweenElements.tailSet(5));
         }
 
         SortedSet<Integer> largeSet = this.newWith(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 
-        if (comparator == null)
+        if (isNaturalOrder)
         {
-            SortedSet<Integer> largeSubSet1 = largeSet.subSet(20, 80);
-            assertEquals(6, largeSubSet1.size());
-            assertIterablesEqual(this.newWith(20, 30, 40, 50, 60, 70), largeSubSet1);
-
-            SortedSet<Integer> largeSubSet2 = largeSet.subSet(25, 75);
-            assertEquals(4, largeSubSet2.size());
-            assertIterablesEqual(this.newWith(30, 40, 50, 60), largeSubSet2);
-
-            SortedSet<Integer> largeHeadSet = largeSet.headSet(55);
-            assertEquals(5, largeHeadSet.size());
-            assertIterablesEqual(this.newWith(10, 20, 30, 40, 50), largeHeadSet);
-
-            SortedSet<Integer> largeTailSet = largeSet.tailSet(55);
-            assertEquals(5, largeTailSet.size());
-            assertIterablesEqual(this.newWith(60, 70, 80, 90, 100), largeTailSet);
+            assertIterablesEqual(this.newWith(20, 30, 40, 50, 60, 70), largeSet.subSet(20, 80));
+            assertIterablesEqual(this.newWith(30, 40, 50, 60), largeSet.subSet(25, 75));
+            assertIterablesEqual(this.newWith(10, 20, 30, 40, 50), largeSet.headSet(55));
+            assertIterablesEqual(this.newWith(60, 70, 80, 90, 100), largeSet.tailSet(55));
         }
         else
         {
-            SortedSet<Integer> largeSubSet1 = largeSet.subSet(80, 20);
-            assertEquals(6, largeSubSet1.size());
-
-            SortedSet<Integer> largeSubSet2 = largeSet.subSet(75, 25);
-            assertEquals(5, largeSubSet2.size());
-
-            SortedSet<Integer> largeHeadSet = largeSet.headSet(55);
-            assertEquals(5, largeHeadSet.size());
-
-            SortedSet<Integer> largeTailSet = largeSet.tailSet(55);
-            assertEquals(5, largeTailSet.size());
+            assertIterablesEqual(this.newWith(80, 70, 60, 50, 40, 30), largeSet.subSet(80, 20));
+            assertIterablesEqual(this.newWith(70, 60, 50, 40, 30), largeSet.subSet(75, 25));
+            assertIterablesEqual(this.newWith(100, 90, 80, 70, 60), largeSet.headSet(55));
+            assertIterablesEqual(this.newWith(50, 40, 30, 20, 10), largeSet.tailSet(55));
         }
     }
 
