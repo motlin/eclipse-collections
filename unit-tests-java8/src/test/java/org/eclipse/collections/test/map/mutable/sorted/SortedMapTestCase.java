@@ -264,6 +264,10 @@ public interface SortedMapTestCase extends MapTestCase
             assertIterablesEqual(this.newWithKeysValues(4, "Four", 5, "Five", 6, "Six"), subMapBetweenElements.subMap(4, 7));
             assertIterablesEqual(this.newWithKeysValues(2, "Two", 3, "Three", 4, "Four", 5, "Five"), subMapBetweenElements.headMap(6));
             assertIterablesEqual(this.newWithKeysValues(5, "Five", 6, "Six", 7, "Seven", 8, "Eight"), subMapBetweenElements.tailMap(5));
+
+            assertThrows(IllegalArgumentException.class, () -> map.subMap(10, 5));
+            assertThrows(IllegalArgumentException.class, () -> map.subMap(7, 2));
+            assertThrows(IllegalArgumentException.class, () -> map.subMap(Integer.MAX_VALUE, Integer.MIN_VALUE));
         }
         else
         {
@@ -308,6 +312,10 @@ public interface SortedMapTestCase extends MapTestCase
             assertIterablesEqual(this.newWithKeysValues(7, "Seven", 6, "Six", 5, "Five"), subMapBetweenElements.subMap(7, 4));
             assertIterablesEqual(this.newWithKeysValues(9, "Nine", 8, "Eight", 7, "Seven"), subMapBetweenElements.headMap(6));
             assertIterablesEqual(this.newWithKeysValues(5, "Five", 4, "Four", 3, "Three"), subMapBetweenElements.tailMap(5));
+
+            assertThrows(IllegalArgumentException.class, () -> map.subMap(5, 10));
+            assertThrows(IllegalArgumentException.class, () -> map.subMap(2, 7));
+            assertThrows(IllegalArgumentException.class, () -> map.subMap(Integer.MIN_VALUE, Integer.MAX_VALUE));
         }
 
         SortedMap<Integer, String> largeMap = this.newWithKeysValues(
@@ -328,6 +336,59 @@ public interface SortedMapTestCase extends MapTestCase
             assertIterablesEqual(this.newWithKeysValues(100, "Hundred", 90, "Ninety", 80, "Eighty", 70, "Seventy", 60, "Sixty"), largeMap.headMap(55));
             assertIterablesEqual(this.newWithKeysValues(50, "Fifty", 40, "Forty", 30, "Thirty", 20, "Twenty", 10, "Ten"), largeMap.tailMap(55));
         }
+
+        SortedMap<Integer, String> singleElementMap = this.newWithKeysValues(42, "FortyTwo");
+        assertIterablesEqual(this.newWithKeysValues(42, "FortyTwo"), singleElementMap.subMap(isNaturalOrder ? 0 : 100, isNaturalOrder ? 100 : 0));
+        assertIterablesEqual(this.newWithKeysValues(42, "FortyTwo"), singleElementMap.subMap(isNaturalOrder ? 42 : 42, isNaturalOrder ? 43 : 41));
+        assertIterablesEqual(this.newWithKeysValues(), singleElementMap.subMap(isNaturalOrder ? 43 : 41, isNaturalOrder ? 50 : 0));
+        assertIterablesEqual(this.newWithKeysValues(42, "FortyTwo"), singleElementMap.headMap(isNaturalOrder ? 50 : 0));
+        assertIterablesEqual(this.newWithKeysValues(), singleElementMap.headMap(isNaturalOrder ? 42 : 50));
+        assertIterablesEqual(this.newWithKeysValues(42, "FortyTwo"), singleElementMap.tailMap(isNaturalOrder ? 42 : 50));
+        assertIterablesEqual(this.newWithKeysValues(), singleElementMap.tailMap(isNaturalOrder ? 50 : 0));
+
+        SortedMap<Integer, String> emptyMap = this.newWithKeysValues();
+        assertIterablesEqual(this.newWithKeysValues(), emptyMap.subMap(1, isNaturalOrder ? 10 : -10));
+        assertIterablesEqual(this.newWithKeysValues(), emptyMap.headMap(5));
+        assertIterablesEqual(this.newWithKeysValues(), emptyMap.tailMap(5));
+
+        SortedMap<Integer, String> boundaryMap = this.newWithKeysValues(
+                Integer.MIN_VALUE, "Min", -100, "NegativeHundred", 0, "Zero", 100, "Hundred", Integer.MAX_VALUE, "Max");
+
+        if (isNaturalOrder)
+        {
+            assertIterablesEqual(this.newWithKeysValues(-100, "NegativeHundred", 0, "Zero", 100, "Hundred"), boundaryMap.subMap(-100, Integer.MAX_VALUE));
+            assertIterablesEqual(this.newWithKeysValues(Integer.MIN_VALUE, "Min", -100, "NegativeHundred", 0, "Zero"), boundaryMap.headMap(100));
+            assertIterablesEqual(this.newWithKeysValues(0, "Zero", 100, "Hundred", Integer.MAX_VALUE, "Max"), boundaryMap.tailMap(0));
+            assertIterablesEqual(this.newWithKeysValues(Integer.MIN_VALUE, "Min"), boundaryMap.subMap(Integer.MIN_VALUE, -100));
+            assertIterablesEqual(this.newWithKeysValues(Integer.MAX_VALUE, "Max"), boundaryMap.subMap(Integer.MAX_VALUE, Integer.MAX_VALUE + 1));
+        }
+        else
+        {
+            assertIterablesEqual(this.newWithKeysValues(Integer.MAX_VALUE, "Max", 100, "Hundred", 0, "Zero"), boundaryMap.subMap(Integer.MAX_VALUE, -100));
+            assertIterablesEqual(this.newWithKeysValues(Integer.MAX_VALUE, "Max", 100, "Hundred"), boundaryMap.headMap(0));
+            assertIterablesEqual(this.newWithKeysValues(0, "Zero", -100, "NegativeHundred", Integer.MIN_VALUE, "Min"), boundaryMap.tailMap(0));
+        }
+
+        SortedMap<Integer, String> consecutiveMap = this.newWithKeysValues(1, "A", 2, "B", 3, "C", 4, "D", 5, "E", 6, "F", 7, "G");
+        SortedMap<Integer, String> middleSubMap = consecutiveMap.subMap(isNaturalOrder ? 3 : 5, isNaturalOrder ? 6 : 2);
+        assertIterablesEqual(this.newWithKeysValues(isNaturalOrder ? 3 : 5, isNaturalOrder ? "C" : "E",
+                isNaturalOrder ? 4 : 4, "D", isNaturalOrder ? 5 : 3, isNaturalOrder ? "E" : "C"), middleSubMap);
+
+        SortedMap<Integer, String> nestedHeadMap = middleSubMap.headMap(isNaturalOrder ? 5 : 4);
+        assertIterablesEqual(isNaturalOrder ? this.newWithKeysValues(3, "C", 4, "D") : this.newWithKeysValues(5, "E"), nestedHeadMap);
+
+        SortedMap<Integer, String> nestedTailMap = middleSubMap.tailMap(isNaturalOrder ? 4 : 4);
+        assertIterablesEqual(this.newWithKeysValues(4, "D", isNaturalOrder ? 5 : 3, isNaturalOrder ? "E" : "C"), nestedTailMap);
+
+        SortedMap<Integer, String> deeplyNestedSubMap = middleSubMap.subMap(isNaturalOrder ? 3 : 5, isNaturalOrder ? 5 : 3);
+        assertIterablesEqual(this.newWithKeysValues(isNaturalOrder ? 3 : 5, isNaturalOrder ? "C" : "E", 4, "D"), deeplyNestedSubMap);
+
+        assertEquals(isNaturalOrder ? 3 : 5, middleSubMap.firstKey());
+        assertEquals(isNaturalOrder ? 5 : 3, middleSubMap.lastKey());
+        assertEquals(isNaturalOrder ? 3 : 5, nestedHeadMap.firstKey());
+        assertEquals(isNaturalOrder ? 4 : 5, nestedHeadMap.lastKey());
+        assertEquals(isNaturalOrder ? 4 : 4, nestedTailMap.firstKey());
+        assertEquals(isNaturalOrder ? 5 : 3, nestedTailMap.lastKey());
     }
 
     @Test
