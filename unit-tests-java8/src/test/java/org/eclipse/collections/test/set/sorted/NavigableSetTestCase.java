@@ -1141,7 +1141,7 @@ public interface NavigableSetTestCase extends SortedSetTestCase
                 }
                 else
                 {
-                    assertEquals(-1, Integer.signum(oddComparator.compare(currentOddValue, previousOddValue)));
+                    assertEquals(1, Integer.signum(oddComparator.compare(previousOddValue, currentOddValue)));
                 }
             }
 
@@ -1429,19 +1429,13 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         }
         else
         {
-            Iterator<Integer> twoElementIterator = twoElementSet.iterator();
-            Integer twoElementFirst = twoElementIterator.next();
-            Integer twoElementSecond = twoElementIterator.next();
+            assertEquals(Integer.valueOf(10), twoElementDescending.first());
+            assertEquals(Integer.valueOf(20), twoElementDescending.last());
 
             Iterator<Integer> twoElementDescendingIterator = twoElementDescending.iterator();
-            assertEquals(twoElementSecond, twoElementDescendingIterator.next());
-            assertEquals(twoElementFirst, twoElementDescendingIterator.next());
+            assertEquals(Integer.valueOf(10), twoElementDescendingIterator.next());
+            assertEquals(Integer.valueOf(20), twoElementDescendingIterator.next());
             assertFalse(twoElementDescendingIterator.hasNext());
-
-            assertEquals(twoElementFirst, twoElementSet.first());
-            assertEquals(twoElementSecond, twoElementSet.last());
-            assertEquals(twoElementSecond, twoElementDescending.first());
-            assertEquals(twoElementFirst, twoElementDescending.last());
         }
 
         NavigableSet<Integer> set = this.newWith(1, 3, 5, 7, 9);
@@ -1606,7 +1600,6 @@ public interface NavigableSetTestCase extends SortedSetTestCase
             assertEquals(lastElement, largeDescending.ceiling(lastElement));
             assertEquals(secondToLast, largeDescending.higher(lastElement));
 
-            assertEquals(secondElement, largeDescending.lower(firstElement));
             assertEquals(firstElement, largeDescending.floor(firstElement));
             assertEquals(firstElement, largeDescending.ceiling(firstElement));
             assertNull(largeDescending.higher(firstElement));

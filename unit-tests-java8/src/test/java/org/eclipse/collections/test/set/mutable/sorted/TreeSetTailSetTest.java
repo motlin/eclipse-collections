@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.set.sorted.SortedSetTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -28,14 +29,14 @@ public class TreeSetTailSetTest implements SortedSetTestCase
     {
         if (elements.length == 0)
         {
-            TreeSet<Integer> emptyTreeSet = new TreeSet<>(Collections.reverseOrder());
+            TreeSet<Integer> emptyTreeSet = new TreeSet<>(Comparators.reverseNaturalOrder());
             emptyTreeSet.add(0);
             @SuppressWarnings("unchecked")
             SortedSet<T> result = (SortedSet<T>) emptyTreeSet.subSet(0, 0);
             return result;
         }
 
-        TreeSet<T> treeSet = new TreeSet<>(Collections.reverseOrder());
+        TreeSet<T> treeSet = new TreeSet<>(Comparators.reverseNaturalOrder());
         Collections.addAll(treeSet, elements);
 
         T largest = treeSet.first();

@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
+import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.set.sorted.NavigableSetTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +29,7 @@ public class TreeSetTest
     @Override
     public final <T> NavigableSet<T> newWith(T... elements)
     {
-        NavigableSet<T> result = new TreeSet<>(Collections.reverseOrder());
+        NavigableSet<T> result = new TreeSet<>(Comparators.reverseNaturalOrder());
         Collections.addAll(result, elements);
         return result;
     }
