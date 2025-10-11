@@ -18,6 +18,7 @@ import org.eclipse.collections.test.set.sorted.SortedSetTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class TreeSetTailSetTest implements SortedSetTestCase
 {
@@ -81,5 +82,27 @@ public class TreeSetTailSetTest implements SortedSetTestCase
     public void Iterable_toString()
     {
         assertEquals("[3, 2, 1]", this.newWith(3, 2, 1).toString());
+    }
+
+    @Override
+    @Test
+    public void Collection_add()
+    {
+        SortedSet<Integer> set = this.newWith(3, 2, 1);
+        assertFalse(set.add(3));
+        assertFalse(set.add(2));
+        assertFalse(set.add(1));
+        assertEquals(this.newWith(1, 2, 3), set);
+    }
+
+    @Override
+    @Test
+    public void Collection_size()
+    {
+        assertEquals(3, this.newWith(3, 2, 1).size());
+        assertEquals(0, this.newWith().size());
+        assertEquals(1, this.newWith(1).size());
+        assertEquals(2, this.newWith(1, 2).size());
+        assertEquals(5, this.newWith(5, 4, 3, 2, 1).size());
     }
 }

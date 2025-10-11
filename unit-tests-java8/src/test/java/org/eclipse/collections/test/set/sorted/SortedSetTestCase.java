@@ -10,12 +10,10 @@
 
 package org.eclipse.collections.test.set.sorted;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.SortedSet;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
@@ -39,35 +37,228 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void Iterable_next()
     {
-        Set<Integer> iterable = this.newWith(3, 2, 1);
+        SortedSet<Integer> set = this.newWith(3, 2, 1);
+        Comparator<? super Integer> comparator = set.comparator();
 
-        Iterator<Integer> iterator = iterable.iterator();
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(3), iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(2), iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(Integer.valueOf(1), iterator.next());
-        assertFalse(iterator.hasNext());
+        boolean isNaturalOrder = comparator == null;
+        boolean isReverseOrder = comparator != null &&
+                (comparator.equals(Collections.reverseOrder()) || comparator.equals(Comparators.reverseNaturalOrder()));
+
+        assertTrue(isNaturalOrder || isReverseOrder,
+                "Comparator must be either null (natural order) or reverse order");
+
+        Iterator<Integer> iterator = set.iterator();
+        if (isNaturalOrder)
+        {
+            assertTrue(iterator.hasNext());
+            assertEquals(Integer.valueOf(1), iterator.next());
+            assertTrue(iterator.hasNext());
+            assertEquals(Integer.valueOf(2), iterator.next());
+            assertTrue(iterator.hasNext());
+            assertEquals(Integer.valueOf(3), iterator.next());
+            assertFalse(iterator.hasNext());
+        }
+        else
+        {
+            assertTrue(iterator.hasNext());
+            assertEquals(Integer.valueOf(3), iterator.next());
+            assertTrue(iterator.hasNext());
+            assertEquals(Integer.valueOf(2), iterator.next());
+            assertTrue(iterator.hasNext());
+            assertEquals(Integer.valueOf(1), iterator.next());
+            assertFalse(iterator.hasNext());
+        }
+
+        assertThrows(NoSuchElementException.class, iterator::next);
+
+        SortedSet<Integer> singleElement = this.newWith(42);
+        Iterator<Integer> singleIterator = singleElement.iterator();
+        assertTrue(singleIterator.hasNext());
+        assertEquals(Integer.valueOf(42), singleIterator.next());
+        assertFalse(singleIterator.hasNext());
+        assertThrows(NoSuchElementException.class, singleIterator::next);
+
+        SortedSet<Integer> emptySet = this.newWith();
+        Iterator<Integer> emptyIterator = emptySet.iterator();
+        assertFalse(emptyIterator.hasNext());
+        assertThrows(NoSuchElementException.class, emptyIterator::next);
+
+        SortedSet<Integer> largeSet = this.newWith(5, 1, 9, 3, 7);
+        Iterator<Integer> largeIterator = largeSet.iterator();
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(1), largeIterator.next());
+            assertEquals(Integer.valueOf(3), largeIterator.next());
+            assertEquals(Integer.valueOf(5), largeIterator.next());
+            assertEquals(Integer.valueOf(7), largeIterator.next());
+            assertEquals(Integer.valueOf(9), largeIterator.next());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(9), largeIterator.next());
+            assertEquals(Integer.valueOf(7), largeIterator.next());
+            assertEquals(Integer.valueOf(5), largeIterator.next());
+            assertEquals(Integer.valueOf(3), largeIterator.next());
+            assertEquals(Integer.valueOf(1), largeIterator.next());
+        }
+        assertFalse(largeIterator.hasNext());
     }
 
     @Override
     @Test
     default void Iterable_remove()
     {
-        Iterable<Integer> iterable = this.newWith(3, 2, 1);
-        Iterator<Integer> iterator = iterable.iterator();
-        assertEquals(Integer.valueOf(3), iterator.next());
-        iterator.remove();
-        assertIterablesEqual(this.newWith(2, 1), iterable);
+        SortedSet<Integer> set = this.newWith(3, 2, 1);
+        Comparator<? super Integer> comparator = set.comparator();
+
+        boolean isNaturalOrder = comparator == null;
+        boolean isReverseOrder = comparator != null &&
+                (comparator.equals(Collections.reverseOrder()) || comparator.equals(Comparators.reverseNaturalOrder()));
+
+        assertTrue(isNaturalOrder || isReverseOrder,
+                "Comparator must be either null (natural order) or reverse order");
+
+        Iterator<Integer> iterator = set.iterator();
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(1), iterator.next());
+            iterator.remove();
+            assertIterablesEqual(this.newWith(2, 3), set);
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(3), iterator.next());
+            iterator.remove();
+            assertIterablesEqual(this.newWith(2, 1), set);
+        }
+
+        SortedSet<Integer> set2 = this.newWith(5, 3, 1, 4, 2);
+        Iterator<Integer> iterator2 = set2.iterator();
+        iterator2.next();
+        iterator2.next();
+        iterator2.remove();
+        if (isNaturalOrder)
+        {
+            assertIterablesEqual(this.newWith(1, 3, 4, 5), set2);
+        }
+        else
+        {
+            assertIterablesEqual(this.newWith(5, 3, 2, 1), set2);
+        }
+
+        SortedSet<Integer> set3 = this.newWith(1, 2, 3, 4, 5);
+        Iterator<Integer> iterator3 = set3.iterator();
+        iterator3.next();
+        iterator3.remove();
+        iterator3.next();
+        iterator3.remove();
+        iterator3.next();
+        iterator3.remove();
+        if (isNaturalOrder)
+        {
+            assertIterablesEqual(this.newWith(4, 5), set3);
+        }
+        else
+        {
+            assertIterablesEqual(this.newWith(2, 1), set3);
+        }
+
+        SortedSet<Integer> set4 = this.newWith(42);
+        Iterator<Integer> iterator4 = set4.iterator();
+        iterator4.next();
+        iterator4.remove();
+        assertIterablesEqual(this.newWith(), set4);
+        assertFalse(iterator4.hasNext());
+
+        SortedSet<Integer> set5 = this.newWith(1, 2, 3);
+        Iterator<Integer> iterator5 = set5.iterator();
+        assertThrows(IllegalStateException.class, iterator5::remove);
+
+        SortedSet<Integer> set6 = this.newWith(1, 2, 3);
+        Iterator<Integer> iterator6 = set6.iterator();
+        iterator6.next();
+        iterator6.remove();
+        assertThrows(IllegalStateException.class, iterator6::remove);
     }
 
     @Override
     @Test
     default void Collection_add()
     {
-        Collection<Integer> collection = this.newWith(1, 2, 3);
-        assertFalse(collection.add(3));
+        SortedSet<Integer> set = this.newWith(1, 2, 3);
+        Comparator<? super Integer> comparator = set.comparator();
+
+        boolean isNaturalOrder = comparator == null;
+        boolean isReverseOrder = comparator != null &&
+                (comparator.equals(Collections.reverseOrder()) || comparator.equals(Comparators.reverseNaturalOrder()));
+
+        assertTrue(isNaturalOrder || isReverseOrder,
+                "Comparator must be either null (natural order) or reverse order");
+
+        assertFalse(set.add(3));
+        assertFalse(set.add(2));
+        assertFalse(set.add(1));
+        assertIterablesEqual(this.newWith(1, 2, 3), set);
+
+        assertTrue(set.add(4));
+        assertIterablesEqual(this.newWith(1, 2, 3, 4), set);
+
+        assertTrue(set.add(0));
+        assertIterablesEqual(this.newWith(0, 1, 2, 3, 4), set);
+
+        SortedSet<Integer> set2 = this.newWith();
+        assertTrue(set2.add(5));
+        if (isNaturalOrder)
+        {
+            assertIterablesEqual(this.newWith(5), set2);
+        }
+        else
+        {
+            assertIterablesEqual(this.newWith(5), set2);
+        }
+
+        assertTrue(set2.add(3));
+        assertTrue(set2.add(7));
+        if (isNaturalOrder)
+        {
+            assertIterablesEqual(this.newWith(3, 5, 7), set2);
+        }
+        else
+        {
+            assertIterablesEqual(this.newWith(7, 5, 3), set2);
+        }
+
+        assertFalse(set2.add(5));
+        if (isNaturalOrder)
+        {
+            assertIterablesEqual(this.newWith(3, 5, 7), set2);
+        }
+        else
+        {
+            assertIterablesEqual(this.newWith(7, 5, 3), set2);
+        }
+
+        SortedSet<Integer> set3 = this.newWith(10, 20, 30);
+        assertTrue(set3.add(15));
+        assertTrue(set3.add(25));
+        if (isNaturalOrder)
+        {
+            Iterator<Integer> iterator = set3.iterator();
+            assertEquals(Integer.valueOf(10), iterator.next());
+            assertEquals(Integer.valueOf(15), iterator.next());
+            assertEquals(Integer.valueOf(20), iterator.next());
+            assertEquals(Integer.valueOf(25), iterator.next());
+            assertEquals(Integer.valueOf(30), iterator.next());
+        }
+        else
+        {
+            Iterator<Integer> iterator = set3.iterator();
+            assertEquals(Integer.valueOf(30), iterator.next());
+            assertEquals(Integer.valueOf(25), iterator.next());
+            assertEquals(Integer.valueOf(20), iterator.next());
+            assertEquals(Integer.valueOf(15), iterator.next());
+            assertEquals(Integer.valueOf(10), iterator.next());
+        }
     }
 
     @Override
@@ -76,6 +267,48 @@ public interface SortedSetTestCase extends CollectionTestCase
     {
         assertThat(this.newWith(3, 2, 1), hasSize(3));
         assertThat(this.newWith(), hasSize(0));
+        assertThat(this.newWith(1), hasSize(1));
+        assertThat(this.newWith(1, 2), hasSize(2));
+        assertThat(this.newWith(5, 4, 3, 2, 1), hasSize(5));
+
+        SortedSet<Integer> set = this.newWith(1, 2, 3);
+        assertThat(set, hasSize(3));
+        set.add(4);
+        assertThat(set, hasSize(4));
+        set.add(4);
+        assertThat(set, hasSize(4));
+        set.add(5);
+        assertThat(set, hasSize(5));
+
+        SortedSet<Integer> set2 = this.newWith(1, 2, 3, 4, 5);
+        assertThat(set2, hasSize(5));
+        set2.remove(3);
+        assertThat(set2, hasSize(4));
+        set2.remove(1);
+        assertThat(set2, hasSize(3));
+        set2.remove(5);
+        assertThat(set2, hasSize(2));
+        set2.remove(2);
+        assertThat(set2, hasSize(1));
+        set2.remove(4);
+        assertThat(set2, hasSize(0));
+
+        SortedSet<Integer> set3 = this.newWith();
+        assertThat(set3, hasSize(0));
+        set3.add(1);
+        assertThat(set3, hasSize(1));
+        set3.clear();
+        assertThat(set3, hasSize(0));
+
+        SortedSet<Integer> set4 = this.newWith(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+        assertThat(set4, hasSize(10));
+        Iterator<Integer> iterator = set4.iterator();
+        iterator.next();
+        iterator.remove();
+        assertThat(set4, hasSize(9));
+        iterator.next();
+        iterator.remove();
+        assertThat(set4, hasSize(8));
     }
 
     @Test

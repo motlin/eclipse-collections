@@ -14,6 +14,10 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 import org.eclipse.collections.test.IterableTestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 public class UnmodifiableMutableSortedSetTest implements UnmodifiableMutableSortedSetTestCase
 {
@@ -24,5 +28,16 @@ public class UnmodifiableMutableSortedSetTest implements UnmodifiableMutableSort
         MutableSortedSet<T> result = new TreeSortedSet<>(Comparators.reverseNaturalOrder());
         IterableTestCase.addAllTo(elements, result);
         return result.asUnmodifiable();
+    }
+
+    @Override
+    @Test
+    public void Collection_size()
+    {
+        assertThat(this.newWith(3, 2, 1), hasSize(3));
+        assertThat(this.newWith(), hasSize(0));
+        assertThat(this.newWith(1), hasSize(1));
+        assertThat(this.newWith(1, 2), hasSize(2));
+        assertThat(this.newWith(5, 4, 3, 2, 1), hasSize(5));
     }
 }
