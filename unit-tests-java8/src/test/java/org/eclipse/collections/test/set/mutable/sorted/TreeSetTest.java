@@ -11,10 +11,10 @@
 package org.eclipse.collections.test.set.mutable.sorted;
 
 import java.util.Collections;
-import java.util.SortedSet;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import org.eclipse.collections.test.set.sorted.SortedSetTestCase;
+import org.eclipse.collections.test.set.sorted.NavigableSetTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertPostSerializedEqualsAndHashCode;
@@ -22,13 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class TreeSetTest
-        implements SortedSetTestCase
+        implements NavigableSetTestCase
 {
     @SafeVarargs
     @Override
-    public final <T> SortedSet<T> newWith(T... elements)
+    public final <T> NavigableSet<T> newWith(T... elements)
     {
-        SortedSet<T> result = new TreeSet<>(Collections.reverseOrder());
+        NavigableSet<T> result = new TreeSet<>(Collections.reverseOrder());
         Collections.addAll(result, elements);
         return result;
     }

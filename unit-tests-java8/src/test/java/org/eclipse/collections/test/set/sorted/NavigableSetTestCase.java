@@ -214,30 +214,30 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         }
         else
         {
-            assertEquals(Integer.valueOf(10), twoElementSet.lower(20));
+            assertNull(twoElementSet.lower(20));
             assertEquals(Integer.valueOf(20), twoElementSet.floor(20));
             assertEquals(Integer.valueOf(20), twoElementSet.ceiling(20));
-            assertNull(twoElementSet.higher(20));
+            assertEquals(Integer.valueOf(10), twoElementSet.higher(20));
 
-            assertEquals(Integer.valueOf(20), twoElementSet.lower(25));
-            assertEquals(Integer.valueOf(20), twoElementSet.floor(25));
-            assertNull(twoElementSet.ceiling(25));
-            assertNull(twoElementSet.higher(25));
+            assertNull(twoElementSet.lower(25));
+            assertNull(twoElementSet.floor(25));
+            assertEquals(Integer.valueOf(20), twoElementSet.ceiling(25));
+            assertEquals(Integer.valueOf(20), twoElementSet.higher(25));
 
             assertEquals(Integer.valueOf(20), twoElementSet.lower(15));
             assertEquals(Integer.valueOf(20), twoElementSet.floor(15));
             assertEquals(Integer.valueOf(10), twoElementSet.ceiling(15));
             assertEquals(Integer.valueOf(10), twoElementSet.higher(15));
 
-            assertNull(twoElementSet.lower(10));
+            assertEquals(Integer.valueOf(20), twoElementSet.lower(10));
             assertEquals(Integer.valueOf(10), twoElementSet.floor(10));
             assertEquals(Integer.valueOf(10), twoElementSet.ceiling(10));
             assertNull(twoElementSet.higher(10));
 
-            assertNull(twoElementSet.lower(5));
-            assertNull(twoElementSet.floor(5));
-            assertEquals(Integer.valueOf(20), twoElementSet.ceiling(5));
-            assertEquals(Integer.valueOf(20), twoElementSet.higher(5));
+            assertEquals(Integer.valueOf(10), twoElementSet.lower(5));
+            assertEquals(Integer.valueOf(10), twoElementSet.floor(5));
+            assertNull(twoElementSet.ceiling(5));
+            assertNull(twoElementSet.higher(5));
         }
 
         NavigableSet<Integer> largeSet = this.newWith(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
@@ -1141,7 +1141,7 @@ public interface NavigableSetTestCase extends SortedSetTestCase
                 }
                 else
                 {
-                    assertEquals(1, Integer.signum(oddComparator.compare(currentOddValue, previousOddValue)));
+                    assertEquals(-1, Integer.signum(oddComparator.compare(currentOddValue, previousOddValue)));
                 }
             }
 
@@ -1164,6 +1164,238 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         }
         assertEquals(duplicateAttemptSet.size(), duplicateCount);
         assertFalse(duplicateDescendingIterator.hasNext());
+    }
+
+    @Test
+    default void NavigableSet_subSet_headSet_tailSet()
+    {
+        NavigableSet<Integer> set = this.newWith(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+        Comparator<? super Integer> comparator = set.comparator();
+        assertEquals(10, set.size());
+
+        Iterator<Integer> iterator = set.iterator();
+        Integer first = iterator.next();
+        Integer second = iterator.next();
+        Integer third = iterator.next();
+        Integer fourth = iterator.next();
+        Integer fifth = iterator.next();
+        Integer sixth = iterator.next();
+        Integer seventh = iterator.next();
+        Integer eighth = iterator.next();
+        Integer ninth = iterator.next();
+        Integer tenth = iterator.next();
+
+        if (comparator != null)
+        {
+            assertEquals(-1, Integer.signum(comparator.compare(first, second)));
+            assertEquals(-1, Integer.signum(comparator.compare(second, third)));
+            assertEquals(-1, Integer.signum(comparator.compare(third, fourth)));
+            assertEquals(-1, Integer.signum(comparator.compare(fourth, fifth)));
+            assertEquals(-1, Integer.signum(comparator.compare(fifth, sixth)));
+            assertEquals(-1, Integer.signum(comparator.compare(sixth, seventh)));
+            assertEquals(-1, Integer.signum(comparator.compare(seventh, eighth)));
+            assertEquals(-1, Integer.signum(comparator.compare(eighth, ninth)));
+            assertEquals(-1, Integer.signum(comparator.compare(ninth, tenth)));
+        }
+
+        NavigableSet<Integer> subSetInclusive = set.subSet(third, true, seventh, true);
+        assertEquals(5, subSetInclusive.size());
+        assertTrue(subSetInclusive.contains(third));
+        assertTrue(subSetInclusive.contains(seventh));
+        assertFalse(subSetInclusive.contains(second));
+        assertFalse(subSetInclusive.contains(eighth));
+
+        NavigableSet<Integer> subSetExclusive = set.subSet(third, false, seventh, false);
+        assertEquals(3, subSetExclusive.size());
+        assertFalse(subSetExclusive.contains(third));
+        assertFalse(subSetExclusive.contains(seventh));
+        assertTrue(subSetExclusive.contains(fourth));
+        assertTrue(subSetExclusive.contains(sixth));
+
+        NavigableSet<Integer> subSetFromInclusive = set.subSet(third, true, seventh, false);
+        assertEquals(4, subSetFromInclusive.size());
+        assertTrue(subSetFromInclusive.contains(third));
+        assertFalse(subSetFromInclusive.contains(seventh));
+
+        NavigableSet<Integer> subSetToInclusive = set.subSet(third, false, seventh, true);
+        assertEquals(4, subSetToInclusive.size());
+        assertFalse(subSetToInclusive.contains(third));
+        assertTrue(subSetToInclusive.contains(seventh));
+
+        NavigableSet<Integer> subSetSingleElement = set.subSet(fifth, true, fifth, true);
+        assertEquals(1, subSetSingleElement.size());
+        assertTrue(subSetSingleElement.contains(fifth));
+
+        NavigableSet<Integer> subSetSingleElementExclusive = set.subSet(fifth, false, fifth, false);
+        assertEquals(0, subSetSingleElementExclusive.size());
+        assertTrue(subSetSingleElementExclusive.isEmpty());
+
+        NavigableSet<Integer> subSetWhole = set.subSet(first, true, tenth, true);
+        assertEquals(10, subSetWhole.size());
+
+        NavigableSet<Integer> subSetBoundaryLower = set.subSet(first, true, fifth, false);
+        assertEquals(4, subSetBoundaryLower.size());
+        assertTrue(subSetBoundaryLower.contains(first));
+        assertFalse(subSetBoundaryLower.contains(fifth));
+
+        NavigableSet<Integer> subSetBoundaryUpper = set.subSet(fifth, false, tenth, true);
+        assertEquals(5, subSetBoundaryUpper.size());
+        assertFalse(subSetBoundaryUpper.contains(fifth));
+        assertTrue(subSetBoundaryUpper.contains(tenth));
+
+        NavigableSet<Integer> headSetInclusive = set.headSet(fifth, true);
+        assertEquals(5, headSetInclusive.size());
+        assertTrue(headSetInclusive.contains(fifth));
+        assertFalse(headSetInclusive.contains(sixth));
+
+        NavigableSet<Integer> headSetExclusive = set.headSet(fifth, false);
+        assertEquals(4, headSetExclusive.size());
+        assertFalse(headSetExclusive.contains(fifth));
+        assertTrue(headSetExclusive.contains(fourth));
+
+        NavigableSet<Integer> headSetLowerBound = set.headSet(first, true);
+        assertEquals(1, headSetLowerBound.size());
+        assertTrue(headSetLowerBound.contains(first));
+
+        NavigableSet<Integer> headSetLowerBoundExclusive = set.headSet(first, false);
+        assertEquals(0, headSetLowerBoundExclusive.size());
+        assertTrue(headSetLowerBoundExclusive.isEmpty());
+
+        NavigableSet<Integer> headSetUpperBound = set.headSet(tenth, true);
+        assertEquals(10, headSetUpperBound.size());
+
+        NavigableSet<Integer> headSetUpperBoundExclusive = set.headSet(tenth, false);
+        assertEquals(9, headSetUpperBoundExclusive.size());
+
+        NavigableSet<Integer> tailSetInclusive = set.tailSet(fifth, true);
+        assertEquals(6, tailSetInclusive.size());
+        assertTrue(tailSetInclusive.contains(fifth));
+        assertFalse(tailSetInclusive.contains(fourth));
+
+        NavigableSet<Integer> tailSetExclusive = set.tailSet(fifth, false);
+        assertEquals(5, tailSetExclusive.size());
+        assertFalse(tailSetExclusive.contains(fifth));
+        assertTrue(tailSetExclusive.contains(sixth));
+
+        NavigableSet<Integer> tailSetLowerBound = set.tailSet(first, true);
+        assertEquals(10, tailSetLowerBound.size());
+
+        NavigableSet<Integer> tailSetLowerBoundExclusive = set.tailSet(first, false);
+        assertEquals(9, tailSetLowerBoundExclusive.size());
+
+        NavigableSet<Integer> tailSetUpperBound = set.tailSet(tenth, true);
+        assertEquals(1, tailSetUpperBound.size());
+        assertTrue(tailSetUpperBound.contains(tenth));
+
+        NavigableSet<Integer> tailSetUpperBoundExclusive = set.tailSet(tenth, false);
+        assertEquals(0, tailSetUpperBoundExclusive.size());
+        assertTrue(tailSetUpperBoundExclusive.isEmpty());
+
+        NavigableSet<String> stringSet = this.newWith("apple", "banana", "cherry", "date", "elderberry", "fig", "grape");
+        Comparator<? super String> stringComparator = stringSet.comparator();
+        assertEquals(7, stringSet.size());
+
+        Iterator<String> stringIterator = stringSet.iterator();
+        String firstString = stringIterator.next();
+        String secondString = stringIterator.next();
+        String thirdString = stringIterator.next();
+        String fourthString = stringIterator.next();
+        String fifthString = stringIterator.next();
+        String sixthString = stringIterator.next();
+        String seventhString = stringIterator.next();
+
+        NavigableSet<String> stringSubSet = stringSet.subSet(secondString, true, sixthString, true);
+        assertEquals(5, stringSubSet.size());
+        assertTrue(stringSubSet.contains(secondString));
+        assertTrue(stringSubSet.contains(sixthString));
+
+        NavigableSet<String> stringSubSetExclusive = stringSet.subSet(secondString, false, sixthString, false);
+        assertEquals(3, stringSubSetExclusive.size());
+        assertFalse(stringSubSetExclusive.contains(secondString));
+        assertFalse(stringSubSetExclusive.contains(sixthString));
+
+        NavigableSet<String> stringHeadSet = stringSet.headSet(fourthString, true);
+        assertEquals(4, stringHeadSet.size());
+        assertTrue(stringHeadSet.contains(fourthString));
+
+        NavigableSet<String> stringHeadSetExclusive = stringSet.headSet(fourthString, false);
+        assertEquals(3, stringHeadSetExclusive.size());
+        assertFalse(stringHeadSetExclusive.contains(fourthString));
+
+        NavigableSet<String> stringTailSet = stringSet.tailSet(thirdString, true);
+        assertEquals(5, stringTailSet.size());
+        assertTrue(stringTailSet.contains(thirdString));
+
+        NavigableSet<String> stringTailSetExclusive = stringSet.tailSet(thirdString, false);
+        assertEquals(4, stringTailSetExclusive.size());
+        assertFalse(stringTailSetExclusive.contains(thirdString));
+
+        NavigableSet<Integer> negativeSet = this.newWith(-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100);
+        Comparator<? super Integer> negativeComparator = negativeSet.comparator();
+        assertEquals(11, negativeSet.size());
+
+        Iterator<Integer> negativeIterator = negativeSet.iterator();
+        Integer negativeFirst = negativeIterator.next();
+        Integer negativeSecond = negativeIterator.next();
+        Integer negativeThird = negativeIterator.next();
+        Integer negativeFourth = negativeIterator.next();
+        Integer negativeFifth = negativeIterator.next();
+        Integer negativeSixth = negativeIterator.next();
+        Integer negativeSeventh = negativeIterator.next();
+        Integer negativeEighth = negativeIterator.next();
+        Integer negativeNinth = negativeIterator.next();
+        Integer negativeTenth = negativeIterator.next();
+        Integer negativeEleventh = negativeIterator.next();
+
+        NavigableSet<Integer> negativeSubSet = negativeSet.subSet(negativeThird, true, negativeNinth, true);
+        assertEquals(7, negativeSubSet.size());
+        assertTrue(negativeSubSet.contains(negativeThird));
+        assertTrue(negativeSubSet.contains(negativeNinth));
+
+        NavigableSet<Integer> negativeSubSetExclusive = negativeSet.subSet(negativeThird, false, negativeNinth, false);
+        assertEquals(5, negativeSubSetExclusive.size());
+        assertFalse(negativeSubSetExclusive.contains(negativeThird));
+        assertFalse(negativeSubSetExclusive.contains(negativeNinth));
+
+        NavigableSet<Integer> negativeHeadSet = negativeSet.headSet(negativeSixth, true);
+        assertEquals(6, negativeHeadSet.size());
+        assertTrue(negativeHeadSet.contains(negativeSixth));
+
+        NavigableSet<Integer> negativeHeadSetExclusive = negativeSet.headSet(negativeSixth, false);
+        assertEquals(5, negativeHeadSetExclusive.size());
+        assertFalse(negativeHeadSetExclusive.contains(negativeSixth));
+
+        NavigableSet<Integer> negativeTailSet = negativeSet.tailSet(negativeSixth, true);
+        assertEquals(6, negativeTailSet.size());
+        assertTrue(negativeTailSet.contains(negativeSixth));
+
+        NavigableSet<Integer> negativeTailSetExclusive = negativeSet.tailSet(negativeSixth, false);
+        assertEquals(5, negativeTailSetExclusive.size());
+        assertFalse(negativeTailSetExclusive.contains(negativeSixth));
+
+        NavigableSet<Integer> adjacentSet = this.newWith(1, 2, 3, 4, 5);
+        Comparator<? super Integer> adjacentComparator = adjacentSet.comparator();
+
+        Iterator<Integer> adjacentIterator = adjacentSet.iterator();
+        Integer adjacentFirst = adjacentIterator.next();
+        Integer adjacentSecond = adjacentIterator.next();
+        Integer adjacentThird = adjacentIterator.next();
+        Integer adjacentFourth = adjacentIterator.next();
+        Integer adjacentFifth = adjacentIterator.next();
+
+        NavigableSet<Integer> adjacentSubSet = adjacentSet.subSet(adjacentSecond, true, adjacentFourth, true);
+        assertEquals(3, adjacentSubSet.size());
+        assertTrue(adjacentSubSet.contains(adjacentSecond));
+        assertTrue(adjacentSubSet.contains(adjacentThird));
+        assertTrue(adjacentSubSet.contains(adjacentFourth));
+
+        NavigableSet<Integer> adjacentSubSetExclusive = adjacentSet.subSet(adjacentSecond, false, adjacentFourth, false);
+        assertEquals(1, adjacentSubSetExclusive.size());
+        assertTrue(adjacentSubSetExclusive.contains(adjacentThird));
+
+        NavigableSet<Integer> adjacentSubSetAdjacent = adjacentSet.subSet(adjacentSecond, true, adjacentThird, false);
+        assertEquals(1, adjacentSubSetAdjacent.size());
+        assertTrue(adjacentSubSetAdjacent.contains(adjacentSecond));
     }
 
     @Test
@@ -1197,9 +1429,19 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         }
         else
         {
-            assertIterablesEqual(this.newWith(10, 20), twoElementDescending);
-            assertEquals(Integer.valueOf(10), twoElementDescending.first());
-            assertEquals(Integer.valueOf(20), twoElementDescending.last());
+            Iterator<Integer> twoElementIterator = twoElementSet.iterator();
+            Integer twoElementFirst = twoElementIterator.next();
+            Integer twoElementSecond = twoElementIterator.next();
+
+            Iterator<Integer> twoElementDescendingIterator = twoElementDescending.iterator();
+            assertEquals(twoElementSecond, twoElementDescendingIterator.next());
+            assertEquals(twoElementFirst, twoElementDescendingIterator.next());
+            assertFalse(twoElementDescendingIterator.hasNext());
+
+            assertEquals(twoElementFirst, twoElementSet.first());
+            assertEquals(twoElementSecond, twoElementSet.last());
+            assertEquals(twoElementSecond, twoElementDescending.first());
+            assertEquals(twoElementFirst, twoElementDescending.last());
         }
 
         NavigableSet<Integer> set = this.newWith(1, 3, 5, 7, 9);
@@ -1345,9 +1587,12 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         {
             Iterator<Integer> largeIterator = largeSet.iterator();
             Integer firstElement = largeIterator.next();
+            Integer secondElement = largeIterator.next();
             Integer lastElement = null;
+            Integer secondToLast = null;
             while (largeIterator.hasNext())
             {
+                secondToLast = lastElement;
                 lastElement = largeIterator.next();
             }
 
@@ -1359,8 +1604,9 @@ public interface NavigableSetTestCase extends SortedSetTestCase
             assertNull(largeDescending.lower(lastElement));
             assertEquals(lastElement, largeDescending.floor(lastElement));
             assertEquals(lastElement, largeDescending.ceiling(lastElement));
+            assertEquals(secondToLast, largeDescending.higher(lastElement));
 
-            assertEquals(lastElement, largeDescending.lower(firstElement));
+            assertEquals(secondElement, largeDescending.lower(firstElement));
             assertEquals(firstElement, largeDescending.floor(firstElement));
             assertEquals(firstElement, largeDescending.ceiling(firstElement));
             assertNull(largeDescending.higher(firstElement));
@@ -1523,7 +1769,7 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         else
         {
             assertEquals(-1, Integer.signum(originalComparator.compare(comparatorVerifySet.first(), comparatorVerifySet.last())));
-            assertEquals(1, Integer.signum(descendingComparator.compare(comparatorVerifyDescending.first(), comparatorVerifyDescending.last())));
+            assertEquals(-1, Integer.signum(descendingComparator.compare(comparatorVerifyDescending.first(), comparatorVerifyDescending.last())));
         }
     }
 }
