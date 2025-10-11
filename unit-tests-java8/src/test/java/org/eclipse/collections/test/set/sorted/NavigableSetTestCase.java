@@ -886,6 +886,287 @@ public interface NavigableSetTestCase extends SortedSetTestCase
     }
 
     @Test
+    default void NavigableSet_descendingIterator()
+    {
+        NavigableSet<Integer> emptySet = this.newWith();
+        Iterator<Integer> emptyIterator = emptySet.descendingIterator();
+        assertFalse(emptyIterator.hasNext());
+
+        NavigableSet<Integer> singletonSet = this.newWith(5);
+        Iterator<Integer> singletonIterator = singletonSet.descendingIterator();
+        assertTrue(singletonIterator.hasNext());
+        assertEquals(Integer.valueOf(5), singletonIterator.next());
+        assertFalse(singletonIterator.hasNext());
+
+        NavigableSet<Integer> twoElementSet = this.newWith(10, 20);
+        Comparator<? super Integer> twoElementComparator = twoElementSet.comparator();
+        Iterator<Integer> twoElementIterator = twoElementSet.descendingIterator();
+        assertTrue(twoElementIterator.hasNext());
+
+        if (twoElementComparator == null)
+        {
+            assertEquals(Integer.valueOf(20), twoElementIterator.next());
+            assertTrue(twoElementIterator.hasNext());
+            assertEquals(Integer.valueOf(10), twoElementIterator.next());
+            assertFalse(twoElementIterator.hasNext());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(10), twoElementIterator.next());
+            assertTrue(twoElementIterator.hasNext());
+            assertEquals(Integer.valueOf(20), twoElementIterator.next());
+            assertFalse(twoElementIterator.hasNext());
+        }
+
+        NavigableSet<Integer> set = this.newWith(1, 3, 5, 7, 9);
+        Comparator<? super Integer> comparator = set.comparator();
+        Iterator<Integer> descendingIterator = set.descendingIterator();
+        assertEquals(5, set.size());
+        assertTrue(descendingIterator.hasNext());
+
+        if (comparator == null)
+        {
+            assertEquals(Integer.valueOf(9), descendingIterator.next());
+            assertTrue(descendingIterator.hasNext());
+            assertEquals(Integer.valueOf(7), descendingIterator.next());
+            assertTrue(descendingIterator.hasNext());
+            assertEquals(Integer.valueOf(5), descendingIterator.next());
+            assertTrue(descendingIterator.hasNext());
+            assertEquals(Integer.valueOf(3), descendingIterator.next());
+            assertTrue(descendingIterator.hasNext());
+            assertEquals(Integer.valueOf(1), descendingIterator.next());
+            assertFalse(descendingIterator.hasNext());
+        }
+        else
+        {
+            Iterator<Integer> ascendingIterator = set.iterator();
+            Integer first = ascendingIterator.next();
+            Integer second = ascendingIterator.next();
+            Integer third = ascendingIterator.next();
+            Integer fourth = ascendingIterator.next();
+            Integer fifth = ascendingIterator.next();
+
+            assertEquals(fifth, descendingIterator.next());
+            assertTrue(descendingIterator.hasNext());
+            assertEquals(fourth, descendingIterator.next());
+            assertTrue(descendingIterator.hasNext());
+            assertEquals(third, descendingIterator.next());
+            assertTrue(descendingIterator.hasNext());
+            assertEquals(second, descendingIterator.next());
+            assertTrue(descendingIterator.hasNext());
+            assertEquals(first, descendingIterator.next());
+            assertFalse(descendingIterator.hasNext());
+        }
+
+        NavigableSet<Integer> largeSet = this.newWith(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+        Comparator<? super Integer> largeComparator = largeSet.comparator();
+        Iterator<Integer> largeDescendingIterator = largeSet.descendingIterator();
+        assertEquals(10, largeSet.size());
+        assertTrue(largeDescendingIterator.hasNext());
+
+        if (largeComparator == null)
+        {
+            assertEquals(Integer.valueOf(100), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(90), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(80), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(70), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(60), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(50), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(40), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(30), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(20), largeDescendingIterator.next());
+            assertEquals(Integer.valueOf(10), largeDescendingIterator.next());
+            assertFalse(largeDescendingIterator.hasNext());
+        }
+        else
+        {
+            Iterator<Integer> largeAscendingIterator = largeSet.iterator();
+            Integer[] elements = new Integer[10];
+            for (int index = 0; index < 10; index++)
+            {
+                elements[index] = largeAscendingIterator.next();
+            }
+
+            for (int index = 9; index >= 0; index--)
+            {
+                assertTrue(largeDescendingIterator.hasNext());
+                assertEquals(elements[index], largeDescendingIterator.next());
+            }
+            assertFalse(largeDescendingIterator.hasNext());
+        }
+
+        NavigableSet<String> stringSet = this.newWith("apple", "banana", "cherry", "date", "elderberry");
+        Comparator<? super String> stringComparator = stringSet.comparator();
+        Iterator<String> stringDescendingIterator = stringSet.descendingIterator();
+        assertEquals(5, stringSet.size());
+        assertTrue(stringDescendingIterator.hasNext());
+
+        if (stringComparator == null)
+        {
+            assertEquals("elderberry", stringDescendingIterator.next());
+            assertTrue(stringDescendingIterator.hasNext());
+            assertEquals("date", stringDescendingIterator.next());
+            assertTrue(stringDescendingIterator.hasNext());
+            assertEquals("cherry", stringDescendingIterator.next());
+            assertTrue(stringDescendingIterator.hasNext());
+            assertEquals("banana", stringDescendingIterator.next());
+            assertTrue(stringDescendingIterator.hasNext());
+            assertEquals("apple", stringDescendingIterator.next());
+            assertFalse(stringDescendingIterator.hasNext());
+        }
+        else
+        {
+            Iterator<String> stringAscendingIterator = stringSet.iterator();
+            String firstString = stringAscendingIterator.next();
+            String secondString = stringAscendingIterator.next();
+            String thirdString = stringAscendingIterator.next();
+            String fourthString = stringAscendingIterator.next();
+            String fifthString = stringAscendingIterator.next();
+
+            assertEquals(fifthString, stringDescendingIterator.next());
+            assertTrue(stringDescendingIterator.hasNext());
+            assertEquals(fourthString, stringDescendingIterator.next());
+            assertTrue(stringDescendingIterator.hasNext());
+            assertEquals(thirdString, stringDescendingIterator.next());
+            assertTrue(stringDescendingIterator.hasNext());
+            assertEquals(secondString, stringDescendingIterator.next());
+            assertTrue(stringDescendingIterator.hasNext());
+            assertEquals(firstString, stringDescendingIterator.next());
+            assertFalse(stringDescendingIterator.hasNext());
+        }
+
+        NavigableSet<Integer> negativeSet = this.newWith(-50, -30, -10, 0, 10, 30, 50);
+        Comparator<? super Integer> negativeComparator = negativeSet.comparator();
+        Iterator<Integer> negativeDescendingIterator = negativeSet.descendingIterator();
+        assertEquals(7, negativeSet.size());
+        assertTrue(negativeDescendingIterator.hasNext());
+
+        if (negativeComparator == null)
+        {
+            assertEquals(Integer.valueOf(50), negativeDescendingIterator.next());
+            assertTrue(negativeDescendingIterator.hasNext());
+            assertEquals(Integer.valueOf(30), negativeDescendingIterator.next());
+            assertTrue(negativeDescendingIterator.hasNext());
+            assertEquals(Integer.valueOf(10), negativeDescendingIterator.next());
+            assertTrue(negativeDescendingIterator.hasNext());
+            assertEquals(Integer.valueOf(0), negativeDescendingIterator.next());
+            assertTrue(negativeDescendingIterator.hasNext());
+            assertEquals(Integer.valueOf(-10), negativeDescendingIterator.next());
+            assertTrue(negativeDescendingIterator.hasNext());
+            assertEquals(Integer.valueOf(-30), negativeDescendingIterator.next());
+            assertTrue(negativeDescendingIterator.hasNext());
+            assertEquals(Integer.valueOf(-50), negativeDescendingIterator.next());
+            assertFalse(negativeDescendingIterator.hasNext());
+        }
+        else
+        {
+            Iterator<Integer> negativeAscendingIterator = negativeSet.iterator();
+            Integer[] negativeElements = new Integer[7];
+            for (int index = 0; index < 7; index++)
+            {
+                negativeElements[index] = negativeAscendingIterator.next();
+            }
+
+            for (int index = 6; index >= 0; index--)
+            {
+                assertTrue(negativeDescendingIterator.hasNext());
+                assertEquals(negativeElements[index], negativeDescendingIterator.next());
+            }
+            assertFalse(negativeDescendingIterator.hasNext());
+        }
+
+        NavigableSet<Integer> consecutiveSet = this.newWith(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+        Comparator<? super Integer> consecutiveComparator = consecutiveSet.comparator();
+        Iterator<Integer> consecutiveDescendingIterator = consecutiveSet.descendingIterator();
+        assertEquals(15, consecutiveSet.size());
+
+        if (consecutiveComparator == null)
+        {
+            for (int value = 15; value >= 1; value--)
+            {
+                assertTrue(consecutiveDescendingIterator.hasNext());
+                assertEquals(Integer.valueOf(value), consecutiveDescendingIterator.next());
+            }
+            assertFalse(consecutiveDescendingIterator.hasNext());
+        }
+        else
+        {
+            Iterator<Integer> consecutiveAscendingIterator = consecutiveSet.iterator();
+            Integer[] consecutiveElements = new Integer[15];
+            for (int index = 0; index < 15; index++)
+            {
+                consecutiveElements[index] = consecutiveAscendingIterator.next();
+            }
+
+            for (int index = 14; index >= 0; index--)
+            {
+                assertTrue(consecutiveDescendingIterator.hasNext());
+                assertEquals(consecutiveElements[index], consecutiveDescendingIterator.next());
+            }
+            assertFalse(consecutiveDescendingIterator.hasNext());
+        }
+
+        NavigableSet<Integer> evenSet = this.newWith(2, 4, 6, 8, 10, 12, 14, 16, 18, 20);
+        Comparator<? super Integer> evenComparator = evenSet.comparator();
+        Iterator<Integer> evenDescendingIterator = evenSet.descendingIterator();
+        assertEquals(10, evenSet.size());
+        int evenCount = 0;
+
+        while (evenDescendingIterator.hasNext())
+        {
+            Integer value = evenDescendingIterator.next();
+            assertTrue(evenSet.contains(value));
+            evenCount++;
+        }
+        assertEquals(10, evenCount);
+        assertFalse(evenDescendingIterator.hasNext());
+
+        NavigableSet<Integer> oddSet = this.newWith(1, 3, 5, 7, 9, 11, 13, 15, 17, 19);
+        Comparator<? super Integer> oddComparator = oddSet.comparator();
+        Iterator<Integer> oddDescendingIterator = oddSet.descendingIterator();
+        assertEquals(10, oddSet.size());
+        int oddCount = 0;
+        Integer previousOddValue = null;
+
+        while (oddDescendingIterator.hasNext())
+        {
+            Integer currentOddValue = oddDescendingIterator.next();
+            assertTrue(oddSet.contains(currentOddValue));
+
+            if (previousOddValue != null)
+            {
+                if (oddComparator == null)
+                {
+                    assertTrue(currentOddValue < previousOddValue);
+                }
+                else
+                {
+                    assertEquals(1, Integer.signum(oddComparator.compare(currentOddValue, previousOddValue)));
+                }
+            }
+
+            previousOddValue = currentOddValue;
+            oddCount++;
+        }
+        assertEquals(10, oddCount);
+        assertFalse(oddDescendingIterator.hasNext());
+
+        NavigableSet<Integer> duplicateAttemptSet = this.newWith(5, 5, 5, 10, 10, 15);
+        Iterator<Integer> duplicateDescendingIterator = duplicateAttemptSet.descendingIterator();
+        assertTrue(duplicateAttemptSet.size() <= 3);
+        int duplicateCount = 0;
+
+        while (duplicateDescendingIterator.hasNext())
+        {
+            Integer value = duplicateDescendingIterator.next();
+            assertTrue(duplicateAttemptSet.contains(value));
+            duplicateCount++;
+        }
+        assertEquals(duplicateAttemptSet.size(), duplicateCount);
+        assertFalse(duplicateDescendingIterator.hasNext());
+    }
+
+    @Test
     default void NavigableSet_descendingSet()
     {
         NavigableSet<Integer> emptySet = this.newWith();
