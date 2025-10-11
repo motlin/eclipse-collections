@@ -13,14 +13,34 @@ package org.eclipse.collections.test.map.mutable.sorted;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.test.MutableSortedIterableTestCase;
 import org.eclipse.collections.test.map.SortedMapIterableTestCase;
+import org.junit.jupiter.api.Test;
 
-public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestCase, MutableSortedIterableTestCase
+public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestCase, SortedMapTestCase, MutableSortedIterableTestCase
 {
     @Override
     <T> MutableSortedMap<Object, T> newWith(T... elements);
 
     @Override
     <K, V> MutableSortedMap<K, V> newWithKeysValues(Object... elements);
+
+    @Override
+    default boolean supportsNullKeys()
+    {
+        return false;
+    }
+
+    @Override
+    default boolean supportsNullValues()
+    {
+        return true;
+    }
+
+    @Override
+    @Test
+    default void Iterable_toString()
+    {
+        SortedMapTestCase.super.Iterable_toString();
+    }
 
     @Override
     default void Iterable_remove()
