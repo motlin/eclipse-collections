@@ -23,6 +23,12 @@ public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, Mut
     <T> MutableSortedSet<T> newWith(T... elements);
 
     @Override
+    default boolean allowsRemove()
+    {
+        return true;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {
