@@ -184,6 +184,20 @@ public interface SortedSetTestCase extends CollectionTestCase
         assertIterablesEqual(this.newWith(30, 20), subset2);
 
         assertIterablesEqual(this.newWith(40, 30, 20, 10), set);
+
+        SortedSet<Integer> headView = set.headSet(30);
+        assertIterablesEqual(this.newWith(40), headView);
+        headView.add(35);
+        assertIterablesEqual(this.newWith(40, 35, 30, 20, 10), set);
+        assertTrue(headView.remove(35));
+        assertIterablesEqual(this.newWith(40, 30, 20, 10), set);
+
+        SortedSet<Integer> tailView = set.tailSet(20);
+        assertIterablesEqual(this.newWith(20, 10), tailView);
+        tailView.add(15);
+        assertIterablesEqual(this.newWith(40, 30, 20, 15, 10), set);
+        assertTrue(tailView.remove(15));
+        assertIterablesEqual(this.newWith(40, 30, 20, 10), set);
     }
 
     @Test
@@ -211,6 +225,21 @@ public interface SortedSetTestCase extends CollectionTestCase
         assertIterablesEqual(this.newWith(25, 20), subset2);
 
         assertIterablesEqual(this.newWith(40, 25, 20, 10), set);
+
+        SortedSet<Integer> headView = set.headSet(20);
+        SortedSet<Integer> headView2 = headView.headSet(30);
+        assertIterablesEqual(this.newWith(40, 25), headView);
+        assertIterablesEqual(this.newWith(40), headView2);
+        Iterator<Integer> headIterator = headView2.iterator();
+        headIterator.next();
+        headIterator.remove();
+        assertIterablesEqual(this.newWith(25, 20, 10), set);
+
+        SortedSet<Integer> tailView = set.tailSet(20);
+        Iterator<Integer> tailIterator = tailView.iterator();
+        tailIterator.next();
+        tailIterator.remove();
+        assertIterablesEqual(this.newWith(25, 10), set);
     }
 
     @Test
@@ -236,6 +265,16 @@ public interface SortedSetTestCase extends CollectionTestCase
         assertIterablesEqual(this.newWith(), subset2);
 
         assertIterablesEqual(this.newWith(40, 10), set);
+
+        SortedSet<Integer> headView = set.headSet(20);
+        assertIterablesEqual(this.newWith(40), headView);
+        headView.addAll(this.newWith(35, 30));
+        assertIterablesEqual(this.newWith(40, 35, 30, 10), set);
+
+        SortedSet<Integer> tailView = set.tailSet(30);
+        assertIterablesEqual(this.newWith(30, 10), tailView);
+        tailView.addAll(this.newWith(25, 20));
+        assertIterablesEqual(this.newWith(40, 35, 30, 25, 20, 10), set);
     }
 
     @Test
@@ -261,6 +300,16 @@ public interface SortedSetTestCase extends CollectionTestCase
         assertIterablesEqual(this.newWith(10, 20, 30, 60, 35), set);
         assertIterablesEqual(this.newWith(60, 35), subset);
         assertIterablesEqual(this.newWith(35), subset2);
+
+        SortedSet<Integer> headView = set.headSet(30);
+        assertIterablesEqual(this.newWith(60, 35), headView);
+        headView.clear();
+        assertIterablesEqual(this.newWith(30, 20, 10), set);
+
+        SortedSet<Integer> tailView = set.tailSet(20);
+        assertIterablesEqual(this.newWith(20, 10), tailView);
+        tailView.clear();
+        assertIterablesEqual(this.newWith(30), set);
     }
 
     @Test
