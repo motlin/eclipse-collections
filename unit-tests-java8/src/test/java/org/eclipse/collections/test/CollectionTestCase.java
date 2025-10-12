@@ -23,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -32,6 +33,15 @@ public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
 {
     @Override
     <T> Collection<T> newWith(T... elements);
+
+    @Test
+    default void newSanityCheck()
+    {
+        Collection<Integer> collection = this.newWith(1, 2, 3);
+        assertThat(collection, is(not(empty())));
+        assertThat(collection, hasSize(3));
+        assertThat(collection, isOneOf(this.newWith(1, 2, 3), this.newWith(3, 2, 1), this.newWith(2, 1, 3), this.newWith(2, 3, 1), this.newWith(1, 3, 2), this.newWith(3, 1, 2)));
+    }
 
     @Test
     default void Collection_size()

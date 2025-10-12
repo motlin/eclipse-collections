@@ -10,8 +10,12 @@
 
 package org.eclipse.collections.test.set.sorted;
 
+import java.util.SortedSet;
+
 import org.eclipse.collections.test.FixedSizeCollectionTestCase;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface UnmodifiableSortedSetTestCase extends FixedSizeCollectionTestCase, SortedSetTestCase
 {
@@ -27,5 +31,45 @@ public interface UnmodifiableSortedSetTestCase extends FixedSizeCollectionTestCa
     default void Collection_add()
     {
         FixedSizeCollectionTestCase.super.Collection_add();
+    }
+
+    @Override
+    @Test
+    default void SortedSet_subSet_subSet_addAll()
+    {
+        SortedSet<Integer> set = this.newWith(10, 20, 30, 40);
+        SortedSet<Integer> subset = set.subSet(40, 10);
+        SortedSet<Integer> subset2 = subset.subSet(30, 10);
+        assertThrows(UnsupportedOperationException.class, () -> subset2.addAll(this.newWith(25, 28)));
+    }
+
+    @Override
+    @Test
+    default void SortedSet_subSet_subSet_clear()
+    {
+        SortedSet<Integer> set = this.newWith(10, 20, 30, 40);
+        SortedSet<Integer> subset = set.subSet(40, 10);
+        SortedSet<Integer> subset2 = subset.subSet(30, 10);
+        assertThrows(UnsupportedOperationException.class, subset2::clear);
+    }
+
+    @Override
+    @Test
+    default void SortedSet_subSet_subSet_iterator_remove()
+    {
+        SortedSet<Integer> set = this.newWith(10, 20, 30, 40);
+        SortedSet<Integer> subset = set.subSet(40, 10);
+        SortedSet<Integer> subset2 = subset.subSet(30, 10);
+        assertThrows(UnsupportedOperationException.class, () -> subset2.add(25));
+    }
+
+    @Override
+    @Test
+    default void SortedSet_subSet_subSet_remove()
+    {
+        SortedSet<Integer> set = this.newWith(10, 20, 30, 40);
+        SortedSet<Integer> subset = set.subSet(40, 10);
+        SortedSet<Integer> subset2 = subset.subSet(30, 10);
+        assertThrows(UnsupportedOperationException.class, () -> subset2.add(25));
     }
 }

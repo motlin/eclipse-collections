@@ -17,7 +17,6 @@ import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.UnmodifiableTreeMap;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
-import org.eclipse.collections.test.FixedSizeIterableTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class UnmodifiableTreeMapTest implements MutableSortedMapIterableTestCase, FixedSizeIterableTestCase
+public class UnmodifiableTreeMapTest implements UnmodifiableMutableSortedMapTestCase
 {
     @Override
     public <T> MutableSortedMap<Object, T> newWith(T... elements)
@@ -55,12 +54,6 @@ public class UnmodifiableTreeMapTest implements MutableSortedMapIterableTestCase
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
         return UnmodifiableTreeMap.of(result);
-    }
-
-    @Override
-    public void Iterable_remove()
-    {
-        FixedSizeIterableTestCase.super.Iterable_remove();
     }
 
     @Override
