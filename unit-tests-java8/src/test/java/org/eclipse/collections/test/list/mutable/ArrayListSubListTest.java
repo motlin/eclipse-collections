@@ -35,5 +35,6 @@ public class ArrayListSubListTest
     @Test
     public void Object_PostSerializedEqualsAndHashCode()
     {
+        // TODO 2025-10-12: Assert that the object is not serializable
     }
 }
