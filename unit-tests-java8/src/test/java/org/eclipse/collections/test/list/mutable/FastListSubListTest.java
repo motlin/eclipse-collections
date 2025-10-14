@@ -12,11 +12,9 @@ package org.eclipse.collections.test.list.mutable;
 
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.impl.test.SerializeTestHelper;
+import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.test.IterableTestCase;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 public class FastListSubListTest implements MutableListTestCase
 {
@@ -35,8 +33,7 @@ public class FastListSubListTest implements MutableListTestCase
     @Test
     public void Object_PostSerializedEqualsAndHashCode()
     {
-        Iterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
-        Object deserialized = SerializeTestHelper.serializeDeserialize(iterable);
-        assertNotSame(iterable, deserialized);
+        // ArrayList.subList() is not serializable, but FastList.subList() is serializable via writeReplace()
+        Verify.assertPostSerializedEqualsAndHashCode(this.newWith(1, 2, 3));
     }
 }

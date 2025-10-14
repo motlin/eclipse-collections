@@ -17,6 +17,8 @@ import java.util.List;
 import org.eclipse.collections.test.list.ListTestCase;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
+
 public class LinkedListSubListTest
         implements ListTestCase
 {
@@ -35,6 +37,6 @@ public class LinkedListSubListTest
     @Test
     public void Object_PostSerializedEqualsAndHashCode()
     {
-        // TODO 2025-10-12: Assert that the object is not serializable
+        assertNotSerializable(this.newWith(1, 2, 3));
     }
 }
