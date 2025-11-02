@@ -144,6 +144,8 @@ public interface SortedSetTestCase extends CollectionTestCase
         // before to after
         assertIterablesEqual(this.newWith(9, 7, 5, 3, 1), set.subSet(10, 0));
 
+        assertThrows(IllegalArgumentException.class, () -> set.subSet(1, 9));
+
         // beginning to beginning
         assertIterablesEqual(this.newWith(), set.subSet(9, 9));
 
