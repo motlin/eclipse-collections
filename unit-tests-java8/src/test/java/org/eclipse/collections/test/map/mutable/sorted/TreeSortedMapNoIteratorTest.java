@@ -55,7 +55,6 @@ public class TreeSortedMapNoIteratorTest implements MutableSortedMapIterableTest
     @Override
     public void Iterable_remove()
     {
-        OrderedIterableNoIteratorTest.super.Iterable_remove();
     }
 
     public static class TreeSortedMapNoIterator<K, V> extends TreeSortedMap<K, V>

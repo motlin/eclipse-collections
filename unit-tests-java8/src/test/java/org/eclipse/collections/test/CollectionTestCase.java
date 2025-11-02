@@ -47,6 +47,36 @@ public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
             assertThat(collection, hasSize(3));
         }
         assertThat(this.newWith(), hasSize(0));
+
+        if (this.allowsAddRemove())
+        {
+            Collection<Integer> collection = this.newWith(3, 2, 1);
+            int initialSize = collection.size();
+            collection.add(4);
+            assertEquals(initialSize + 1, collection.size());
+
+            if (this.allowsDuplicates())
+            {
+                collection.add(4);
+                assertEquals(initialSize + 2, collection.size());
+                collection.remove(Integer.valueOf(4));
+                assertEquals(initialSize + 1, collection.size());
+            }
+            else
+            {
+                collection.add(4);
+                assertEquals(initialSize + 1, collection.size());
+            }
+
+            collection.remove(Integer.valueOf(4));
+            assertEquals(initialSize, collection.size());
+
+            if (!this.allowsDuplicates())
+            {
+                collection.add(3);
+                assertEquals(initialSize, collection.size());
+            }
+        }
     }
 
     @Test

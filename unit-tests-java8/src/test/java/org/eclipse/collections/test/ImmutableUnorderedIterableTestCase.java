@@ -19,6 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public interface ImmutableUnorderedIterableTestCase extends UnorderedIterableTestCase
 {
     @Override
+    default boolean allowsAddRemove()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

@@ -42,6 +42,12 @@ public class UnifiedMapKeySetTest implements SetTestCase
     }
 
     @Override
+    public boolean allowsAddRemove()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     public void Collection_add()
     {

@@ -10,56 +10,22 @@
 
 package org.eclipse.collections.test;
 
-import org.junit.jupiter.api.Test;
-
 public interface NoIteratorTestCase extends RichIterableTestCase
 {
     @Override
-    @Test
+    default boolean allowsAddRemove()
+    {
+        return false;
+    }
+
+    @Override
+    default boolean allowsIterator()
+    {
+        return false;
+    }
+
+    @Override
     default void Iterable_remove()
     {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getFirst()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getLast()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getOnly()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void RichIterable_iterator_iterationOrder()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void Iterable_hasNext()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void Iterable_next()
-    {
-        // Not applicable
     }
 }

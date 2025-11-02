@@ -278,6 +278,11 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_getFirst()
     {
+        if (!this.allowsIterator())
+        {
+            return;
+        }
+
         RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         Integer first = iterable.getFirst();
         assertThat(first, isOneOf(3, 2, 1));
@@ -287,6 +292,11 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_getLast()
     {
+        if (!this.allowsIterator())
+        {
+            return;
+        }
+
         RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         Integer last = iterable.getLast();
         assertThat(last, isOneOf(3, 2, 1));
@@ -302,6 +312,11 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_getOnly()
     {
+        if (!this.allowsIterator())
+        {
+            return;
+        }
+
         RichIterable<Integer> iterable = this.newWith(3);
         Integer only = iterable.getOnly();
         assertThat(only, is(3));
@@ -561,6 +576,11 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_iterator_iterationOrder()
     {
+        if (!this.allowsIterator())
+        {
+            return;
+        }
+
         MutableCollection<Integer> iterationOrder = this.newMutableForFilter();
         Iterator<Integer> iterator = this.getInstanceUnderTest().iterator();
         while (iterator.hasNext())

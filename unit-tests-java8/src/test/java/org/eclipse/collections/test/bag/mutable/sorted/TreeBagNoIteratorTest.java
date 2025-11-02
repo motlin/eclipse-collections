@@ -32,13 +32,6 @@ public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedI
     @Override
     public void Iterable_remove()
     {
-        OrderedIterableNoIteratorTest.super.Iterable_remove();
-    }
-
-    @Override
-    public void RichIterable_iterator_iterationOrder()
-    {
-        OrderedIterableNoIteratorTest.super.RichIterable_iterator_iterationOrder();
     }
 
     public static class TreeBagNoIterator<T> extends TreeBag<T>

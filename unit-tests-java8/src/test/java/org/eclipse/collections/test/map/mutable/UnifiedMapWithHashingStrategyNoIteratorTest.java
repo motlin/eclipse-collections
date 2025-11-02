@@ -61,27 +61,8 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
     }
 
     @Override
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
     public void Iterable_remove()
     {
-        NoIteratorTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    public void RichIterable_getFirst()
-    {
-        NoIteratorTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
     }
 
     @Override
