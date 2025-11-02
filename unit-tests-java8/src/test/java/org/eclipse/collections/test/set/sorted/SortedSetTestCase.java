@@ -240,6 +240,8 @@ public interface SortedSetTestCase extends CollectionTestCase
         assertIterablesEqual(this.newWith(9), subset.headSet(8));
         assertIterablesEqual(this.newWith(9, 7, 5, 3), subset.headSet(1));
 
+        assertThrows(IllegalArgumentException.class, () -> subset.headSet(0));
+
         assertIterablesEqual(this.newWith(7, 5, 3), subset.tailSet(7));
         assertIterablesEqual(this.newWith(5, 3), subset.tailSet(6));
         assertIterablesEqual(this.newWith(9, 7, 5, 3), subset.tailSet(9));
@@ -248,6 +250,8 @@ public interface SortedSetTestCase extends CollectionTestCase
         assertIterablesEqual(this.newWith(9, 7, 5), headView);
         assertIterablesEqual(this.newWith(9), headView.headSet(7));
         assertIterablesEqual(this.newWith(9, 7, 5), headView.headSet(3));
+
+        assertThrows(IllegalArgumentException.class, () -> headView.headSet(2));
 
         assertIterablesEqual(this.newWith(7, 5), headView.subSet(7, 3));
         assertIterablesEqual(this.newWith(9, 7, 5), headView.subSet(10, 3));
@@ -265,6 +269,8 @@ public interface SortedSetTestCase extends CollectionTestCase
 
         assertIterablesEqual(this.newWith(3), tailView.headSet(1));
         assertIterablesEqual(this.newWith(3, 1), tailView.headSet(-1));
+
+        assertThrows(IllegalArgumentException.class, () -> tailView.headSet(4));
     }
 
     @Test
