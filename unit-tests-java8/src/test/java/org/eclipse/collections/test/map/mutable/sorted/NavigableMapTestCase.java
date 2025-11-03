@@ -449,5 +449,78 @@ public interface NavigableMapTestCase extends SortedMapTestCase
         {
             assertThrows(IllegalArgumentException.class, () -> map.subMap(ninth, true, first, false));
         }
+
+        assertEquals(third, subMapInclusive.firstEntry().getKey());
+        assertEquals(third.toString(), subMapInclusive.firstEntry().getValue());
+        assertEquals(seventh, subMapInclusive.lastEntry().getKey());
+        assertEquals(seventh.toString(), subMapInclusive.lastEntry().getValue());
+
+        assertEquals(fourth, subMapExclusive.firstEntry().getKey());
+        assertEquals(fourth.toString(), subMapExclusive.firstEntry().getValue());
+        assertEquals(sixth, subMapExclusive.lastEntry().getKey());
+        assertEquals(sixth.toString(), subMapExclusive.lastEntry().getValue());
+
+        assertEquals(third, subMapFromInclusive.firstEntry().getKey());
+        assertEquals(third.toString(), subMapFromInclusive.firstEntry().getValue());
+        assertEquals(sixth, subMapFromInclusive.lastEntry().getKey());
+        assertEquals(sixth.toString(), subMapFromInclusive.lastEntry().getValue());
+
+        assertEquals(fourth, subMapToInclusive.firstEntry().getKey());
+        assertEquals(fourth.toString(), subMapToInclusive.firstEntry().getValue());
+        assertEquals(seventh, subMapToInclusive.lastEntry().getKey());
+        assertEquals(seventh.toString(), subMapToInclusive.lastEntry().getValue());
+
+        assertEquals(first, headMapInclusive.firstEntry().getKey());
+        assertEquals(first.toString(), headMapInclusive.firstEntry().getValue());
+        assertEquals(fifth, headMapInclusive.lastEntry().getKey());
+        assertEquals(fifth.toString(), headMapInclusive.lastEntry().getValue());
+
+        assertEquals(first, headMapExclusive.firstEntry().getKey());
+        assertEquals(first.toString(), headMapExclusive.firstEntry().getValue());
+        assertEquals(fourth, headMapExclusive.lastEntry().getKey());
+        assertEquals(fourth.toString(), headMapExclusive.lastEntry().getValue());
+
+        assertEquals(fifth, tailMapInclusive.firstEntry().getKey());
+        assertEquals(fifth.toString(), tailMapInclusive.firstEntry().getValue());
+        assertEquals(tenth, tailMapInclusive.lastEntry().getKey());
+        assertEquals(tenth.toString(), tailMapInclusive.lastEntry().getValue());
+
+        assertEquals(sixth, tailMapExclusive.firstEntry().getKey());
+        assertEquals(sixth.toString(), tailMapExclusive.firstEntry().getValue());
+        assertEquals(tenth, tailMapExclusive.lastEntry().getKey());
+        assertEquals(tenth.toString(), tailMapExclusive.lastEntry().getValue());
+
+        NavigableMap<Integer, String> pollTestMap = this.newWithKeysValues(10, "10", 20, "20", 30, "30", 40, "40", 50, "50", 60, "60", 70, "70", 80, "80", 90, "90", 100, "100");
+        NavigableMap<Integer, String> pollSubMapInclusive = pollTestMap.subMap(third, true, seventh, true);
+        Map.Entry<Integer, String> polledFirstEntry = pollSubMapInclusive.pollFirstEntry();
+        assertEquals(third, polledFirstEntry.getKey());
+        assertEquals(third.toString(), polledFirstEntry.getValue());
+        Map.Entry<Integer, String> polledLastEntry = pollSubMapInclusive.pollLastEntry();
+        assertEquals(seventh, polledLastEntry.getKey());
+        assertEquals(seventh.toString(), polledLastEntry.getValue());
+        assertEquals(3, pollSubMapInclusive.size());
+        assertEquals(8, pollTestMap.size());
+
+        NavigableMap<Integer, String> pollTestMap2 = this.newWithKeysValues(10, "10", 20, "20", 30, "30", 40, "40", 50, "50", 60, "60", 70, "70", 80, "80", 90, "90", 100, "100");
+        NavigableMap<Integer, String> pollHeadMapInclusive = pollTestMap2.headMap(fifth, true);
+        Map.Entry<Integer, String> polledFirstEntry2 = pollHeadMapInclusive.pollFirstEntry();
+        assertEquals(first, polledFirstEntry2.getKey());
+        assertEquals(first.toString(), polledFirstEntry2.getValue());
+        Map.Entry<Integer, String> polledLastEntry2 = pollHeadMapInclusive.pollLastEntry();
+        assertEquals(fifth, polledLastEntry2.getKey());
+        assertEquals(fifth.toString(), polledLastEntry2.getValue());
+        assertEquals(3, pollHeadMapInclusive.size());
+        assertEquals(8, pollTestMap2.size());
+
+        NavigableMap<Integer, String> pollTestMap3 = this.newWithKeysValues(10, "10", 20, "20", 30, "30", 40, "40", 50, "50", 60, "60", 70, "70", 80, "80", 90, "90", 100, "100");
+        NavigableMap<Integer, String> pollTailMapInclusive = pollTestMap3.tailMap(fifth, true);
+        Map.Entry<Integer, String> polledFirstEntry3 = pollTailMapInclusive.pollFirstEntry();
+        assertEquals(fifth, polledFirstEntry3.getKey());
+        assertEquals(fifth.toString(), polledFirstEntry3.getValue());
+        Map.Entry<Integer, String> polledLastEntry3 = pollTailMapInclusive.pollLastEntry();
+        assertEquals(tenth, polledLastEntry3.getKey());
+        assertEquals(tenth.toString(), polledLastEntry3.getValue());
+        assertEquals(4, pollTailMapInclusive.size());
+        assertEquals(8, pollTestMap3.size());
     }
 }
