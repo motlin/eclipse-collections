@@ -315,6 +315,7 @@ public interface SortedMapTestCase extends MapTestCase
 
             assertThrows(IllegalArgumentException.class, () -> map.subMap(5, 10));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(2, 7));
+            assertThrows(IllegalArgumentException.class, () -> map.subMap(1, 9));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(Integer.MIN_VALUE, Integer.MAX_VALUE));
         }
 
