@@ -20,6 +20,7 @@ import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface NavigableSetTestCase extends SortedSetTestCase
@@ -1396,6 +1397,11 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         NavigableSet<Integer> adjacentSubSetAdjacent = adjacentSet.subSet(adjacentSecond, true, adjacentThird, false);
         assertEquals(1, adjacentSubSetAdjacent.size());
         assertTrue(adjacentSubSetAdjacent.contains(adjacentSecond));
+
+        if (comparator != null && comparator.compare(first, second) == -1 && first.compareTo(second) == 1)
+        {
+            assertThrows(IllegalArgumentException.class, () -> set.subSet(ninth, true, first, false));
+        }
     }
 
     @Test
