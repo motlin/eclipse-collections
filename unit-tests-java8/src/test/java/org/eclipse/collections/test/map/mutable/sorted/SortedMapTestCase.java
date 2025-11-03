@@ -271,6 +271,13 @@ public interface SortedMapTestCase extends MapTestCase
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.headMap(1));
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.headMap(10));
 
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.tailMap(1));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.tailMap(10));
+
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(1, "BelowRange"));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(9, "AtUpperBound"));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(10, "AboveRange"));
+
             assertThrows(IllegalArgumentException.class, () -> map.subMap(10, 5));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(7, 2));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(Integer.MAX_VALUE, Integer.MIN_VALUE));
@@ -324,6 +331,13 @@ public interface SortedMapTestCase extends MapTestCase
 
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.headMap(10));
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.headMap(1));
+
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.tailMap(10));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.tailMap(1));
+
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(10, "AboveRange"));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(2, "AtLowerBound"));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(1, "BelowRange"));
 
             assertThrows(IllegalArgumentException.class, () -> map.subMap(5, 10));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(2, 7));
