@@ -522,5 +522,42 @@ public interface NavigableMapTestCase extends SortedMapTestCase
         assertEquals(tenth.toString(), polledLastEntry3.getValue());
         assertEquals(4, pollTailMapInclusive.size());
         assertEquals(8, pollTestMap3.size());
+
+        NavigableMap<Integer, String> subMapDescending = subMapInclusive.descendingMap();
+        assertEquals(5, subMapDescending.size());
+        assertEquals(seventh, subMapDescending.firstKey());
+        assertEquals(third, subMapDescending.lastKey());
+        Iterator<Integer> subMapDescendingIterator = subMapDescending.keySet().iterator();
+        assertEquals(seventh, subMapDescendingIterator.next());
+        assertEquals(sixth, subMapDescendingIterator.next());
+        assertEquals(fifth, subMapDescendingIterator.next());
+        assertEquals(fourth, subMapDescendingIterator.next());
+        assertEquals(third, subMapDescendingIterator.next());
+        assertFalse(subMapDescendingIterator.hasNext());
+
+        NavigableMap<Integer, String> headMapDescending = headMapInclusive.descendingMap();
+        assertEquals(5, headMapDescending.size());
+        assertEquals(fifth, headMapDescending.firstKey());
+        assertEquals(first, headMapDescending.lastKey());
+        Iterator<Integer> headMapDescendingIterator = headMapDescending.keySet().iterator();
+        assertEquals(fifth, headMapDescendingIterator.next());
+        assertEquals(fourth, headMapDescendingIterator.next());
+        assertEquals(third, headMapDescendingIterator.next());
+        assertEquals(second, headMapDescendingIterator.next());
+        assertEquals(first, headMapDescendingIterator.next());
+        assertFalse(headMapDescendingIterator.hasNext());
+
+        NavigableMap<Integer, String> tailMapDescending = tailMapInclusive.descendingMap();
+        assertEquals(6, tailMapDescending.size());
+        assertEquals(tenth, tailMapDescending.firstKey());
+        assertEquals(fifth, tailMapDescending.lastKey());
+        Iterator<Integer> tailMapDescendingIterator = tailMapDescending.keySet().iterator();
+        assertEquals(tenth, tailMapDescendingIterator.next());
+        assertEquals(ninth, tailMapDescendingIterator.next());
+        assertEquals(eighth, tailMapDescendingIterator.next());
+        assertEquals(seventh, tailMapDescendingIterator.next());
+        assertEquals(sixth, tailMapDescendingIterator.next());
+        assertEquals(fifth, tailMapDescendingIterator.next());
+        assertFalse(tailMapDescendingIterator.hasNext());
     }
 }
