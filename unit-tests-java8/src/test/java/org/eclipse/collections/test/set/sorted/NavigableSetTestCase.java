@@ -1407,6 +1407,26 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         assertThrows(IllegalArgumentException.class, () -> subSetInclusive.tailSet(second, true));
         assertThrows(IllegalArgumentException.class, () -> subSetInclusive.tailSet(eighth, false));
 
+        assertThrows(IllegalArgumentException.class, () -> subSetInclusive.add(second));
+        assertThrows(IllegalArgumentException.class, () -> subSetInclusive.add(eighth));
+
+        assertThrows(IllegalArgumentException.class, () -> subSetExclusive.add(second));
+        assertThrows(IllegalArgumentException.class, () -> subSetExclusive.add(third));
+        assertThrows(IllegalArgumentException.class, () -> subSetExclusive.add(seventh));
+        assertThrows(IllegalArgumentException.class, () -> subSetExclusive.add(eighth));
+
+        assertThrows(IllegalArgumentException.class, () -> headSetInclusive.add(sixth));
+        assertThrows(IllegalArgumentException.class, () -> headSetInclusive.add(tenth));
+
+        assertThrows(IllegalArgumentException.class, () -> headSetExclusive.add(fifth));
+        assertThrows(IllegalArgumentException.class, () -> headSetExclusive.add(tenth));
+
+        assertThrows(IllegalArgumentException.class, () -> tailSetInclusive.add(first));
+        assertThrows(IllegalArgumentException.class, () -> tailSetInclusive.add(fourth));
+
+        assertThrows(IllegalArgumentException.class, () -> tailSetExclusive.add(first));
+        assertThrows(IllegalArgumentException.class, () -> tailSetExclusive.add(fifth));
+
         if (comparator != null && comparator.compare(first, second) == -1 && first.compareTo(second) == 1)
         {
             assertThrows(IllegalArgumentException.class, () -> set.subSet(ninth, true, first, false));
