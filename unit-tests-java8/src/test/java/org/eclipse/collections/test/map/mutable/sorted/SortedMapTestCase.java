@@ -278,6 +278,11 @@ public interface SortedMapTestCase extends MapTestCase
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(9, "AtUpperBound"));
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(10, "AboveRange"));
 
+            SortedMap<Integer, String> headMapView = map.headMap(5);
+            assertThrows(IllegalArgumentException.class, () -> headMapView.put(5, "AtBound"));
+            assertThrows(IllegalArgumentException.class, () -> headMapView.put(6, "AboveRange"));
+            assertThrows(IllegalArgumentException.class, () -> headMapView.put(11, "FarAboveRange"));
+
             assertThrows(IllegalArgumentException.class, () -> map.subMap(10, 5));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(7, 2));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(Integer.MAX_VALUE, Integer.MIN_VALUE));
@@ -338,6 +343,11 @@ public interface SortedMapTestCase extends MapTestCase
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(10, "AboveRange"));
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(2, "AtLowerBound"));
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.put(1, "BelowRange"));
+
+            SortedMap<Integer, String> headMapView = map.headMap(5);
+            assertThrows(IllegalArgumentException.class, () -> headMapView.put(5, "AtBound"));
+            assertThrows(IllegalArgumentException.class, () -> headMapView.put(4, "BelowRange"));
+            assertThrows(IllegalArgumentException.class, () -> headMapView.put(1, "FarBelowRange"));
 
             assertThrows(IllegalArgumentException.class, () -> map.subMap(5, 10));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(2, 7));

@@ -307,6 +307,11 @@ public class UnmodifiableTreeMapTest implements UnmodifiableMutableSortedMapTest
         assertThrows(UnsupportedOperationException.class, () -> subMapBetweenElements.put(2, "AtLowerBound"));
         assertThrows(UnsupportedOperationException.class, () -> subMapBetweenElements.put(1, "BelowRange"));
 
+        MutableSortedMap<Integer, String> headMapView = map.headMap(5);
+        assertThrows(UnsupportedOperationException.class, () -> headMapView.put(5, "AtBound"));
+        assertThrows(UnsupportedOperationException.class, () -> headMapView.put(4, "BelowRange"));
+        assertThrows(UnsupportedOperationException.class, () -> headMapView.put(1, "FarBelowRange"));
+
         assertThrows(IllegalArgumentException.class, () -> map.subMap(5, 10));
         assertThrows(IllegalArgumentException.class, () -> map.subMap(2, 7));
         assertThrows(IllegalArgumentException.class, () -> map.subMap(1, 9));
