@@ -20,6 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public interface UnmodifiableSortedSetTestCase extends FixedSizeCollectionTestCase, SortedSetTestCase
 {
     @Override
+    default boolean allowsSubSetViews()
+    {
+        return true;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

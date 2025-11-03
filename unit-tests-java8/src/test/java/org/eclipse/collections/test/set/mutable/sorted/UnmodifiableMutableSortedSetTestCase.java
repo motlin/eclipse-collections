@@ -23,6 +23,12 @@ public interface UnmodifiableMutableSortedSetTestCase extends UnmodifiableMutabl
     }
 
     @Override
+    default boolean allowsSubSetViews()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {
@@ -41,5 +47,29 @@ public interface UnmodifiableMutableSortedSetTestCase extends UnmodifiableMutabl
     default void MutableCollection_removeIfWith()
     {
         UnmodifiableMutableCollectionTestCase.super.MutableCollection_removeIfWith();
+    }
+
+    @Override
+    @Test
+    default void SortedSet_subSet_subSet_addAll()
+    {
+    }
+
+    @Override
+    @Test
+    default void SortedSet_subSet_subSet_clear()
+    {
+    }
+
+    @Override
+    @Test
+    default void SortedSet_subSet_subSet_iterator_remove()
+    {
+    }
+
+    @Override
+    @Test
+    default void SortedSet_subSet_subSet_remove()
+    {
     }
 }

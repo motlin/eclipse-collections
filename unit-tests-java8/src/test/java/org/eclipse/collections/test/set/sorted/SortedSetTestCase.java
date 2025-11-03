@@ -33,6 +33,11 @@ public interface SortedSetTestCase extends CollectionTestCase
         return true;
     }
 
+    default boolean allowsSubSetViews()
+    {
+        return true;
+    }
+
     @Override
     <T> SortedSet<T> newWith(T... elements);
 
@@ -124,6 +129,11 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void SortedSet_subSet_headSet_tailSet()
     {
+        if (!this.allowsSubSetViews())
+        {
+            return;
+        }
+
         SortedSet<Integer> set = this.newWith(1, 3, 5, 7, 9);
 
         // before to before
@@ -225,6 +235,11 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void SortedSet_subSet_subSet()
     {
+        if (!this.allowsSubSetViews())
+        {
+            return;
+        }
+
         SortedSet<Integer> set = this.newWith(9, 7, 5, 3, 1);
 
         SortedSet<Integer> subset = set.subSet(9, 1);
@@ -280,7 +295,7 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void SortedSet_subSet_subSet_remove()
     {
-        if (!this.allowsRemove())
+        if (!this.allowsRemove() || !this.allowsSubSetViews())
         {
             return;
         }
@@ -333,7 +348,7 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void SortedSet_subSet_subSet_iterator_remove()
     {
-        if (!this.allowsRemove())
+        if (!this.allowsRemove() || !this.allowsSubSetViews())
         {
             return;
         }
@@ -379,7 +394,7 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void SortedSet_subSet_subSet_addAll()
     {
-        if (!this.allowsRemove())
+        if (!this.allowsRemove() || !this.allowsSubSetViews())
         {
             return;
         }
@@ -417,7 +432,7 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void SortedSet_subSet_subSet_clear()
     {
-        if (!this.allowsRemove())
+        if (!this.allowsRemove() || !this.allowsSubSetViews())
         {
             return;
         }
@@ -467,5 +482,23 @@ public interface SortedSetTestCase extends CollectionTestCase
         SortedSet<Integer> set3 = this.newWith(1, 2, 3);
         assertEquals(Integer.valueOf(3), set3.first());
         assertEquals(Integer.valueOf(1), set3.last());
+
+        if (!this.allowsSubSetViews())
+        {
+            return;
+        }
+
+        SortedSet<Integer> set4 = this.newWith(1, 3, 5, 7, 9);
+        SortedSet<Integer> subset = set4.subSet(9, 3);
+        assertEquals(Integer.valueOf(9), subset.first());
+        assertEquals(Integer.valueOf(5), subset.last());
+
+        SortedSet<Integer> headView = set4.headSet(5);
+        assertEquals(Integer.valueOf(9), headView.first());
+        assertEquals(Integer.valueOf(7), headView.last());
+
+        SortedSet<Integer> tailView = set4.tailSet(5);
+        assertEquals(Integer.valueOf(5), tailView.first());
+        assertEquals(Integer.valueOf(1), tailView.last());
     }
 }
