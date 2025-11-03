@@ -268,6 +268,9 @@ public interface SortedMapTestCase extends MapTestCase
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.subMap(10, 5));
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.subMap(5, 1));
 
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.headMap(1));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.headMap(10));
+
             assertThrows(IllegalArgumentException.class, () -> map.subMap(10, 5));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(7, 2));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(Integer.MAX_VALUE, Integer.MIN_VALUE));
@@ -318,6 +321,9 @@ public interface SortedMapTestCase extends MapTestCase
 
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.subMap(5, 10));
             assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.subMap(1, 5));
+
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.headMap(10));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.headMap(1));
 
             assertThrows(IllegalArgumentException.class, () -> map.subMap(5, 10));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(2, 7));
