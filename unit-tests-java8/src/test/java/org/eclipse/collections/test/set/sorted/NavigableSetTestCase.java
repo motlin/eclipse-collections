@@ -1398,6 +1398,9 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         assertEquals(1, adjacentSubSetAdjacent.size());
         assertTrue(adjacentSubSetAdjacent.contains(adjacentSecond));
 
+        assertThrows(IllegalArgumentException.class, () -> subSetInclusive.subSet(second, true, sixth, false));
+        assertThrows(IllegalArgumentException.class, () -> subSetInclusive.subSet(fourth, true, eighth, false));
+
         if (comparator != null && comparator.compare(first, second) == -1 && first.compareTo(second) == 1)
         {
             assertThrows(IllegalArgumentException.class, () -> set.subSet(ninth, true, first, false));
