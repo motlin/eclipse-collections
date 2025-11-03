@@ -10,8 +10,12 @@
 
 package org.eclipse.collections.test.list;
 
+import java.util.List;
+
+import org.eclipse.collections.api.factory.Lists;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface UnmodifiableListTestCase extends FixedSizeListTestCase
@@ -26,5 +30,34 @@ public interface UnmodifiableListTestCase extends FixedSizeListTestCase
 
         assertThrows(UnsupportedOperationException.class, () -> this.newWith().set(-1, 4));
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).set(4, 4));
+    }
+
+    @Override
+    @Test
+    default void List_subList()
+    {
+        List<Integer> list = this.newWith(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        List<Integer> sublist = list.subList(2, 8);
+        assertIterablesEqual(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, () -> sublist.set(0, 99));
+        assertIterablesEqual(Lists.immutable.with(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, () -> sublist.add(100));
+        assertIterablesEqual(Lists.immutable.with(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, () -> sublist.remove(Integer.valueOf(5)));
+        assertIterablesEqual(Lists.immutable.with(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, () -> sublist.add(1, 99));
+        assertIterablesEqual(Lists.immutable.with(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, sublist::clear);
+        assertIterablesEqual(Lists.immutable.with(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist);
     }
 }

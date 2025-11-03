@@ -31,6 +31,35 @@ public interface FixedSizeListTestCase extends FixedSizeCollectionTestCase, List
 
     @Override
     @Test
+    default void List_subList()
+    {
+        List<Integer> list = this.newWith(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        List<Integer> sublist = list.subList(2, 8);
+        assertIterablesEqual(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist);
+
+        sublist.set(0, 99);
+        assertIterablesEqual(Lists.immutable.with(0, 1, 99, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(99, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, () -> sublist.add(100));
+        assertIterablesEqual(Lists.immutable.with(0, 1, 99, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(99, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, () -> sublist.remove(Integer.valueOf(5)));
+        assertIterablesEqual(Lists.immutable.with(0, 1, 99, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(99, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, () -> sublist.add(1, 200));
+        assertIterablesEqual(Lists.immutable.with(0, 1, 99, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(99, 3, 4, 5, 6, 7), sublist);
+
+        assertThrows(UnsupportedOperationException.class, sublist::clear);
+        assertIterablesEqual(Lists.immutable.with(0, 1, 99, 3, 4, 5, 6, 7, 8, 9), list);
+        assertIterablesEqual(Lists.immutable.with(99, 3, 4, 5, 6, 7), sublist);
+    }
+
+    @Override
+    @Test
     default void List_subList_subList_remove()
     {
         List<String> list = this.newWith("A", "B", "C", "D");

@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test.list;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -32,6 +33,11 @@ public interface ListTestCase extends CollectionTestCase
     default boolean allowsDuplicates()
     {
         return true;
+    }
+
+    default boolean detectsConcurrentModification()
+    {
+        return false;
     }
 
     @Override
@@ -229,7 +235,52 @@ public interface ListTestCase extends CollectionTestCase
         assertEquals(Lists.immutable.with(99, 200, 4, 5, 6, 7, 100), sublist2);
 
         list.set(7, 300);
-        assertEquals(Lists.immutable.with(0, 1, 99, 200, 4, 5, 6, 7, 300, 100, 8, 9), list);
-        assertEquals(Lists.immutable.with(99, 200, 4, 5, 6, 7, 300, 100), sublist2);
+        assertEquals(Lists.immutable.with(0, 1, 99, 200, 4, 5, 6, 300, 100, 8, 9), list);
+        assertEquals(Lists.immutable.with(99, 200, 4, 5, 6, 300, 100), sublist2);
+
+        List<Integer> list2 = this.newWith(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        List<Integer> sublist3 = list2.subList(2, 8);
+        assertEquals(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist3);
+
+        sublist3.remove(Integer.valueOf(5));
+        assertEquals(Lists.immutable.with(0, 1, 2, 3, 4, 6, 7, 8, 9), list2);
+        assertEquals(Lists.immutable.with(2, 3, 4, 6, 7), sublist3);
+
+        sublist3.add(1, 99);
+        assertEquals(Lists.immutable.with(0, 1, 2, 99, 3, 4, 6, 7, 8, 9), list2);
+        assertEquals(Lists.immutable.with(2, 99, 3, 4, 6, 7), sublist3);
+
+        sublist3.clear();
+        assertEquals(Lists.immutable.with(0, 1, 8, 9), list2);
+        assertEquals(Lists.immutable.with(), sublist3);
+
+        List<Integer> list3 = this.newWith(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        List<Integer> sublist4 = list3.subList(2, 8);
+        assertEquals(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist4);
+
+        sublist4.add(1000);
+        assertEquals(Lists.immutable.with(0, 1, 2, 3, 4, 5, 6, 7, 1000, 8, 9), list3);
+        assertEquals(Lists.immutable.with(2, 3, 4, 5, 6, 7, 1000), sublist4);
+
+        sublist4.add(0, -1000);
+        assertEquals(Lists.immutable.with(0, 1, -1000, 2, 3, 4, 5, 6, 7, 1000, 8, 9), list3);
+        assertEquals(Lists.immutable.with(-1000, 2, 3, 4, 5, 6, 7, 1000), sublist4);
+
+        if (this.detectsConcurrentModification())
+        {
+            List<Integer> list4 = this.newWith(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+            List<Integer> sublist5 = list4.subList(2, 8);
+            assertEquals(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist5);
+
+            list4.add(100);
+            assertThrows(ConcurrentModificationException.class, () -> sublist5.get(0));
+
+            List<Integer> list5 = this.newWith(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+            List<Integer> sublist6 = list5.subList(2, 8);
+            assertEquals(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist6);
+
+            list5.remove(0);
+            assertThrows(ConcurrentModificationException.class, () -> sublist6.size());
+        }
     }
 }
