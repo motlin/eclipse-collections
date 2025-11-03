@@ -212,5 +212,24 @@ public interface ListTestCase extends CollectionTestCase
         assertEquals(Lists.immutable.with(1, 2, 3, 4, 5, 6, 7), innerSublist2);
         List<Integer> innerSublist3 = sublist.subList(1, 8);
         assertEquals(Lists.immutable.with(2, 3, 4, 5, 6, 7, 8), innerSublist3);
+
+        List<Integer> sublist2 = list.subList(2, 8);
+        assertEquals(Lists.immutable.with(2, 3, 4, 5, 6, 7), sublist2);
+
+        sublist2.set(0, 99);
+        assertEquals(Lists.immutable.with(0, 1, 99, 3, 4, 5, 6, 7, 8, 9), list);
+        assertEquals(Lists.immutable.with(99, 3, 4, 5, 6, 7), sublist2);
+
+        sublist2.add(100);
+        assertEquals(Lists.immutable.with(0, 1, 99, 3, 4, 5, 6, 7, 100, 8, 9), list);
+        assertEquals(Lists.immutable.with(99, 3, 4, 5, 6, 7, 100), sublist2);
+
+        list.set(3, 200);
+        assertEquals(Lists.immutable.with(0, 1, 99, 200, 4, 5, 6, 7, 100, 8, 9), list);
+        assertEquals(Lists.immutable.with(99, 200, 4, 5, 6, 7, 100), sublist2);
+
+        list.set(7, 300);
+        assertEquals(Lists.immutable.with(0, 1, 99, 200, 4, 5, 6, 7, 300, 100, 8, 9), list);
+        assertEquals(Lists.immutable.with(99, 200, 4, 5, 6, 7, 300, 100), sublist2);
     }
 }
