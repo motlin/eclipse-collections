@@ -163,6 +163,15 @@ public interface NavigableMapTestCase extends SortedMapTestCase
 
         assertThrows(IllegalArgumentException.class, () -> subMapInclusive.headMap(second, false));
         assertThrows(IllegalArgumentException.class, () -> subMapInclusive.headMap(eighth, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.headMap(first, false));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.headMap(first, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.headMap(ninth, false));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.headMap(tenth, true));
+
+        assertThrows(IllegalArgumentException.class, () -> subMapExclusive.headMap(second, false));
+        assertThrows(IllegalArgumentException.class, () -> subMapExclusive.headMap(third, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapExclusive.headMap(seventh, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapExclusive.headMap(eighth, true));
 
         assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(second, true));
         assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(eighth, false));

@@ -10,7 +10,7 @@
 
 package org.eclipse.collections.test.map.mutable.sorted;
 
-import java.util.SortedMap;
+import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
@@ -18,13 +18,13 @@ import org.eclipse.collections.impl.block.factory.Comparators;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class TreeMapTest implements SortedMapTestCase
+public class TreeMapTest implements NavigableMapTestCase
 {
     @Override
-    public <T> SortedMap<Object, T> newWith(T... elements)
+    public <T> NavigableMap<Object, T> newWith(T... elements)
     {
         int i = elements.length;
-        SortedMap<Object, T> result = new TreeMap<>(Comparators.reverseNaturalOrder());
+        NavigableMap<Object, T> result = new TreeMap<>(Comparators.reverseNaturalOrder());
         for (T each : elements)
         {
             assertNull(result.put(i, each));
@@ -34,14 +34,14 @@ public class TreeMapTest implements SortedMapTestCase
     }
 
     @Override
-    public <K, V> SortedMap<K, V> newWithKeysValues(Object... elements)
+    public <K, V> NavigableMap<K, V> newWithKeysValues(Object... elements)
     {
         if (elements.length % 2 != 0)
         {
             fail(String.valueOf(elements.length));
         }
 
-        SortedMap<K, V> result = new TreeMap<>(Comparators.reverseNaturalOrder());
+        NavigableMap<K, V> result = new TreeMap<>(Comparators.reverseNaturalOrder());
         for (int i = 0; i < elements.length; i += 2)
         {
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
