@@ -500,5 +500,17 @@ public interface SortedSetTestCase extends CollectionTestCase
         SortedSet<Integer> tailView = set4.tailSet(5);
         assertEquals(Integer.valueOf(5), tailView.first());
         assertEquals(Integer.valueOf(1), tailView.last());
+
+        SortedSet<Integer> emptySubSet = set4.subSet(5, 5);
+        assertThrows(NoSuchElementException.class, emptySubSet::first);
+        assertThrows(NoSuchElementException.class, emptySubSet::last);
+
+        SortedSet<Integer> emptyHeadSet = set4.headSet(10);
+        assertThrows(NoSuchElementException.class, emptyHeadSet::first);
+        assertThrows(NoSuchElementException.class, emptyHeadSet::last);
+
+        SortedSet<Integer> emptyTailSet = set4.tailSet(0);
+        assertThrows(NoSuchElementException.class, emptyTailSet::first);
+        assertThrows(NoSuchElementException.class, emptyTailSet::last);
     }
 }
