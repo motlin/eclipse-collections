@@ -208,6 +208,124 @@ public interface NavigableMapTestCase extends SortedMapTestCase
         assertThrows(IllegalArgumentException.class, () -> tailMapExclusive.put(first, "1"));
         assertThrows(IllegalArgumentException.class, () -> tailMapExclusive.put(fifth, "5"));
 
+        assertEquals(Map.entry(fourth, map.get(fourth)), subMapInclusive.lowerEntry(fifth));
+        assertEquals(Map.entry(third, map.get(third)), subMapInclusive.lowerEntry(fourth));
+        assertEquals(null, subMapInclusive.lowerEntry(third));
+        assertEquals(Map.entry(sixth, map.get(sixth)), subMapInclusive.lowerEntry(seventh));
+        assertEquals(null, subMapInclusive.lowerEntry(second));
+        // TreeMap returns boundary entry for keys outside subMap range
+        assertEquals(Map.entry(seventh, map.get(seventh)), subMapInclusive.lowerEntry(eighth));
+
+        assertEquals(Map.entry(fifth, map.get(fifth)), subMapInclusive.floorEntry(fifth));
+        assertEquals(Map.entry(fourth, map.get(fourth)), subMapInclusive.floorEntry(fourth));
+        assertEquals(Map.entry(third, map.get(third)), subMapInclusive.floorEntry(third));
+        assertEquals(Map.entry(seventh, map.get(seventh)), subMapInclusive.floorEntry(seventh));
+        assertEquals(null, subMapInclusive.floorEntry(second));
+        // TreeMap returns boundary entry for keys outside subMap range
+        assertEquals(Map.entry(seventh, map.get(seventh)), subMapInclusive.floorEntry(eighth));
+
+        assertEquals(Map.entry(fifth, map.get(fifth)), subMapInclusive.ceilingEntry(fifth));
+        assertEquals(Map.entry(fourth, map.get(fourth)), subMapInclusive.ceilingEntry(fourth));
+        assertEquals(Map.entry(third, map.get(third)), subMapInclusive.ceilingEntry(third));
+        assertEquals(Map.entry(seventh, map.get(seventh)), subMapInclusive.ceilingEntry(seventh));
+        assertEquals(Map.entry(third, map.get(third)), subMapInclusive.ceilingEntry(second));
+        assertEquals(null, subMapInclusive.ceilingEntry(eighth));
+
+        assertEquals(Map.entry(sixth, map.get(sixth)), subMapInclusive.higherEntry(fifth));
+        assertEquals(Map.entry(fifth, map.get(fifth)), subMapInclusive.higherEntry(fourth));
+        assertEquals(Map.entry(fourth, map.get(fourth)), subMapInclusive.higherEntry(third));
+        assertEquals(null, subMapInclusive.higherEntry(seventh));
+        assertEquals(Map.entry(third, map.get(third)), subMapInclusive.higherEntry(second));
+        assertEquals(null, subMapInclusive.higherEntry(eighth));
+
+        assertEquals(Map.entry(fourth, map.get(fourth)), subMapExclusive.lowerEntry(fifth));
+        assertEquals(null, subMapExclusive.lowerEntry(fourth));
+        assertEquals(null, subMapExclusive.lowerEntry(third));
+        assertEquals(Map.entry(sixth, map.get(sixth)), subMapExclusive.lowerEntry(seventh));
+
+        assertEquals(Map.entry(sixth, map.get(sixth)), subMapExclusive.floorEntry(sixth));
+        assertEquals(Map.entry(fifth, map.get(fifth)), subMapExclusive.floorEntry(fifth));
+        assertEquals(null, subMapExclusive.floorEntry(third));
+        // TreeMap returns boundary entry for keys outside subMap range
+        assertEquals(Map.entry(sixth, map.get(sixth)), subMapExclusive.floorEntry(seventh));
+
+        assertEquals(Map.entry(sixth, map.get(sixth)), subMapExclusive.ceilingEntry(sixth));
+        assertEquals(Map.entry(fifth, map.get(fifth)), subMapExclusive.ceilingEntry(fifth));
+        assertEquals(Map.entry(fourth, map.get(fourth)), subMapExclusive.ceilingEntry(third));
+        assertEquals(null, subMapExclusive.ceilingEntry(seventh));
+
+        assertEquals(null, subMapExclusive.higherEntry(sixth));
+        assertEquals(Map.entry(sixth, map.get(sixth)), subMapExclusive.higherEntry(fifth));
+        assertEquals(Map.entry(fourth, map.get(fourth)), subMapExclusive.higherEntry(third));
+        assertEquals(null, subMapExclusive.higherEntry(seventh));
+
+        assertEquals(Map.entry(fourth, map.get(fourth)), headMapInclusive.lowerEntry(fifth));
+        assertEquals(null, headMapInclusive.lowerEntry(first));
+        // TreeMap returns boundary entry for keys outside subMap range
+        assertEquals(Map.entry(fifth, map.get(fifth)), headMapInclusive.lowerEntry(sixth));
+
+        assertEquals(Map.entry(fifth, map.get(fifth)), headMapInclusive.floorEntry(fifth));
+        assertEquals(Map.entry(first, map.get(first)), headMapInclusive.floorEntry(first));
+        // TreeMap returns boundary entry for keys outside subMap range
+        assertEquals(Map.entry(fifth, map.get(fifth)), headMapInclusive.floorEntry(sixth));
+
+        assertEquals(Map.entry(fifth, map.get(fifth)), headMapInclusive.ceilingEntry(fifth));
+        assertEquals(Map.entry(first, map.get(first)), headMapInclusive.ceilingEntry(first));
+        assertEquals(null, headMapInclusive.ceilingEntry(sixth));
+
+        assertEquals(null, headMapInclusive.higherEntry(fifth));
+        assertEquals(Map.entry(second, map.get(second)), headMapInclusive.higherEntry(first));
+        assertEquals(null, headMapInclusive.higherEntry(sixth));
+
+        assertEquals(Map.entry(third, map.get(third)), headMapExclusive.lowerEntry(fourth));
+        assertEquals(null, headMapExclusive.lowerEntry(first));
+        assertEquals(Map.entry(fourth, map.get(fourth)), headMapExclusive.lowerEntry(fifth));
+
+        assertEquals(Map.entry(fourth, map.get(fourth)), headMapExclusive.floorEntry(fourth));
+        assertEquals(Map.entry(first, map.get(first)), headMapExclusive.floorEntry(first));
+        assertEquals(Map.entry(fourth, map.get(fourth)), headMapExclusive.floorEntry(fifth));
+
+        assertEquals(Map.entry(fourth, map.get(fourth)), headMapExclusive.ceilingEntry(fourth));
+        assertEquals(Map.entry(first, map.get(first)), headMapExclusive.ceilingEntry(first));
+        assertEquals(null, headMapExclusive.ceilingEntry(fifth));
+
+        assertEquals(null, headMapExclusive.higherEntry(fourth));
+        assertEquals(Map.entry(second, map.get(second)), headMapExclusive.higherEntry(first));
+        assertEquals(null, headMapExclusive.higherEntry(fifth));
+
+        assertEquals(Map.entry(ninth, map.get(ninth)), tailMapInclusive.lowerEntry(tenth));
+        assertEquals(null, tailMapInclusive.lowerEntry(fifth));
+        assertEquals(null, tailMapInclusive.lowerEntry(fourth));
+
+        assertEquals(Map.entry(tenth, map.get(tenth)), tailMapInclusive.floorEntry(tenth));
+        assertEquals(Map.entry(fifth, map.get(fifth)), tailMapInclusive.floorEntry(fifth));
+        assertEquals(null, tailMapInclusive.floorEntry(fourth));
+
+        assertEquals(Map.entry(tenth, map.get(tenth)), tailMapInclusive.ceilingEntry(tenth));
+        assertEquals(Map.entry(fifth, map.get(fifth)), tailMapInclusive.ceilingEntry(fifth));
+        assertEquals(Map.entry(fifth, map.get(fifth)), tailMapInclusive.ceilingEntry(fourth));
+
+        assertEquals(null, tailMapInclusive.higherEntry(tenth));
+        assertEquals(Map.entry(sixth, map.get(sixth)), tailMapInclusive.higherEntry(fifth));
+        assertEquals(Map.entry(fifth, map.get(fifth)), tailMapInclusive.higherEntry(fourth));
+
+        assertEquals(Map.entry(ninth, map.get(ninth)), tailMapExclusive.lowerEntry(tenth));
+        assertEquals(Map.entry(sixth, map.get(sixth)), tailMapExclusive.lowerEntry(seventh));
+        assertEquals(null, tailMapExclusive.lowerEntry(sixth));
+
+        assertEquals(Map.entry(tenth, map.get(tenth)), tailMapExclusive.floorEntry(tenth));
+        assertEquals(Map.entry(seventh, map.get(seventh)), tailMapExclusive.floorEntry(seventh));
+        assertEquals(null, tailMapExclusive.floorEntry(fifth));
+
+        assertEquals(Map.entry(tenth, map.get(tenth)), tailMapExclusive.ceilingEntry(tenth));
+        assertEquals(Map.entry(seventh, map.get(seventh)), tailMapExclusive.ceilingEntry(seventh));
+        // TreeMap returns boundary entry for keys outside subMap range
+        assertEquals(Map.entry(sixth, map.get(sixth)), tailMapExclusive.ceilingEntry(fifth));
+
+        assertEquals(null, tailMapExclusive.higherEntry(tenth));
+        assertEquals(Map.entry(eighth, map.get(eighth)), tailMapExclusive.higherEntry(seventh));
+        assertEquals(Map.entry(sixth, map.get(sixth)), tailMapExclusive.higherEntry(fifth));
+
         if (comparator != null && comparator.compare(first, second) == -1 && first.compareTo(second) == 1)
         {
             assertThrows(IllegalArgumentException.class, () -> map.subMap(ninth, true, first, false));
