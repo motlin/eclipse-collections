@@ -265,6 +265,9 @@ public interface SortedMapTestCase extends MapTestCase
             assertIterablesEqual(this.newWithKeysValues(2, "Two", 3, "Three", 4, "Four", 5, "Five"), subMapBetweenElements.headMap(6));
             assertIterablesEqual(this.newWithKeysValues(5, "Five", 6, "Six", 7, "Seven", 8, "Eight"), subMapBetweenElements.tailMap(5));
 
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.subMap(10, 5));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.subMap(5, 1));
+
             assertThrows(IllegalArgumentException.class, () -> map.subMap(10, 5));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(7, 2));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(Integer.MAX_VALUE, Integer.MIN_VALUE));
@@ -312,6 +315,9 @@ public interface SortedMapTestCase extends MapTestCase
             assertIterablesEqual(this.newWithKeysValues(7, "Seven", 6, "Six", 5, "Five"), subMapBetweenElements.subMap(7, 4));
             assertIterablesEqual(this.newWithKeysValues(9, "Nine", 8, "Eight", 7, "Seven"), subMapBetweenElements.headMap(6));
             assertIterablesEqual(this.newWithKeysValues(5, "Five", 4, "Four", 3, "Three"), subMapBetweenElements.tailMap(5));
+
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.subMap(5, 10));
+            assertThrows(IllegalArgumentException.class, () -> subMapBetweenElements.subMap(1, 5));
 
             assertThrows(IllegalArgumentException.class, () -> map.subMap(5, 10));
             assertThrows(IllegalArgumentException.class, () -> map.subMap(2, 7));
