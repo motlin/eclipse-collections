@@ -443,6 +443,239 @@ public interface NavigableSetTestCase extends SortedSetTestCase
             assertEquals(lastNegative, negativeSet.ceiling(lastNegative));
             assertNull(negativeSet.higher(lastNegative));
         }
+
+        NavigableSet<Integer> viewSet = this.newWith(1, 3, 5, 7, 9, 11, 13, 15, 17, 19);
+        Comparator<? super Integer> viewComparator = viewSet.comparator();
+        assertEquals(10, viewSet.size());
+
+        if (viewComparator == null)
+        {
+            NavigableSet<Integer> subSetView = viewSet.subSet(5, true, 15, true);
+            assertEquals(6, subSetView.size());
+
+            assertNull(subSetView.lower(5));
+            assertEquals(Integer.valueOf(5), subSetView.floor(5));
+            assertEquals(Integer.valueOf(5), subSetView.ceiling(5));
+            assertEquals(Integer.valueOf(7), subSetView.higher(5));
+
+            assertEquals(Integer.valueOf(5), subSetView.lower(6));
+            assertEquals(Integer.valueOf(5), subSetView.floor(6));
+            assertEquals(Integer.valueOf(7), subSetView.ceiling(6));
+            assertEquals(Integer.valueOf(7), subSetView.higher(6));
+
+            assertEquals(Integer.valueOf(7), subSetView.lower(9));
+            assertEquals(Integer.valueOf(9), subSetView.floor(9));
+            assertEquals(Integer.valueOf(9), subSetView.ceiling(9));
+            assertEquals(Integer.valueOf(11), subSetView.higher(9));
+
+            assertEquals(Integer.valueOf(13), subSetView.lower(15));
+            assertEquals(Integer.valueOf(15), subSetView.floor(15));
+            assertEquals(Integer.valueOf(15), subSetView.ceiling(15));
+            assertNull(subSetView.higher(15));
+
+            assertEquals(Integer.valueOf(15), subSetView.lower(16));
+            assertEquals(Integer.valueOf(15), subSetView.floor(16));
+            assertNull(subSetView.ceiling(16));
+            assertNull(subSetView.higher(16));
+
+            assertNull(subSetView.lower(4));
+            assertNull(subSetView.floor(4));
+            assertEquals(Integer.valueOf(5), subSetView.ceiling(4));
+            assertEquals(Integer.valueOf(5), subSetView.higher(4));
+
+            NavigableSet<Integer> subSetExclusiveView = viewSet.subSet(5, false, 15, false);
+            assertEquals(4, subSetExclusiveView.size());
+
+            assertNull(subSetExclusiveView.lower(7));
+            assertEquals(Integer.valueOf(7), subSetExclusiveView.floor(7));
+            assertEquals(Integer.valueOf(7), subSetExclusiveView.ceiling(7));
+            assertEquals(Integer.valueOf(9), subSetExclusiveView.higher(7));
+
+            assertEquals(Integer.valueOf(11), subSetExclusiveView.lower(13));
+            assertEquals(Integer.valueOf(13), subSetExclusiveView.floor(13));
+            assertEquals(Integer.valueOf(13), subSetExclusiveView.ceiling(13));
+            assertNull(subSetExclusiveView.higher(13));
+
+            assertNull(subSetExclusiveView.lower(6));
+            assertNull(subSetExclusiveView.floor(6));
+            assertEquals(Integer.valueOf(7), subSetExclusiveView.ceiling(6));
+            assertEquals(Integer.valueOf(7), subSetExclusiveView.higher(6));
+
+            NavigableSet<Integer> headSetView = viewSet.headSet(11, true);
+            assertEquals(6, headSetView.size());
+
+            assertNull(headSetView.lower(1));
+            assertEquals(Integer.valueOf(1), headSetView.floor(1));
+            assertEquals(Integer.valueOf(1), headSetView.ceiling(1));
+            assertEquals(Integer.valueOf(3), headSetView.higher(1));
+
+            assertEquals(Integer.valueOf(5), headSetView.lower(7));
+            assertEquals(Integer.valueOf(7), headSetView.floor(7));
+            assertEquals(Integer.valueOf(7), headSetView.ceiling(7));
+            assertEquals(Integer.valueOf(9), headSetView.higher(7));
+
+            assertEquals(Integer.valueOf(9), headSetView.lower(11));
+            assertEquals(Integer.valueOf(11), headSetView.floor(11));
+            assertEquals(Integer.valueOf(11), headSetView.ceiling(11));
+            assertNull(headSetView.higher(11));
+
+            assertEquals(Integer.valueOf(11), headSetView.lower(12));
+            assertEquals(Integer.valueOf(11), headSetView.floor(12));
+            assertNull(headSetView.ceiling(12));
+            assertNull(headSetView.higher(12));
+
+            NavigableSet<Integer> headSetExclusiveView = viewSet.headSet(11, false);
+            assertEquals(5, headSetExclusiveView.size());
+
+            assertEquals(Integer.valueOf(7), headSetExclusiveView.lower(9));
+            assertEquals(Integer.valueOf(9), headSetExclusiveView.floor(9));
+            assertEquals(Integer.valueOf(9), headSetExclusiveView.ceiling(9));
+            assertNull(headSetExclusiveView.higher(9));
+
+            assertEquals(Integer.valueOf(9), headSetExclusiveView.lower(10));
+            assertEquals(Integer.valueOf(9), headSetExclusiveView.floor(10));
+            assertNull(headSetExclusiveView.ceiling(10));
+            assertNull(headSetExclusiveView.higher(10));
+
+            NavigableSet<Integer> tailSetView = viewSet.tailSet(9, true);
+            assertEquals(6, tailSetView.size());
+
+            assertNull(tailSetView.lower(9));
+            assertEquals(Integer.valueOf(9), tailSetView.floor(9));
+            assertEquals(Integer.valueOf(9), tailSetView.ceiling(9));
+            assertEquals(Integer.valueOf(11), tailSetView.higher(9));
+
+            assertEquals(Integer.valueOf(11), tailSetView.lower(13));
+            assertEquals(Integer.valueOf(13), tailSetView.floor(13));
+            assertEquals(Integer.valueOf(13), tailSetView.ceiling(13));
+            assertEquals(Integer.valueOf(15), tailSetView.higher(13));
+
+            assertEquals(Integer.valueOf(17), tailSetView.lower(19));
+            assertEquals(Integer.valueOf(19), tailSetView.floor(19));
+            assertEquals(Integer.valueOf(19), tailSetView.ceiling(19));
+            assertNull(tailSetView.higher(19));
+
+            assertNull(tailSetView.lower(8));
+            assertNull(tailSetView.floor(8));
+            assertEquals(Integer.valueOf(9), tailSetView.ceiling(8));
+            assertEquals(Integer.valueOf(9), tailSetView.higher(8));
+
+            NavigableSet<Integer> tailSetExclusiveView = viewSet.tailSet(9, false);
+            assertEquals(5, tailSetExclusiveView.size());
+
+            assertNull(tailSetExclusiveView.lower(11));
+            assertEquals(Integer.valueOf(11), tailSetExclusiveView.floor(11));
+            assertEquals(Integer.valueOf(11), tailSetExclusiveView.ceiling(11));
+            assertEquals(Integer.valueOf(13), tailSetExclusiveView.higher(11));
+
+            assertNull(tailSetExclusiveView.lower(10));
+            assertNull(tailSetExclusiveView.floor(10));
+            assertEquals(Integer.valueOf(11), tailSetExclusiveView.ceiling(10));
+            assertEquals(Integer.valueOf(11), tailSetExclusiveView.higher(10));
+        }
+        else
+        {
+            Iterator<Integer> viewIterator = viewSet.iterator();
+            Integer firstView = viewIterator.next();
+            Integer secondView = viewIterator.next();
+            Integer thirdView = viewIterator.next();
+            Integer fourthView = viewIterator.next();
+            Integer fifthView = viewIterator.next();
+            Integer sixthView = viewIterator.next();
+            Integer seventhView = viewIterator.next();
+            Integer eighthView = viewIterator.next();
+            Integer ninthView = viewIterator.next();
+            Integer tenthView = viewIterator.next();
+
+            assertEquals(-1, Integer.signum(viewComparator.compare(firstView, secondView)));
+            assertEquals(-1, Integer.signum(viewComparator.compare(secondView, thirdView)));
+            assertEquals(-1, Integer.signum(viewComparator.compare(thirdView, fourthView)));
+            assertEquals(-1, Integer.signum(viewComparator.compare(fourthView, fifthView)));
+            assertEquals(-1, Integer.signum(viewComparator.compare(fifthView, sixthView)));
+
+            NavigableSet<Integer> subSetView = viewSet.subSet(thirdView, true, seventhView, true);
+            assertEquals(5, subSetView.size());
+
+            assertNull(subSetView.lower(thirdView));
+            assertEquals(thirdView, subSetView.floor(thirdView));
+            assertEquals(thirdView, subSetView.ceiling(thirdView));
+            assertEquals(fourthView, subSetView.higher(thirdView));
+
+            assertEquals(fourthView, subSetView.lower(fifthView));
+            assertEquals(fifthView, subSetView.floor(fifthView));
+            assertEquals(fifthView, subSetView.ceiling(fifthView));
+            assertEquals(sixthView, subSetView.higher(fifthView));
+
+            assertEquals(sixthView, subSetView.lower(seventhView));
+            assertEquals(seventhView, subSetView.floor(seventhView));
+            assertEquals(seventhView, subSetView.ceiling(seventhView));
+            assertNull(subSetView.higher(seventhView));
+
+            NavigableSet<Integer> subSetExclusiveView = viewSet.subSet(thirdView, false, seventhView, false);
+            assertEquals(3, subSetExclusiveView.size());
+
+            assertNull(subSetExclusiveView.lower(fourthView));
+            assertEquals(fourthView, subSetExclusiveView.floor(fourthView));
+            assertEquals(fourthView, subSetExclusiveView.ceiling(fourthView));
+            assertEquals(fifthView, subSetExclusiveView.higher(fourthView));
+
+            assertEquals(fifthView, subSetExclusiveView.lower(sixthView));
+            assertEquals(sixthView, subSetExclusiveView.floor(sixthView));
+            assertEquals(sixthView, subSetExclusiveView.ceiling(sixthView));
+            assertNull(subSetExclusiveView.higher(sixthView));
+
+            NavigableSet<Integer> headSetView = viewSet.headSet(sixthView, true);
+            assertEquals(6, headSetView.size());
+
+            assertNull(headSetView.lower(firstView));
+            assertEquals(firstView, headSetView.floor(firstView));
+            assertEquals(firstView, headSetView.ceiling(firstView));
+            assertEquals(secondView, headSetView.higher(firstView));
+
+            assertEquals(fourthView, headSetView.lower(fifthView));
+            assertEquals(fifthView, headSetView.floor(fifthView));
+            assertEquals(fifthView, headSetView.ceiling(fifthView));
+            assertEquals(sixthView, headSetView.higher(fifthView));
+
+            assertEquals(fifthView, headSetView.lower(sixthView));
+            assertEquals(sixthView, headSetView.floor(sixthView));
+            assertEquals(sixthView, headSetView.ceiling(sixthView));
+            assertNull(headSetView.higher(sixthView));
+
+            NavigableSet<Integer> headSetExclusiveView = viewSet.headSet(sixthView, false);
+            assertEquals(5, headSetExclusiveView.size());
+
+            assertEquals(fourthView, headSetExclusiveView.lower(fifthView));
+            assertEquals(fifthView, headSetExclusiveView.floor(fifthView));
+            assertEquals(fifthView, headSetExclusiveView.ceiling(fifthView));
+            assertNull(headSetExclusiveView.higher(fifthView));
+
+            NavigableSet<Integer> tailSetView = viewSet.tailSet(fifthView, true);
+            assertEquals(6, tailSetView.size());
+
+            assertNull(tailSetView.lower(fifthView));
+            assertEquals(fifthView, tailSetView.floor(fifthView));
+            assertEquals(fifthView, tailSetView.ceiling(fifthView));
+            assertEquals(sixthView, tailSetView.higher(fifthView));
+
+            assertEquals(sixthView, tailSetView.lower(seventhView));
+            assertEquals(seventhView, tailSetView.floor(seventhView));
+            assertEquals(seventhView, tailSetView.ceiling(seventhView));
+            assertEquals(eighthView, tailSetView.higher(seventhView));
+
+            assertEquals(ninthView, tailSetView.lower(tenthView));
+            assertEquals(tenthView, tailSetView.floor(tenthView));
+            assertEquals(tenthView, tailSetView.ceiling(tenthView));
+            assertNull(tailSetView.higher(tenthView));
+
+            NavigableSet<Integer> tailSetExclusiveView = viewSet.tailSet(fifthView, false);
+            assertEquals(5, tailSetExclusiveView.size());
+
+            assertNull(tailSetExclusiveView.lower(sixthView));
+            assertEquals(sixthView, tailSetExclusiveView.floor(sixthView));
+            assertEquals(sixthView, tailSetExclusiveView.ceiling(sixthView));
+            assertEquals(seventhView, tailSetExclusiveView.higher(sixthView));
+        }
     }
 
     @Test
