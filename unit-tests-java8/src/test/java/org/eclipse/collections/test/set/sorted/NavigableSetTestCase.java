@@ -1401,6 +1401,9 @@ public interface NavigableSetTestCase extends SortedSetTestCase
         assertThrows(IllegalArgumentException.class, () -> subSetInclusive.subSet(second, true, sixth, false));
         assertThrows(IllegalArgumentException.class, () -> subSetInclusive.subSet(fourth, true, eighth, false));
 
+        assertThrows(IllegalArgumentException.class, () -> subSetInclusive.headSet(second, false));
+        assertThrows(IllegalArgumentException.class, () -> subSetInclusive.headSet(eighth, true));
+
         if (comparator != null && comparator.compare(first, second) == -1 && first.compareTo(second) == 1)
         {
             assertThrows(IllegalArgumentException.class, () -> set.subSet(ninth, true, first, false));
