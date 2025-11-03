@@ -706,6 +706,10 @@ public interface SortedMapTestCase extends MapTestCase
             assertEquals(Integer.valueOf(5), nestedTailMapFromSubMap.firstKey());
             assertEquals(Integer.valueOf(4), nestedTailMapFromSubMap.lastKey());
         }
+
+        SortedMap<Integer, String> emptyNestedSubMap = subMapView.subMap(isNaturalOrder ? 4 : 6, isNaturalOrder ? 4 : 6);
+        assertThrows(NoSuchElementException.class, () -> emptyNestedSubMap.firstKey());
+        assertThrows(NoSuchElementException.class, () -> emptyNestedSubMap.lastKey());
     }
 
     @Test
