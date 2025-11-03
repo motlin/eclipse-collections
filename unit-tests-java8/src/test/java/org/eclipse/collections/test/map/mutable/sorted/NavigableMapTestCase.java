@@ -174,7 +174,19 @@ public interface NavigableMapTestCase extends SortedMapTestCase
         assertThrows(IllegalArgumentException.class, () -> subMapExclusive.headMap(eighth, true));
 
         assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(second, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(second, false));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(first, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(first, false));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(eighth, true));
         assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(eighth, false));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(ninth, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(ninth, false));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(tenth, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapInclusive.tailMap(tenth, false));
+
+        assertThrows(IllegalArgumentException.class, () -> subMapExclusive.tailMap(second, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapExclusive.tailMap(third, true));
+        assertThrows(IllegalArgumentException.class, () -> subMapExclusive.tailMap(eighth, true));
 
         assertThrows(IllegalArgumentException.class, () -> subMapInclusive.put(second, "2"));
         assertThrows(IllegalArgumentException.class, () -> subMapInclusive.put(eighth, "8"));
