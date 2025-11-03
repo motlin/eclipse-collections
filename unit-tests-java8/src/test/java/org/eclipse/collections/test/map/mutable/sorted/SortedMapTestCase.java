@@ -644,6 +644,68 @@ public interface SortedMapTestCase extends MapTestCase
             assertEquals(Integer.valueOf(Integer.MAX_VALUE), extremeMap.firstKey());
             assertEquals(Integer.valueOf(Integer.MIN_VALUE), extremeMap.lastKey());
         }
+
+        SortedMap<Integer, String> viewTestMap = this.newWithKeysValues(1, "One", 2, "Two", 3, "Three", 4, "Four", 5, "Five", 6, "Six", 7, "Seven", 8, "Eight", 9, "Nine");
+
+        SortedMap<Integer, String> subMapView = viewTestMap.subMap(isNaturalOrder ? 3 : 7, isNaturalOrder ? 7 : 3);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(3), subMapView.firstKey());
+            assertEquals(Integer.valueOf(6), subMapView.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(7), subMapView.firstKey());
+            assertEquals(Integer.valueOf(4), subMapView.lastKey());
+        }
+
+        SortedMap<Integer, String> headMapView = viewTestMap.headMap(isNaturalOrder ? 6 : 4);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(1), headMapView.firstKey());
+            assertEquals(Integer.valueOf(5), headMapView.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(9), headMapView.firstKey());
+            assertEquals(Integer.valueOf(5), headMapView.lastKey());
+        }
+
+        SortedMap<Integer, String> tailMapView = viewTestMap.tailMap(isNaturalOrder ? 4 : 6);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(4), tailMapView.firstKey());
+            assertEquals(Integer.valueOf(9), tailMapView.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(6), tailMapView.firstKey());
+            assertEquals(Integer.valueOf(1), tailMapView.lastKey());
+        }
+
+        SortedMap<Integer, String> nestedHeadMapFromSubMap = subMapView.headMap(isNaturalOrder ? 5 : 5);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(3), nestedHeadMapFromSubMap.firstKey());
+            assertEquals(Integer.valueOf(4), nestedHeadMapFromSubMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(7), nestedHeadMapFromSubMap.firstKey());
+            assertEquals(Integer.valueOf(6), nestedHeadMapFromSubMap.lastKey());
+        }
+
+        SortedMap<Integer, String> nestedTailMapFromSubMap = subMapView.tailMap(isNaturalOrder ? 5 : 5);
+        if (isNaturalOrder)
+        {
+            assertEquals(Integer.valueOf(5), nestedTailMapFromSubMap.firstKey());
+            assertEquals(Integer.valueOf(6), nestedTailMapFromSubMap.lastKey());
+        }
+        else
+        {
+            assertEquals(Integer.valueOf(5), nestedTailMapFromSubMap.firstKey());
+            assertEquals(Integer.valueOf(4), nestedTailMapFromSubMap.lastKey());
+        }
     }
 
     @Test
