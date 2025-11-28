@@ -1264,6 +1264,111 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
             </build>
         </profile>
 
+        <profile>
+            <id>errorprone-strict</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <fork>true</fork>
+                            <compilerArgs combine.children="append">
+                                <arg>-XDcompilePolicy=simple</arg>
+                                <arg>--should-stop=ifError=FLOW</arg>
+                                <arg>-Xplugin:ErrorProne \
+                                    -XepExcludedPaths:.*/generated-sources/.* \
+                                    -Xep:EqualsWrongThing:OFF \
+                                    -Xep:ComparisonOutOfRange:OFF \
+                                    -Xep:SelfAssertion:OFF \
+                                    -Xep:SelfEquals:OFF \
+                                    -Xep:SelfComparison:OFF \
+                                    -Xep:IdentityBinaryExpression:OFF \
+                                    -Xep:IsInstanceIncompatibleType:OFF \
+                                    -Xep:CollectionIncompatibleType:OFF \
+                                    -Xep:ReturnValueIgnored:OFF \
+                                    -Xep:UnnecessaryTypeArgument:OFF \
+                                    -Xep:BadImport:ERROR \
+                                    -Xep:InvalidInlineTag:ERROR \
+                                    -Xep:JavaDurationGetSecondsToToSeconds:ERROR \
+                                    -Xep:ObjectToString:ERROR</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                            <annotationProcessorPaths combine.self="override">
+                                <path>
+                                    <groupId>com.google.errorprone</groupId>
+                                    <artifactId>error_prone_core</artifactId>
+                                    <version>2.36.0</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>errorprone-patch</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <fork>true</fork>
+                            <compilerArgs combine.children="append">
+                                <arg>-XDcompilePolicy=simple</arg>
+                                <arg>--should-stop=ifError=FLOW</arg>
+                                <arg>-Xplugin:ErrorProne \
+                                    -XepExcludedPaths:.*/generated-sources/.* \
+                                    -XepPatchChecks:ERROR \
+                                    -XepPatchLocation:${project.build.directory}/errorprone \
+                                    -Xep:EqualsWrongThing:OFF \
+                                    -Xep:ComparisonOutOfRange:OFF \
+                                    -Xep:SelfAssertion:OFF \
+                                    -Xep:SelfEquals:OFF \
+                                    -Xep:SelfComparison:OFF \
+                                    -Xep:IdentityBinaryExpression:OFF \
+                                    -Xep:IsInstanceIncompatibleType:OFF \
+                                    -Xep:CollectionIncompatibleType:OFF \
+                                    -Xep:ReturnValueIgnored:OFF \
+                                    -Xep:UnnecessaryTypeArgument:OFF \
+                                    -Xep:BadImport:ERROR \
+                                    -Xep:InvalidInlineTag:ERROR \
+                                    -Xep:JavaDurationGetSecondsToToSeconds:ERROR \
+                                    -Xep:ObjectToString:ERROR</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                            <annotationProcessorPaths combine.self="override">
+                                <path>
+                                    <groupId>com.google.errorprone</groupId>
+                                    <artifactId>error_prone_core</artifactId>
+                                    <version>2.36.0</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <!--endregion Phase 7: compile-->
         <!--region Phase 21: verify-->
         <profile>
