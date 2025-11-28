@@ -16,6 +16,7 @@ import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.lazy.DistinctIterable;
 import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.OrderingType;
 import org.eclipse.collections.test.RichIterableUniqueTestCase;
 import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.eclipse.collections.test.list.mutable.FastListNoIterator;
@@ -23,6 +24,12 @@ import org.junit.jupiter.api.Test;
 
 public class DistinctIterableTestNoIteratorTest implements NoIteratorTestCase, RichIterableUniqueTestCase, TransformsToListTrait
 {
+    @Override
+    public OrderingType getOrderingType()
+    {
+        return OrderingType.INSERTION_ORDER;
+    }
+
     @Override
     public <T> LazyIterable<T> newWith(T... elements)
     {

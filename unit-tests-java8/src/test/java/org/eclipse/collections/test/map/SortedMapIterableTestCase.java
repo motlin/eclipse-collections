@@ -21,6 +21,7 @@ import org.eclipse.collections.api.map.sorted.SortedMapIterable;
 import org.eclipse.collections.api.partition.ordered.PartitionOrderedIterable;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.test.OrderedIterableTestCase;
+import org.eclipse.collections.test.OrderingType;
 import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.junit.jupiter.api.Test;
 

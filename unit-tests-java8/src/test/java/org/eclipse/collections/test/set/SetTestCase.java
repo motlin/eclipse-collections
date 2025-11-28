@@ -18,6 +18,7 @@ import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.test.CollectionTestCase;
+import org.eclipse.collections.test.OrderingType;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertPostSerializedEqualsAndHashCode;

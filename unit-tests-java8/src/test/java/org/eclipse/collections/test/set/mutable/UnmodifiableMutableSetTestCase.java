@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test.set.mutable;
 
+import org.eclipse.collections.test.OrderingType;
 import org.eclipse.collections.test.UnmodifiableMutableCollectionTestCase;
 import org.eclipse.collections.test.set.UnmodifiableSetTestCase;
 import org.junit.jupiter.api.Test;
