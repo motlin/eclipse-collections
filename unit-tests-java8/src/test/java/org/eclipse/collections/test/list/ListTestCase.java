@@ -16,6 +16,7 @@ import java.util.ListIterator;
 
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.test.CollectionTestCase;
+import org.eclipse.collections.test.OrderingType;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
@@ -32,6 +33,12 @@ public interface ListTestCase extends CollectionTestCase
     default boolean allowsDuplicates()
     {
         return true;
+    }
+
+    @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.INSERTION_ORDER;
     }
 
     @Override

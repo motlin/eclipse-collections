@@ -20,6 +20,7 @@ import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.test.MutableOrderedIterableTestCase;
+import org.eclipse.collections.test.OrderingType;
 import org.eclipse.collections.test.collection.mutable.MutableCollectionTestCase;
 import org.eclipse.collections.test.list.ListIterableTestCase;
 import org.eclipse.collections.test.list.ListTestCase;

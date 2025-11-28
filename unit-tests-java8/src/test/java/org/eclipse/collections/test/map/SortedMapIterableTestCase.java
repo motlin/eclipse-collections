@@ -21,6 +21,7 @@ import org.eclipse.collections.api.map.sorted.SortedMapIterable;
 import org.eclipse.collections.api.partition.ordered.PartitionOrderedIterable;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.test.OrderedIterableTestCase;
+import org.eclipse.collections.test.OrderingType;
 import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.junit.jupiter.api.Test;
 
@@ -78,7 +79,6 @@ public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedI
     // 2. Map equals compares entries (keys + values), not just values, so takeWhile/dropWhile
     //    results must be compared against maps built with matching keys via newWithKeysValues.
 
-    @Override
     @Test
     default void OrderedIterable_takeWhile()
     {
@@ -95,7 +95,6 @@ public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedI
         }));
     }
 
-    @Override
     @Test
     default void OrderedIterable_dropWhile()
     {
@@ -111,7 +110,6 @@ public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedI
         }));
     }
 
-    @Override
     @Test
     default void OrderedIterable_partitionWhile()
     {

@@ -16,6 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public interface OrderedIterableWithDuplicatesTestCase extends RichIterableWithDuplicatesTestCase, OrderedIterableTestCase
 {
+    @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.INSERTION_ORDER;
+    }
+
     @Test
     default void OrderedIterable_toArray()
     {

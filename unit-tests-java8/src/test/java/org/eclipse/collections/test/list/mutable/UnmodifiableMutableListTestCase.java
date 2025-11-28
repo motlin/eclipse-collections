@@ -13,6 +13,7 @@ package org.eclipse.collections.test.list.mutable;
 import java.util.Random;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
+import org.eclipse.collections.test.OrderingType;
 import org.eclipse.collections.test.UnmodifiableMutableCollectionTestCase;
 import org.eclipse.collections.test.list.UnmodifiableListTestCase;
 import org.junit.jupiter.api.Test;

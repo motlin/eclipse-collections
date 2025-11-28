@@ -45,6 +45,27 @@ public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedI
         OrderedIterableNoIteratorTestCase.super.RichIterable_iterator_iterationOrder();
     }
 
+    @Override
+    @Test
+    public void OrderedIterable_takeWhile()
+    {
+        // AbstractMutableSortedBag.takeWhile delegates to iterator()
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_dropWhile()
+    {
+        // AbstractMutableSortedBag.dropWhile delegates to iterator()
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_partitionWhile()
+    {
+        // AbstractMutableSortedBag.partitionWhile delegates to iterator()
+    }
+
     public static class TreeBagNoIterator<T> extends TreeBag<T>
     {
         public TreeBagNoIterator()

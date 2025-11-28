@@ -19,6 +19,12 @@ import org.junit.jupiter.api.Test;
 public interface LazyNoIteratorTestCase extends NoIteratorTestCase, RichIterableWithDuplicatesTestCase, TransformsToListTrait
 {
     @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.INSERTION_ORDER;
+    }
+
+    @Override
     default <T> ListIterable<T> getExpectedFiltered(T... elements)
     {
         return Lists.immutable.with(elements);

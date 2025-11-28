@@ -21,6 +21,7 @@ import org.eclipse.collections.api.map.OrderedMap;
 import org.eclipse.collections.api.partition.ordered.PartitionOrderedIterable;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.test.OrderedIterableTestCase;
+import org.eclipse.collections.test.OrderingType;
 import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,12 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
 
     @Override
     <K, V> OrderedMap<K, V> newWithKeysValues(Object... elements);
+
+    @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.INSERTION_ORDER;
+    }
 
     @Override
     default <K, V> MapIterable<K, V> newWithTransformedKeysValues(Object... elements)
@@ -108,7 +115,6 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     // when values match. We use newWithKeysValues for takeWhile/dropWhile to ensure
     // key-value pairs match, and Lists for partitionWhile which returns value-only lists.
 
-    @Override
     @Test
     default void OrderedIterable_takeWhile()
     {
@@ -128,7 +134,6 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         }));
     }
 
-    @Override
     @Test
     default void OrderedIterable_dropWhile()
     {
@@ -147,7 +152,6 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         }));
     }
 
-    @Override
     @Test
     default void OrderedIterable_partitionWhile()
     {

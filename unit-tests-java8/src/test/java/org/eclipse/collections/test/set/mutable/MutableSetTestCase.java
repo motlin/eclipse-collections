@@ -11,6 +11,7 @@
 package org.eclipse.collections.test.set.mutable;
 
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.test.OrderingType;
 import org.eclipse.collections.test.collection.mutable.MutableCollectionUniqueTestCase;
 import org.eclipse.collections.test.set.SetTestCase;
 import org.eclipse.collections.test.set.UnsortedSetIterableTestCase;
