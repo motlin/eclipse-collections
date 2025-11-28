@@ -377,6 +377,8 @@ public interface RichIterableTestCase extends IterableTestCase
             default -> fail("Unexpected value: " + this.getOrderingType());
         }
 
+        assertNotEquals(iterable.getFirst(), last);
+
         if (!this.allowsDuplicates())
         {
             return;
