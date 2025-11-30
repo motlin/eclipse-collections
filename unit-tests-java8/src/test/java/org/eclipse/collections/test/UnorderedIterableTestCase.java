@@ -10,11 +10,43 @@
 
 package org.eclipse.collections.test;
 
-public interface UnorderedIterableTestCase extends RichIterableTestCase
-{
+
     @Override
-    default OrderingType getOrderingType()
+    @Test
+    default void Iterable_toString()
     {
-        return OrderingType.UNORDERED;
+        assertThat(this.newWith(2, 2, 1).toString(), isOneOf("[2, 2, 1]", "[1, 2, 2]"));
+        assertThat(this.newWith(2, 2, 1).asLazy().toString(), isOneOf("[2, 2, 1]", "[1, 2, 2]"));
+    }
+
+    @Override
+    @Test
+    default void RichIterable_getFirst()
+    {
+        RichIterable<Integer> integers = this.newWith(3, 2, 1);
+        Integer first = integers.getFirst();
+        assertThat(first, isOneOf(3, 2, 1));
+        assertEquals(integers.iterator().next(), first);
+
+        assertNotEquals(integers.getLast(), first);
+    }
+
+    @Override
+    @Test
+    default void RichIterable_getLast()
+    {
+        RichIterable<Integer> integers = this.newWith(3, 2, 1);
+        Integer last = integers.getLast();
+        assertThat(last, isOneOf(3, 2, 1));
+
+        Iterator<Integer> iterator = integers.iterator();
+        Integer iteratorLast = null;
+        while (iterator.hasNext())
+        {
+            iteratorLast = iterator.next();
+        }
+        assertEquals(iteratorLast, last);
+
+        assertNotEquals(integers.getFirst(), last);
     }
 }

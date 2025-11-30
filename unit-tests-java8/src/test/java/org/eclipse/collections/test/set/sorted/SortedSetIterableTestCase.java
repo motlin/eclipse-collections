@@ -18,6 +18,7 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
+import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.SortedIterableTestCase;
 import org.eclipse.collections.test.domain.A;
@@ -28,7 +29,7 @@ import org.eclipse.collections.test.set.SetIterableTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -110,6 +111,139 @@ public interface SortedSetIterableTestCase extends SetIterableTestCase, SortedIt
     }
 
     @Override
+    @Test
+    default void OrderedIterable_getFirst()
+    {
+        assertEquals(Integer.valueOf(3), this.newWith(3, 2, 1).getFirst());
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_getFirstOptional()
+    {
+        assertEquals(Optional.of(3), ((OrderedIterable<?>) this.newWith(3, 2, 1)).getFirstOptional());
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_getLast()
+    {
+        assertEquals(Integer.valueOf(1), this.newWith(3, 2, 1).getLast());
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_getLastOptional()
+    {
+        assertEquals(Optional.of(Integer.valueOf(1)), ((OrderedIterable<?>) this.newWith(3, 2, 1)).getLastOptional());
+    }
+
+    @Override
+    @Test
+    default void RichIterable_getFirst()
+    {
+        assertEquals(Integer.valueOf(3), this.newWith(3, 2, 1).getFirst());
+    }
+
+    @Override
+    @Test
+    default void RichIterable_getLast()
+    {
+        assertEquals(Integer.valueOf(1), this.newWith(3, 2, 1).getLast());
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_min()
+    {
+        // Cannot contain duplicates
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_max()
+    {
+        // Cannot contain duplicates
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_min_comparator()
+    {
+        // Cannot contain duplicates
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_max_comparator()
+    {
+        // Cannot contain duplicates
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_zipWithIndex()
+    {
+        // Sorted sets cannot contain duplicates, so use unique elements
+        RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
+        assertEquals(
+                Lists.immutable.with(
+                        Tuples.pair(4, 0),
+                        Tuples.pair(3, 1),
+                        Tuples.pair(2, 2),
+                        Tuples.pair(1, 3)),
+                iterable.zipWithIndex().toList());
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_zipWithIndex_target()
+    {
+        // Sorted sets cannot contain duplicates, so use unique elements
+        RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
+        MutableList<Pair<Integer, Integer>> target = Lists.mutable.empty();
+        MutableList<Pair<Integer, Integer>> result = iterable.zipWithIndex(target);
+        assertEquals(
+                Lists.immutable.with(
+                        Tuples.pair(4, 0),
+                        Tuples.pair(3, 1),
+                        Tuples.pair(2, 2),
+                        Tuples.pair(1, 3)),
+                result);
+        assertSame(target, result);
+    }
+
+    @Test
+    default void OrderedIterable_forEach_from_to()
+    {
+        SortedIterable<Integer> integers = this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+
+        MutableList<Integer> result = Lists.mutable.empty();
+        integers.forEach(5, 7, result::add);
+        assertIterablesEqual(Lists.immutable.with(4, 3, 2), result);
+
+        MutableList<Integer> result2 = Lists.mutable.empty();
+        integers.forEach(5, 5, result2::add);
+        assertIterablesEqual(Lists.immutable.with(4), result2);
+
+        MutableList<Integer> result3 = Lists.mutable.empty();
+        integers.forEach(0, 9, result3::add);
+        assertIterablesEqual(Lists.immutable.with(9, 8, 7, 6, 5, 4, 3, 2, 1, 0), result3);
+
+        MutableList<Integer> result4 = Lists.mutable.empty();
+        integers.forEach(0, 0, result4::add);
+        assertIterablesEqual(Lists.immutable.with(9), result4);
+
+        MutableList<Integer> result5 = Lists.mutable.empty();
+        integers.forEach(9, 9, result5::add);
+        assertIterablesEqual(Lists.immutable.with(0), result5);
+
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(-1, 0, result::add));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(0, -1, result::add));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(0, 10, result::add));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(10, 0, result::add));
+    }
+
     @Test
     default void OrderedIterable_forEach_from_to_reverse_order()
     {

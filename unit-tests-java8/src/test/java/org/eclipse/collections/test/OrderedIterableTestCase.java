@@ -138,6 +138,20 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
     }
 
     @Test
+    default void OrderedIterable_getFirst()
+    {
+        RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
+            case INSERTION_ORDER -> assertEquals(Integer.valueOf(3), iterable.getFirst());
+            case SORTED_NATURAL -> assertEquals(Integer.valueOf(1), iterable.getFirst());
+            case SORTED_REVERSE_NATURAL -> assertEquals(Integer.valueOf(3), iterable.getFirst());
+            case SORTED_CUSTOM -> throw new AssertionError("OrderedIterable_getFirst test does not support SORTED_CUSTOM ordering type");
+        }
+    }
+
+    @Test
     default void OrderedIterable_getFirstOptional_empty()
     {
         assertSame(Optional.empty(), ((OrderedIterable<?>) this.newWith()).getFirstOptional());
@@ -146,27 +160,14 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
     @Test
     default void OrderedIterable_getFirstOptional()
     {
-        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 2, 1);
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 3, 3, 2, 2, 1);
         switch (this.getOrderingType())
         {
             case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Optional.of(3), iterable.getFirstOptional());
+            case INSERTION_ORDER -> assertEquals(Optional.of(3), iterable.getFirstOptional());
             case SORTED_NATURAL -> assertEquals(Optional.of(1), iterable.getFirstOptional());
-            default -> fail("Unexpected value: " + this.getOrderingType());
-        }
-
-        if (!this.allowsDuplicates())
-        {
-            return;
-        }
-
-        OrderedIterable<Integer> iterableWithDuplicates = (OrderedIterable<Integer>) this.newWith(3, 3, 3, 2, 2, 1);
-        switch (this.getOrderingType())
-        {
-            case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Optional.of(3), iterableWithDuplicates.getFirstOptional());
-            case SORTED_NATURAL -> assertEquals(Optional.of(1), iterableWithDuplicates.getFirstOptional());
-            default -> fail("Unexpected value: " + this.getOrderingType());
+            case SORTED_REVERSE_NATURAL -> assertEquals(Optional.of(3), iterable.getFirstOptional());
+            case SORTED_CUSTOM -> throw new AssertionError("OrderedIterable_getFirstOptional test does not support SORTED_CUSTOM ordering type");
         }
     }
 
@@ -174,6 +175,20 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
     default void OrderedIterable_getFirstOptional_null_element()
     {
         assertThrows(NullPointerException.class, () -> ((OrderedIterable<?>) this.newWith(new Object[]{null})).getFirstOptional());
+    }
+
+    @Test
+    default void OrderedIterable_getLast()
+    {
+        RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
+            case INSERTION_ORDER -> assertEquals(Integer.valueOf(1), iterable.getLast());
+            case SORTED_NATURAL -> assertEquals(Integer.valueOf(3), iterable.getLast());
+            case SORTED_REVERSE_NATURAL -> assertEquals(Integer.valueOf(1), iterable.getLast());
+            case SORTED_CUSTOM -> throw new AssertionError("OrderedIterable_getLast test does not support SORTED_CUSTOM ordering type");
+        }
     }
 
     @Test
@@ -185,27 +200,14 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
     @Test
     default void OrderedIterable_getLastOptional()
     {
-        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 2, 1);
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 3, 3, 2, 2, 1);
         switch (this.getOrderingType())
         {
             case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Optional.of(1), iterable.getLastOptional());
+            case INSERTION_ORDER -> assertEquals(Optional.of(1), iterable.getLastOptional());
             case SORTED_NATURAL -> assertEquals(Optional.of(3), iterable.getLastOptional());
-            default -> fail("Unexpected value: " + this.getOrderingType());
-        }
-
-        if (!this.allowsDuplicates())
-        {
-            return;
-        }
-
-        OrderedIterable<Integer> iterableWithDuplicates = (OrderedIterable<Integer>) this.newWith(3, 3, 3, 2, 2, 1);
-        switch (this.getOrderingType())
-        {
-            case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Optional.of(1), iterableWithDuplicates.getLastOptional());
-            case SORTED_NATURAL -> assertEquals(Optional.of(3), iterableWithDuplicates.getLastOptional());
-            default -> fail("Unexpected value: " + this.getOrderingType());
+            case SORTED_REVERSE_NATURAL -> assertEquals(Optional.of(1), iterable.getLastOptional());
+            case SORTED_CUSTOM -> throw new AssertionError("OrderedIterable_getLastOptional test does not support SORTED_CUSTOM ordering type");
         }
     }
 
@@ -225,7 +227,7 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
         switch (this.getOrderingType())
         {
             case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            case INSERTION_ORDER ->
             {
                 assertEquals(Integer.valueOf(3), iterator.next());
                 assertEquals(Integer.valueOf(2), iterator.next());
@@ -237,40 +239,52 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
                 assertEquals(Integer.valueOf(2), iterator.next());
                 assertEquals(Integer.valueOf(3), iterator.next());
             }
-            default -> fail("Unexpected value: " + this.getOrderingType());
+            case SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals(Integer.valueOf(3), iterator.next());
+                assertEquals(Integer.valueOf(2), iterator.next());
+                assertEquals(Integer.valueOf(1), iterator.next());
+            }
+            case SORTED_CUSTOM -> throw new AssertionError("OrderedIterable_next test does not support SORTED_CUSTOM ordering type");
         }
+    }
+
+    @Test
+    default void OrderedIterable_min()
+    {
+        Holder<Integer> first = new Holder<>(-1);
+        Holder<Integer> second = new Holder<>(-1);
+        assertSame(first, this.newWith(new Holder<>(2), first, new Holder<>(0), second).min());
+    }
+
+    @Test
+    default void OrderedIterable_max()
+    {
+        Holder<Integer> first = new Holder<>(1);
+        Holder<Integer> second = new Holder<>(1);
+        assertSame(first, this.newWith(new Holder<>(-2), first, new Holder<>(0), second).max());
+    }
+
+    @Test
+    default void OrderedIterable_min_comparator()
+    {
+        Holder<Integer> first = new Holder<>(1);
+        Holder<Integer> second = new Holder<>(1);
+        assertSame(first, this.newWith(new Holder<>(-2), first, new Holder<>(0), second).min(Comparators.reverseNaturalOrder()));
+    }
+
+    @Test
+    default void OrderedIterable_max_comparator()
+    {
+        Holder<Integer> first = new Holder<>(-1);
+        Holder<Integer> second = new Holder<>(-1);
+        assertSame(first, this.newWith(new Holder<>(2), first, new Holder<>(0), second).max(Comparators.reverseNaturalOrder()));
     }
 
     @Test
     default void OrderedIterable_zipWithIndex()
     {
-        RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
-        switch (this.getOrderingType())
-        {
-            case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(
-                    Lists.immutable.with(
-                            Tuples.pair(4, 0),
-                            Tuples.pair(3, 1),
-                            Tuples.pair(2, 2),
-                            Tuples.pair(1, 3)),
-                    iterable.zipWithIndex().toList());
-            case SORTED_NATURAL -> assertEquals(
-                    Lists.immutable.with(
-                            Tuples.pair(1, 0),
-                            Tuples.pair(2, 1),
-                            Tuples.pair(3, 2),
-                            Tuples.pair(4, 3)),
-                    iterable.zipWithIndex().toList());
-            default -> fail("Unexpected value: " + this.getOrderingType());
-        }
-
-        if (!this.allowsDuplicates())
-        {
-            return;
-        }
-
-        RichIterable<Integer> iterableWithDuplicates = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
+        RichIterable<Integer> iterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
         switch (this.getOrderingType())
         {
             case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
@@ -286,7 +300,7 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
                             Tuples.pair(2, 7),
                             Tuples.pair(2, 8),
                             Tuples.pair(1, 9)),
-                    iterableWithDuplicates.zipWithIndex().toList());
+                    iterable.zipWithIndex().toList());
             case SORTED_NATURAL -> assertEquals(
                     Lists.immutable.with(
                             Tuples.pair(1, 0),
@@ -299,8 +313,8 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
                             Tuples.pair(4, 7),
                             Tuples.pair(4, 8),
                             Tuples.pair(4, 9)),
-                    iterableWithDuplicates.zipWithIndex().toList());
-            default -> fail("Unexpected value: " + this.getOrderingType());
+                    iterable.zipWithIndex().toList());
+            case SORTED_CUSTOM -> throw new AssertionError("OrderedIterable_zipWithIndex test does not support SORTED_CUSTOM ordering type");
         }
     }
 
@@ -316,18 +330,30 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
             case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(
                     Lists.immutable.with(
                             Tuples.pair(4, 0),
-                            Tuples.pair(3, 1),
-                            Tuples.pair(2, 2),
-                            Tuples.pair(1, 3)),
+                            Tuples.pair(4, 1),
+                            Tuples.pair(4, 2),
+                            Tuples.pair(4, 3),
+                            Tuples.pair(3, 4),
+                            Tuples.pair(3, 5),
+                            Tuples.pair(3, 6),
+                            Tuples.pair(2, 7),
+                            Tuples.pair(2, 8),
+                            Tuples.pair(1, 9)),
                     result);
             case SORTED_NATURAL -> assertEquals(
                     Lists.immutable.with(
                             Tuples.pair(1, 0),
                             Tuples.pair(2, 1),
-                            Tuples.pair(3, 2),
-                            Tuples.pair(4, 3)),
+                            Tuples.pair(2, 2),
+                            Tuples.pair(3, 3),
+                            Tuples.pair(3, 4),
+                            Tuples.pair(3, 5),
+                            Tuples.pair(4, 6),
+                            Tuples.pair(4, 7),
+                            Tuples.pair(4, 8),
+                            Tuples.pair(4, 9)),
                     result);
-            default -> fail("Unexpected value: " + this.getOrderingType());
+            case SORTED_CUSTOM -> throw new AssertionError("OrderedIterable_zipWithIndex_target test does not support SORTED_CUSTOM ordering type");
         }
         assertSame(target, result);
 

@@ -27,6 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public interface MutableSortedBagNoComparatorTestCase extends SortedBagTestCase, MutableBagIterableTestCase, MutableSortedNaturalOrderTestCase
 {
     @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.SORTED_NATURAL;
+    }
+
+    @Override
     <T> MutableSortedBag<T> newWith(T... elements);
 
     @Override

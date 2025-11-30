@@ -20,6 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetectOptionalNullTestCase
 {
     @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.SORTED_REVERSE_NATURAL;
+    }
+
+    @Override
     <T> SortedIterable<T> newWith(T... elements);
 
     @Override

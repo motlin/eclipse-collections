@@ -85,6 +85,7 @@ public interface IterableTestCase
         INSERTION_ORDER,
         SORTED_NATURAL,
         SORTED_REVERSE_NATURAL,
+        SORTED_CUSTOM
     }
 
     default OrderingType getOrderingType()
