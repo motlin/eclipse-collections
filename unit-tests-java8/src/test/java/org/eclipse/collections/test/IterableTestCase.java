@@ -52,6 +52,7 @@ import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
 import static org.eclipse.collections.impl.test.Verify.assertPostSerializedEqualsAndHashCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -91,6 +92,11 @@ public interface IterableTestCase
     default OrderingType getOrderingType()
     {
         return OrderingType.INSERTION_ORDER;
+    }
+
+    default boolean allowsSerialization()
+    {
+        return true;
     }
 
     static void assertIterablesEqual(Object o1, Object o2)
@@ -263,6 +269,12 @@ public interface IterableTestCase
     default void Object_PostSerializedEqualsAndHashCode()
     {
         Iterable<Integer> iterable = this.newWith(3, 2, 1);
+        if (!this.allowsSerialization())
+        {
+            assertNotSerializable(iterable);
+            return;
+        }
+
         Object deserialized = SerializeTestHelper.serializeDeserialize(iterable);
         assertNotSame(iterable, deserialized);
 
@@ -279,7 +291,15 @@ public interface IterableTestCase
     @Test
     default void Object_equalsAndHashCode()
     {
-        assertPostSerializedEqualsAndHashCode(this.newWith(3, 2, 1));
+        Iterable<Integer> iterable = this.newWith(3, 2, 1);
+        if (this.allowsSerialization())
+        {
+            assertPostSerializedEqualsAndHashCode(iterable);
+        }
+        else
+        {
+            assertNotSerializable(iterable);
+        }
 
         assertIterablesNotEqual(this.newWith(4, 3, 2, 1), this.newWith(3, 2, 1));
         assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 3, 2, 1));
