@@ -15,8 +15,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Spliterator;
 
 import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.map.UnsortedMapIterable;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.junit.jupiter.api.Test;
@@ -475,6 +477,26 @@ public interface MapTestCase
         assertTrue(map3.containsKey(3));
         assertEquals("2", map3.get(2));
         assertSize(3, map3);
+    }
+
+    @Test
+    default void keySetValuesEntrySetSpliteratorsAreConcurrentAndNotSized()
+    {
+        Map<Integer, String> map = this.newWithKeysValues( 1, "1");
+
+        Spliterator<Integer> ks = map.keySet().spliterator();
+        assertTrue(ks.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(ks.hasCharacteristics(Spliterator.SIZED));
+        assertFalse(ks.hasCharacteristics(Spliterator.SUBSIZED));
+
+        Spliterator<String> vs = map.values().spliterator();
+        assertTrue(vs.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(vs.hasCharacteristics(Spliterator.SIZED));
+        assertFalse(vs.hasCharacteristics(Spliterator.SUBSIZED));
+        Spliterator<Map.Entry<Integer, String>> es = map.entrySet().spliterator();
+        assertTrue(es.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(es.hasCharacteristics(Spliterator.SIZED));
+        assertFalse(es.hasCharacteristics(Spliterator.SUBSIZED));
     }
 
     class AlwaysEqual

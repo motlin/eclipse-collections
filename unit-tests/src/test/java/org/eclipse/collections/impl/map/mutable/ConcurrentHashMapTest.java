@@ -11,6 +11,9 @@
 package org.eclipse.collections.impl.map.mutable;
 
 import java.util.Collections;
+import java.util.Map;
+import java.util.Spliterator;
+import java.util.concurrent.ConcurrentMap;
 
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
@@ -394,6 +397,27 @@ public class ConcurrentHashMapTest extends ConcurrentHashMapTestCase
     {
         ConcurrentHashMap<?, ?> empty = ConcurrentHashMap.newMap(0);
         assertEquals("{}", empty.toString());
+    }
+
+    @Test
+    public void keySetValuesEntrySetSpliteratorsAreConcurrentAndNotSized()
+    {
+        ConcurrentMap<Integer, String> map = new ConcurrentHashMap<>();
+        map.put(1, "1");
+
+        Spliterator<Integer> ks = map.keySet().spliterator();
+        assertTrue(ks.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(ks.hasCharacteristics(Spliterator.SIZED));
+        assertFalse(ks.hasCharacteristics(Spliterator.SUBSIZED));
+
+        Spliterator<String> vs = map.values().spliterator();
+        assertTrue(vs.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(vs.hasCharacteristics(Spliterator.SIZED));
+        assertFalse(vs.hasCharacteristics(Spliterator.SUBSIZED));
+        Spliterator<Map.Entry<Integer, String>> es = map.entrySet().spliterator();
+        assertTrue(es.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(es.hasCharacteristics(Spliterator.SIZED));
+        assertFalse(es.hasCharacteristics(Spliterator.SUBSIZED));
     }
 
     private static class KeyTransformer implements Function2<Integer, Integer, Integer>

@@ -33,6 +33,9 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.Spliterator;
+import java.util.Spliterators;
+
 
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -1631,6 +1634,14 @@ public final class ConcurrentHashMap<K, V>
         }
 
         @Override
+        public Spliterator<K> spliterator()
+        {
+            // Backed by a concurrent map; size may change during traversal.
+            // Avoid SIZED/SUBSIZED to prevent Stream#toArray() fixed-size preallocation.
+            return Spliterators.spliteratorUnknownSize(this.iterator(), Spliterator.CONCURRENT);
+        }
+
+        @Override
         public int size()
         {
             return ConcurrentHashMap.this.size();
@@ -1661,6 +1672,14 @@ public final class ConcurrentHashMap<K, V>
         public Iterator<V> iterator()
         {
             return new ValueIterator();
+        }
+
+        @Override
+        public Spliterator<V> spliterator()
+        {
+            // Important: values view is backed by a concurrent map whose size may change during traversal.
+            // Mark as CONCURRENT and do not report SIZED/SUBSIZED to avoid Stream#toArray preallocating a fixed buffer.
+            return Spliterators.spliteratorUnknownSize(this.iterator(), Spliterator.CONCURRENT);
         }
 
         @Override
@@ -1720,6 +1739,12 @@ public final class ConcurrentHashMap<K, V>
         public Iterator<Map.Entry<K, V>> iterator()
         {
             return new EntryIterator();
+        }
+
+        @Override
+        public Spliterator<Map.Entry<K, V>> spliterator()
+        {
+            return Spliterators.spliteratorUnknownSize(this.iterator(), Spliterator.CONCURRENT);
         }
 
         @Override

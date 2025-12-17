@@ -10,6 +10,10 @@
 
 package org.eclipse.collections.test.map;
 
+import java.util.Map;
+import java.util.Spliterator;
+import java.util.concurrent.ConcurrentMap;
+
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.UnsortedBag;
@@ -18,6 +22,7 @@ import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.UnsortedMapIterable;
+import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
 import org.eclipse.collections.test.UnorderedIterableTestCase;
 import org.eclipse.collections.test.bag.TransformsToBagTrait;
 import org.junit.jupiter.api.Test;
@@ -25,6 +30,8 @@ import org.junit.jupiter.api.Test;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface UnsortedMapIterableTestCase
         extends MapIterableTestCase, UnorderedIterableTestCase, TransformsToBagTrait
