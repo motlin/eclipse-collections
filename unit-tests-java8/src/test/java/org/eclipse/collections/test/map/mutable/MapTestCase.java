@@ -482,20 +482,36 @@ public interface MapTestCase
     @Test
     default void keySetValuesEntrySetSpliteratorsAreConcurrentAndNotSized()
     {
-        Map<Integer, String> map = this.newWithKeysValues( 1, "1");
+        Map<Integer, String> map = this.newWithKeysValues(1, "1");
 
         Spliterator<Integer> ks = map.keySet().spliterator();
-        assertTrue(ks.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(ks.hasCharacteristics(Spliterator.ORDERED));
+        assertTrue(ks.hasCharacteristics(Spliterator.DISTINCT));
+        assertFalse(ks.hasCharacteristics(Spliterator.SORTED));
         assertFalse(ks.hasCharacteristics(Spliterator.SIZED));
+        assertTrue(ks.hasCharacteristics(Spliterator.NONNULL));
+        assertFalse(ks.hasCharacteristics(Spliterator.IMMUTABLE));
+        assertTrue(ks.hasCharacteristics(Spliterator.CONCURRENT));
         assertFalse(ks.hasCharacteristics(Spliterator.SUBSIZED));
 
         Spliterator<String> vs = map.values().spliterator();
-        assertTrue(vs.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(vs.hasCharacteristics(Spliterator.ORDERED));
+        assertFalse(vs.hasCharacteristics(Spliterator.DISTINCT));
+        assertFalse(vs.hasCharacteristics(Spliterator.SORTED));
         assertFalse(vs.hasCharacteristics(Spliterator.SIZED));
+        assertTrue(vs.hasCharacteristics(Spliterator.NONNULL));
+        assertFalse(vs.hasCharacteristics(Spliterator.IMMUTABLE));
+        assertTrue(vs.hasCharacteristics(Spliterator.CONCURRENT));
         assertFalse(vs.hasCharacteristics(Spliterator.SUBSIZED));
+
         Spliterator<Map.Entry<Integer, String>> es = map.entrySet().spliterator();
-        assertTrue(es.hasCharacteristics(Spliterator.CONCURRENT));
+        assertFalse(es.hasCharacteristics(Spliterator.ORDERED));
+        assertTrue(es.hasCharacteristics(Spliterator.DISTINCT));
+        assertFalse(es.hasCharacteristics(Spliterator.SORTED));
         assertFalse(es.hasCharacteristics(Spliterator.SIZED));
+        assertTrue(es.hasCharacteristics(Spliterator.NONNULL));
+        assertFalse(es.hasCharacteristics(Spliterator.IMMUTABLE));
+        assertTrue(es.hasCharacteristics(Spliterator.CONCURRENT));
         assertFalse(es.hasCharacteristics(Spliterator.SUBSIZED));
     }
 
