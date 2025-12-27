@@ -1263,7 +1263,6 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 </plugins>
             </build>
         </profile>
-
         <!--endregion Phase 7: compile-->
         <!--region Phase 21: verify-->
         <profile>
