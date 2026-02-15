@@ -40,28 +40,6 @@ public class MultiReaderHashBagTest implements MutableBagTestCase, MultiReaderMu
     @Test
     public void Iterable_remove()
     {
-        MultiReaderMutableCollectionTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    @Test
-    public void Iterable_next()
-    {
-        MultiReaderMutableCollectionTestCase.super.Iterable_next();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getFirst()
-    {
-        MultiReaderMutableCollectionTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getLast()
-    {
-        MultiReaderMutableCollectionTestCase.super.RichIterable_getLast();
     }
 
     @Override

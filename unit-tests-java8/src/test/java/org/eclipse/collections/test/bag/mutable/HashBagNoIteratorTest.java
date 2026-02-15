@@ -20,6 +20,13 @@ import org.junit.jupiter.api.Test;
 
 public class HashBagNoIteratorTest implements MutableBagTestCase, NoIteratorTestCase
 {
+    @Override
+    @Test
+    public void Iterable_remove()
+    {
+        NoIteratorTestCase.super.Iterable_remove();
+    }
+
     @SafeVarargs
     @Override
     public final <T> MutableBag<T> newWith(T... elements)
@@ -29,47 +36,12 @@ public class HashBagNoIteratorTest implements MutableBagTestCase, NoIteratorTest
         return result;
     }
 
-    @Override
-    @Test
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
-    @Test
-    public void Iterable_remove()
-    {
-        NoIteratorTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_iterator_iterationOrder()
-    {
-        NoIteratorTestCase.super.RichIterable_iterator_iterationOrder();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getFirst()
-    {
-        NoIteratorTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
-    }
-
     public static class HashBagNoIterator<T> extends HashBag<T>
     {
         @Override
         public Iterator<T> iterator()
         {
-            throw new AssertionError("No iteration patterns should delegate to iterator()");
+            throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
         }
     }
 }

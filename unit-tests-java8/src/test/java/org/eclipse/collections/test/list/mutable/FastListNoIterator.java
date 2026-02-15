@@ -20,18 +20,18 @@ public final class FastListNoIterator<T> extends FastList<T>
     @Override
     public Iterator<T> iterator()
     {
-        throw new AssertionError("No iteration patterns should delegate to iterator()");
+        throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
     }
 
     @Override
     public ListIterator<T> listIterator()
     {
-        throw new AssertionError("No iteration patterns should delegate to listIterator()");
+        throw new UnsupportedOperationException("No iteration patterns should delegate to listIterator()");
     }
 
     @Override
     public ListIterator<T> listIterator(int index)
     {
-        throw new AssertionError("No iteration patterns should delegate to listIterator()");
+        throw new UnsupportedOperationException("No iteration patterns should delegate to listIterator()");
     }
 }

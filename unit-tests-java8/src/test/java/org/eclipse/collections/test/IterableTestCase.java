@@ -71,10 +71,20 @@ public interface IterableTestCase
 
     default boolean allowsAdd()
     {
-        return true;
+        return this.allowsAddRemove();
     }
 
     default boolean allowsRemove()
+    {
+        return this.allowsAddRemove();
+    }
+
+    default boolean allowsAddRemove()
+    {
+        return true;
+    }
+
+    default boolean allowsIterator()
     {
         return true;
     }
@@ -293,6 +303,12 @@ public interface IterableTestCase
     @Test
     default void Iterable_hasNext()
     {
+        if (!this.allowsIterator())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).iterator());
+            return;
+        }
+
         assertTrue(this.newWith(3, 2, 1).iterator().hasNext());
         assertFalse(this.newWith().iterator().hasNext());
     }
@@ -300,6 +316,12 @@ public interface IterableTestCase
     @Test
     default void Iterable_next()
     {
+        if (!this.allowsIterator())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).iterator());
+            return;
+        }
+
         Iterator<Integer> iterator = this.newWith(3, 2, 1).iterator();
         MutableSet<Integer> set = Sets.mutable.with();
         assertTrue(set.add(iterator.next()));

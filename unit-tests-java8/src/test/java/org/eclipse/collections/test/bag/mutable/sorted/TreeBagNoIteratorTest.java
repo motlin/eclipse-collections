@@ -21,15 +21,6 @@ import org.junit.jupiter.api.Test;
 
 public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedIterableNoIteratorTest
 {
-    @SafeVarargs
-    @Override
-    public final <T> MutableSortedBag<T> newWith(T... elements)
-    {
-        MutableSortedBag<T> result = new TreeBagNoIterator<>(Comparators.reverseNaturalOrder());
-        IterableTestCase.addAllTo(elements, result);
-        return result;
-    }
-
     @Override
     @Test
     public void Iterable_remove()
@@ -41,7 +32,15 @@ public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedI
     @Test
     public void RichIterable_iterator_iterationOrder()
     {
-        OrderedIterableNoIteratorTest.super.RichIterable_iterator_iterationOrder();
+    }
+
+    @SafeVarargs
+    @Override
+    public final <T> MutableSortedBag<T> newWith(T... elements)
+    {
+        MutableSortedBag<T> result = new TreeBagNoIterator<>(Comparators.reverseNaturalOrder());
+        IterableTestCase.addAllTo(elements, result);
+        return result;
     }
 
     public static class TreeBagNoIterator<T> extends TreeBag<T>
@@ -59,7 +58,7 @@ public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedI
         @Override
         public Iterator<T> iterator()
         {
-            throw new AssertionError("No iteration patterns should delegate to iterator()");
+            throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
         }
     }
 }

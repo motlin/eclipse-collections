@@ -70,7 +70,7 @@ public interface MutableSetTestCase extends SetTestCase, UnsortedSetIterableTest
     {
         UnsortedSetIterableTestCase.super.equalsAndHashCode();
 
-        if (this.allowsRemove())
+        if (this.allowsAddRemove())
         {
             MutableSet<Integer> singleCollisionBucket = this.newWith(COLLISION_1, COLLISION_2);
             singleCollisionBucket.remove(COLLISION_2);

@@ -25,12 +25,6 @@ public class UnifiedMapKeySetTest implements SetTestCase
 {
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
 
-    @Override
-    public boolean allowsAdd()
-    {
-        return false;
-    }
-
     @SafeVarargs
     @Override
     public final <T> Set<T> newWith(T... elements)
@@ -43,5 +37,17 @@ public class UnifiedMapKeySetTest implements SetTestCase
             assertNull(result.put(element, random.nextDouble()));
         }
         return result.keySet();
+    }
+
+    @Override
+    public boolean allowsAdd()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean allowsRemove()
+    {
+        return true;
     }
 }

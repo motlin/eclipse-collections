@@ -12,54 +12,20 @@ package org.eclipse.collections.test;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public interface NoIteratorTestCase extends RichIterableTestCase
 {
+    @Override
+    default boolean allowsIterator()
+    {
+        return false;
+    }
+
     @Override
     @Test
     default void Iterable_remove()
     {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getFirst()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getLast()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getOnly()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void RichIterable_iterator_iterationOrder()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void Iterable_hasNext()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void Iterable_next()
-    {
-        // Not applicable
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).iterator());
     }
 }

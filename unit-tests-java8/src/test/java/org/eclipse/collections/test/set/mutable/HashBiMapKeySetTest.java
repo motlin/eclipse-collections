@@ -18,12 +18,6 @@ import org.eclipse.collections.test.set.SetTestCase;
 
 public class HashBiMapKeySetTest implements SetTestCase
 {
-    @Override
-    public boolean allowsAdd()
-    {
-        return false;
-    }
-
     @SafeVarargs
     @Override
     public final <T> Set<T> newWith(T... elements)
@@ -38,5 +32,17 @@ public class HashBiMapKeySetTest implements SetTestCase
             result.put(element, element);
         }
         return result.keySet();
+    }
+
+    @Override
+    public boolean allowsAdd()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean allowsRemove()
+    {
+        return true;
     }
 }

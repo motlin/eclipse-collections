@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 public interface UnmodifiableMutableSetTestCase extends UnmodifiableMutableCollectionTestCase, UnmodifiableSetTestCase, MutableSetTestCase
 {
     @Override
-    default boolean allowsRemove()
+    default boolean allowsAddRemove()
     {
         return false;
     }
