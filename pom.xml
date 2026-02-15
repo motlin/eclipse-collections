@@ -143,6 +143,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <project.previous.version>12.0.0</project.previous.version>
     </properties>
 
+
     <pluginRepositories>
 
         <pluginRepository>
