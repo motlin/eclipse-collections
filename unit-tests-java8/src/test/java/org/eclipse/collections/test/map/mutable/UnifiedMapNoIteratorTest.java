@@ -60,31 +60,9 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
     }
 
     @Override
-    @Test
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
-    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getFirst()
-    {
-        NoIteratorTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
     }
 
     @Override
@@ -118,7 +96,7 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
         expected.add(3);
         expected.add(2);
         expected.add(1);
-        assertThrows(AssertionError.class, () -> map.keySet().equals(expected));
+        assertThrows(UnsupportedOperationException.class, () -> map.keySet().equals(expected));
     }
 
     @Override
@@ -131,7 +109,7 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
         expected.add(ImmutableEntry.of(1, "One"));
         expected.add(ImmutableEntry.of(2, "Two"));
         expected.add(ImmutableEntry.of(3, "Three"));
-        assertThrows(AssertionError.class, () -> map.entrySet().equals(expected));
+        assertThrows(UnsupportedOperationException.class, () -> map.entrySet().equals(expected));
     }
 
     @Override
@@ -166,7 +144,7 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
         @Override
         public Iterator<V> iterator()
         {
-            throw new AssertionError("No iteration patterns should delegate to iterator()");
+            throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
         }
 
         @Override
@@ -192,7 +170,7 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
             @Override
             public Iterator<Entry<K, V>> iterator()
             {
-                throw new AssertionError("No iteration patterns should delegate to iterator()");
+                throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
             }
         }
 
@@ -201,7 +179,7 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
             @Override
             public Iterator<K> iterator()
             {
-                throw new AssertionError("No iteration patterns should delegate to iterator()");
+                throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
             }
         }
 
@@ -210,7 +188,7 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
             @Override
             public Iterator<V> iterator()
             {
-                throw new AssertionError("No iteration patterns should delegate to iterator()");
+                throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
             }
         }
     }

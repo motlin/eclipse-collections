@@ -25,6 +25,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class TreeSortedMapNoIteratorTest implements MutableSortedMapIterableTestCase, OrderedIterableNoIteratorTest
 {
     @Override
+    @Test
+    public void Iterable_remove()
+    {
+        OrderedIterableNoIteratorTest.super.Iterable_remove();
+    }
+
+    @Override
     public <T> MutableSortedMap<Object, T> newWith(T... elements)
     {
         int i = elements.length;
@@ -53,13 +60,6 @@ public class TreeSortedMapNoIteratorTest implements MutableSortedMapIterableTest
         return result;
     }
 
-    @Override
-    @Test
-    public void Iterable_remove()
-    {
-        OrderedIterableNoIteratorTest.super.Iterable_remove();
-    }
-
     public static class TreeSortedMapNoIterator<K, V> extends TreeSortedMap<K, V>
     {
         public TreeSortedMapNoIterator()
@@ -75,7 +75,7 @@ public class TreeSortedMapNoIteratorTest implements MutableSortedMapIterableTest
         @Override
         public Iterator<V> iterator()
         {
-            throw new AssertionError("No iteration patterns should delegate to iterator()");
+            throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
         }
     }
 }

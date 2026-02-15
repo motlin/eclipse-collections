@@ -323,10 +323,13 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_getFirst()
     {
-        RichIterable<Integer> iterable = this.newWith(3, 2, 1);
+        RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         Integer first = iterable.getFirst();
         assertThat(first, isOneOf(3, 2, 1));
-        assertEquals(iterable.iterator().next(), first);
+        if (this.allowsIterator())
+        {
+            assertEquals(iterable.iterator().next(), first);
+        }
 
         if (!this.allowsDuplicates())
         {
@@ -336,22 +339,28 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> iterableWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
         Integer firstWithDuplicates = iterableWithDuplicates.getFirst();
         assertThat(firstWithDuplicates, isOneOf(3, 2, 1));
-        assertEquals(iterableWithDuplicates.iterator().next(), firstWithDuplicates);
+        if (this.allowsIterator())
+        {
+            assertEquals(iterableWithDuplicates.iterator().next(), firstWithDuplicates);
+        }
     }
 
     @Test
     default void RichIterable_getLast()
     {
-        RichIterable<Integer> iterable = this.newWith(3, 2, 1);
+        RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         Integer last = iterable.getLast();
         assertThat(last, isOneOf(3, 2, 1));
-        Iterator<Integer> iterator = iterable.iterator();
-        Integer iteratorLast = null;
-        while (iterator.hasNext())
+        if (this.allowsIterator())
         {
-            iteratorLast = iterator.next();
+            Iterator<Integer> iterator = iterable.iterator();
+            Integer iteratorLast = null;
+            while (iterator.hasNext())
+            {
+                iteratorLast = iterator.next();
+            }
+            assertEquals(iteratorLast, last);
         }
-        assertEquals(iteratorLast, last);
 
         if (!this.allowsDuplicates())
         {
@@ -361,18 +370,26 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> iterableWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
         Integer lastWithDuplicates = iterableWithDuplicates.getLast();
         assertThat(lastWithDuplicates, isOneOf(3, 2, 1));
-        Iterator<Integer> iteratorWithDuplicates = iterableWithDuplicates.iterator();
-        Integer iteratorLastWithDuplicates = null;
-        while (iteratorWithDuplicates.hasNext())
+        if (this.allowsIterator())
         {
-            iteratorLastWithDuplicates = iteratorWithDuplicates.next();
+            Iterator<Integer> iteratorWithDuplicates = iterableWithDuplicates.iterator();
+            Integer iteratorLastWithDuplicates = null;
+            while (iteratorWithDuplicates.hasNext())
+            {
+                iteratorLastWithDuplicates = iteratorWithDuplicates.next();
+            }
+            assertEquals(iteratorLastWithDuplicates, lastWithDuplicates);
         }
-        assertEquals(iteratorLastWithDuplicates, lastWithDuplicates);
     }
 
     @Test
     default void RichIterable_getOnly()
     {
+        if (!this.allowsIterator())
+        {
+            return;
+        }
+
         RichIterable<Integer> iterable = this.newWith(3);
         Integer only = iterable.getOnly();
         assertThat(only, is(3));
@@ -723,13 +740,16 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_iterator_iterationOrder()
     {
-        MutableCollection<Integer> iterationOrder = this.newMutableForFilter();
-        Iterator<Integer> iterator = this.getInstanceUnderTest().iterator();
-        while (iterator.hasNext())
+        if (this.allowsIterator())
         {
-            iterationOrder.add(iterator.next());
+            MutableCollection<Integer> iterationOrder = this.newMutableForFilter();
+            Iterator<Integer> iterator = this.getInstanceUnderTest().iterator();
+            while (iterator.hasNext())
+            {
+                iterationOrder.add(iterator.next());
+            }
+            assertIterablesEqual(this.expectedIterationOrder(), iterationOrder);
         }
-        assertIterablesEqual(this.expectedIterationOrder(), iterationOrder);
 
         MutableCollection<Integer> expectedIterationOrder = this.expectedIterationOrder();
         MutableCollection<Integer> forEachWithIterationOrder = this.newMutableForFilter();

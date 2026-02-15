@@ -16,6 +16,18 @@ import org.junit.jupiter.api.Test;
 public interface UnmodifiableSortedSetTestCase extends FixedSizeCollectionTestCase, SortedSetTestCase
 {
     @Override
+    default boolean allowsAdd()
+    {
+        return false;
+    }
+
+    @Override
+    default boolean allowsRemove()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

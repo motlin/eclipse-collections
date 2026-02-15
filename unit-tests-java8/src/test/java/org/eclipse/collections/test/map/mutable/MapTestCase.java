@@ -504,7 +504,7 @@ public interface MapTestCase
         @Override
         public Iterator<T> iterator()
         {
-            throw new AssertionError();
+            throw new UnsupportedOperationException();
         }
     }
 }

@@ -39,11 +39,10 @@ public class MultiReaderFastListTest implements MutableListTestCase, MultiReader
         return result;
     }
 
-    @Override
     @Test
+    @Override
     public void Iterable_remove()
     {
-        MultiReaderMutableCollectionTestCase.super.Iterable_remove();
     }
 
     @Override

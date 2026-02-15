@@ -20,51 +20,15 @@ public interface MultiReaderMutableCollectionTestCase extends MutableCollectionT
     @Override
     <T> AbstractMultiReaderMutableCollection<T> newWith(T... elements);
 
+    @Override
+    default boolean allowsIterator()
+    {
+        return false;
+    }
+
     @Test
     default void Iterable_iterator_throws()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).iterator());
-    }
-
-    @Override
-    @Test
-    default void Iterable_remove()
-    {
-        // Multi-reader collections don't support iterator()
-    }
-
-    @Override
-    @Test
-    default void Iterable_next()
-    {
-        // Multi-reader collections don't support iterator()
-    }
-
-    @Override
-    @Test
-    default void Iterable_hasNext()
-    {
-        // Multi-reader collections don't support iterator()
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getFirst()
-    {
-        // Does not support iterator outside withReadLockAndDelegate
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getLast()
-    {
-        // Does not support iterator outside withReadLockAndDelegate
-    }
-
-    @Override
-    @Test
-    default void RichIterable_getOnly()
-    {
-        // Does not support iterator outside withReadLockAndDelegate
     }
 }

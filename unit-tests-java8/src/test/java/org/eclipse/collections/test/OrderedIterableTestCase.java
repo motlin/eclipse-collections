@@ -125,6 +125,11 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
     @Test
     default void OrderedIterable_next()
     {
+        if (!this.allowsIterator())
+        {
+            return;
+        }
+
         Iterator<Integer> iterator = this.newWith(3, 2, 1).iterator();
         assertEquals(Integer.valueOf(3), iterator.next());
         assertEquals(Integer.valueOf(2), iterator.next());

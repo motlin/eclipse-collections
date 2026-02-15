@@ -79,6 +79,11 @@ public interface IterableTestCase
         return true;
     }
 
+    default boolean allowsIterator()
+    {
+        return true;
+    }
+
     static void assertIterablesEqual(Object o1, Object o2)
     {
         if (!(o1 instanceof Iterable)
@@ -293,6 +298,12 @@ public interface IterableTestCase
     @Test
     default void Iterable_hasNext()
     {
+        if (!this.allowsIterator())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).iterator());
+            return;
+        }
+
         assertTrue(this.newWith(3, 2, 1).iterator().hasNext());
         assertFalse(this.newWith().iterator().hasNext());
     }
@@ -300,6 +311,12 @@ public interface IterableTestCase
     @Test
     default void Iterable_next()
     {
+        if (!this.allowsIterator())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).iterator());
+            return;
+        }
+
         Iterator<Integer> iterator = this.newWith(3, 2, 1).iterator();
         MutableSet<Integer> set = Sets.mutable.with();
         assertTrue(set.add(iterator.next()));

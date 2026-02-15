@@ -24,22 +24,6 @@ import org.junit.jupiter.api.Test;
 @Disabled("Requires scapegoat tree implementation")
 public class TreeSortedSetNoIteratorTest implements MutableSortedSetTestCase, NoIteratorTestCase
 {
-    @SafeVarargs
-    @Override
-    public final <T> MutableSortedSet<T> newWith(T... elements)
-    {
-        MutableSortedSet<T> result = new TreeSortedSetNoIterator<>(Comparators.reverseNaturalOrder());
-        IterableTestCase.addAllTo(elements, result);
-        return result;
-    }
-
-    @Override
-    @Test
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
     @Override
     @Test
     public void Iterable_remove()
@@ -47,18 +31,13 @@ public class TreeSortedSetNoIteratorTest implements MutableSortedSetTestCase, No
         NoIteratorTestCase.super.Iterable_remove();
     }
 
+    @SafeVarargs
     @Override
-    @Test
-    public void RichIterable_getFirst()
+    public final <T> MutableSortedSet<T> newWith(T... elements)
     {
-        NoIteratorTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
+        MutableSortedSet<T> result = new TreeSortedSetNoIterator<>(Comparators.reverseNaturalOrder());
+        IterableTestCase.addAllTo(elements, result);
+        return result;
     }
 
     public static class TreeSortedSetNoIterator<T> extends TreeSortedSet<T>
@@ -76,7 +55,7 @@ public class TreeSortedSetNoIteratorTest implements MutableSortedSetTestCase, No
         @Override
         public Iterator<T> iterator()
         {
-            throw new AssertionError("No iteration patterns should delegate to iterator()");
+            throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
         }
     }
 }
