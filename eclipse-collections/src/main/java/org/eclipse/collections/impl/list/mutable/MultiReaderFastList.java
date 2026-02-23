@@ -684,6 +684,15 @@ public final class MultiReaderFastList<T>
     }
 
     @Override
+    public void removeRange(int fromIndex, int toIndex)
+    {
+        try (LockWrapper wrapper = this.lockWrapper.acquireWriteLock())
+        {
+            this.delegate.removeRange(fromIndex, toIndex);
+        }
+    }
+
+    @Override
     public <S> boolean corresponds(OrderedIterable<S> other, Predicate2<? super T, ? super S> predicate)
     {
         try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
@@ -1228,6 +1237,12 @@ public final class MultiReaderFastList<T>
         public void add(int index, T element)
         {
             this.getDelegate().add(index, element);
+        }
+
+        @Override
+        public void removeRange(int fromIndex, int toIndex)
+        {
+            this.getDelegate().removeRange(fromIndex, toIndex);
         }
 
         @Override

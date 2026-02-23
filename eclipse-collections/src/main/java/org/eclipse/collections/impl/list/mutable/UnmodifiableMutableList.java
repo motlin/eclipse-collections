@@ -344,6 +344,12 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
+    public void removeRange(int fromIndex, int toIndex)
+    {
+        throw new UnsupportedOperationException("Cannot call removeRange() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public UnmodifiableMutableList<T> subList(int fromIndex, int toIndex)
     {
         MutableList<T> subList = this.getMutableList().subList(fromIndex, toIndex);

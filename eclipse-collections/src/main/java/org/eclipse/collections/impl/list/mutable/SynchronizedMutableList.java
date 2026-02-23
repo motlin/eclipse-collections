@@ -176,6 +176,15 @@ public class SynchronizedMutableList<T>
     }
 
     @Override
+    public void removeRange(int fromIndex, int toIndex)
+    {
+        synchronized (this.getLock())
+        {
+            this.getDelegate().removeRange(fromIndex, toIndex);
+        }
+    }
+
+    @Override
     public MutableList<T> subList(int fromIndex, int toIndex)
     {
         synchronized (this.getLock())

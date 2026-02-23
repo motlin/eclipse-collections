@@ -588,30 +588,6 @@ public abstract class AbstractMutableList<T>
         return new SubList<>(this, fromIndex, toIndex);
     }
 
-    /**
-     * Removes from this list all the elements whose index is between
-     * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive.
-     * Shifts any succeeding elements to the left (reduces their index).
-     * This call shortens the list by {@code (toIndex - fromIndex)} elements.
-     * (If {@code toIndex==fromIndex}, this operation has no effect.)
-     * @param fromIndex inclusive
-     * @param toIndex exclusive
-     */
-    protected void removeRange(int fromIndex, int toIndex)
-    {
-        if (fromIndex > toIndex)
-        {
-            throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ')');
-        }
-        ListIterator<T> it = this.listIterator(fromIndex);
-        int n = toIndex - fromIndex;
-        for (int i = 0; i < n; i++)
-        {
-            it.next();
-            it.remove();
-        }
-    }
-
     static void subListRangeCheck(int fromIndex, int toIndex, int size)
     {
         if (fromIndex < 0)

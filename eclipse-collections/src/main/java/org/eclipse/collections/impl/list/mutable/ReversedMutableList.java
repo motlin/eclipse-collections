@@ -87,6 +87,12 @@ public class ReversedMutableList<T>
     }
 
     @Override
+    public void removeRange(int fromIndex, int toIndex)
+    {
+        this.delegate.removeRange(this.size() - toIndex, this.size() - fromIndex);
+    }
+
+    @Override
     public MutableList<T> reversed()
     {
         return this.delegate;

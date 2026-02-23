@@ -101,6 +101,18 @@ public interface MutableListTestCase extends MutableCollectionTestCase, ListTest
     }
 
     @Test
+    default void MutableList_removeRange()
+    {
+        MutableList<Integer> mutableList = this.newWith(1, 2, 3, 4, 5);
+        mutableList.removeRange(1, 3);
+        assertIterablesEqual(Lists.immutable.with(1, 4, 5), mutableList);
+
+        MutableList<Integer> mutableList2 = this.newWith(1, 2, 3);
+        mutableList2.removeRange(1, 1);
+        assertIterablesEqual(Lists.immutable.with(1, 2, 3), mutableList2);
+    }
+
+    @Test
     default void MutableList_reversed()
     {
         MutableList<Integer> original = this.newWith(3, 3, 3, 2, 2, 1);

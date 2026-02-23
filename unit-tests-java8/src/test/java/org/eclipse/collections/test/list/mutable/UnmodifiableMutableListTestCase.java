@@ -38,6 +38,13 @@ public interface UnmodifiableMutableListTestCase extends UnmodifiableMutableColl
 
     @Override
     @Test
+    default void MutableList_removeRange()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3, 4, 5).removeRange(1, 3));
+    }
+
+    @Override
+    @Test
     default void Iterable_remove()
     {
         UnmodifiableMutableCollectionTestCase.super.Iterable_remove();
