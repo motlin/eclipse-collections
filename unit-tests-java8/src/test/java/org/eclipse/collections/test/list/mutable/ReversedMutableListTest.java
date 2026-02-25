@@ -186,6 +186,44 @@ public class ReversedMutableListTest implements MutableListTestCase
         assertEquals(Lists.mutable.with(4, 2), reversed);
     }
 
+    // Base list is already reversed, so outermost wrapper is always Reversed, not the types the default test expects.
+    @Override
+    @Test
+    public void MutableList_wrapping_order()
+    {
+        MutableList<Integer> list = this.newWith(1, 2, 3, 4, 5);
+
+        MutableList<Integer> unmodSync = list.asUnmodifiable().asSynchronized();
+        MutableList<Integer> syncUnmod = list.asSynchronized().asUnmodifiable();
+        assertSame(unmodSync.getClass(), syncUnmod.getClass());
+        assertIterablesEqual(unmodSync, syncUnmod);
+
+        MutableList<Integer> unmodReversed = list.asUnmodifiable().reversed();
+        MutableList<Integer> reversedUnmod = list.reversed().asUnmodifiable();
+        assertSame(unmodReversed.getClass(), reversedUnmod.getClass());
+        assertIterablesEqual(unmodReversed, reversedUnmod);
+
+        MutableList<Integer> unmodSubList = list.asUnmodifiable().subList(1, 4);
+        MutableList<Integer> subListUnmod = list.subList(1, 4).asUnmodifiable();
+        assertSame(unmodSubList.getClass(), subListUnmod.getClass());
+        assertIterablesEqual(unmodSubList, subListUnmod);
+
+        MutableList<Integer> syncReversed = list.asSynchronized().reversed();
+        MutableList<Integer> reversedSync = list.reversed().asSynchronized();
+        assertSame(syncReversed.getClass(), reversedSync.getClass());
+        assertIterablesEqual(syncReversed, reversedSync);
+
+        MutableList<Integer> syncSubList = list.asSynchronized().subList(1, 4);
+        MutableList<Integer> subListSync = list.subList(1, 4).asSynchronized();
+        assertSame(syncSubList.getClass(), subListSync.getClass());
+        assertIterablesEqual(syncSubList, subListSync);
+
+        MutableList<Integer> reversedSubList = list.reversed().subList(1, 4);
+        MutableList<Integer> subListReversed = list.subList(1, 4).reversed();
+        assertSame(reversedSubList.getClass(), subListReversed.getClass());
+        assertIterablesEqual(reversedSubList, subListReversed);
+    }
+
     @Test
     public void MutableList_clone()
     {

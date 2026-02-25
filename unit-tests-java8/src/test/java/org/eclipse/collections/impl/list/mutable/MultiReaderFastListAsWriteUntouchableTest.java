@@ -16,7 +16,9 @@ import org.eclipse.collections.test.list.mutable.MutableListTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
+import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesNotEqual;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MultiReaderFastListAsWriteUntouchableTest implements MutableListTestCase
 {
@@ -50,5 +52,19 @@ public class MultiReaderFastListAsWriteUntouchableTest implements MutableListTes
 
         assertIterablesNotEqual(this.newWith(4, 2, 1), this.newWith(3, 2, 1));
         assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 2, 1));
+    }
+
+    // UntouchableMutableList throws on asUnmodifiable() and asSynchronized(); only reversed() and subList() are supported.
+    @Override
+    @Test
+    public void MutableList_wrapping_order()
+    {
+        MutableList<Integer> list = this.newWith(1, 2, 3, 4, 5);
+
+        MutableList<Integer> reversedSubList = list.reversed().subList(1, 4);
+        MutableList<Integer> subListReversed = list.subList(1, 4).reversed();
+        assertEquals(ReversedRandomAccessMutableList.class, reversedSubList.getClass());
+        assertEquals(ReversedRandomAccessMutableList.class, subListReversed.getClass());
+        assertIterablesEqual(reversedSubList, subListReversed);
     }
 }

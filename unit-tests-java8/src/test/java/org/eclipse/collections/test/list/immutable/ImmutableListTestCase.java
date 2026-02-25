@@ -45,4 +45,15 @@ public interface ImmutableListTestCase extends ImmutableCollectionTestCase, List
         ImmutableList<Integer> empty = this.newWith();
         assertSame(empty, empty.reversed());
     }
+
+    @Test
+    default void ImmutableList_wrapping_order()
+    {
+        ImmutableList<Integer> list = this.newWith(1, 2, 3, 4, 5);
+
+        ImmutableList<Integer> reversedSubList = list.reversed().subList(1, 4);
+        ImmutableList<Integer> subListReversed = list.subList(1, 4).reversed();
+        assertSame(reversedSubList.getClass(), subListReversed.getClass());
+        assertIterablesEqual(reversedSubList, subListReversed);
+    }
 }

@@ -18,13 +18,20 @@ import java.util.NoSuchElementException;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MultiReaderList;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.list.mutable.MultiReaderFastList;
+import org.eclipse.collections.impl.list.mutable.ReversedMutableList;
+import org.eclipse.collections.impl.list.mutable.ReversedRandomAccessMutableList;
+import org.eclipse.collections.impl.list.mutable.SynchronizedMutableList;
+import org.eclipse.collections.impl.list.mutable.UnmodifiableMutableList;
 import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.collection.mutable.MultiReaderMutableCollectionTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -142,5 +149,26 @@ public class MultiReaderFastListTest implements MutableListTestCase, MultiReader
         });
 
         assertIterablesEqual(Lists.immutable.with("A", "B", "C", "D"), list);
+    }
+
+    // Default test uses assertIterablesEqual() which triggers iterator(), but MultiReaderFastList throws on iterator() without a read/write lock.
+    @Override
+    @Test
+    public void MutableList_wrapping_order()
+    {
+        MutableList<Integer> list = this.newWith(1, 2, 3, 4, 5);
+
+        assertEquals(UnmodifiableMutableList.class, list.asUnmodifiable().asSynchronized().getClass());
+        assertEquals(UnmodifiableMutableList.class, list.asSynchronized().asUnmodifiable().getClass());
+        assertEquals(ReversedRandomAccessMutableList.class, list.asUnmodifiable().reversed().getClass());
+        assertEquals(ReversedRandomAccessMutableList.class, list.reversed().asUnmodifiable().getClass());
+        assertInstanceOf(UnmodifiableMutableList.class, list.asUnmodifiable().subList(1, 4));
+        assertInstanceOf(UnmodifiableMutableList.class, list.subList(1, 4).asUnmodifiable());
+        assertEquals(ReversedMutableList.class, list.asSynchronized().reversed().getClass());
+        assertEquals(ReversedMutableList.class, list.reversed().asSynchronized().getClass());
+        assertEquals(SynchronizedMutableList.class, list.asSynchronized().subList(1, 4).getClass());
+        assertEquals(SynchronizedMutableList.class, list.subList(1, 4).asSynchronized().getClass());
+        assertEquals(ReversedRandomAccessMutableList.class, list.reversed().subList(1, 4).getClass());
+        assertEquals(ReversedRandomAccessMutableList.class, list.subList(1, 4).reversed().getClass());
     }
 }

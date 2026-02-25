@@ -256,7 +256,7 @@ public class UnmodifiableMutableListTest
     public void asSynchronized()
     {
         MutableList<String> synchronizedList = this.unmodifiableList.asSynchronized();
-        Verify.assertInstanceOf(SynchronizedMutableList.class, synchronizedList);
+        Verify.assertInstanceOf(UnmodifiableMutableList.class, synchronizedList);
         assertThrows(UnsupportedOperationException.class, () ->
         {
             Iterator<String> iterator = synchronizedList.iterator();

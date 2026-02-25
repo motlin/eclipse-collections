@@ -119,7 +119,7 @@ public class UnmodifiableMutableList<T>
     @Override
     public MutableList<T> asSynchronized()
     {
-        return SynchronizedMutableList.of(this);
+        return this.getMutableList().asSynchronized().asUnmodifiable();
     }
 
     @Override

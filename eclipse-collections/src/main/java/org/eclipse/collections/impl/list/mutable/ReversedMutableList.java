@@ -87,6 +87,25 @@ public class ReversedMutableList<T>
     }
 
     @Override
+    public MutableList<T> subList(int fromIndex, int toIndex)
+    {
+        AbstractMutableList.subListRangeCheck(fromIndex, toIndex, this.size());
+        return this.delegate.subList(this.size() - toIndex, this.size() - fromIndex).reversed();
+    }
+
+    @Override
+    public MutableList<T> asUnmodifiable()
+    {
+        return this.delegate.asUnmodifiable().reversed();
+    }
+
+    @Override
+    public MutableList<T> asSynchronized()
+    {
+        return this.delegate.asSynchronized().reversed();
+    }
+
+    @Override
     public MutableList<T> reversed()
     {
         return this.delegate;
