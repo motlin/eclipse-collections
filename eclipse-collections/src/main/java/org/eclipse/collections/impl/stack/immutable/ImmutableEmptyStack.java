@@ -193,13 +193,13 @@ final class ImmutableEmptyStack<T>
     @Override
     public T getFirst()
     {
-        throw new EmptyStackException();
+        return null;
     }
 
     @Override
     public T getLast()
     {
-        throw new EmptyStackException();
+        return null;
     }
 
     @Override

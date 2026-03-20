@@ -189,7 +189,7 @@ public abstract class StackIterableTestCase
         StackIterable<Integer> stack = this.newStackWith(1, 2, 3);
         assertEquals(Integer.valueOf(3), stack.getFirst());
         assertEquals(stack.peek(), stack.getFirst());
-        assertThrows(EmptyStackException.class, () -> this.newStackWith().getFirst());
+        assertNull(this.newStackWith().getFirst());
         StackIterable<Integer> stack2 = this.newStackFromTopToBottom(1, 2, 3);
         assertEquals(Integer.valueOf(1), stack2.getFirst());
     }
@@ -200,6 +200,7 @@ public abstract class StackIterableTestCase
     {
         StackIterable<Integer> stack = this.newStackWith(1, 2, 3);
         assertEquals(Integer.valueOf(1), stack.getLast());
+        assertNull(this.newStackWith().getLast());
     }
 
     @Test

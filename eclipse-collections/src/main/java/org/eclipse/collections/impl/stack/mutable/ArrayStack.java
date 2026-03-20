@@ -315,13 +315,20 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     @Override
     public T getFirst()
     {
-        return this.peek();
+        if (this.delegate.isEmpty())
+        {
+            return null;
+        }
+        return this.delegate.getLast();
     }
 
     @Override
     public T getLast()
     {
-        this.checkEmptyStack();
+        if (this.delegate.isEmpty())
+        {
+            return null;
+        }
         return this.delegate.getFirst();
     }
 

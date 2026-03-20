@@ -278,13 +278,20 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     @Override
     public T getFirst()
     {
-        return this.peek();
+        if (this.delegate.isEmpty())
+        {
+            return null;
+        }
+        return this.delegate.getLast();
     }
 
     @Override
     public T getLast()
     {
-        this.checkEmptyStack();
+        if (this.delegate.isEmpty())
+        {
+            return null;
+        }
         return this.delegate.getFirst();
     }
 

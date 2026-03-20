@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -96,14 +97,14 @@ public interface StackIterableTestCase extends OrderedIterableWithDuplicatesTest
     @Test
     default void RichIterable_getFirst_empty_null()
     {
-        assertThrows(EmptyStackException.class, this.newWith()::getFirst);
+        assertNull(this.newWith().getFirst());
     }
 
     @Override
     @Test
     default void RichIterable_getLast_empty_null()
     {
-        assertThrows(EmptyStackException.class, () -> this.newWith().getLast());
+        assertNull(this.newWith().getLast());
     }
 
     @Test
