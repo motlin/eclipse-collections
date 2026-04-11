@@ -14,8 +14,10 @@ import java.util.LinkedHashMap;
 
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class OrderedMapAdapterTest implements MutableOrderedMapTestCase
@@ -47,5 +49,13 @@ public class OrderedMapAdapterTest implements MutableOrderedMapTestCase
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
         return result;
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_forEach_from_to()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(5, 7, each -> { }));
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
     }
 }
