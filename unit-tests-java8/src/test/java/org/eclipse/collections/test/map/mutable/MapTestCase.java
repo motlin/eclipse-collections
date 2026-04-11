@@ -58,6 +58,22 @@ public interface MapTestCase
     }
 
     @Test
+    default void Map_equals()
+    {
+        Map<String, Integer> map1 = this.newWithKeysValues("A", 1, "B", 2);
+        Map<String, Integer> map2 = this.newWithKeysValues("B", 2, "A", 1);
+
+        assertEquals(map1, map2);
+        assertEquals(map1.hashCode(), map2.hashCode());
+
+        Map<String, Integer> hashMap = new java.util.HashMap<>();
+        hashMap.put("A", 1);
+        hashMap.put("B", 2);
+        assertEquals(map1, hashMap);
+        assertEquals(hashMap, map1);
+    }
+
+    @Test
     default void Map_clear()
     {
         Map<Object, String> map = this.newWith("Three", "Two", "One");

@@ -261,4 +261,11 @@ public class ImmutableOrderedMapTest
         assertThrows(UnsupportedOperationException.class, () -> map.remove(4, "4"));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
+
+    @Override
+    @Test
+    public void OrderedIterable_forEach_from_to()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(5, 7, each -> { }));
+    }
 }

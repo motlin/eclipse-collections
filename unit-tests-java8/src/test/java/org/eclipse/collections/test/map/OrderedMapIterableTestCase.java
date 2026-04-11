@@ -60,7 +60,7 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     }
 
     @Test
-    default void take()
+    default void ReversibleIterable_take()
     {
         OrderedMap<Integer, String> orderedMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three");
         assertIterablesEqual(this.newWithKeysValues(), orderedMap.take(0));
@@ -73,7 +73,7 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     }
 
     @Test
-    default void drop()
+    default void ReversibleIterable_drop()
     {
         OrderedMap<Integer, String> orderedMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three");
         assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.drop(0));
@@ -174,14 +174,4 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         assertIterablesEqual(Lists.immutable.empty(), partition4.getRejected());
     }
 
-    @Override
-    @Test
-    default void OrderedIterable_forEach_from_to()
-    {
-        // TODO Support indexed traversal for ordered maps.
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(5, 7, each -> { }));
-
-        // TODO Support reverse indexed traversal for ordered maps.
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
-    }
 }
