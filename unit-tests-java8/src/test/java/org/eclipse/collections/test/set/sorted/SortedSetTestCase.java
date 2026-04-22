@@ -18,6 +18,7 @@ import java.util.SortedSet;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.CollectionTestCase;
+import org.eclipse.collections.test.IterableTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,6 +31,12 @@ public interface SortedSetTestCase extends CollectionTestCase
 {
     @Override
     <T> SortedSet<T> newWith(T... elements);
+
+    @Override
+    default IterableTestCase.OrderingType getOrderingType()
+    {
+        return IterableTestCase.OrderingType.SORTED_REVERSE_NATURAL;
+    }
 
     default boolean isNaturalOrder(Comparator<?> comparator)
     {

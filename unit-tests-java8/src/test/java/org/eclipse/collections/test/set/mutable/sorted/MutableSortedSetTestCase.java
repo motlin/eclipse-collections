@@ -11,6 +11,7 @@
 package org.eclipse.collections.test.set.mutable.sorted;
 
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
+import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.MutableSortedIterableTestCase;
 import org.eclipse.collections.test.collection.mutable.MutableCollectionUniqueTestCase;
 import org.eclipse.collections.test.set.sorted.NavigableSetTestCase;
@@ -21,6 +22,12 @@ public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, Mut
 {
     @Override
     <T> MutableSortedSet<T> newWith(T... elements);
+
+    @Override
+    default IterableTestCase.OrderingType getOrderingType()
+    {
+        return IterableTestCase.OrderingType.SORTED_REVERSE_NATURAL;
+    }
 
     @Override
     @Test
