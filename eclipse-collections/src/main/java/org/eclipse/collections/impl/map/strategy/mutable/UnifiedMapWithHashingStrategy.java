@@ -3299,31 +3299,79 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean removeAll(Collection<?> collection)
         {
-            // todo: this is N^2. if c is large, we should copy the values to a set.
-            boolean changed = false;
-
-            for (Object obj : collection)
-            {
-                if (this.remove(obj))
-                {
-                    changed = true;
-                }
-            }
-            return changed;
+            return this.removeByValueCondition(collection, true);
         }
 
         @Override
         public boolean retainAll(Collection<?> collection)
         {
+            return this.removeByValueCondition(collection, false);
+        }
+
+        private boolean removeByValueCondition(Collection<?> collection, boolean removeIfContained)
+        {
+            // todo: this is N^2. if c is large, we should copy the values to a set.
             boolean modified = false;
-            Iterator<V> e = this.iterator();
-            while (e.hasNext())
+            Object[] table = UnifiedMapWithHashingStrategy.this.table;
+            for (int i = 0; i < table.length; i += 2)
             {
-                if (!collection.contains(e.next()))
+                Object cur = table[i];
+                if (cur == CHAINED_KEY)
                 {
-                    e.remove();
+                    modified |= this.removeFromChainByValue((Object[]) table[i + 1], i, collection, removeIfContained);
+                }
+                else if (cur != null)
+                {
+                    if (collection.contains(table[i + 1]) == removeIfContained)
+                    {
+                        table[i] = null;
+                        table[i + 1] = null;
+                        UnifiedMapWithHashingStrategy.this.occupied--;
+                        modified = true;
+                    }
+                }
+            }
+            return modified;
+        }
+
+        private boolean removeFromChainByValue(
+                Object[] chain,
+                int tableIndex,
+                Collection<?> collection,
+                boolean removeIfContained)
+        {
+            boolean modified = false;
+            int writeIndex = 0;
+            for (int readIndex = 0; readIndex < chain.length; readIndex += 2)
+            {
+                if (chain[readIndex] == null)
+                {
+                    break;
+                }
+                if (collection.contains(chain[readIndex + 1]) == removeIfContained)
+                {
+                    UnifiedMapWithHashingStrategy.this.occupied--;
                     modified = true;
                 }
+                else
+                {
+                    if (writeIndex != readIndex)
+                    {
+                        chain[writeIndex] = chain[readIndex];
+                        chain[writeIndex + 1] = chain[readIndex + 1];
+                    }
+                    writeIndex += 2;
+                }
+            }
+            for (int i = writeIndex; i < chain.length && chain[i] != null; i += 2)
+            {
+                chain[i] = null;
+                chain[i + 1] = null;
+            }
+            if (writeIndex == 0)
+            {
+                UnifiedMapWithHashingStrategy.this.table[tableIndex] = null;
+                UnifiedMapWithHashingStrategy.this.table[tableIndex + 1] = null;
             }
             return modified;
         }
