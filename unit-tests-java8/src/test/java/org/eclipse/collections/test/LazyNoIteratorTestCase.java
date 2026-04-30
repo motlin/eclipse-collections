@@ -38,13 +38,6 @@ public interface LazyNoIteratorTestCase extends NoIteratorTestCase, RichIterable
 
     @Override
     @Test
-    default void Object_PostSerializedEqualsAndHashCode()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
     default void Object_equalsAndHashCode()
     {
         // Not applicable

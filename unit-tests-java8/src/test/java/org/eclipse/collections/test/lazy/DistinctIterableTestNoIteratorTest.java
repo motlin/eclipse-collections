@@ -56,13 +56,6 @@ public class DistinctIterableTestNoIteratorTest implements NoIteratorTestCase, R
 
     @Override
     @Test
-    public void Object_PostSerializedEqualsAndHashCode()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
     public void Object_equalsAndHashCode()
     {
         // Not applicable

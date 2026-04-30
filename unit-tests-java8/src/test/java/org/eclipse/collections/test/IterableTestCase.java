@@ -48,10 +48,10 @@ import org.eclipse.collections.api.ordered.SortedIterable;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.stack.ImmutableStack;
 import org.eclipse.collections.impl.list.mutable.MultiReaderFastList;
-import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
 import static org.eclipse.collections.impl.test.Verify.assertPostSerializedEqualsAndHashCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -75,6 +75,11 @@ public interface IterableTestCase
     }
 
     default boolean allowsRemove()
+    {
+        return true;
+    }
+
+    default boolean allowsSerialization()
     {
         return true;
     }
@@ -302,26 +307,16 @@ public interface IterableTestCase
     }
 
     @Test
-    default void Object_PostSerializedEqualsAndHashCode()
-    {
-        Iterable<Integer> iterable = this.newWith(3, 2, 1);
-        Object deserialized = SerializeTestHelper.serializeDeserialize(iterable);
-        assertNotSame(iterable, deserialized);
-
-        if (!this.allowsDuplicates())
-        {
-            return;
-        }
-
-        Iterable<Integer> iterable2 = this.newWith(3, 3, 3, 2, 2, 1);
-        Object deserialized2 = SerializeTestHelper.serializeDeserialize(iterable2);
-        assertNotSame(iterable2, deserialized2);
-    }
-
-    @Test
     default void Object_equalsAndHashCode()
     {
-        assertPostSerializedEqualsAndHashCode(this.newWith(3, 2, 1));
+        if (!this.allowsSerialization())
+        {
+            assertNotSerializable(this.newWith(3, 2, 1));
+        }
+        else
+        {
+            assertPostSerializedEqualsAndHashCode(this.newWith(3, 2, 1));
+        }
 
         assertIterablesNotEqual(this.newWith(4, 3, 2, 1), this.newWith(3, 2, 1));
         assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 3, 2, 1));
@@ -335,6 +330,11 @@ public interface IterableTestCase
         if (!this.allowsDuplicates())
         {
             return;
+        }
+
+        if (this.allowsSerialization())
+        {
+            assertPostSerializedEqualsAndHashCode(this.newWith(3, 3, 3, 2, 2, 1));
         }
 
         Verify.assertEqualsAndHashCode(this.newWith(3, 3, 3, 2, 2, 1), this.newWith(3, 3, 3, 2, 2, 1));
