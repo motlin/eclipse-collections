@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +34,7 @@ import org.eclipse.collections.api.bag.Bag;
 import org.eclipse.collections.api.bag.sorted.SortedBag;
 import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.api.collection.MutableCollection;
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.primitive.BooleanList;
@@ -170,8 +172,15 @@ public interface IterableTestCase
         }
 
         boolean equivalentEmptyCollections = IterableTestCase.areEquivalentEmptyCollections(o1, o2);
+        boolean plainCollections = isPlainCollection(o1) && isPlainCollection(o2);
 
-        if (!equivalentEmptyCollections)
+        if (plainCollections)
+        {
+            assertEquals(
+                    Bags.mutable.withAll((Collection<?>) o1),
+                    Bags.mutable.withAll((Collection<?>) o2));
+        }
+        else if (!equivalentEmptyCollections)
         {
             assertEquals(o1, o2);
         }
@@ -182,7 +191,7 @@ public interface IterableTestCase
         assertIterablesNotEqual("Neither item should equal new Object()", o2.equals(new Object()));
         assertEquals(o1, o1);
         assertEquals(o2, o2);
-        if (!equivalentEmptyCollections)
+        if (!plainCollections && !equivalentEmptyCollections)
         {
             assertEquals(o1, o2);
             assertEquals(o2, o1);
@@ -283,6 +292,14 @@ public interface IterableTestCase
 
         // If either is null, consider them compatible
         return true;
+    }
+
+    private static boolean isPlainCollection(Object o)
+    {
+        return o instanceof Collection<?>
+                && !(o instanceof Set<?>)
+                && !(o instanceof List<?>)
+                && !(o instanceof Bag<?>);
     }
 
     private static boolean areEquivalentEmptyCollections(Object o1, Object o2)

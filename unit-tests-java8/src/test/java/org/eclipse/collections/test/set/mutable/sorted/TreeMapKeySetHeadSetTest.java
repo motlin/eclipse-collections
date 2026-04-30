@@ -86,6 +86,14 @@ public class TreeMapKeySetHeadSetTest implements SortedSetTestCase
 
     @Override
     @Test
+    public void Object_equalsAndHashCode()
+    {
+        assertEquals(this.newWith(4, 3, 2, 1), this.newWith(4, 3, 2, 1));
+        assertEquals(this.newWith(3, 2, 1), this.newWith(3, 2, 1));
+    }
+
+    @Override
+    @Test
     public void Iterable_toString()
     {
         assertEquals("[3, 2, 1]", this.newWith(3, 2, 1).toString());

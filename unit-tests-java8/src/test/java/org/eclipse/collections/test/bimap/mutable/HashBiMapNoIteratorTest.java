@@ -20,7 +20,11 @@ import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.map.MapKeySetTestCase;
+import org.eclipse.collections.test.map.NoIteratorBiMapValuesCollectionTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapKeySetTestCase;
 import org.eclipse.collections.test.map.mutable.MapTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -150,6 +154,30 @@ public class HashBiMapNoIteratorTest implements MutableBiMapTestCase, NoIterator
             {
                 throw new AssertionError("No iteration patterns should delegate to iterator()");
             }
+        }
+    }
+
+    @Nested
+    public class KeySetView implements NoIteratorMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            MutableBiMap<T, T> result = new HashBiMapNoIterator<>();
+            MapKeySetTestCase.populateBiMapWithSameKeyAndValue(result, elements);
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements NoIteratorBiMapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return HashBiMapNoIteratorTest.this.newWith(elements).values();
         }
     }
 }

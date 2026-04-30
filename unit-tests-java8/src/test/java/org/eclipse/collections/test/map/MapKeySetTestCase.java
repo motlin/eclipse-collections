@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -8,28 +8,22 @@
  * http://www.eclipse.org/org/documents/edl-v10.php.
  */
 
-package org.eclipse.collections.test.set.mutable;
-
-import java.util.Set;
+package org.eclipse.collections.test.map;
 
 import org.eclipse.collections.api.bimap.MutableBiMap;
-import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 import org.eclipse.collections.test.set.SetTestCase;
 
-// TODO Move standalone assertions into @Nested view classes
-public class HashBiMapKeySetTest implements SetTestCase
+public interface MapKeySetTestCase extends SetTestCase
 {
     @Override
-    public boolean allowsAdd()
+    default boolean allowsAdd()
     {
         return false;
     }
 
     @SafeVarargs
-    @Override
-    public final <T> Set<T> newWith(T... elements)
+    static <T> void populateBiMapWithSameKeyAndValue(MutableBiMap<T, T> result, T... elements)
     {
-        MutableBiMap<T, T> result = new HashBiMap<>();
         for (T element : elements)
         {
             if (result.containsKey(element))
@@ -38,6 +32,5 @@ public class HashBiMapKeySetTest implements SetTestCase
             }
             result.put(element, element);
         }
-        return result.keySet();
     }
 }
