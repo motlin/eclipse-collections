@@ -953,7 +953,7 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
                 V next = iterator.next();
                 if (!collection.contains(next))
                 {
-                    this.remove(next);
+                    iterator.remove();
                 }
             }
             return oldSize != AbstractMutableBiMap.this.size();
